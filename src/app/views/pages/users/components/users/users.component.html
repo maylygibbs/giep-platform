@@ -1,0 +1,43 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Usuarios</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Listado</li>
+    </ol>
+  </nav>
+
+  <div *ngIf="users" class="row">
+    <div class="col-md-12 stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title"></h6>
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Username</th>
+                  <th>Nombre y Apellido</th>
+                  <th>Dependencias</th>
+                  <th>Cargo</th>
+                  <th>Estado</th>
+                  <th>Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users.data">
+                  <td>{{user.id}}</td>
+                  <td>{{user.username}}</td>
+                  <td>{{user.fullName}}</td>
+                  <td>{{user.dependence.label}}</td>
+                  <td>{{user.position.label}}</td>
+                  <td>{{user.status.label}}</td>
+                  <td>$320,800</td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
