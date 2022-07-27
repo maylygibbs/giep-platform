@@ -33,7 +33,7 @@ export class UserService extends HttpService {
     user.email = resp[0].email;
     user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion) ;
     user.position = new SelectOption(resp[0].cargo.id, resp[0].cargo.Descripcion);
-    user.phone = resp[0].telefonos;
+    user.phones = resp[0].telefonos;
     user.birthDate = resp[0].fechaNacimiento;
     user.documentType = resp[0].tipoDocumentoIdentidad;
     user.documentNumber = resp[0].numeroDocumento;
@@ -63,7 +63,7 @@ export class UserService extends HttpService {
       user.email = item.email;
       user.dependence = new SelectOption(item.Dependencia.id, item.Dependencia.Descripcion) ;
       user.position = new SelectOption(item.cargo.id, item.cargo.Descripcion);
-      user.phone = item.telefonos;
+      user.phones = item.telefonos;
       user.birthDate = item.fechaNacimiento;
       user.documentType = item.tipoDocumentoIdentidad;
       user.documentNumber = item.numeroDocumento;
@@ -91,7 +91,7 @@ export class UserService extends HttpService {
     user.email = resp[0].email;
     user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion) ;
     user.position = new SelectOption(resp[0].cargo.id, resp[0].cargo.Descripcion);
-    user.phone = resp[0].telefonos;
+    user.phones = resp[0].telefonos;
     user.birthDate = resp[0].fechaNacimiento;
     user.documentType = resp[0].tipoDocumentoIdentidad;
     user.documentNumber = resp[0].numeroDocumento;
@@ -105,6 +105,15 @@ export class UserService extends HttpService {
    */
   async deleteUser(id:number){
     const resp = await firstValueFrom(this.delete(environment.apiUrl,`/user/${id}`));
+  }
+
+  /**
+   * Persists user data
+   * @param data 
+   */
+  async storeUser(data:any){
+    const resp = data.id ? await firstValueFrom(this.put(environment.apiUrl,`/user/${data.id}`, data)) : await firstValueFrom(this.post(environment.apiUrl,'/user/${id}', data));
+
   }
 
 }

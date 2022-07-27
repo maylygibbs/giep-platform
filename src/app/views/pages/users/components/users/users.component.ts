@@ -4,6 +4,7 @@ import { UserService } from './../../../../../core/services/user.service';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { Subject } from 'rxjs';
+import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 
 
 @Component({
@@ -12,19 +13,9 @@ import { Subject } from 'rxjs';
   styleUrls: ['./users.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent extends BaseComponent implements  OnInit {
 
-  public dtOptions: DataTables.Settings = {
-    info: false,
-    paging: false,
-    searching: false,
-    ordering: true,
-    autoWidth: true,
-    responsive: true
-  };
-  
-  dtTrigger: Subject<any> = new Subject<any>();
-  
+  step:number = 1;
   users: PaginationResponse;
   loadingIndicator = true;
   reorderable = true;
@@ -36,22 +27,30 @@ export class UsersComponent implements OnInit {
 
 
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {
+    super();
+   }
 
   async ngOnInit() {
 
     this.users = await this.userService.getUsersPaginated({ page: 1, rowByPage: 3, word: null });
-    this.dtTrigger.next(this.users);
+
   }
 
   async loadPage(pageInfo: any) {
     console.log('pageInfo', pageInfo);
-    this.page = pageInfo.offset + 1;
+    this.page = pageInfo;
     this.users = await this.userService.getUsersPaginated({ page: this.page, rowByPage: 3, word: null });
+  }
+
+  create(){
+    this.selectedItem = new User();
+    this.next();
   }
 
   async select(id: number) {
     this.selectedItem = await this.userService.getUserById(id);
+    this.next();
   }
 
   async delete(id: number) {
@@ -59,8 +58,17 @@ export class UsersComponent implements OnInit {
     this.loadPage({offset:this.page-1})
   }
 
+  next(){
+    this.step++;
+  }
+
+  back(item:any){
+    this.selectedItem = item;
+    this.step--;
+  }
+
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
+    
   }
 
 }

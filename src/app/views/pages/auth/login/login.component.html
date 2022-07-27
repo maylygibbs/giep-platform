@@ -24,7 +24,7 @@
                 [ngClass]="{'ng-dirty ng-invalid' : emailInput.errors && ( emailInput.dirty || emailInput.touched || loginForm.submitted) }"
                   id="exampleInputEmail1" placeholder="Email" email required>
                 <div *ngIf="emailInput.invalid && loginForm.submitted" class="invalid-feedback">
-                  <div *ngIf="emailInput.errors?.required">Campo requerido.
+                  <div *ngIf="emailInput.errors?.required">Campo requerido
                   </div>
                 </div>
               </div>
@@ -34,7 +34,7 @@
                 [ngClass]="{'ng-dirty ng-invalid' : passwordInput.errors && ( passwordInput.dirty || passwordInput.touched || loginForm.submitted) }"
                   class="form-control" placeholder="Password" required>
                 <div *ngIf="passwordInput.invalid && loginForm.submitted" class="invalid-feedback">
-                  <div *ngIf="passwordInput.errors?.required">Campo requerido.
+                  <div *ngIf="passwordInput.errors?.required">Campo requerido
                   </div>
                 </div>
               </div>
@@ -51,7 +51,7 @@
                   Login with twitter
                 </button>-->
               </div> 
-              <a routerLink="/" class="d-block mt-3 text-muted">¿Olvidaste tú password?</a>
+              <a routerLink="/auth/recover-pass" class="d-block mt-3 text-muted">¿Olvidaste tú password?</a>
             </form>
           </div>
         </div>

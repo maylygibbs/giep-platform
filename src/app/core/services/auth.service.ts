@@ -87,7 +87,15 @@ export class AuthService extends HttpService {
       return true;
     }
     return false;
+  }
 
+  async initRecoverPass(email:string):Promise<any>{
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/account/recovery-password',{email}))
+  }
+
+
+  async resetPass(data:any):Promise<any>{
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/account/recovery-password',data));
   }
 
 

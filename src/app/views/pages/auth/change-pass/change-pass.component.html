@@ -1,0 +1,51 @@
+<div class="row w-100 mx-0 auth-page">
+    <div class="col-md-8 col-xl-6 mx-auto">
+      <div class="card">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3 class="text-center mb-3 mt-4">Restablecer Password</h3>
+            </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            
+            <div class="auth-form-wrapper px-4 py-5">
+              <div *ngIf="inputError"
+              class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+                <div [innerHtml]="inputError"></div>
+              </div>
+              <form name="changePassForm" #changePassForm="ngForm" (ngSubmit)="changePassForm.valid && onSubmit(changePassForm)"
+              [mustMatch]="['password', 'confirmPassword']"
+                class="forms-sample">
+                <div class="form-group mb-3">
+                  <input name="password" #password="ngModel" [(ngModel)]="passwordInput" type="password"  class="form-control"
+                  [ngClass]="{'ng-dirty ng-invalid' : password.errors && ( password.dirty || password.touched || changePassForm.submitted) }"
+                  [pattern]="environment.form.password.validations.pattern" placeholder="Indica un password" required>
+                  <div *ngIf="password.invalid && ( password.dirty || password.touched || changePassForm.submitted)" class="invalid-feedback">
+                    <div *ngIf="password.errors?.required">Campo requerido.
+                    </div>
+                    <div *ngIf="password.errors?.pattern">Password debe tener 1 mayúscula, 1 minúscula, 1 número, 1 no alfanumérico y al menos 6 caracteres.
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mb-3">
+                    <input name="confirmPassword" #confirmPassword="ngModel" [(ngModel)]="confirmPasswordInput" type="password"  class="form-control"
+                    [ngClass]="{'ng-dirty ng-invalid' : confirmPassword.errors && ( confirmPassword.dirty || confirmPassword.touched || changePassForm.submitted) }"
+                    placeholder="Confirma el password" required>
+                    <div *ngIf="confirmPassword.invalid && ( confirmPassword.dirty || confirmPassword.touched || changePassForm.submitted)" class="invalid-feedback">
+                        <div *ngIf="confirmPassword.errors?.required">Campo requerido.
+                        </div>
+                        <div *ngIf="confirmPassword.errors?.mustMatch">
+                            Los password no coinciden.
+                          </div>
+                    </div>
+                  </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Restablecer</button>
+                </div> 
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+

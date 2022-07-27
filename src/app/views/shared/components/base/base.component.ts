@@ -7,6 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BaseComponent {
 
+  /** Datatable options */
+  public dtOptions: DataTables.Settings = {
+    info: false,
+    paging: false,
+    searching: false,
+    ordering: true,
+    autoWidth: true,
+    responsive: true
+  };
+
 
     /** Gestao mensajes da error */
     private messages = {

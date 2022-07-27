@@ -35,7 +35,9 @@
 //@import "./assets/scss/style.rtl.css";
 
 
-
+.text-right{
+  text-align: right;
+}
 
 /**
  * Forms
@@ -61,4 +63,23 @@
     font-size: 80%;
     color: #d9534f;
     margin-top: .30rem !important;
+}
+
+/** Datatables**/
+.btn-create-dt{
+  border-radius: 100%;
+}
+table.dataTable{
+  tfoot tr th{
+    padding-top: 15px;
+    text-align: right;
+  }
+}
+.custom-pagination{
+  font-size: 13px;
+}
+.custom-pagination .ngx-pagination .current {
+  background: #6571ff !important;
+  border-radius: 2px;
+  padding: 0.15rem 0.5rem;
 }

@@ -1,5 +1,7 @@
+import { CommonsListPositionsResolver } from './../../../core/resolvers/commons.resolver';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonsListDependencesResolver } from '../../../core/resolvers/commons.resolver';
 import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
@@ -8,6 +10,10 @@ const routes: Routes = [
     component:UsersComponent,
     data:{
       title: 'Usuarios - GIEP',
+    },
+    resolve:{
+      dependences: CommonsListDependencesResolver,
+      positions: CommonsListPositionsResolver
     }
   }
 ];

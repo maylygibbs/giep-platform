@@ -1,0 +1,231 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form name="userForm" #userForm="ngForm" (ngSubmit)="onSubmit(userForm)" class="forms-sample">
+                    <div class="row">
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12 p-1">
+                            <div class="d-flex align-items-left pt-3 pb-5">
+                                <div>
+                                  <img class="wd-150 rounded-circle" [defaultImage]="defaultImage" [lazyLoad]="image"/>                   
+                               </div>
+                                <div class="d-flex" style="flex-direction: column; vertical-align: middle;">
+                                    <span class="h4 ms-3 text-dark">{{user?.fullName}}</span>
+                                    <div class="mb-3 ms-3">
+                                        <div class="form-check form-switch mb-2">
+                                          <input type="checkbox" name=status #status="ngModel" [(ngModel)]="userStatus" (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">
+                                          <label class="form-check-label" for="formSwitch1">Activo</label>
+                                        </div>
+                                      </div>
+                                </div>
+
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputFirstName" class="form-label">Primer Nombre</label>
+                                <input type="text" name="firstName" #firstName="ngModel" [(ngModel)]="user.firstName"
+                                [ngClass]="{'ng-dirty ng-invalid' : firstName.errors && ( firstName.dirty || firstName.touched || userForm.submitted) }"
+                                    class="form-control" id="inputFirstName" autocomplete="off" minlength="3" maxlength="100" required>
+                                <div *ngIf="firstName.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="firstName.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="firstName.errors?.minlength || firstName.errors?.maxlength">
+                                        Campo permite entre 3 y 100 caracteres</div>
+                                </div>                                    
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputSecondName" class="form-label">Segundo Nombre</label>
+                                <input name="secondName" #secondName="ngModel" [(ngModel)]="user.secondName" type="text"
+                                [ngClass]="{'ng-dirty ng-invalid' : secondName.errors && ( secondName.dirty || secondName.touched || userForm.submitted) }"
+                                    class="form-control" id="inputSecondName" autocomplete="off" minlength="3" maxlength="100" required>
+                                <div *ngIf="secondName.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="secondName.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="secondName.errors?.minlength || secondName.errors?.maxlength">
+                                        Campo permite entre 3 y 100 caracteres</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputLastName" class="form-label">Primer Apellido</label>
+                                <input type="text" name="lastName" #lastName="ngModel" [(ngModel)]="user.lastName"
+                                [ngClass]="{'ng-dirty ng-invalid' : lastName.errors && ( lastName.dirty || lastName.touched || userForm.submitted) }"
+                                    class="form-control" id="inputLastName" autocomplete="off" minlength="3" maxlength="100" required>
+                                    <div *ngIf="lastName.invalid && userForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="lastName.errors?.required">Campo es requerido
+                                        </div>
+                                        <div *ngIf="lastName.errors?.minlength || lastName.errors?.maxlength">
+                                            Campo permite entre 3 y 100 caracteres</div>
+                                    </div>                                    
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputSecondLastName" class="form-label">Segundo Apellido</label>
+                                <input name="secondLastName" #secondLastName="ngModel" [(ngModel)]="user.secondLastName"
+                                [ngClass]="{'ng-dirty ng-invalid' : secondLastName.errors && ( secondLastName.dirty || secondLastName.touched || userForm.submitted) }"
+                                    type="text" class="form-control" id="inputSecondLastName" autocomplete="off" minlength="3" maxlength="100" required>
+                                <div *ngIf="secondLastName.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="secondLastName.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="secondLastName.errors?.minlength || secondLastName.errors?.maxlength">
+                                        Campo permite entre 3 y 100 caracteres</div>
+                                </div>                                      
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputDocumentType" class="form-label">Tipo Documento</label>
+                                <ng-select id="inputDocumentType" name="documentType" #documentType="ngModel" [(ngModel)]="user.documentType"
+                                [ngClass]="{'ng-dirty ng-invalid' : documentType.errors && ( documentType.dirty || documentType.touched || userForm.submitted) }"    
+                                [searchable]="false" [(ngModel)]="user.documentType" required>
+                                    <ng-option value="V">V</ng-option>
+                                    <ng-option value="P">P</ng-option>
+                                    <ng-option value="E">E</ng-option>
+                                </ng-select>
+                                <div *ngIf="documentType.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="documentType.errors?.required">Campo es requerido
+                                    </div>
+                                </div>                                 
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputDocumentNumber" class="form-label">Nº Documento</label>
+                                <input name="documentNumber" #documentNumber="ngModel" [(ngModel)]="user.documentNumber"
+                                [pattern]="environment.form.number.validations.pattern"
+                                [ngClass]="{'ng-dirty ng-invalid' : documentNumber.errors && ( documentNumber.dirty || documentNumber.touched || userForm.submitted) }" 
+                                    type="text" class="form-control" id="inputDocumentNumber" autocomplete="off" minlength="3" maxlength="20" required>
+                                    <div *ngIf="documentNumber.invalid && userForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="documentNumber.errors?.required">Campo es requerido
+                                        </div>
+                                        <div *ngIf="documentNumber.errors?.minlength || documentNumber.errors?.maxlength">
+                                            Campo permite entre 3 y 20 caracteres</div>
+                                        <div *ngIf="documentNumber.errors?.pattern">Campo solo permite números
+                                        </div>                                            
+                                    </div>                               
+                                </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputBirthDate" class="form-label">Fecha Nacimiento</label>
+                                <div class="input-group">
+                                    <input id="inputBirthDate" name="birthDate" #birthDate="ngModel"  class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                                    [ngClass]="{'ng-dirty ng-invalid' : birthDate.errors && ( birthDate.dirty || birthDate.touched || userForm.submitted) }"
+                                        [(ngModel)]="user.birthDate" ngbDatepicker #dp="ngbDatepicker" required>
+                                    <button class="input-group-text" type="button" (click)="dp.toggle()">
+                                        <i class="feather icon-calendar icon-md text-muted"></i>
+                                    </button>
+                                    <div *ngIf="birthDate.invalid && userForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="birthDate.errors?.required">Campo es requerido
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputEmail" class="form-label">Email</label>
+                                <input type="text" email name="email" #email="ngModel" [(ngModel)]="user.email"
+                                [ngClass]="{'ng-dirty ng-invalid' : email.errors && ( email.dirty || email.touched || userForm.submitted) }"
+                                    class="form-control" id="inputEmail" autocomplete="off" required>
+                                <div *ngIf="email.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="email.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="email.errors?.email">Campo requiere un email válido
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputPhone" class="form-label">Telefono/Cel</label>
+                                <tag-input [(ngModel)]="user.phones"
+                                    name="phone" 
+                                    #phone="ngModel" 
+                                    theme="bootstrap"
+                                    theme="bootstrap"
+                                    [displayBy]="'numero'"
+                                    [ngClass]="{'ng-invalid' : phone.errors && ( phone.dirty || phone.touched || userForm.submitted) }" required>
+                                </tag-input>
+                                    <div *ngIf="phone.invalid && userForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="phone.errors?.required">Campo es requerido
+                                        </div>
+                                 
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputDependence" class="form-label">Dependencia</label>
+                                <ng-select id="inputDependence" [items]="data.dependences" name="dependence" #dependence="ngModel"
+                                [ngClass]="{'ng-dirty ng-invalid' : dependence.errors && ( dependence.dirty || dependence.touched || userForm.submitted) }"
+                                    bindLabel="label" bindValue="value" [searchable]="false"
+                                    [(ngModel)]="user.dependence" required>
+                                </ng-select>
+                                <div *ngIf="dependence.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="dependence.errors?.required">Campo es requerido
+                                    </div>                          
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputPosition" class="form-label">Cargo</label>
+                                <ng-select id="inputPosition" [items]="data.positions" name="position" #position="ngModel" bindLabel="label"
+                                [ngClass]="{'ng-dirty ng-invalid' : position.errors && ( position.dirty || position.touched || userForm.submitted) }"
+                                    bindValue="value" [searchable]="false" [(ngModel)]="user.position" required>
+                                </ng-select>
+                                <div *ngIf="position.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="position.errors?.required">Campo es requerido
+                                    </div>                          
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputUsername" class="form-label">Username</label>
+                                <input type="text" name="username" #username="ngModel" [(ngModel)]="user.email"
+                                    class="form-control" id="inputUsername" autocomplete="off" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputRoles" class="form-label">Roles</label>
+                                <ng-select id="inputRoles" [items]="roles" name="rolesuser" #rolesuser="ngModel"
+                                bindLabel="label" bindValue="value"
+                                [searchable]="false" [(ngModel)]="user.roles" required>
+                                </ng-select>                                    
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-right">
+                            <button class="btn btn-secondary" (click)="back()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

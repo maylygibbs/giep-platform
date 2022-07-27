@@ -5,6 +5,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthComponent } from './auth.component';
+import { RecoverPassComponent } from './recover-pass/recover-pass.component';
+import { ChangePassComponent } from './change-pass/change-pass.component';
 
 const routes: Routes = [
   {
@@ -21,15 +23,20 @@ const routes: Routes = [
         component: LoginComponent
       },
       {
-        path: 'register',
-        component: RegisterComponent
+        path: 'recover-pass',
+        component: RecoverPassComponent
+      },
+      {
+        path: 'change-pass/:token',
+        component: ChangePassComponent
       }
+
     ]
   },
 ]
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, AuthComponent],
+  declarations: [LoginComponent, RegisterComponent, AuthComponent, RecoverPassComponent, ChangePassComponent],
   imports: [
     CommonModule,
     SharedModule,

@@ -19,8 +19,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError(err => {
                 if (err.status === 401) {
-                    Swal.fire('Error 401',`${ err.error.msg }`,'error');
-                    //this.authService.logout();
+                    Swal.fire('Su sesión expiró','','error');
+                    this.authService.logout();
                 } else if (err.status === 404) {
                     Swal.fire('Error 404', `${ err.error.msg }`, 'error');
                 } else if (err.status === 500) {

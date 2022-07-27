@@ -4,7 +4,7 @@ export class User {
     id: string;
     username: string;
     token?: string;
-    role?:string[];
+    roles?:any[];
     firstName:string;
     secondName:string;
     lastName:string;
@@ -12,14 +12,15 @@ export class User {
     email:string;
     dependence:SelectOption;
     position:SelectOption;
-    phone:any[];
+    phones:any[];
     birthDate:Date;
     documentType:string;
     documentNumber:string;
     status:SelectOption;
+    avatar:string;
 
     get fullName(){    
-        return this.firstName + ' ' + this.lastName;  
+        return (this.firstName ? this.firstName : '')  + ' ' + (this.lastName ? this.lastName:'');  
     }
 
     public static map(user: User):User{
@@ -36,30 +37,26 @@ export class User {
         return newInstace
     }
 
-    /*{
-        "id": 1,
-        "username": "sirjcbg1@hotmail.com",
-        "tipoDocumentoIdentidad": "V",
-        "primerNombre": "Juan",
-        "segundoNombre": "Carlos",
-        "primerApellido": "Blanco",
-        "segundoApellido": "Garcia",
-        "fechaNacimiento": "16/07/2022",
-        "email": "sirjcbg1@hotmail.com",
-        "status": {
-            "id": 1,
-            "Descripcion": "Vigente"
-        },
-        "createAt": "16/07/2022",
-        "updateBy": null,
-        "updateAt": "16/07/2022",
-        "createBy": null,
-        "telefonos": [],
-        "Dependencia": null,
-        "roles": [
-            {
-                "rol": "Administrador"
-            }
-        ]
-    }*/
+    public static mapForPost(user: User){
+        let userMap:any;
+        if (!user.id) {
+           Object.assign(userMap, {username: user.email}) 
+        }
+        Object.assign(userMap, {idStatus: parseInt(user.status.value)});
+        Object.assign(userMap, {numeroDocumento: user.documentNumber});
+        Object.assign(userMap, {tipoDocumentoIdentidad: user.documentType});
+        Object.assign(userMap, {primerNombre: user.firstName});
+        Object.assign(userMap, {segundoNombre: user.secondName});
+        Object.assign(userMap, {primerApellido: user.lastName});
+        Object.assign(userMap, {segundoApellido: user.secondLastName});
+        Object.assign(userMap, {fechaNacimiento: user.birthDate});
+        Object.assign(userMap, {email: user.email});
+        Object.assign(userMap, {idDependencia: parseInt(user.dependence.value)});
+        Object.assign(userMap, {idCargo: parseInt(user.position.value)});
+        Object.assign(userMap, {telefono: user.phones});
+        Object.assign(userMap, {roles: user.roles});
+        return userMap;
+    }
+
+
 }
