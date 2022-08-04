@@ -7,6 +7,7 @@ export const environment = {
   name_system: 'GIEP',
   ttl: 600000,
   apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
+  apiAuth: 'https://giepboffice.pafar.com.ve/public',
   localstorage:{
     userKey : 'cusr'
   },
@@ -39,10 +40,12 @@ export const environment = {
   endpoints:{
     handle_error_blackList:[
       '/login_check',
+      '/recovery-password',
+      '/changepassword'
     ],
     handler_auth_whiteList:[
       '/recovery-password',
-      'changepassword'
+      '/changepassword'
     ]
   }
 };

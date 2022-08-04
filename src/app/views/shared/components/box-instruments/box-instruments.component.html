@@ -1,0 +1,52 @@
+<div *ngIf="instrument" class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="mt-3">
+                    <h6>Por favor, llena la siguiente</h6>
+                  </div>
+                  <div class="mt-3">
+                    <label class="tx-11 fw-bolder mb-0 text-uppercase">Encuesta</label>
+                    <p class="text-muted">{{instrument.name}}</p>
+                  </div>
+                  <div class="mt-3">
+                    <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción</label>
+                    <p class="text-muted" [innerHtml]="instrument.description ? instrument.description : 'Breve leyenda'"></p>
+                  </div>
+                  <div class="mt-3">
+                    <button class="btn btn-primary" (click)="show = true">Iniciar</button>
+                  </div>                  
+
+            </div>
+            <div class="card-body" [hidden]="!show">
+                <form name="instrumentForm" #instrumentForm="ngForm" (ngSubmit)="onSubmit(instrumentForm)" class="forms-sample">
+                    <div *ngFor="let question of instrument.questions" class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div *ngIf="question.inputType.label =='select'" class="mb-3">
+                                <label for="inputFirstName" class="form-label">{{question.order}}.- {{question.label}}</label>
+                                <ng-select id="selectInput-{{question.id}}" [name]="question.nameImput" [(ngModel)]="question.valueResp"
+                                [ngClass]="{'ng-dirty ng-invalid' : instrumentForm.form.controls[question.nameImput]?.errors && ( instrumentForm.form.controls[question.nameImput]?.dirty || instrumentForm.form.controls[question.nameImput]?.touched || instrumentForm.submitted) }"    
+                                [searchable]="false" [required]="question.required">
+                                    <ng-option *ngFor="let option of question.options" [value]="option.value">{{option.label}}</ng-option>
+                                </ng-select>
+                                <div *ngIf="instrumentForm.form.controls[question.nameImput]?.invalid && instrumentForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="instrumentForm.form.controls[question.nameImput]?.errors?.required">Campo es requerido
+                                    </div>
+                                </div>  
+                           
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-right">
+                            <button class="btn btn-secondary" (click)="reset(instrumentForm)">Cancelar</button>
+                            <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

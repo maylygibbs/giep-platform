@@ -13,12 +13,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { TagInputModule } from 'ngx-chips';
 import { MustMatchDirective } from './directive/must-match.directive';
+import { BoxInstrumentsComponent } from './components/box-instruments/box-instruments.component';
 
 
 
 
 @NgModule({
-  declarations: [BaseComponent, PagerComponent, MustMatchDirective],
+  declarations: [BaseComponent, PagerComponent, MustMatchDirective, BoxInstrumentsComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -46,7 +47,8 @@ import { MustMatchDirective } from './directive/must-match.directive';
     NgSelectModule,
     LazyLoadImageModule,
     TagInputModule,
-    MustMatchDirective
+    MustMatchDirective,
+    BoxInstrumentsComponent
   ]
 
 })

@@ -1,3 +1,4 @@
+import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
@@ -19,7 +20,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   menuItems: MenuItem[] = [];
   @ViewChild('sidebarMenu') sidebarMenu: ElementRef;
 
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, router: Router) { 
+  constructor(@Inject(DOCUMENT) private document: Document, 
+  private renderer: Renderer2, 
+  router: Router,
+  private authService: AuthService) { 
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
 
@@ -40,7 +44,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.menuItems = MENU;
+    this.menuItems = this.authService.currentUser.optionsMenu;
 
     /**
      * Sidebar-folded on desktop (min-width:992px and max-width: 1199px)

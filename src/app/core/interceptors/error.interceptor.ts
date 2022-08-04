@@ -5,11 +5,12 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService, private router:Router) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const isInclude = this.isOnTheBlackList(request.url, environment.endpoints.handle_error_blackList);
@@ -19,8 +20,11 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError(err => {
                 if (err.status === 401) {
-                    Swal.fire('Su sesión expiró','','error');
-                    this.authService.logout();
+                    Swal.fire('Su sesión expiró','','error').then(()=>{
+                        this.authService.logout();
+                        this.router.navigate(['/auth/login']);
+                    });
+                    
                 } else if (err.status === 404) {
                     Swal.fire('Error 404', `${ err.error.msg }`, 'error');
                 } else if (err.status === 500) {

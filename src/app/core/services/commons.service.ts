@@ -54,8 +54,9 @@ export class CommonsService extends HttpService {
 
     let roles: Array<SelectOption> = new Array<SelectOption>();
     const resp = await firstValueFrom(this.get(environment.apiUrl, '/rol/list'))
-    roles = resp.data.map((item: any) => {
-      return new SelectOption(item.id, item.descripcion);
+    const temp = resp[0];
+    roles = temp.map((item: any) => {
+      return new SelectOption(item.descripcion, item.descripcion);
     });
     return roles;
 

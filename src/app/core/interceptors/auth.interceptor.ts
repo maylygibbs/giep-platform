@@ -14,17 +14,24 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add auth header with jwt if user is logged in and request is to the api url
+        
         const token = this.authService.currentUser?.token;
         
         const isInclude = this.isOnTheWhiteList(request.url, environment.endpoints.handle_error_blackList);
         if(isInclude){
+           /* request = request.clone({
+                setHeaders: {
+                    'Content-Type': 'application/json',
+                },
+            });*/
             return next.handle(request);
         }
         const isApiUrl = request.url.startsWith(environment.apiUrl);
         if (token && isApiUrl) {
             request = request.clone({
                 setHeaders: {
-                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
             });
         }

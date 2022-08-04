@@ -1,3 +1,5 @@
+import { User } from './../../../core/models/user';
+import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit, ViewChild, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
@@ -9,14 +11,19 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
+  user:User;
+
   constructor(
     @Inject(DOCUMENT) private document: Document, 
     private renderer: Renderer2,
+    private authService:AuthService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.user = this.authService.currentUser;
   }
+  
 
   /**
    * Sidebar toggle on hamburger button click
@@ -31,9 +38,9 @@ export class NavbarComponent implements OnInit {
    */
   onLogout(e: Event) {
     e.preventDefault();
-    localStorage.removeItem('isLoggedin');
+    this.authService.logout();
 
-    if (!localStorage.getItem('isLoggedin')) {
+    if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
     }
   }

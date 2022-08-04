@@ -6,7 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 
-import { LayoutModule } from './views/layout/layout.module';
 import { AuthGuard } from './core/guard/auth.guard';
 
 import { AppComponent } from './app.component';
@@ -17,6 +16,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -32,7 +32,13 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
     BrowserAnimationsModule,
     LoadingBarHttpClientModule,
     LoadingBarRouterModule,
-    LoadingBarModule 
+    LoadingBarModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      titleClass: 'toast-title',
+      progressBar: false,
+      enableHtml: true,
+    })
   ],
   providers: [
     AuthGuard,

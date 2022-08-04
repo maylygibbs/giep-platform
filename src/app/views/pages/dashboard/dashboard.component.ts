@@ -1,3 +1,5 @@
+import { Instrument } from './../../../core/models/instrument';
+import { InstrumentsService } from './../../../core/services/instruments.service';
 import { User } from './../../../core/models/user';
 import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,6 +14,8 @@ import { BaseComponent } from '../../shared/components/base/base.component';
   preserveWhitespaces: true
 })
 export class DashboardComponent extends BaseComponent implements OnInit {
+
+  
 
   /**
    * Apex chart
@@ -52,9 +56,8 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.user = this.authService.currentUser;
-    console.log(this.user.fullName)
     this.currentDate = this.calendar.getToday();
 
     this.customersChartOptions = getCustomerseChartOptions(this.obj);

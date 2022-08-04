@@ -5,13 +5,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { SelectOption } from '../../../../../core/models/select-option';
 import { ActivatedRoute } from '@angular/router';
+import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 
 @Component({
   selector: 'app-user-store',
   templateUrl: './user-store.component.html',
   styleUrls: ['./user-store.component.scss']
 })
-export class UserStoreComponent implements OnInit {
+export class UserStoreComponent extends BaseComponent implements OnInit {
 
   @Input()
   user:User;
@@ -35,7 +36,9 @@ export class UserStoreComponent implements OnInit {
 
 
   constructor(private route: ActivatedRoute,
-    private userService:UserService) { }
+    private userService:UserService) {
+      super();
+     }
 
   ngOnInit(): void {
     this.route.data.subscribe((data)=>{      
@@ -54,8 +57,14 @@ export class UserStoreComponent implements OnInit {
     this.user.status = this.userStatus == true ? new SelectOption('1') : new SelectOption('2');
   }
 
-  onSubmit(form:NgForm){
-    
+  async onSubmit(form:NgForm){
+    if(form.valid){
+      console.log('user', this.user)
+      console.log('post user',User.mapForPost(this.user));
+      await this.userService.storeUser(User.mapForPost(this.user));
+      this.back()
+    }
+
   }
 
   back(){

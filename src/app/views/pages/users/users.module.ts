@@ -5,12 +5,14 @@ import { UsersRoutingModule } from './users-routing.module';
 import { UsersComponent } from './components/users/users.component';
 import { SharedModule } from '../../shared/shared.module';
 import { UserStoreComponent } from './components/user-store/user-store.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 @NgModule({
   declarations: [
     UsersComponent,
-    UserStoreComponent
+    UserStoreComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,

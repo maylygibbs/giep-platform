@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment';
 import { PaginationResponse } from './../../../../../core/models/pagination-response';
 import { User } from './../../../../../core/models/user';
 import { UserService } from './../../../../../core/services/user.service';
@@ -25,6 +26,8 @@ export class UsersComponent extends BaseComponent implements  OnInit {
 
   selectedItem: User;
 
+  word:string;
+
 
 
   constructor(private userService: UserService) {
@@ -40,7 +43,7 @@ export class UsersComponent extends BaseComponent implements  OnInit {
   async loadPage(pageInfo: any) {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
-    this.users = await this.userService.getUsersPaginated({ page: this.page, rowByPage: 3, word: null });
+    this.users = await this.userService.getUsersPaginated({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
   }
 
   create(){
@@ -55,7 +58,7 @@ export class UsersComponent extends BaseComponent implements  OnInit {
 
   async delete(id: number) {
     await this.userService.deleteUser(id);
-    this.loadPage({offset:this.page-1})
+    this.loadPage(this.page);
   }
 
   next(){
@@ -65,6 +68,13 @@ export class UsersComponent extends BaseComponent implements  OnInit {
   back(item:any){
     this.selectedItem = item;
     this.step--;
+    this.loadPage(this.page);
+  }
+
+  search(){
+    if (this.word && this.word.length > 0) {
+      this.loadPage(1);
+    }
   }
 
   ngOnDestroy(): void {

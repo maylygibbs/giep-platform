@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-base',
@@ -35,6 +36,7 @@ export class BaseComponent {
   
   
     public messageModal: string;
+    
   
     /**
      * Limpe a lista de mensagens de erro.

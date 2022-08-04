@@ -4,9 +4,11 @@
  */
 export class SelectOption{
 
+  public idOption: number;
   public value: string;
   public label: string;
   public disabled:boolean;
+  public isSelected:boolean;
   public link_google: string;
   public morada:string;
 

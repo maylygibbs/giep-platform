@@ -20,8 +20,12 @@
     </button>
   </div>
 </div>
-
-<div class="row">
+<div *ngIf="user.instrumentsPending" class="row">
+  <div class="col-12 col-xl-12 grid-margin">
+    <app-box-instruments [instruments]="user.instrumentsPending" ></app-box-instruments>
+  </div>
+</div>
+ <!--<div class="row">
   <div class="col-12 col-xl-12 stretch-card">
     <div class="row flex-grow-1">
       <div class="col-md-4 grid-margin stretch-card">
@@ -68,7 +72,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 grid-margin stretch-card">
+     <div class="col-md-4 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-baseline">
@@ -157,9 +161,9 @@
       </div>
     </div>
   </div>
-</div> <!-- row -->
+</div> row -->
 
-<div class="row">
+<!--<div class="row">
   <div class="col-12 col-xl-12 grid-margin stretch-card">
     <div class="card overflow-hidden">
       <div class="card-body">
@@ -206,7 +210,7 @@
       </div>
     </div>
   </div>
-</div> <!-- row -->
+</div>  row -->
 
 <div class="row">
   <div class="col-lg-7 col-xl-8 grid-margin stretch-card">

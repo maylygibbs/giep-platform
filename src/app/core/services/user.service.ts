@@ -7,15 +7,19 @@ import { HttpService } from './http.service';
 import { User } from '../models/user';
 import { firstValueFrom } from 'rxjs';
 import { SelectOption } from '../models/select-option';
-import { unstable_UserBlockingPriority } from 'preact/compat';
+import { ToastrService } from 'ngx-toastr';
+import { MenuItem } from '../models/menu.model';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService extends HttpService {
+  
 
   constructor(protected http: HttpClient,
-    private authService: AuthService) { 
+    private authService: AuthService,
+    private toastrService: ToastrService) { 
     super(http);
   }
 
@@ -38,6 +42,37 @@ export class UserService extends HttpService {
     user.documentType = resp[0].tipoDocumentoIdentidad;
     user.documentNumber = resp[0].numeroDocumento;
     user.status = new SelectOption(resp[0].status.id, resp[0].status.Descripcion);
+    user.avatar = resp[0].foto;
+    user.createAt = resp[0].createAt;
+    user.updateAt = resp[0].updateAt;
+    user.instrumentsPending = resp[0].instrumentosPendientes && resp[0].instrumentosPendientes.length > 0 ? resp[0].instrumentosPendientes : null  ;
+    
+    const arrayMenu: Array<MenuItem> = new Array<MenuItem>();
+
+    resp[0].opcionesMenu.forEach((item:any) => {
+      const menuItem = new MenuItem();
+      menuItem.label = item.nombre;
+      menuItem.isTitle = item.isTitle == 'true' ? true : false;
+      menuItem.link = item.path;
+      menuItem.icon = item.icon;
+      menuItem.order = item.orden;
+      arrayMenu.push(menuItem);
+      if(item.hijos && item.hijos.MenuChild){
+        item.hijos.MenuChild.forEach((itemChild:any) => {
+          const menuItemChild = new MenuItem();
+          menuItemChild.label = itemChild.menu;
+          menuItemChild.isTitle = itemChild.isTitle == 'true' ? true : false;
+          menuItemChild.link = itemChild.path;
+          menuItemChild.icon = itemChild.icon;
+          menuItemChild.order = itemChild.orden;
+          arrayMenu.push(menuItemChild);
+        });
+      }
+
+    })
+    user.optionsMenu = arrayMenu;
+
+
     this.authService.saveUserInLocalstorage(user);
     return user;
   }
@@ -92,10 +127,18 @@ export class UserService extends HttpService {
     user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion) ;
     user.position = new SelectOption(resp[0].cargo.id, resp[0].cargo.Descripcion);
     user.phones = resp[0].telefonos;
-    user.birthDate = resp[0].fechaNacimiento;
+    const d = new Date(resp[0].fechaNacimiento);
+    user.birthDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
     user.documentType = resp[0].tipoDocumentoIdentidad;
     user.documentNumber = resp[0].numeroDocumento;
+    user.roles = resp[0].roles.map((item:any)=>{
+      return item.rol;
+    });
     user.status = new SelectOption(resp[0].status.id, resp[0].status.Descripcion);
+    user.avatar = resp[0].foto;
+    user.createAt = resp[0].createAt;
+    user.updateAt = resp[0].updateAt;
+
     return user;
   }
 
@@ -112,8 +155,25 @@ export class UserService extends HttpService {
    * @param data 
    */
   async storeUser(data:any){
-    const resp = data.id ? await firstValueFrom(this.put(environment.apiUrl,`/user/${data.id}`, data)) : await firstValueFrom(this.post(environment.apiUrl,'/user/${id}', data));
-
+    try {
+      if(data.id){
+        const id = data.id;
+        delete data.id;
+        await firstValueFrom(this.put(environment.apiUrl,`/user/${id}`, data));
+        this.toastrService.success('Usuario actualizado con exito.');
+      }else{
+        await firstValueFrom(this.post(environment.apiUrl,'/user', data));
+        this.toastrService.success('Usuario registrado con exito.');
+      }
+    } catch (error:any) {
+      debugger
+      console.log(error);
+      if (error.status == 409) {
+        this.toastrService.error('',error.msg);
+      }
+      this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+    }
+    
   }
 
 }

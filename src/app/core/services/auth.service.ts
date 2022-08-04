@@ -5,13 +5,15 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { HttpService } from './http.service';
 import { firstValueFrom, map } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends HttpService {
 
-  constructor(protected http: HttpClient) {
+  constructor(protected http: HttpClient,
+    private toastrService: ToastrService ) {
     super(http);
   }
 
@@ -75,12 +77,18 @@ export class AuthService extends HttpService {
 
 
   }
-
+  /**
+   * Close sesion
+   */
   logout() {
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem('cusr');
   }
 
 
+  /**
+   * Check if the user is logged in
+   * @returns 
+   */
   isLoggedIn(): boolean {
     const currentUser = this.currentUser || null;
     if (currentUser) {
@@ -89,13 +97,46 @@ export class AuthService extends HttpService {
     return false;
   }
 
-  async initRecoverPass(email:string):Promise<any>{
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/account/recovery-password',{email}))
+  /**
+   * Init process recovery password
+   * @param email 
+   * @returns 
+   */
+  async initRecoverPass(email:string):Promise<any>{    
+    try {
+      const resp = await firstValueFrom(this.post(environment.apiAuth, '/account/recovery-password',{email}));
+      this.toastrService.success('','Le fué enviado un email con éxito para que restablezca su password.');
+    } catch (error: any) {
+      debugger
+      if (error.status == 404) {
+        this.toastrService.error('','No existe el correo electrónico.');
+        return;
+      }
+      this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      return;
+    }
   }
 
-
+  /**
+   * Reset password
+   * @param data 
+   * @returns 
+   */
   async resetPass(data:any):Promise<any>{
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/account/recovery-password',data));
+    try {
+      const resp = await firstValueFrom(this.post(environment.apiAuth, '/user/changepassword',data));
+      this.toastrService.success('','Su password fué restablecido con éxito.');
+      return true;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status == 409) {
+        this.toastrService.error('','El tiempo establecido para restablecer password ha caducado. Inicie nuevamente el proceso.');
+        return false;
+      }
+      this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      return false;
+    }
+    
   }
 
 

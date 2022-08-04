@@ -35,6 +35,8 @@ export const environment = {
   endpoints:{
     handle_error_blackList:[
       '/login_check',
+      '/recovery-password',
+      '/changepassword'
     ],
     handler_auth_whiteList:[
       '/recovery-password',
