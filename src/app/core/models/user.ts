@@ -52,6 +52,7 @@ export class User {
         newInstace.avatar = user.avatar;
         newInstace.createAt = user.createAt;
         newInstace.updateAt = user.updateAt;
+        newInstace.roles = user.roles;
         newInstace.instrumentsPending = user.instrumentsPending;
         newInstace.optionsMenu = user.optionsMenu;
 

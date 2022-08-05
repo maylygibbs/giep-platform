@@ -10,19 +10,37 @@
       <input class="form-control border-primary bg-transparent" placeholder="yyyy-mm-dd"
           name="dp" [(ngModel)]="currentDate" ngbDatepicker #d="ngbDatepicker">
     </div>
-    <button type="button" class="btn btn-outline-primary btn-icon-text me-2 mb-2 mb-md-0">
+    <!--<button type="button" class="btn btn-outline-primary btn-icon-text me-2 mb-2 mb-md-0">
       <i class="btn-icon-prepend" data-feather="printer" appFeatherIcon></i>
-      Print
+      Imprimir
     </button>
     <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
       <i class="btn-icon-prepend" data-feather="download-cloud" appFeatherIcon></i>
-      Download Report
-    </button>
+      Descargar reporte
+    </button>-->
   </div>
 </div>
-<div *ngIf="user.instrumentsPending" class="row">
+<div *ngIf="$instruments | async" class="row">
   <div class="col-12 col-xl-12 grid-margin">
-    <app-box-instruments [instruments]="user.instrumentsPending" ></app-box-instruments>
+    <app-box-instruments [instruments]="$instruments | async" ></app-box-instruments>
+  </div>
+</div>
+<div  *ngIf="!($instruments | async) && user.roles.includes('ROLE_REGULAR')">
+  <div class="col-12 col-xl-12 grid-margin">  
+    <app-box-message 
+      [title]="'Usted no tiene instrumentos asignados en este momento.'" 
+      [subtitle]="'Seguimos trabajando para ti...'" 
+      [image]="'/assets/images/others/icon-construction2.svg'">
+    </app-box-message>
+  </div>
+</div>
+<div  *ngIf="(!results || results.length == 0) && user.roles.includes('ROLE_ADMINISTRADOR')">
+  <div class="col-12 col-xl-12 grid-margin">  
+    <app-box-message 
+      [title]="'Usted no tiene instrumentos asignados en este momento.'" 
+      [subtitle]="'Seguimos trabajando para ti...'" 
+      [image]="'/assets/images/others/icon-construction1.svg'">
+    </app-box-message>
   </div>
 </div>
  <!--<div class="row">
@@ -212,13 +230,13 @@
   </div>
 </div>  row -->
 
-<div class="row">
-  <div class="col-lg-7 col-xl-8 grid-margin stretch-card">
+<div *ngIf="!user.roles.includes('ROLE_REGULAR') && results && results.length > 0 " class="row">
+  <div *ngFor="let result of results" class="col-lg-6 col-md-6 col-xs-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-baseline mb-2">
-          <h6 class="card-title mb-0">Monthly sales</h6>
-          <div ngbDropdown class="mb-2">
+          <h6 class="card-title mb-0">{{result.name}}</h6>
+          <div ngbDropdown class="mb-2" style="visibility: hidden;">
             <button ngbDropdownToggle class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton4">
               <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal" appFeatherIcon></i>
             </button>
@@ -231,24 +249,24 @@
             </div>
           </div>
         </div>
-        <p class="text-muted">Sales are activities related to selling or the number of goods or services sold in a given time period.</p>
+        <p class="text-muted">Resultados</p>
         <apx-chart
-          [series]="monthlySalesChartOptions.series"
-          [chart]="monthlySalesChartOptions.chart"
-          [colors]="monthlySalesChartOptions.colors"
-          [fill]="monthlySalesChartOptions.fill"
-          [grid]="monthlySalesChartOptions.grid"
-          [xaxis]="monthlySalesChartOptions.xaxis"
-          [yaxis]="monthlySalesChartOptions.yaxis"
-          [legend]="monthlySalesChartOptions.legend"
-          [stroke]="monthlySalesChartOptions.stroke"
-          [dataLabels]="monthlySalesChartOptions.dataLabels"
-          [plotOptions]="monthlySalesChartOptions.plotOptions"
+          [series]="result.optionsChart.series"
+          [chart]="result.optionsChart.chart"
+          [colors]="result.optionsChart.colors"
+          [fill]="result.optionsChart.fill"
+          [grid]="result.optionsChart.grid"
+          [xaxis]="result.optionsChart.xaxis"
+          [yaxis]="result.optionsChart.yaxis"
+          [legend]="result.optionsChart.legend"
+          [stroke]="result.optionsChart.stroke"
+          [dataLabels]="result.optionsChart.dataLabels"
+          [plotOptions]="result.optionsChart.plotOptions"
         ></apx-chart>
       </div> 
     </div>
   </div>
-  <div class="col-lg-5 col-xl-4 grid-margin stretch-card">
+  <!--<div *ngIf="!user.roles.includes('ROLE_REGULAR')" class="col-lg-5 col-xl-4 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-baseline mb-2">
@@ -294,10 +312,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
 </div> <!-- row -->
 
-<div class="row">
+<div *ngIf="!user.roles.includes('ROLE_REGULAR')" class="row" style="display: none;">
   <div class="col-lg-5 col-xl-4 grid-margin grid-margin-xl-0 stretch-card">
     <div class="card">
       <div class="card-body">
@@ -381,7 +399,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-7 col-xl-8 stretch-card">
+  <div *ngIf="!user.roles.includes('ROLE_REGULAR')" class="col-lg-7 col-xl-8 stretch-card" style="display: none;">
     <div class="card">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-baseline mb-2">

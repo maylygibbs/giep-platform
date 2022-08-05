@@ -1,3 +1,4 @@
+import { GetInfoUserResolver } from './../../../core/resolvers/user.resolver';
 import { AuthGuard } from './../../../core/guard/auth.guard';
 import { SBRouteData } from './../../../core/models/navigation.model';
 import { NgModule } from '@angular/core';
@@ -18,6 +19,9 @@ const routes: Routes = [
           title: 'Dashboard - GIEP',
         },
         canActivate: [AuthGuard],
+        resolve:{
+          infoDetalle: GetInfoUserResolver
+        }
       },
       {
         path: 'users',

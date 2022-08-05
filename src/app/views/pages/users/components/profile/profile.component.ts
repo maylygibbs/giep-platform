@@ -12,10 +12,13 @@ export class ProfileComponent implements OnInit {
   user:User;
   
   tab:string = 'about';
+
+  date:Date = new Date();
   
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.user = this.authService.currentUser;
   }
 
 }

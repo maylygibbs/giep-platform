@@ -36,7 +36,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/.htaccess"
+              "src/.htaccess",
+              "src/web.config"
             ],
             "styles": [
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",

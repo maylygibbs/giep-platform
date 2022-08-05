@@ -1,11 +1,13 @@
-import { Instrument } from './../../../core/models/instrument';
 import { InstrumentsService } from './../../../core/services/instruments.service';
+import { Instrument } from './../../../core/models/instrument';
+import { UserService } from './../../../core/services/user.service';
 import { User } from './../../../core/models/user';
 import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { BaseComponent } from '../../shared/components/base/base.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,22 +52,35 @@ export class DashboardComponent extends BaseComponent implements OnInit {
   currentDate: NgbDateStruct;
 
   user:User;
+  $instruments:Observable<any>;
+  results:any;
 
   constructor(private calendar: NgbCalendar,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private userService: UserService,
+    private instrumentsService: InstrumentsService) {
     super();
   }
 
    ngOnInit(): void {
+     
     this.user = this.authService.currentUser;
+    this.$instruments = this.userService.$instruments;
     this.currentDate = this.calendar.getToday();
 
-    this.customersChartOptions = getCustomerseChartOptions(this.obj);
-    this.ordersChartOptions = getOrdersChartOptions(this.obj);
-    this.growthChartOptions = getGrowthChartOptions(this.obj);
-    this.revenueChartOptions = getRevenueChartOptions(this.obj);
-    this.monthlySalesChartOptions = getMonthlySalesChartOptions(this.obj);
-    this.cloudStorageChartOptions = getCloudStorageChartOptions(this.obj);
+    if(this.user.roles.includes('ROLE_ADMINISTRADOR') ){
+      this.instrumentsService.getInstrumentResultByCategory(1).then((resp)=>{
+        this.results = resp;
+        console.log('results',this.results)
+      });
+    }
+
+    //this.customersChartOptions = getCustomerseChartOptions(this.obj);
+    ///this.ordersChartOptions = getOrdersChartOptions(this.obj);
+    //this.growthChartOptions = getGrowthChartOptions(this.obj);
+    //this.revenueChartOptions = getRevenueChartOptions(this.obj);
+    this.monthlySalesChartOptions = getInstrumentResult(this.obj);
+    //this.cloudStorageChartOptions = getCloudStorageChartOptions(this.obj);
 
     // Some RTL fixes. (feel free to remove if you are using LTR))
     if (document.querySelector('html')?.getAttribute('dir') === 'rtl') {
@@ -88,6 +103,104 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     this.monthlySalesChartOptions.yaxis.title.offsetX = -70;
   }
 }
+
+
+
+/**
+ * Monthly sales chart options
+ */
+ function getInstrumentResult(obj: any, data?:any) {
+  return {
+    series: [{
+      data: [{
+          x: 'Apple',
+          y: 54
+      }, {
+          x: 'Orange',
+          y: 66
+      }],
+  }],
+    chart: {
+      type: 'bar',
+      height: '329',
+      parentHeightOffset: 0,
+      foreColor: obj.bodyColor,
+      background: obj.cardBg,
+      toolbar: {
+        show: false
+      },
+    },
+    colors: [obj.primary],  
+    fill: {
+      opacity: .9
+    } , 
+    grid: {
+      padding: {
+        bottom: -4
+      },
+      borderColor: obj.gridBorder,
+      xaxis: {
+        lines: {
+          show: true
+        }
+      }
+    },
+    xaxis: {
+      type: 'category',      
+      axisBorder: {
+        color: obj.gridBorder,
+      },
+      axisTicks: {
+        color: obj.gridBorder,
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'Categorias',
+        style:{
+          size: 9,
+          color: obj.muted
+        }
+      },
+      labels: {
+        offsetX: 0,
+      },
+    },
+    legend: {
+      show: true,
+      position: "top",
+      horizontalAlign: 'center',
+      fontFamily: obj.fontFamily,
+      itemMargin: {
+        horizontal: 8,
+        vertical: 0
+      },
+    },
+    stroke: {
+      width: 0
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        fontSize: '10px',
+        fontFamily: obj.fontFamily,
+      },
+      offsetY: -27
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        columnWidth: "50%",
+        borderRadius: 4,
+        dataLabels: {
+          position: 'top',
+          orientation: 'vertical',
+        }
+      },
+    }
+  }
+}
+
 
 
 /**
@@ -427,95 +540,6 @@ function getRevenueChartOptions(obj: any) {
 
 
 
-/**
- * Monthly sales chart options
- */
-function getMonthlySalesChartOptions(obj: any) {
-  return {
-    series: [{
-      name: 'Sales',
-      data: [152,109,93,113,126,161,188,143,102,113,116,124]
-    }],
-    chart: {
-      type: 'bar',
-      height: '318',
-      parentHeightOffset: 0,
-      foreColor: obj.bodyColor,
-      background: obj.cardBg,
-      toolbar: {
-        show: false
-      },
-    },
-    colors: [obj.primary],  
-    fill: {
-      opacity: .9
-    } , 
-    grid: {
-      padding: {
-        bottom: -4
-      },
-      borderColor: obj.gridBorder,
-      xaxis: {
-        lines: {
-          show: true
-        }
-      }
-    },
-    xaxis: {
-      type: 'datetime',
-      categories: ['01/01/2022','02/01/2022','03/01/2022','04/01/2022','05/01/2022','06/01/2022','07/01/2022', '08/01/2022','09/01/2022','10/01/2022', '11/01/2022', '12/01/2022'],
-      axisBorder: {
-        color: obj.gridBorder,
-      },
-      axisTicks: {
-        color: obj.gridBorder,
-      },
-    },
-    yaxis: {
-      title: {
-        text: 'Number of Sales',
-        style:{
-          size: 9,
-          color: obj.muted
-        }
-      },
-      labels: {
-        offsetX: 0,
-      },
-    },
-    legend: {
-      show: true,
-      position: "top",
-      horizontalAlign: 'center',
-      fontFamily: obj.fontFamily,
-      itemMargin: {
-        horizontal: 8,
-        vertical: 0
-      },
-    },
-    stroke: {
-      width: 0
-    },
-    dataLabels: {
-      enabled: true,
-      style: {
-        fontSize: '10px',
-        fontFamily: obj.fontFamily,
-      },
-      offsetY: -27
-    },
-    plotOptions: {
-      bar: {
-        columnWidth: "50%",
-        borderRadius: 4,
-        dataLabels: {
-          position: 'top',
-          orientation: 'vertical',
-        }
-      },
-    }
-  }
-}
 
 
 

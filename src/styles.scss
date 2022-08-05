@@ -64,6 +64,17 @@
 }
 
 /**
+ * loader spinner
+ */
+
+div.ngx-spinner  {
+  top: 6px !important;
+  left: unset !important;
+  right: 0 !important;
+  margin-right: 7px;
+}
+
+/**
  * Forms
  */
  .form-control.ng-invalid,

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { User } from '../models/user';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { SelectOption } from '../models/select-option';
 import { ToastrService } from 'ngx-toastr';
 import { MenuItem } from '../models/menu.model';
@@ -16,6 +16,7 @@ import { MenuItem } from '../models/menu.model';
 })
 export class UserService extends HttpService {
   
+  private instruments: BehaviorSubject< Array<any>> = new BehaviorSubject< Array<any>>(null);
 
   constructor(protected http: HttpClient,
     private authService: AuthService,
@@ -45,8 +46,11 @@ export class UserService extends HttpService {
     user.avatar = resp[0].foto;
     user.createAt = resp[0].createAt;
     user.updateAt = resp[0].updateAt;
+    user.roles = resp[0].roles.map((itemRol:any)=>{
+      return itemRol.rol;
+    })
     user.instrumentsPending = resp[0].instrumentosPendientes && resp[0].instrumentosPendientes.length > 0 ? resp[0].instrumentosPendientes : null  ;
-    
+    this.instruments.next(user.instrumentsPending);
     const arrayMenu: Array<MenuItem> = new Array<MenuItem>();
 
     resp[0].opcionesMenu.forEach((item:any) => {
@@ -75,6 +79,13 @@ export class UserService extends HttpService {
 
     this.authService.saveUserInLocalstorage(user);
     return user;
+  }
+
+  /**
+   * Get observable of instruments
+   */
+  get $instruments(){
+    return this.instruments.asObservable();
   }
 
 /**
