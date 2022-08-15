@@ -9,26 +9,15 @@ import { DashboardComponent } from './dashboard.component';
 const routes: Routes = [
   {
     path: '',
-    component: BaseComponent,
-    //canActivate: [AuthGuard],
-    children: [
+    component: DashboardComponent,
+    data: {
+      title: 'Dashboard - GIEP',
+    },
+    resolve:{
+      infoDetalle: GetInfoUserResolver
+    }
+   /* children: [      
       {
-        path: 'dashboard',
-        component: DashboardComponent,
-        data: {
-          title: 'Dashboard - GIEP',
-        },
-        canActivate: [AuthGuard],
-        resolve:{
-          infoDetalle: GetInfoUserResolver
-        }
-      },
-      {
-        path: 'users',
-        loadChildren: () => import('../users/users.module').then(m => m.UsersModule),
-        canActivate: [AuthGuard]
-      },
-     /* {
         path: 'apps',
         loadChildren: () => import('./views/pages/apps/apps.module').then(m => m.AppsModule)
       },
@@ -63,10 +52,9 @@ const routes: Routes = [
       {
         path: 'general',
         loadChildren: () => import('./views/pages/general/general.module').then(m => m.GeneralModule)
-      },*/
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, 
-      // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
-    ]
+      },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]*/
   },
 ];
 

@@ -9,7 +9,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PagerComponent } from './components/pager/pager.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { TagInputModule } from 'ngx-chips';
 import { MustMatchDirective } from './directive/must-match.directive';
@@ -30,6 +30,7 @@ import { BoxMessageComponent } from './components/box-message/box-message.compon
     NgxDatatableModule,
     DataTablesModule,
     NgxPaginationModule,
+    NgbPaginationModule,
     NgbModule,
     NgSelectModule,
     LazyLoadImageModule,
@@ -44,6 +45,7 @@ import { BoxMessageComponent } from './components/box-message/box-message.compon
     DataTablesModule,
     PagerComponent,
     NgxPaginationModule,
+    NgbPaginationModule,
     NgbModule,
     NgSelectModule,
     LazyLoadImageModule,

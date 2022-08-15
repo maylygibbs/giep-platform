@@ -62,4 +62,51 @@ export class CommonsService extends HttpService {
 
   }
 
+
+  /**
+  * Get all roles
+  * @returns 
+  */
+  async getAllCountries(): Promise<Array<SelectOption>> {
+
+    let countries: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/pais/List'))
+    countries = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return countries;
+  }
+
+    /**
+  * Get all states by id pais
+  * @returns 
+  */
+     async getAllStates(id:number): Promise<Array<SelectOption>> {
+
+      let states: Array<SelectOption> = new Array<SelectOption>();
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/estado/pais/${id}`))
+      states = resp.map((item: any) => {
+        return new SelectOption(item.id, item.nombre);
+      });
+      return states;
+  
+    }
+
+
+    /**
+  * Get all city by id estados
+  * @returns 
+  */
+     async getAllCities(id:number): Promise<Array<SelectOption>> {
+
+      let cities: Array<SelectOption> = new Array<SelectOption>();
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/ciudad/estado/${id}`))
+      cities = resp.map((item: any) => {
+        return new SelectOption(item.id, item.nombre);
+      });
+      return cities;
+  
+    }    
+
+
 }

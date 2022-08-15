@@ -4,8 +4,8 @@ import { User } from './../../../../../core/models/user';
 import { UserService } from './../../../../../core/services/user.service';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { Subject } from 'rxjs';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
+
 
 
 @Component({
@@ -16,16 +16,21 @@ import { BaseComponent } from '../../../../../views/shared/components/base/base.
 })
 export class UsersComponent extends BaseComponent implements  OnInit {
 
+
   step:number = 1;
   users: PaginationResponse;
   loadingIndicator = true;
   reorderable = true;
   ColumnMode = ColumnMode;
 
+
+  totalItems: number;
   page: number = 1;
+  previousPage: number;
+  showPagination: boolean;
 
+  
   selectedItem: User;
-
   word:string;
 
 
@@ -35,15 +40,36 @@ export class UsersComponent extends BaseComponent implements  OnInit {
    }
 
   async ngOnInit() {
-
     this.users = await this.userService.getUsersPaginated({ page: 1, rowByPage: 3, word: null });
-
+    /*if (this.users && this.users.data.length>0) {
+      this.page = this.users.page;
+      this.previousPage = 1;
+      this.totalItems = this.users.count;
+      this.showPagination = true;
+    }else{
+      this.page = 1;
+      this.previousPage = 1;
+      this.totalItems = 0;
+      this.showPagination = false;
+    }*/
   }
 
   async loadPage(pageInfo: any) {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
+    this.users = null;
     this.users = await this.userService.getUsersPaginated({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
+    /*if (this.users && this.users.data.length>0) {
+      this.page = this.users.page;
+      this.previousPage = 1;
+      this.totalItems = this.users.count;
+      this.showPagination = true;
+    }else{
+      this.page = 1;
+      this.previousPage = 1;
+      this.totalItems = 0;
+      this.showPagination = false;
+    }*/
   }
 
   create(){
@@ -76,6 +102,7 @@ export class UsersComponent extends BaseComponent implements  OnInit {
       this.loadPage(1);
     }
   }
+
 
   ngOnDestroy(): void {
     

@@ -36,44 +36,47 @@
       </div>
       <div class="card-body">
         <h6 class="card-title"></h6>
-        <div>
-          <table datatable [dtOptions]="dtOptions" class="table table-striped">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Username</th>
-                <th>Nombre y Apellido</th>
-                <th>Dependencias</th>
-                <th>Cargo</th>
-                <th>Estado</th>
-                <th>Accion</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let user of users.data | paginate: { id: 'server', itemsPerPage: 3, currentPage: page, totalItems: users.count }">
-                <td>{{user.id}}</td>
-                <td>{{user.username}}</td>
-                <td>{{user.fullName}}</td>
-                <td>{{user.dependence.label}}</td>
-                <td>{{user.position.label}}</td>
-                <td>{{user.status.label}}</td>
-                <td class="text-center">
-                  <i class="feather icon-edit-2" (click)="select(user.id)"></i>
-                  <i class="feather icon-trash" (click)="delete(user.id)"></i>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th colspan="7" class="text-right">
-                  <app-pager (onChangePage)="loadPage($event)"></app-pager>
-                </th>
-              </tr>
+        <div class="row">
+          <div class="col-lg-12">
+            <table datatable [dtOptions]="dtOptions" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Username</th>
+                  <th>Nombre y Apellido</th>
+                  <th>Dependencias</th>
+                  <th>Cargo</th>
+                  <th>Estado</th>
+                  <th data-priority="1">Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let user of users.data | paginate: { id: 'server', itemsPerPage: 3, currentPage: page, totalItems: users.count }">
+                  <td>{{user.id}}</td>
+                  <td>{{user.username}}</td>
+                  <td>{{user.fullName}}</td>
+                  <td>{{user.dependence.label}}</td>
+                  <td>{{user.position.label}}</td>
+                  <td>{{user.status.label}}</td>
+                  <td class="text-center">
+                    <i class="feather icon-edit-2" (click)="select(user.id)"></i>
+                    <i class="feather icon-trash" (click)="delete(user.id)"></i>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="7" class="text-right">
+                    <app-pager (onChangePage)="loadPage($event)"></app-pager>
+                  </th>
+                </tr>
+  
+              </tfoot>
+  
+            </table>
+          </div>
 
-            </tfoot>
-
-          </table>
         </div>
 
       </div>

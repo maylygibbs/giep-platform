@@ -36,3 +36,13 @@ export class CommonsListRolesResolver implements Resolve<any> {
     return this.commonsService.getAllRoles();
   }
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListCountriesResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllCountries();
+  }
+}

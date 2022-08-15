@@ -1,3 +1,4 @@
+import { CommonsService } from './../../../../../core/services/commons.service';
 import { environment } from './../../../../../../environments/environment';
 import { UserService } from './../../../../../core/services/user.service';
 import { User } from './../../../../../core/models/user';
@@ -34,9 +35,13 @@ export class UserStoreComponent extends BaseComponent implements OnInit {
   defaultImage = 'https://via.placeholder.com/200x200';
   image = 'https://via.placeholder.com/200x200';
 
+  states:Array<SelectOption>;
+  cities:Array<SelectOption>;
+
 
   constructor(private route: ActivatedRoute,
-    private userService:UserService) {
+    private userService:UserService,
+    private commonsService: CommonsService) {
       super();
      }
 
@@ -53,8 +58,19 @@ export class UserStoreComponent extends BaseComponent implements OnInit {
   }
 
   onChangeStatus(event:any){
-    debugger
     this.user.status = this.userStatus == true ? new SelectOption('1') : new SelectOption('2');
+  }
+
+  async onChangeCountry(event:any){
+    console.log('country', this.user.country);
+    this.states = await this.commonsService.getAllStates(this.user.country.id);
+    
+  }
+
+  async onChangeStates(event:any){
+    console.log('state', this.user.state);
+    this.cities = await this.commonsService.getAllCities(this.user.state.id);
+    
   }
 
   async onSubmit(form:NgForm){
@@ -62,7 +78,7 @@ export class UserStoreComponent extends BaseComponent implements OnInit {
       console.log('user', this.user)
       console.log('post user',User.mapForPost(this.user));
       await this.userService.storeUser(User.mapForPost(this.user));
-      this.back()
+      this.back();
     }
 
   }

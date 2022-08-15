@@ -7,7 +7,7 @@ import { ErrorPageComponent } from './views/pages/error-page/error-page.componen
 
 const routes: Routes = [
   { path:'auth', loadChildren: () => import('./views/pages/auth/auth.module').then(m => m.AuthModule) },
-  { path:'', loadChildren: () => import('./views/pages/dashboard/dashboard.module').then(m => m.DashboardModule) },
+  { path:'', loadChildren: () => import('./views/pages/main/main.module').then(m => m.MainModule) },
   { 
     path: 'error',
     component: ErrorPageComponent,
@@ -24,8 +24,9 @@ const routes: Routes = [
   { path: '**', redirectTo: 'error', pathMatch: 'full' }
 ];
 
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top'})], 
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top', onSameUrlNavigation: 'reload'})], 
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

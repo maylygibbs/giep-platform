@@ -24,6 +24,10 @@ export class UserService extends HttpService {
     super(http);
   }
 
+  async uploadAvatar(formData:FormData){
+    await firstValueFrom(this.post(environment.apiUrl,'/user/upload/photo',formData));
+  }
+
   /**
    * Get info of user
    */
@@ -75,7 +79,11 @@ export class UserService extends HttpService {
 
     })
     user.optionsMenu = arrayMenu;
-
+    user.sex = resp[0].sexo
+    user.address = resp[0].direccion;
+    user.country = new SelectOption(resp[0].pais?.id);
+    user.state = new SelectOption(resp[0].estado?.id);
+    user.city = new SelectOption(resp[0].ciudad?.id);
 
     this.authService.saveUserInLocalstorage(user);
     return user;
@@ -114,6 +122,13 @@ export class UserService extends HttpService {
       user.documentType = item.tipoDocumentoIdentidad;
       user.documentNumber = item.numeroDocumento;
       user.status = new SelectOption(item.status.id, item.status.Descripcion);
+      user.createAt = item.createAt;
+      user.updateAt = item.updateAt;
+      user.sex = item.sexo;
+      user.address = item.direccion;
+      user.country = new SelectOption(item.pais?.id);
+      user.state = new SelectOption(item.estado?.id);
+      user.city = new SelectOption(item.ciudad?.id);
       return user;
     })
     return paginator;
@@ -149,7 +164,11 @@ export class UserService extends HttpService {
     user.avatar = resp[0].foto;
     user.createAt = resp[0].createAt;
     user.updateAt = resp[0].updateAt;
-
+    user.sex = resp[0].sexo;
+    user.address = resp[0].direccion;
+    user.country = new SelectOption(resp[0].pais.id, resp[0].pais.Nombre);
+    user.state = new SelectOption(resp[0].estado.id, resp[0].estado.Nombre);
+    user.city = new SelectOption(resp[0].ciudad.id, resp[0].ciudad.Nombre);
     return user;
   }
 

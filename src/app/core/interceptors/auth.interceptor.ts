@@ -19,18 +19,12 @@ export class AuthInterceptor implements HttpInterceptor {
         
         const isInclude = this.isOnTheWhiteList(request.url, environment.endpoints.handle_error_blackList);
         if(isInclude){
-           /* request = request.clone({
-                setHeaders: {
-                    'Content-Type': 'application/json',
-                },
-            });*/
             return next.handle(request);
         }
         const isApiUrl = request.url.startsWith(environment.apiUrl);
         if (token && isApiUrl) {
             request = request.clone({
                 setHeaders: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
             });

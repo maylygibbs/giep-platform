@@ -26,6 +26,11 @@ export class User {
     updateAt:Date;
     instrumentsPending: Array<any>;
     optionsMenu:Array<MenuItem>;
+    sex: string;
+    address: string;
+    country: SelectOption;
+    state: SelectOption;
+    city: SelectOption;
 
 
     get fullName(){    
@@ -56,6 +61,12 @@ export class User {
         newInstace.instrumentsPending = user.instrumentsPending;
         newInstace.optionsMenu = user.optionsMenu;
 
+        newInstace.sex = user.sex;
+        newInstace.address = user.address;
+        newInstace.country = user.country;
+        newInstace.state = user.state;
+        newInstace.city = user.city;
+
         return newInstace
     }
 
@@ -80,6 +91,11 @@ export class User {
         Object.assign(userMap, {idCargo: parseInt(user.position.value)});
         Object.assign(userMap, {telefono: this.getPhonesUser(user.phones) });
         Object.assign(userMap, {roles: this.getRolesUser(user.roles)});
+        Object.assign(userMap, {sexo: user.sex});
+        Object.assign(userMap, {direccion: user.address? user.address : null});
+        Object.assign(userMap, {pais: user.country.id});
+        Object.assign(userMap, {estado: user.state.id});
+        Object.assign(userMap, {ciudad: user.city.id});
         return userMap;
     }
 

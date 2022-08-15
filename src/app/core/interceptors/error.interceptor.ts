@@ -23,8 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     Swal.fire('Su sesión expiró','','error').then(()=>{
                         this.authService.logout();
                         this.router.navigate(['/auth/login']);
-                    });
-                    
+                    });                    
                 } else if (err.status === 404) {
                     Swal.fire('Error 404', `${ err.error.msg }`, 'error');
                 } else if (err.status === 500) {
