@@ -17,6 +17,7 @@ export class LoginComponent extends BaseComponent  implements OnInit {
   email:string;
   password:string;
   returnUrl: any;
+  showPassword:boolean = false;
 
   constructor(
     private router: Router, 

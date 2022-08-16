@@ -3,6 +3,7 @@ import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit, ViewChild, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,9 @@ export class NavbarComponent implements OnInit {
 
   user:User;
 
+  //Subcription
+  user$: Subscription;
+
   constructor(
     @Inject(DOCUMENT) private document: Document, 
     private renderer: Renderer2,
@@ -21,7 +25,9 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.user = this.authService.currentUser;
+    this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
+      this.user = user ? user : this.authService.currentUser;
+    });
   }
   
 
@@ -42,6 +48,12 @@ export class NavbarComponent implements OnInit {
 
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
+    }
+  }
+
+  ngOnDestroy(){
+    if(this.user$){
+      this.user$.unsubscribe();
     }
   }
 

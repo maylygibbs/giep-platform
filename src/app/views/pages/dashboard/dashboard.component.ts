@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { BaseComponent } from '../../shared/components/base/base.component';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -55,6 +55,9 @@ export class DashboardComponent extends BaseComponent implements OnInit {
   $instruments:Observable<any>;
   results:any;
 
+  //Subcription
+  user$: Subscription;
+
   constructor(private calendar: NgbCalendar,
     private authService: AuthService,
     private userService: UserService,
@@ -64,7 +67,9 @@ export class DashboardComponent extends BaseComponent implements OnInit {
 
    ngOnInit(): void {
      
-    this.user = this.authService.currentUser;
+    this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
+      this.user = user ? user : this.authService.currentUser;
+    });
     this.$instruments = this.userService.$instruments;
     this.currentDate = this.calendar.getToday();
 
@@ -101,6 +106,12 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     //  Monthly sales chart
     this.monthlySalesChartOptions.yaxis.labels.offsetX = -10;
     this.monthlySalesChartOptions.yaxis.title.offsetX = -70;
+  }
+
+  ngOnDestroy(){
+    if(this.user$){
+      this.user$.unsubscribe();
+    }
   }
 }
 

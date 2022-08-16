@@ -3,15 +3,14 @@
       <div class="card">
         <div class="position-relative">
           <figure class="overflow-hidden mb-0 d-flex justify-content-center">
-            <img src="https://via.placeholder.com/1148x272" class="rounded-top" alt="profile cover">
+            <img  src="https://via.placeholder.com/1148x272" class="rounded-top" alt="profile cover">
           </figure>
           <div class="d-flex justify-content-between align-items-center position-absolute top-90 w-100 px-2 px-md-4 mt-n4">
             <div>
-              <img class="wd-70 rounded-circle" [src]="user.avatar ? user.avatar : 'https://via.placeholder.com/100x100'" alt="profile">
-              <i class="feather icon-edit" (click)="preUploadAvatar()"></i>
-              <input #inputAvatar type="file" name="avatar" accept="image/*;capture=camera" (change)="uploadAvatar($event)">
-
+              <img #avatar class="wd-70 rounded-circle" [src]="user.avatar ? user.avatar : 'https://via.placeholder.com/100x100'" alt="profile">
+              <i class="feather icon-edit avatar" (click)="preUploadAvatar()"></i>
               <span class="h4 ms-3 text-dark">{{user?.fullName}}</span>
+              <input  #inputAvatar type="file" name="avatar" accept="image/*;capture=camera" style="visibility: hidden;" (change)="uploadAvatar($event)">
             </div>
             <div class="d-none d-md-block">
               <button class="btn btn-primary btn-icon-text">

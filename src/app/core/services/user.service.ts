@@ -73,18 +73,32 @@ export class UserService extends HttpService {
           menuItemChild.link = itemChild.path;
           menuItemChild.icon = itemChild.icon;
           menuItemChild.order = itemChild.orden;
+          if(itemChild.hijos && itemChild.hijos.MenuChild){
+            menuItemChild.subItems = itemChild.hijos.MenuChild.map((itemSubChild:any)=>{
+              const menuSubItemChild = new MenuItem();
+              menuSubItemChild.label = itemSubChild.menu;
+              menuSubItemChild.isTitle = itemSubChild.isTitle == 'true' ? true : false;
+              menuSubItemChild.link = itemSubChild.path;
+              //menuSubItemChild.icon = itemSubChild.icon;
+              menuSubItemChild.order = itemSubChild.orden;
+              return menuSubItemChild;
+            })
+          }
           arrayMenu.push(menuItemChild);
         });
       }
 
     })
+    
     user.optionsMenu = arrayMenu;
+    console.log('arrayMenu', arrayMenu)
     user.sex = resp[0].sexo
     user.address = resp[0].direccion;
     user.country = new SelectOption(resp[0].pais?.id);
     user.state = new SelectOption(resp[0].estado?.id);
     user.city = new SelectOption(resp[0].ciudad?.id);
 
+    this.authService.updateUserSource(user);
     this.authService.saveUserInLocalstorage(user);
     return user;
   }
@@ -201,7 +215,10 @@ export class UserService extends HttpService {
       if (error.status == 409) {
         this.toastrService.error('',error.msg);
       }
-      this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      if (error.status != 500) {
+        this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      }
+      
     }
     
   }

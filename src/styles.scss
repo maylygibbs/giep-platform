@@ -90,6 +90,11 @@ div.ngx-spinner  {
    }
  }
 
+ .input-group-text{
+   height: 100%;
+   cursor: pointer;
+ }
+
 /*validation*/
 .invalid-feedback {
     display: block !important;

@@ -4,13 +4,16 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { HttpService } from './http.service';
-import { firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends HttpService {
+
+  private userSource: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  currentUser$ = this.userSource.asObservable();
 
   constructor(protected http: HttpClient,
     private toastrService: ToastrService ) {
@@ -52,6 +55,10 @@ export class AuthService extends HttpService {
       expiry: now.getTime() + environment.ttl,
     }
     localStorage.setItem(environment.localstorage.userKey, JSON.stringify(item));
+  }
+
+  updateUserSource(user:User){
+    this.userSource.next(user);
   }
 
   /**
@@ -112,7 +119,10 @@ export class AuthService extends HttpService {
         this.toastrService.error('','No existe el correo electrónico.');
         return;
       }
-      this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      if (error.status != 500) {
+        this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      }
+      
       return;
     }
   }
@@ -133,7 +143,9 @@ export class AuthService extends HttpService {
         this.toastrService.error('','El tiempo establecido para restablecer password ha caducado. Inicie nuevamente el proceso.');
         return false;
       }
-      this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      if (error.status != 500) {
+        this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      }
       return false;
     }
     
