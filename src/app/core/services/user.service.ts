@@ -98,7 +98,7 @@ export class UserService extends HttpService {
     user.country = new SelectOption(resp[0].pais?.id, resp[0].pais.Nombre);
     user.state = new SelectOption(resp[0].estado?.id, resp[0].estado.Nombre);
     user.city = new SelectOption(resp[0].ciudad?.id, resp[0].ciudad.Nombre);
-debugger
+
     if (resp[0].redes) {
       user.socialNetwork = resp[0].redes.map((item:any)=>{
           return { idTipo:item.idTipo, label:null, networkDir: item.red }
