@@ -1,39 +1,46 @@
 <div class="row">
-    <div class="col-12 grid-margin">
-      <div class="card">
-        <div class="position-relative">
-          <figure class="overflow-hidden mb-0 d-flex justify-content-center">
-            <img  src="https://via.placeholder.com/1148x272" class="rounded-top" alt="profile cover">
-          </figure>
-          <div class="d-flex justify-content-between align-items-center position-absolute top-90 w-100 px-2 px-md-4 mt-n4">
-            <div>
-              <img #avatar class="wd-70 rounded-circle" [src]="user.avatar ? user.avatar : 'https://via.placeholder.com/100x100'" alt="profile">
-              <i class="feather icon-edit avatar" (click)="preUploadAvatar()"></i>
-              <span class="h4 ms-3 text-dark">{{user?.fullName}}</span>
-              <input  #inputAvatar type="file" name="avatar" accept="image/*;capture=camera" style="visibility: hidden;" (change)="uploadAvatar($event)">
-            </div>
-            <div class="d-none d-md-block">
-              <button class="btn btn-primary btn-icon-text">
-                <i class="feather icon-edit btn-icon-prepend"></i> Personalizar baner
-              </button>
-            </div>
+  <div class="col-12 grid-margin">
+    <div class="card">
+      <div class="position-relative">
+        <figure class="overflow-hidden mb-0 d-flex justify-content-center">
+          <img src="https://via.placeholder.com/1148x272" class="rounded-top" alt="profile cover">
+        </figure>
+        <div
+          class="d-flex justify-content-between align-items-center position-absolute top-90 w-100 px-2 px-md-4 mt-n4">
+          <div>
+            <img #avatar class="wd-70 rounded-circle"
+              [src]="user.avatar ? user.avatar : 'https://via.placeholder.com/100x100'" alt="profile">
+            <i class="feather icon-edit avatar" (click)="preUploadAvatar()"></i>
+            <span class="h4 ms-3 text-dark">{{user?.fullName}}</span>
+            <input #inputAvatar type="file" name="avatar" accept="image/*;capture=camera" style="visibility: hidden;"
+              (change)="uploadAvatar($event)">
+          </div>
+          <div class="d-none d-md-block">
+            <button class="btn btn-primary btn-icon-text">
+              <i class="feather icon-edit btn-icon-prepend"></i> Personalizar baner
+            </button>
           </div>
         </div>
-        <div class="d-flex justify-content-center p-3 rounded-bottom">
-          <ul class="d-flex align-items-center m-0 p-0">
-            <li class="d-flex align-items-center" [ngClass]="{'active':tab=='about'}">
-              <i class="feather icon-user me-1 icon-md"></i>
-              <a class="pt-1px d-none d-md-block text-primary" (click)="tab='about'">Mis datos</a>
-            </li>
-            <li class="ms-3 ps-3 border-start d-flex align-items-center" [ngClass]="{'active':tab=='social'}">
-              <i class="feather icon-globe me-1 icon-md"></i>
-              <a class="pt-1px d-none d-md-block text-body" (click)="tab='social'">Mis redes</a>
-            </li>
-            <li class="ms-3 ps-3 border-start d-flex align-items-center" [ngClass]="{'active':tab=='security'}">
-              <i class="feather icon-key me-1 icon-md"></i>
-              <a class="pt-1px d-none d-md-block text-body" (click)="tab='security'">Seguridad</a>
-            </li>
-           <!-- <li class="ms-3 ps-3 border-start d-flex align-items-center">
+      </div>
+      <div class="d-flex justify-content-center p-3 rounded-bottom">
+        <ul class="d-flex align-items-center m-0 p-0">
+          <li class="d-flex align-items-center">
+            <i class="feather icon-user me-1 icon-md"></i>
+            <a class="pt-1px d-none d-md-block" [ngClass]="{'text-primary':tab=='about', 'text-body': tab!='about'}"
+              (click)="selectTab('about')">Mis datos</a>
+          </li>
+          <li class="ms-3 ps-3 border-start d-flex align-items-center">
+            <i class="feather icon-globe me-1 icon-md"></i>
+            <a class="pt-1px d-none d-md-block" [ngClass]="{'text-primary':tab=='social', 'text-body': tab!='social'}"
+              (click)="selectTab('social')">Mis redes</a>
+          </li>
+          <li class="ms-3 ps-3 border-start d-flex align-items-center">
+            <i class="feather icon-key me-1 icon-md"></i>
+            <a class="pt-1px d-none d-md-block"
+              [ngClass]="{'text-primary':tab=='security', 'text-body': tab!='security'}"
+              (click)="selectTab('security')">Seguridad</a>
+          </li>
+          <!-- <li class="ms-3 ps-3 border-start d-flex align-items-center">
               <i class="feather icon-image me-1 icon-md"></i>
               <a class="pt-1px d-none d-md-block text-body" routerLink=".">Photos</a>
             </li>
@@ -41,80 +48,86 @@
               <i class="feather icon-video me-1 icon-md"></i>
               <a class="pt-1px d-none d-md-block text-body" routerLink=".">Videos</a>
             </li> -->
-          </ul>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="tab=='about'" class="row profile-body">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="card rounded">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="card-title mb-0">Datos personales</h6>
+          <div ngbDropdown>
+            <button class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton" ngbDropdownToggle>
+              <i class="feather icon-more-horizontal icon-lg text-muted pb-3px"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+              <a ngbDropdownItem class="d-flex align-items-center" (click)="selectTab('edit')"><i
+                  class="feather icon-edit-2 icon-sm me-2"></i> <span class="">Editar</span></a>
+              <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-git-branch icon-sm me-2"></i> <span class="">Update</span></a>-->
+              <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-eye icon-sm me-2"></i> <span class="">View all</span></a>-->
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="tx-11 fw-bolder mb-0 text-uppercase">Ultimo ingreso</label>
+          <p class="text-muted">{{date | date:'yyyy-MM-dd'}}</p>
+        </div>
+        <div class="mt-3">
+          <label class="tx-11 fw-bolder mb-0 text-uppercase">Lives:</label>
+          <p class="text-muted">
+            <span *ngIf="user.address">{{user.address}},&nbsp;</span>
+            <span *ngIf="user.city">{{user.city.label}},&nbsp;</span>
+            <span *ngIf="user.state">{{user.state.label}},&nbsp;</span>
+            <span *ngIf="user.country">{{user.country.label}}.&nbsp;</span>
+        </div>
+        <div class="mt-3">
+          <label class="tx-11 fw-bolder mb-0 text-uppercase">Email:</label>
+          <p class="text-muted">{{user.email}}</p>
+        </div>
+        <div class="mt-3" *ngIf="user.phones && user.phones.length > 0">
+          <label class="tx-11 fw-bolder mb-0 text-uppercase">Teléfonos:</label>
+          <p class="text-muted" *ngFor="let phone of  user.phones">{{phone.numero}}</p>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="tab=='about'" class="row profile-body">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="card rounded">
-          <div class="card-body">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-              <h6 class="card-title mb-0">Datos personales</h6>
-              <div ngbDropdown>
-                <button class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton" ngbDropdownToggle>
-                  <i class="feather icon-more-horizontal icon-lg text-muted pb-3px"></i>
-                </button>
-                <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-                  <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-edit-2 icon-sm me-2"></i> <span class="">Editar</span></a>
-                  <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-git-branch icon-sm me-2"></i> <span class="">Update</span></a>-->
-                  <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-eye icon-sm me-2"></i> <span class="">View all</span></a>-->
-                </div>
-              </div>
-            </div>
-            
-            <div class="mt-3">
-              <label class="tx-11 fw-bolder mb-0 text-uppercase">Ultimo ingreso</label>
-              <p class="text-muted">{{date | date:'yyyy-MM-dd'}}</p>
-            </div>
-            <div class="mt-3">
-              <label class="tx-11 fw-bolder mb-0 text-uppercase">Lives:</label>
-              <p class="text-muted">Caracas, Venezuela</p>
-            </div>
-            <div class="mt-3">
-              <label class="tx-11 fw-bolder mb-0 text-uppercase">Email:</label>
-              <p class="text-muted">{{user.email}}</p>
-            </div>
-            <div class="mt-3">
-              <label class="tx-11 fw-bolder mb-0 text-uppercase">Teléfonos:</label>
-              <p class="text-muted">{{user.phones}}</p>
+</div>
+<div *ngIf="tab=='social'" class="row profile-body">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="card rounded">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="card-title mb-0">Mis redes</h6>
+          <div ngbDropdown>
+            <button class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton" ngbDropdownToggle>
+              <i class="feather icon-more-horizontal icon-lg text-muted pb-3px"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+              <a ngbDropdownItem class="d-flex align-items-center" (click)="selectTab('edit')"><i
+                  class="feather icon-edit-2 icon-sm me-2"></i> <span class="">Editar</span></a>
+              <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-git-branch icon-sm me-2"></i> <span class="">Update</span></a>-->
+              <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-eye icon-sm me-2"></i> <span class="">View all</span></a>-->
             </div>
           </div>
         </div>
-      </div>
-  </div>
-  <div *ngIf="tab=='social'" class="row profile-body">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-      <div class="card rounded">
-        <div class="card-body">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="card-title mb-0">Mis redes</h6>
-            <div ngbDropdown>
-              <button class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton" ngbDropdownToggle>
-                <i class="feather icon-more-horizontal icon-lg text-muted pb-3px"></i>
-              </button>
-              <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-                <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-edit-2 icon-sm me-2"></i> <span class="">Editar</span></a>
-                <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-git-branch icon-sm me-2"></i> <span class="">Update</span></a>-->
-                <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-eye icon-sm me-2"></i> <span class="">View all</span></a>-->
-              </div>
-            </div>
-          </div>          
-          <div class="mt-3 d-flex social-links">
-            <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
-              <i class="feather icon-github"></i>
-            </a>
-            <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
-              <i class="feather icon-twitter"></i>
-            </a>
-            <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
-              <i class="feather icon-instagram"></i>
-            </a>
-          </div>
+        <div class="mt-3 d-flex social-links">
+          <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
+            <i class="feather icon-github"></i>
+          </a>
+          <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
+            <i class="feather icon-twitter"></i>
+          </a>
+          <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
+            <i class="feather icon-instagram"></i>
+          </a>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <div *ngIf="tab=='security'" class="row profile-body">
   <div class="col-lg-12 col-md-12 col-sm-12">
@@ -127,13 +140,125 @@
               <i class="feather icon-more-horizontal icon-lg text-muted pb-3px"></i>
             </button>
             <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-              <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-edit-2 icon-sm me-2"></i> <span class="">Editar</span></a>
+              <a ngbDropdownItem class="d-flex align-items-center" (click)="selectTab('edit')"><i
+                  class="feather icon-edit-2 icon-sm me-2"></i> <span class="">Editar</span></a>
               <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-git-branch icon-sm me-2"></i> <span class="">Update</span></a>-->
               <!--<a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i class="feather icon-eye icon-sm me-2"></i> <span class="">View all</span></a>-->
             </div>
           </div>
         </div>
         <p>En construcción!!!</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="tab=='edit'" class="row profile-body">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="card rounded">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="card-title mb-3">Editar mis datos</h6>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <form name="userForm" #userForm="ngForm" (ngSubmit)="onSubmit(userForm)" class="forms-sample">
+
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputCountry" class="form-label">País</label>
+                    <ng-select id="inputCountry" [items]="data.countries" name="country" #country="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : country.errors && ( country.dirty || country.touched || userForm.submitted) }"
+                      [searchable]="false" (change)="onChangeCountry($event)" [(ngModel)]="user.country" required>
+                    </ng-select>
+                    <div *ngIf="country.invalid && userForm.submitted" class="invalid-feedback">
+                      <div *ngIf="country.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputState" class="form-label">Estado</label>
+                    <ng-select id="inputState" [items]="states" name="state" #state="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : state.errors && ( state.dirty || state.touched || userForm.submitted) }"
+                      (change)="onChangeStates($event)" [searchable]="false" [(ngModel)]="user.state" required>
+                    </ng-select>
+                    <div *ngIf="state.invalid && userForm.submitted" class="invalid-feedback">
+                      <div *ngIf="state.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputCity" class="form-label">Ciudad</label>
+                    <ng-select id="inputCity" [items]="cities" name="city" #city="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : city.errors && ( city.dirty || city.touched || userForm.submitted) }"
+                      [searchable]="false" (change)="onChangeStates($event)" [(ngModel)]="user.city" required>
+                    </ng-select>
+                    <div *ngIf="city.invalid && userForm.submitted" class="invalid-feedback">
+                      <div *ngIf="city.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputAddress" class="form-label">Dirección</label>
+                    <input type="text" id="inputAddress" name="address" #address="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : address.errors && ( address.dirty || address.touched || userForm.submitted) }"
+                      [(ngModel)]="user.address" class="form-control" minlength="3" maxlength="500" required />
+                    <div *ngIf="address.invalid && userForm.submitted" class="invalid-feedback">
+                      <div *ngIf="address.errors?.required">Campo es requerido
+                      </div>
+                      <div *ngIf="address.errors?.minlength || address.errors?.maxlength">
+                        Campo permite entre 3 y 500 caracteres</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputPhone" class="form-label">Telefono/Cel</label>
+                    <tag-input [(ngModel)]="user.phones" name="phone" #phone="ngModel" theme="bootstrap"
+                      theme="bootstrap" [displayBy]="'numero'"
+                      [ngClass]="{'ng-invalid' : phone.errors && ( phone.dirty || phone.touched || userForm.submitted) }"
+                      required>
+                    </tag-input>
+                    <div *ngIf="phone.invalid && userForm.submitted" class="invalid-feedback">
+                      <div *ngIf="phone.errors?.required">Campo es requerido. Pulse enter para confirmar los números.
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+
+                <div *ngFor="let network of user.socialNetwork;let i = index" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputNetwork-{{i}}" class="form-label">{{network.label}}</label>
+                    <input type="text" id="inputNetwork-{{i}}" name="network-{{i}}"
+                      [(ngModel)]="network.networkDir" class="form-control" maxlength="100"  />
+                  </div>
+                </div>
+
+              </div>
+
+
+              <div class="row">
+                <div class="col-lg-12 col-md-12 text-right">
+                  <button type="button" class="btn btn-secondary" (click)="selectTab('about')">Cancelar</button>
+                  <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                </div>
+              </div>
+
+            </form>
+
+
+          </div>
+        </div>
       </div>
     </div>
   </div>

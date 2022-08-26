@@ -1,0 +1,41 @@
+<div class="row">
+
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId" class="nav-tabs">
+                    <li [ngbNavItem]="1">
+                      <a ngbNavLink>Construir</a>
+                      <ng-template ngbNavContent>
+                        <div class="row">
+                            <div class="col-md-offset-2 col-md-8">
+                                <div class="d-flex align-items-center flex-row">
+                                    <button type="button" style="margin-bottom: 15px" class="btn btn-primary" >Reset</button>
+                                </div>                                
+                            </div>
+                            <div class="col-lg-12 col-md-12">
+                                <form name="instrumentForm" #instrumentForm="ngForm">
+                                    <div class="row">
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                      </ng-template>
+                    </li>
+                    <li [ngbNavItem]="2">
+                      <a ngbNavLink>Visor</a>
+                      <ng-template ngbNavContent>
+
+                      </ng-template>
+                    </li>
+                  </ul>
+                  
+                  <div [ngbNavOutlet]="defaultNav" class="border border-top-0 p-3"></div>
+                  <p class="mt-2">Active: {{ defaultNavActiveId }}</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>

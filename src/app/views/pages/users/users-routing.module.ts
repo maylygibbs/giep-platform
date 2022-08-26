@@ -1,6 +1,6 @@
 import { ProfileComponent } from './components/profile/profile.component';
 
-import { CommonsListCountriesResolver, CommonsListPositionsResolver, CommonsListRolesResolver } from './../../../core/resolvers/commons.resolver';
+import { CommonsListCountriesResolver, CommonsListPositionsResolver, CommonsListRolesResolver, CommonsListSocialNetworkResolver } from './../../../core/resolvers/commons.resolver';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonsListDependencesResolver } from '../../../core/resolvers/commons.resolver';
@@ -11,7 +11,7 @@ const routes: Routes = [
     path:'',
     component:UsersComponent,
     data:{
-      title: 'Usuarios - GIEP',
+      title: 'Usuarios - GIEp',
     },
     resolve:{
       dependences: CommonsListDependencesResolver,
@@ -24,7 +24,11 @@ const routes: Routes = [
     path:'profile',
     component:ProfileComponent,
     data:{
-      title: 'Mi perfil - GIEP',
+      title: 'Mi perfil - GIEp',
+    },
+    resolve:{
+      countries: CommonsListCountriesResolver,
+      networks: CommonsListSocialNetworkResolver
     }
   }
 ];

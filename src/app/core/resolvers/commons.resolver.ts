@@ -46,3 +46,14 @@ export class CommonsListCountriesResolver implements Resolve<any> {
     return this.commonsService.getAllCountries();
   }
 }
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListSocialNetworkResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllSocialNetwork();
+  }
+}

@@ -28,7 +28,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group mb-3">
+              <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
                 <div class="input-group">
                   <input name="passwordInput" #passwordInput="ngModel" [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'"
@@ -38,11 +38,9 @@
                     <div *ngIf="passwordInput.errors?.required">Campo requerido
                     </div>
                   </div>
-                  <div class="input-group-append">
-                    <span class="input-group-text" (click)="showPassword = !showPassword">
-                      <i class="feather" [ngClass]="{'icon-eye-off':showPassword, 'icon-eye':!showPassword}"></i>
-                    </span>
-                 </div>
+                  <button class="input-group-text" type="button" (click)="showPassword = !showPassword">
+                    <i class="feather" [ngClass]="{'icon-eye-off':showPassword, 'icon-eye':!showPassword}"></i>
+                  </button>
                 </div>
 
               </div>

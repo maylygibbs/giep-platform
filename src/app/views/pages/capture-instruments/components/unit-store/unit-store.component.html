@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form name="unitTypeForm" #unitTypeForm="ngForm" (ngSubmit)="onSubmit(unitTypeForm)" class="forms-sample">
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="unitTypeName" class="form-label">Tipo unidad</label>
+                                <input type="text" name="inputName" #inputName="ngModel" [(ngModel)]="unit.label"
+                                [ngClass]="{'ng-dirty ng-invalid' : inputName.errors && ( inputName.dirty || inputName.touched || unitTypeForm.submitted) }"
+                                    class="form-control" id="unitTypeName" autocomplete="off" minlength="2" maxlength="20" required>
+                                <div *ngIf="inputName.invalid && unitTypeForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="inputName.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="inputName.errors?.minlength || inputName.errors?.maxlength">
+                                        Campo permite entre 2 y 20 caracteres</div>
+                                </div>                                    
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputFactor" class="form-label">Factor</label>
+                                <input type="text" name="factor" #factor="ngModel" [(ngModel)]="unit.factor"
+                                [ngClass]="{'ng-dirty ng-invalid' : factor.errors && ( factor.dirty || factor.touched || unitTypeForm.submitted) }"
+                                    class="form-control" id="inputFactor"  required>
+                                <div *ngIf="factor.invalid && unitTypeForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="factor.errors?.required">Campo es requerido
+                                    </div>
+                                </div>                                    
+                            </div>
+                        </div>                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-right">
+                            <button class="btn btn-secondary" (click)="back()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

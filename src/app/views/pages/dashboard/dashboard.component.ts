@@ -74,7 +74,7 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     this.currentDate = this.calendar.getToday();
 
     if(this.user.roles.includes('ROLE_ADMINISTRADOR') ){
-      this.instrumentsService.getInstrumentResultByCategory(1).then((resp)=>{
+      this.instrumentsService.getInstrumentResultByQuestions(2).then((resp)=>{
         this.results = resp;
         console.log('results',this.results)
       });
