@@ -1,0 +1,800 @@
+{
+    "count": 50,
+    "data": [
+        {
+            "id": 1,
+            "Nombre": "Projecto",
+            "Descripcion": "Projecto",
+            "token": "token",
+            "RecursosAsignados": [
+                {
+                    "count": 39,
+                    "data": [
+                        {
+                            "id": 48,
+                            "username": "maylygibbs807@gmail.com",
+                            "numeroDocumento": "12501465",
+                            "tipoDocumentoIdentidad": "V",
+                            "primerNombre": "Mayly",
+                            "segundoNombre": "Celina",
+                            "primerApellido": "Gibbs",
+                            "segundoApellido": "Lopez",
+                            "fechaNacimiento": "1989-12-06",
+                            "email": "maylygibbs807@gmail.com",
+                            "status": {
+                                "id": 1,
+                                "Descripcion": "Vigente"
+                            },
+                            "createAt": null,
+                            "updateBy": "sirjcbg1@hotmail.com",
+                            "updateAt": "15/08/2022",
+                            "createBy": "sirjcbg1@hotmail.com",
+                            "telefonos": [
+                                {
+                                    "id": 14,
+                                    "numero": "04242538009"
+                                }
+                            ],
+                            "Dependencia": {
+                                "id": 2,
+                                "Descripcion": "IT"
+                            },
+                            "cargo": {
+                                "id": 1,
+                                "Descripcion": "Presidente"
+                            },
+                            "roles": [
+                                {
+                                    "rol": "ROLE_REGULAR"
+                                }
+                            ],
+                            "foto": null,
+                            "opcionesMenu": null,
+                            "componentes": null,
+                            "instrumentosPendientes": null,
+                            "pais": {
+                                "id": 1,
+                                "Nombre": "Venezuela"
+                            },
+                            "estado": {
+                                "id": 24,
+                                "Nombre": "Distrito Capital"
+                            },
+                            "ciudad": {
+                                "id": 149,
+                                "Nombre": "Caracas"
+                            },
+                            "direccion": null,
+                            "sexo": "F"
+                        }
+                    ]
+                }
+            ],
+            "FechaInicio": "2022-08-22T18:05:15",
+            "FechaFinal": "2023-08-22",
+            "HorasProyecto": "70",
+            "Progreso": "70",
+            "OficinaGetionProyectos": {
+                "id": 48,
+                "username": "maylygibbs807@gmail.com",
+                "numeroDocumento": "12501465",
+                "tipoDocumentoIdentidad": "V",
+                "primerNombre": "Mayly",
+                "segundoNombre": "Celina",
+                "primerApellido": "Gibbs",
+                "segundoApellido": "Lopez",
+                "fechaNacimiento": "1989-12-06",
+                "email": "maylygibbs807@gmail.com",
+                "status": {
+                    "id": 1,
+                    "Descripcion": "Vigente"
+                },
+                "createAt": null,
+                "updateBy": "sirjcbg1@hotmail.com",
+                "updateAt": "15/08/2022",
+                "createBy": "sirjcbg1@hotmail.com",
+                "telefonos": [
+                    {
+                        "id": 14,
+                        "numero": "04242538009"
+                    }
+                ],
+                "Dependencia": {
+                    "id": 2,
+                    "Descripcion": "IT"
+                },
+                "cargo": {
+                    "id": 1,
+                    "Descripcion": "Presidente"
+                },
+                "roles": [
+                    {
+                        "rol": "ROLE_REGULAR"
+                    }
+                ],
+                "foto": null,
+                "opcionesMenu": null,
+                "componentes": null,
+                "instrumentosPendientes": null,
+                "pais": {
+                    "id": 1,
+                    "Nombre": "Venezuela"
+                },
+                "estado": {
+                    "id": 24,
+                    "Nombre": "Distrito Capital"
+                },
+                "ciudad": {
+                    "id": 149,
+                    "Nombre": "Caracas"
+                },
+                "direccion": null,
+                "sexo": "F"
+            },
+            "estatus": {
+                "id": 1,
+                "Descripcion": "Activo"
+            }
+        },
+        {
+            "id": 2,
+            "Nombre": "Proyecto 2",
+            "Descripcion": "Proyecto 2",
+            "token": "token",
+            "RecursosAsignados": [
+                {
+                    "count": 39,
+                    "data": [
+                        {
+                            "id": 1,
+                            "username": "sirjcbg1@hotmail.com",
+                            "numeroDocumento": "2345678",
+                            "tipoDocumentoIdentidad": "V",
+                            "primerNombre": "Juan",
+                            "segundoNombre": "Carlos",
+                            "primerApellido": "Blanco",
+                            "segundoApellido": "Garcia",
+                            "fechaNacimiento": "2022-07-14",
+                            "email": "sirjcbg1@hotmail.com",
+                            "status": {
+                                "id": 1,
+                                "Descripcion": "Vigente"
+                            },
+                            "createAt": "16/07/2022",
+                            "updateBy": "sirjcbg1@hotmail.com",
+                            "updateAt": "20/08/2022",
+                            "createBy": null,
+                            "telefonos": [
+                                {
+                                    "id": 17,
+                                    "numero": "04245555555"
+                                }
+                            ],
+                            "Dependencia": {
+                                "id": 2,
+                                "Descripcion": "IT"
+                            },
+                            "cargo": {
+                                "id": 1,
+                                "Descripcion": "Presidente"
+                            },
+                            "roles": [
+                                {
+                                    "rol": "ROLE_ADMINISTRADOR"
+                                },
+                                {
+                                    "rol": "ROLE_ANALISTA"
+                                }
+                            ],
+                            "foto": null,
+                            "opcionesMenu": null,
+                            "componentes": null,
+                            "instrumentosPendientes": null,
+                            "pais": {
+                                "id": 1,
+                                "Nombre": "Venezuela"
+                            },
+                            "estado": {
+                                "id": 24,
+                                "Nombre": "Distrito Capital"
+                            },
+                            "ciudad": {
+                                "id": 149,
+                                "Nombre": "Caracas"
+                            },
+                            "direccion": "Calle colombia, entre calles san vicente y santa marta cas 75",
+                            "sexo": "M"
+                        },
+                        {
+                            "id": 49,
+                            "username": "anibalasdrubal.briceno@movilnet.com.ve",
+                            "numeroDocumento": "6977744",
+                            "tipoDocumentoIdentidad": "V",
+                            "primerNombre": "Anibal",
+                            "segundoNombre": "Asdrubal",
+                            "primerApellido": "Briceño",
+                            "segundoApellido": "Asdrubal",
+                            "fechaNacimiento": "1989-12-06",
+                            "email": "anibalasdrubal.briceno@movilnet.com.ve",
+                            "status": {
+                                "id": 1,
+                                "Descripcion": "Vigente"
+                            },
+                            "createAt": null,
+                            "updateBy": "sirjcbg1@hotmail.com",
+                            "updateAt": "12/08/2022",
+                            "createBy": "sirjcbg1@hotmail.com",
+                            "telefonos": [
+                                {
+                                    "id": 10,
+                                    "numero": "04240987645"
+                                }
+                            ],
+                            "Dependencia": {
+                                "id": 17,
+                                "Descripcion": "Presidencia"
+                            },
+                            "cargo": {
+                                "id": 1,
+                                "Descripcion": "Presidente"
+                            },
+                            "roles": [
+                                {
+                                    "rol": "ROLE_REGULAR"
+                                }
+                            ],
+                            "foto": null,
+                            "opcionesMenu": null,
+                            "componentes": null,
+                            "instrumentosPendientes": null,
+                            "pais": {
+                                "id": 1,
+                                "Nombre": "Venezuela"
+                            },
+                            "estado": {
+                                "id": 24,
+                                "Nombre": "Distrito Capital"
+                            },
+                            "ciudad": {
+                                "id": 149,
+                                "Nombre": "Caracas"
+                            },
+                            "direccion": null,
+                            "sexo": "M"
+                        }
+                    ]
+                }
+            ],
+            "FechaInicio": "2022-08-22T18:05:15",
+            "FechaFinal": "2023-08-22",
+            "HorasProyecto": "45",
+            "Progreso": "45",
+            "OficinaGetionProyectos": {
+                "id": 49,
+                "username": "maylygibbs807@gmail.com",
+                "numeroDocumento": "12501465",
+                "tipoDocumentoIdentidad": "V",
+                "primerNombre": "Mayly",
+                "segundoNombre": "Celina",
+                "primerApellido": "Gibbs",
+                "segundoApellido": "Lopez",
+                "fechaNacimiento": "1989-12-06",
+                "email": "maylygibbs807@gmail.com",
+                "status": {
+                    "id": 1,
+                    "Descripcion": "Vigente"
+                },
+                "createAt": null,
+                "updateBy": "sirjcbg1@hotmail.com",
+                "updateAt": "15/08/2022",
+                "createBy": "sirjcbg1@hotmail.com",
+                "telefonos": [
+                    {
+                        "id": 14,
+                        "numero": "04242538009"
+                    }
+                ],
+                "Dependencia": {
+                    "id": 2,
+                    "Descripcion": "IT"
+                },
+                "cargo": {
+                    "id": 1,
+                    "Descripcion": "Presidente"
+                },
+                "roles": [
+                    {
+                        "rol": "ROLE_REGULAR"
+                    }
+                ],
+                "foto": null,
+                "opcionesMenu": null,
+                "componentes": null,
+                "instrumentosPendientes": null,
+                "pais": {
+                    "id": 1,
+                    "Nombre": "Venezuela"
+                },
+                "estado": {
+                    "id": 24,
+                    "Nombre": "Distrito Capital"
+                },
+                "ciudad": {
+                    "id": 149,
+                    "Nombre": "Caracas"
+                },
+                "direccion": null,
+                "sexo": "F"
+            },
+            "estatus": {
+                "id": 1,
+                "Descripcion": "Activo"
+            }
+        },
+        {
+            "id": 3,
+            "Nombre": "Projecto",
+            "Descripcion": "Projecto",
+            "token": "token",
+            "RecursosAsignados": [
+                {
+                    "count": 39,
+                    "data": [
+                        {
+                            "id": 48,
+                            "username": "maylygibbs807@gmail.com",
+                            "numeroDocumento": "12501465",
+                            "tipoDocumentoIdentidad": "V",
+                            "primerNombre": "Mayly",
+                            "segundoNombre": "Celina",
+                            "primerApellido": "Gibbs",
+                            "segundoApellido": "Lopez",
+                            "fechaNacimiento": "1989-12-06",
+                            "email": "maylygibbs807@gmail.com",
+                            "status": {
+                                "id": 1,
+                                "Descripcion": "Vigente"
+                            },
+                            "createAt": null,
+                            "updateBy": "sirjcbg1@hotmail.com",
+                            "updateAt": "15/08/2022",
+                            "createBy": "sirjcbg1@hotmail.com",
+                            "telefonos": [
+                                {
+                                    "id": 14,
+                                    "numero": "04242538009"
+                                }
+                            ],
+                            "Dependencia": {
+                                "id": 2,
+                                "Descripcion": "IT"
+                            },
+                            "cargo": {
+                                "id": 1,
+                                "Descripcion": "Presidente"
+                            },
+                            "roles": [
+                                {
+                                    "rol": "ROLE_REGULAR"
+                                }
+                            ],
+                            "foto": null,
+                            "opcionesMenu": null,
+                            "componentes": null,
+                            "instrumentosPendientes": null,
+                            "pais": {
+                                "id": 1,
+                                "Nombre": "Venezuela"
+                            },
+                            "estado": {
+                                "id": 24,
+                                "Nombre": "Distrito Capital"
+                            },
+                            "ciudad": {
+                                "id": 149,
+                                "Nombre": "Caracas"
+                            },
+                            "direccion": null,
+                            "sexo": "F"
+                        }
+                    ]
+                }
+            ],
+            "FechaInicio": "2022-08-22T18:05:15",
+            "FechaFinal": "2023-08-22",
+            "HorasProyecto": "70",
+            "Progreso": "70",
+            "OficinaGetionProyectos": {
+                "id": 48,
+                "username": "maylygibbs807@gmail.com",
+                "numeroDocumento": "12501465",
+                "tipoDocumentoIdentidad": "V",
+                "primerNombre": "Mayly",
+                "segundoNombre": "Celina",
+                "primerApellido": "Gibbs",
+                "segundoApellido": "Lopez",
+                "fechaNacimiento": "1989-12-06",
+                "email": "maylygibbs807@gmail.com",
+                "status": {
+                    "id": 1,
+                    "Descripcion": "Vigente"
+                },
+                "createAt": null,
+                "updateBy": "sirjcbg1@hotmail.com",
+                "updateAt": "15/08/2022",
+                "createBy": "sirjcbg1@hotmail.com",
+                "telefonos": [
+                    {
+                        "id": 14,
+                        "numero": "04242538009"
+                    }
+                ],
+                "Dependencia": {
+                    "id": 2,
+                    "Descripcion": "IT"
+                },
+                "cargo": {
+                    "id": 1,
+                    "Descripcion": "Presidente"
+                },
+                "roles": [
+                    {
+                        "rol": "ROLE_REGULAR"
+                    }
+                ],
+                "foto": null,
+                "opcionesMenu": null,
+                "componentes": null,
+                "instrumentosPendientes": null,
+                "pais": {
+                    "id": 1,
+                    "Nombre": "Venezuela"
+                },
+                "estado": {
+                    "id": 24,
+                    "Nombre": "Distrito Capital"
+                },
+                "ciudad": {
+                    "id": 149,
+                    "Nombre": "Caracas"
+                },
+                "direccion": null,
+                "sexo": "F"
+            },
+            "estatus": {
+                "id": 1,
+                "Descripcion": "Activo"
+            }
+        },
+        {
+            "id": 4,
+            "Nombre": "Proyecto 2",
+            "Descripcion": "Proyecto 2",
+            "token": "token",
+            "RecursosAsignados": [
+                {
+                    "count": 39,
+                    "data": [
+                        {
+                            "id": 1,
+                            "username": "sirjcbg1@hotmail.com",
+                            "numeroDocumento": "2345678",
+                            "tipoDocumentoIdentidad": "V",
+                            "primerNombre": "Juan",
+                            "segundoNombre": "Carlos",
+                            "primerApellido": "Blanco",
+                            "segundoApellido": "Garcia",
+                            "fechaNacimiento": "2022-07-14",
+                            "email": "sirjcbg1@hotmail.com",
+                            "status": {
+                                "id": 1,
+                                "Descripcion": "Vigente"
+                            },
+                            "createAt": "16/07/2022",
+                            "updateBy": "sirjcbg1@hotmail.com",
+                            "updateAt": "20/08/2022",
+                            "createBy": null,
+                            "telefonos": [
+                                {
+                                    "id": 17,
+                                    "numero": "04245555555"
+                                }
+                            ],
+                            "Dependencia": {
+                                "id": 2,
+                                "Descripcion": "IT"
+                            },
+                            "cargo": {
+                                "id": 1,
+                                "Descripcion": "Presidente"
+                            },
+                            "roles": [
+                                {
+                                    "rol": "ROLE_ADMINISTRADOR"
+                                },
+                                {
+                                    "rol": "ROLE_ANALISTA"
+                                }
+                            ],
+                            "foto": null,
+                            "opcionesMenu": null,
+                            "componentes": null,
+                            "instrumentosPendientes": null,
+                            "pais": {
+                                "id": 1,
+                                "Nombre": "Venezuela"
+                            },
+                            "estado": {
+                                "id": 24,
+                                "Nombre": "Distrito Capital"
+                            },
+                            "ciudad": {
+                                "id": 149,
+                                "Nombre": "Caracas"
+                            },
+                            "direccion": "Calle colombia, entre calles san vicente y santa marta cas 75",
+                            "sexo": "M"
+                        },
+                        {
+                            "id": 49,
+                            "username": "anibalasdrubal.briceno@movilnet.com.ve",
+                            "numeroDocumento": "6977744",
+                            "tipoDocumentoIdentidad": "V",
+                            "primerNombre": "Anibal",
+                            "segundoNombre": "Asdrubal",
+                            "primerApellido": "Briceño",
+                            "segundoApellido": "Asdrubal",
+                            "fechaNacimiento": "1989-12-06",
+                            "email": "anibalasdrubal.briceno@movilnet.com.ve",
+                            "status": {
+                                "id": 1,
+                                "Descripcion": "Vigente"
+                            },
+                            "createAt": null,
+                            "updateBy": "sirjcbg1@hotmail.com",
+                            "updateAt": "12/08/2022",
+                            "createBy": "sirjcbg1@hotmail.com",
+                            "telefonos": [
+                                {
+                                    "id": 10,
+                                    "numero": "04240987645"
+                                }
+                            ],
+                            "Dependencia": {
+                                "id": 17,
+                                "Descripcion": "Presidencia"
+                            },
+                            "cargo": {
+                                "id": 1,
+                                "Descripcion": "Presidente"
+                            },
+                            "roles": [
+                                {
+                                    "rol": "ROLE_REGULAR"
+                                }
+                            ],
+                            "foto": null,
+                            "opcionesMenu": null,
+                            "componentes": null,
+                            "instrumentosPendientes": null,
+                            "pais": {
+                                "id": 1,
+                                "Nombre": "Venezuela"
+                            },
+                            "estado": {
+                                "id": 24,
+                                "Nombre": "Distrito Capital"
+                            },
+                            "ciudad": {
+                                "id": 149,
+                                "Nombre": "Caracas"
+                            },
+                            "direccion": null,
+                            "sexo": "M"
+                        }
+                    ]
+                }
+            ],
+            "FechaInicio": "2022-08-22T18:05:15",
+            "FechaFinal": "2023-08-22",
+            "HorasProyecto": "45",
+            "Progreso": "45",
+            "OficinaGetionProyectos": {
+                "id": 49,
+                "username": "maylygibbs807@gmail.com",
+                "numeroDocumento": "12501465",
+                "tipoDocumentoIdentidad": "V",
+                "primerNombre": "Mayly",
+                "segundoNombre": "Celina",
+                "primerApellido": "Gibbs",
+                "segundoApellido": "Lopez",
+                "fechaNacimiento": "1989-12-06",
+                "email": "maylygibbs807@gmail.com",
+                "status": {
+                    "id": 1,
+                    "Descripcion": "Vigente"
+                },
+                "createAt": null,
+                "updateBy": "sirjcbg1@hotmail.com",
+                "updateAt": "15/08/2022",
+                "createBy": "sirjcbg1@hotmail.com",
+                "telefonos": [
+                    {
+                        "id": 14,
+                        "numero": "04242538009"
+                    }
+                ],
+                "Dependencia": {
+                    "id": 2,
+                    "Descripcion": "IT"
+                },
+                "cargo": {
+                    "id": 1,
+                    "Descripcion": "Presidente"
+                },
+                "roles": [
+                    {
+                        "rol": "ROLE_REGULAR"
+                    }
+                ],
+                "foto": null,
+                "opcionesMenu": null,
+                "componentes": null,
+                "instrumentosPendientes": null,
+                "pais": {
+                    "id": 1,
+                    "Nombre": "Venezuela"
+                },
+                "estado": {
+                    "id": 24,
+                    "Nombre": "Distrito Capital"
+                },
+                "ciudad": {
+                    "id": 149,
+                    "Nombre": "Caracas"
+                },
+                "direccion": null,
+                "sexo": "F"
+            },
+            "estatus": {
+                "id": 1,
+                "Descripcion": "Activo"
+            }
+        },
+        {
+            "id": 5,
+            "Nombre": "Projecto",
+            "Descripcion": "Projecto",
+            "token": "token",
+            "RecursosAsignados": [
+                {
+                    "count": 39,
+                    "data": [
+                        {
+                            "id": 48,
+                            "username": "maylygibbs807@gmail.com",
+                            "numeroDocumento": "12501465",
+                            "tipoDocumentoIdentidad": "V",
+                            "primerNombre": "Mayly",
+                            "segundoNombre": "Celina",
+                            "primerApellido": "Gibbs",
+                            "segundoApellido": "Lopez",
+                            "fechaNacimiento": "1989-12-06",
+                            "email": "maylygibbs807@gmail.com",
+                            "status": {
+                                "id": 1,
+                                "Descripcion": "Vigente"
+                            },
+                            "createAt": null,
+                            "updateBy": "sirjcbg1@hotmail.com",
+                            "updateAt": "15/08/2022",
+                            "createBy": "sirjcbg1@hotmail.com",
+                            "telefonos": [
+                                {
+                                    "id": 14,
+                                    "numero": "04242538009"
+                                }
+                            ],
+                            "Dependencia": {
+                                "id": 2,
+                                "Descripcion": "IT"
+                            },
+                            "cargo": {
+                                "id": 1,
+                                "Descripcion": "Presidente"
+                            },
+                            "roles": [
+                                {
+                                    "rol": "ROLE_REGULAR"
+                                }
+                            ],
+                            "foto": null,
+                            "opcionesMenu": null,
+                            "componentes": null,
+                            "instrumentosPendientes": null,
+                            "pais": {
+                                "id": 1,
+                                "Nombre": "Venezuela"
+                            },
+                            "estado": {
+                                "id": 24,
+                                "Nombre": "Distrito Capital"
+                            },
+                            "ciudad": {
+                                "id": 149,
+                                "Nombre": "Caracas"
+                            },
+                            "direccion": null,
+                            "sexo": "F"
+                        }
+                    ]
+                }
+            ],
+            "FechaInicio": "2022-08-22T18:05:15",
+            "FechaFinal": "2023-08-22",
+            "HorasProyecto": "70",
+            "Progreso": "70",
+            "OficinaGetionProyectos": {
+                "id": 48,
+                "username": "maylygibbs807@gmail.com",
+                "numeroDocumento": "12501465",
+                "tipoDocumentoIdentidad": "V",
+                "primerNombre": "Mayly",
+                "segundoNombre": "Celina",
+                "primerApellido": "Gibbs",
+                "segundoApellido": "Lopez",
+                "fechaNacimiento": "1989-12-06",
+                "email": "maylygibbs807@gmail.com",
+                "status": {
+                    "id": 1,
+                    "Descripcion": "Vigente"
+                },
+                "createAt": null,
+                "updateBy": "sirjcbg1@hotmail.com",
+                "updateAt": "15/08/2022",
+                "createBy": "sirjcbg1@hotmail.com",
+                "telefonos": [
+                    {
+                        "id": 14,
+                        "numero": "04242538009"
+                    }
+                ],
+                "Dependencia": {
+                    "id": 2,
+                    "Descripcion": "IT"
+                },
+                "cargo": {
+                    "id": 1,
+                    "Descripcion": "Presidente"
+                },
+                "roles": [
+                    {
+                        "rol": "ROLE_REGULAR"
+                    }
+                ],
+                "foto": null,
+                "opcionesMenu": null,
+                "componentes": null,
+                "instrumentosPendientes": null,
+                "pais": {
+                    "id": 1,
+                    "Nombre": "Venezuela"
+                },
+                "estado": {
+                    "id": 24,
+                    "Nombre": "Distrito Capital"
+                },
+                "ciudad": {
+                    "id": 149,
+                    "Nombre": "Caracas"
+                },
+                "direccion": null,
+                "sexo": "F"
+            },
+            "estatus": {
+                "id": 1,
+                "Descripcion": "Activo"
+            }
+        }
+    ]
+}

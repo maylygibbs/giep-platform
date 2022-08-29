@@ -18,6 +18,46 @@ const routes: Routes = [
         path: 'users',
         loadChildren: () => import('../users/users.module').then(m => m.UsersModule),
       },
+      {
+        path: 'projects',
+        loadChildren: () => import('../projects/projects.module').then(m => m.ProjectsModule),
+      },
+      {
+        path: 'apps',
+        loadChildren: () => import('../apps/apps.module').then(m => m.AppsModule)
+      },
+      {
+        path: 'ui-components',
+        loadChildren: () => import('../ui-components/ui-components.module').then(m => m.UiComponentsModule)
+      },
+      {
+        path: 'advanced-ui',
+        loadChildren: () => import('../advanced-ui/advanced-ui.module').then(m => m.AdvancedUiModule)
+      },
+      {
+        path: 'form-elements',
+        loadChildren: () => import('../form-elements/form-elements.module').then(m => m.FormElementsModule)
+      },
+      {
+        path: 'advanced-form-elements',
+        loadChildren: () => import('../advanced-form-elements/advanced-form-elements.module').then(m => m.AdvancedFormElementsModule)
+      },
+      {
+        path: 'charts-graphs',
+        loadChildren: () => import('../charts-graphs/charts-graphs.module').then(m => m.ChartsGraphsModule)
+      },
+      {
+        path: 'tables',
+        loadChildren: () => import('../tables/tables.module').then(m => m.TablesModule)
+      },
+      {
+        path: 'icons',
+        loadChildren: () => import('../icons/icons.module').then(m => m.IconsModule)
+      },
+      {
+        path: 'general',
+        loadChildren: () => import('../general/general.module').then(m => m.GeneralModule)
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

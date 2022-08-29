@@ -90,23 +90,41 @@ export class CommonsService extends HttpService {
       });
       return states;
   
-    }
+  }
 
 
-    /**
-  * Get all city by id estados
-  * @returns 
-  */
-     async getAllCities(id:number): Promise<Array<SelectOption>> {
+  /**
+* Get all city by id estados
+* @returns 
+*/
+  async getAllCities(id: number): Promise<Array<SelectOption>> {
 
-      let cities: Array<SelectOption> = new Array<SelectOption>();
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/ciudad/estado/${id}`))
-      cities = resp.map((item: any) => {
-        return new SelectOption(item.id, item.nombre);
-      });
-      return cities;
-  
-    }    
+    let cities: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/ciudad/estado/${id}`))
+    cities = resp.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return cities;
+
+  }
+
+
+  /**
+* Get all status
+* @returns 
+*/
+  async getAllStatus(): Promise<Array<SelectOption>> {
+
+    let status: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/status/list`))
+    status = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.descripcion);
+    });
+    console.log(status);
+    
+    return status;
+
+  }
 
 
 }

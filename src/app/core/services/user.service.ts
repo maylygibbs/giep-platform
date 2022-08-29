@@ -150,6 +150,43 @@ export class UserService extends HttpService {
 
 
   /**
+   * Check all users
+   * @param filter 
+   * @returns 
+   */
+  async getUsers(filter: any): Promise<any> {
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/all', filter));
+    const data = resp.data.map((item: any) => {
+      const user = new User();
+      user.id = item.id;
+      user.username = item.username;
+      user.token = this.authService.currentUser.token;
+      user.firstName = item.primerNombre;
+      user.lastName = item.primerApellido;
+      user.secondName = item.segundoNombre;
+      user.secondLastName = item.segundoApellido;
+      user.email = item.email;
+      user.dependence = new SelectOption(item.Dependencia.id, item.Dependencia.Descripcion);
+      user.position = new SelectOption(item.cargo.id, item.cargo.Descripcion);
+      user.phones = item.telefonos;
+      user.birthDate = item.fechaNacimiento;
+      user.documentType = item.tipoDocumentoIdentidad;
+      user.documentNumber = item.numeroDocumento;
+      user.status = new SelectOption(item.status.id, item.status.Descripcion);
+      user.createAt = item.createAt;
+      user.updateAt = item.updateAt;
+      user.sex = item.sexo;
+      user.address = item.direccion;
+      user.country = new SelectOption(item.pais?.id);
+      user.state = new SelectOption(item.estado?.id);
+      user.city = new SelectOption(item.ciudad?.id);
+      return user;
+    });
+     return  data;
+  }
+
+
+  /**
    * Query user by id
    * @param id 
    * @returns 
@@ -220,6 +257,34 @@ export class UserService extends HttpService {
       }
       
     }
+    
+  }
+
+  async mapFromServerObject(item: any): Promise<User> {
+    const user = new User();
+    user.id = item.id;
+    user.username = item.username;
+    user.token = this.authService.currentUser.token;
+    user.firstName = item.primerNombre;
+    user.lastName = item.primerApellido;
+    user.secondName = item.segundoNombre;
+    user.secondLastName = item.segundoApellido;
+    user.email = item.email;
+    user.dependence = new SelectOption(item.Dependencia.id, item.Dependencia.Descripcion);
+    user.position = new SelectOption(item.cargo.id, item.cargo.Descripcion);
+    user.phones = item.telefonos;
+    user.birthDate = item.fechaNacimiento;
+    user.documentType = item.tipoDocumentoIdentidad;
+    user.documentNumber = item.numeroDocumento;
+    user.status = new SelectOption(item.status.id, item.status.Descripcion);
+    user.createAt = item.createAt;
+    user.updateAt = item.updateAt;
+    user.sex = item.sexo;
+    user.address = item.direccion;
+    user.country = new SelectOption(item.pais?.id);
+    user.state = new SelectOption(item.estado?.id);
+    user.city = new SelectOption(item.ciudad?.id);
+    return user;
     
   }
 

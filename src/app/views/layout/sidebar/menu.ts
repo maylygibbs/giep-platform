@@ -58,7 +58,7 @@ export const MENU: MenuItem[] = [
     subItems: [
       {
         label: 'Ver proyectos',
-        link: '/ui-components/accordion',
+        link: '/projects',
       }
     ]
   },
