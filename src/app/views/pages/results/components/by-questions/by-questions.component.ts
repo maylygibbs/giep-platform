@@ -1,4 +1,6 @@
+import { InstrumentsService } from './../../../../../core/services/instruments.service';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-by-questions',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ByQuestionsComponent implements OnInit {
 
-  constructor() { }
+  results:any;
+  instrumentName:string;
+
+  constructor(private route: ActivatedRoute,
+    private instrumentsService: InstrumentsService) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(async(params)=>{
+      this.instrumentName = params.name;
+      this.results = await this.instrumentsService.getInstrumentResultByQuestions(params.id);
+     });
   }
 
 }

@@ -68,3 +68,17 @@ export class CommonsListSocialNetworkResolver implements Resolve<any> {
     return this.commonsService.getAllSocialNetwork();
   }
 }
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListUnitsTypeResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllUnitsType();
+  }
+}
+
+
+

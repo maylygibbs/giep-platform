@@ -274,10 +274,16 @@
                                 <label for="inputRoles" class="form-label">Roles</label>
                                 <ng-select id="inputRoles" [items]="data.roles" [multiple]=true [searchable]="false"
                                 [closeOnSelect]="false" name="rolesuser" #rolesuser="ngModel"
+                                [ngClass]="{'ng-dirty ng-invalid' : rolesuser.errors && ( rolesuser.dirty || rolesuser.touched || userForm.submitted) }"
                                 bindLabel="label" bindValue="value"
                                 [searchable]="false" [(ngModel)]="user.roles" required>
-                                </ng-select>                                    
+                                </ng-select>   
+                                <div *ngIf="rolesuser.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="rolesuser.errors?.required">Campo es requerido
+                                    </div>                          
+                                </div>                                  
                             </div>
+
                         </div>
                     </div>
 
