@@ -1,0 +1,78 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Tipos de Input</a></li>
+      <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Nuevo tipo de input</li>
+      <li *ngIf="selectedItem && selectedItem.id" class="breadcrumb-item active" aria-current="page">Actualizar tipo de input</li>
+    </ol>
+  </nav>
+  
+  <div *ngIf="step==1 && inputs && inputs.data.length>0" class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+              <div class="search-form">
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <i class="feather icon-search" (click)="search()"></i>
+                  </div>
+                  <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (keyup.enter)="search()"  placeholder="Buscar aqui...">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+              <button type="button" class="btn btn-display-dt">
+                <i class="feather icon-list"></i>
+              </button>
+              <button type="button" class="btn btn-display-dt">
+                <i class="feather icon-grid"></i>
+              </button>
+              <button type="button" class="btn btn-primary btn-create-dt">
+                <i class="mdi mdi-plus" (click)="create()"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <h6 class="card-title"></h6>
+          <div class="row">
+            <div class="col-lg-12">
+              <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Tipo de input</th>
+                    <th data-priority="1" class="text-center">Accion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let input of inputs.data | paginate: { id: 'server', itemsPerPage: 3, currentPage: page, totalItems: inputs.count }">
+                    <td>{{input.id}}</td>
+                    <td>{{input.label}}</td>                   
+                    <td class="text-center">
+                      <i class="feather icon-edit-2" (click)="select(input.id)"></i>
+                      <!--<i class="feather icon-trash" (click)="delete(input.id)"></i>-->
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th colspan="3" class="text-right">
+                      <app-pager (onChangePage)="loadPage($event)"></app-pager>
+                    </th>
+                  </tr>    
+                </tfoot>    
+              </table>
+            </div>
+  
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step==2">
+   <app-input-store [input]="selectedItem" (onBack)="back($event)"></app-input-store>
+  </div>

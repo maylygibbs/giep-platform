@@ -58,6 +58,14 @@ const routes: Routes = [
         path: 'general',
         loadChildren: () => import('../general/general.module').then(m => m.GeneralModule)
       },
+      {
+        path: 'capture-instruments',
+        loadChildren: () => import('../capture-instruments/capture-instruments.module').then(m => m.CaptureInstrumentsModule),
+      },
+      {
+        path: 'results',
+        loadChildren: () => import('../results/results.module').then(m => m.ResultsModule),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

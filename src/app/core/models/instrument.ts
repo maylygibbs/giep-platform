@@ -6,7 +6,8 @@ export class Instrument {
     id: string;
     name: string;
     description:string;
-    questions: Array<Question>
+    questions: Array<Question>;
+    path:string;
     createAt:Date;
     updateAt:Date;
 

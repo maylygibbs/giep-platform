@@ -126,5 +126,15 @@ export class CommonsService extends HttpService {
 
   }
 
+    async getAllSocialNetwork(): Promise<Array<SelectOption>>{
+
+      let redes: Array<SelectOption> = new Array<SelectOption>();
+      const resp = await firstValueFrom(this.get(environment.apiUrl, '/tiporedes/List'));
+      redes = resp.data.map((item: any) => {
+        return new SelectOption(item.id, item.nombre);
+      });
+      return redes;
+    }
+
 
 }

@@ -19,10 +19,10 @@ export class UsersComponent extends BaseComponent implements  OnInit {
 
   step:number = 1;
   users: PaginationResponse;
+
   loadingIndicator = true;
   reorderable = true;
   ColumnMode = ColumnMode;
-
 
   totalItems: number;
   page: number = 1;
@@ -41,17 +41,6 @@ export class UsersComponent extends BaseComponent implements  OnInit {
 
   async ngOnInit() {
     this.users = await this.userService.getUsersPaginated({ page: 1, rowByPage: 3, word: null });
-    /*if (this.users && this.users.data.length>0) {
-      this.page = this.users.page;
-      this.previousPage = 1;
-      this.totalItems = this.users.count;
-      this.showPagination = true;
-    }else{
-      this.page = 1;
-      this.previousPage = 1;
-      this.totalItems = 0;
-      this.showPagination = false;
-    }*/
   }
 
   async loadPage(pageInfo: any) {
@@ -59,17 +48,6 @@ export class UsersComponent extends BaseComponent implements  OnInit {
     this.page = pageInfo;
     this.users = null;
     this.users = await this.userService.getUsersPaginated({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
-    /*if (this.users && this.users.data.length>0) {
-      this.page = this.users.page;
-      this.previousPage = 1;
-      this.totalItems = this.users.count;
-      this.showPagination = true;
-    }else{
-      this.page = 1;
-      this.previousPage = 1;
-      this.totalItems = 0;
-      this.showPagination = false;
-    }*/
   }
 
   create(){
@@ -103,9 +81,5 @@ export class UsersComponent extends BaseComponent implements  OnInit {
     }
   }
 
-
-  ngOnDestroy(): void {
-    
-  }
 
 }

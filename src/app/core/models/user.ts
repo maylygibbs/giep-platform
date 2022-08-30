@@ -31,6 +31,7 @@ export class User {
     country: SelectOption;
     state: SelectOption;
     city: SelectOption;
+    socialNetwork: Array<any>;
 
 
     get fullName(){    
@@ -99,6 +100,22 @@ export class User {
         return userMap;
     }
 
+    public static mapForEditProfile(user: User){
+        let userMap:any = {};
+        Object.assign(userMap, {id: user.id});
+        Object.assign(userMap, {idStatus: parseInt(user.status.value)});
+        
+        Object.assign(userMap, {telefono: this.getPhonesUser(user.phones) });
+
+        Object.assign(userMap, {direccion: user.address? user.address : null});
+        Object.assign(userMap, {pais: user.country.id});
+        Object.assign(userMap, {estado: user.state.id});
+        Object.assign(userMap, {ciudad: user.city.id});
+        Object.assign(userMap, {redes: this.getNetworkUser(user.socialNetwork)});
+        
+        return userMap;
+    }
+
 
     private static getPhonesUser(userPhones:any[]){
         let phones;
@@ -114,6 +131,22 @@ export class User {
             return {rol: item};
         });
         return roles;
+    }
+
+    private static getNetworkUser(networks:any[]){
+        const arrayNetwork:any[] = [];
+
+        networks.forEach((net:any)=>{
+            arrayNetwork.push(		{
+                tipo: parseInt(net.idTipo),
+                red: net.networkDir? net.networkDir : ''	  
+          
+           });
+
+        });
+
+        return arrayNetwork;
+
     }
 
 

@@ -34,6 +34,7 @@ export class UserService extends HttpService {
   async getInfoUser(){
     const resp =  await firstValueFrom(this.get(environment.apiUrl,'/user/info/detalle'));
     const user = new User();
+    user.id = resp[0].id;
     user.token = this.authService.currentUser.token;
     user.firstName = resp[0].primerNombre;
     user.lastName = resp[0].primerApellido;
@@ -94,9 +95,15 @@ export class UserService extends HttpService {
     console.log('arrayMenu', arrayMenu)
     user.sex = resp[0].sexo
     user.address = resp[0].direccion;
-    user.country = new SelectOption(resp[0].pais?.id);
-    user.state = new SelectOption(resp[0].estado?.id);
-    user.city = new SelectOption(resp[0].ciudad?.id);
+    user.country = new SelectOption(resp[0].pais?.id, resp[0].pais.Nombre);
+    user.state = new SelectOption(resp[0].estado?.id, resp[0].estado.Nombre);
+    user.city = new SelectOption(resp[0].ciudad?.id, resp[0].ciudad.Nombre);
+
+    if (resp[0].redes) {
+      user.socialNetwork = resp[0].redes.map((item:any)=>{
+          return { idTipo:item.idTipo, label:null, networkDir: item.red }
+      });
+    }
 
     this.authService.updateUserSource(user);
     this.authService.saveUserInLocalstorage(user);
@@ -247,7 +254,7 @@ export class UserService extends HttpService {
         this.toastrService.success('Usuario registrado con exito.');
       }
     } catch (error:any) {
-      debugger
+      
       console.log(error);
       if (error.status == 409) {
         this.toastrService.error('',error.msg);
@@ -256,6 +263,22 @@ export class UserService extends HttpService {
         this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
       }
       
+    }    
+  }
+
+
+  async updateProfile(data:any){
+    try {
+      await firstValueFrom(this.put(environment.apiUrl,`/user/perfil/${data.id}`, data));
+      this.toastrService.success('Usuario actualizado con exito.');
+    } catch (error:any) {
+      console.log(error);
+      if (error.status == 409) {
+        this.toastrService.error('',error.msg);
+      }
+      if (error.status != 500) {
+        this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      }
     }
     
   }
