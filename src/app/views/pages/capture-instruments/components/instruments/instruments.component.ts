@@ -1,3 +1,4 @@
+import { Section } from './../../../../../core/models/section';
 import { Instrument } from './../../../../../core/models/instrument';
 import { PaginationResponse } from './../../../../../core/models/pagination-response';
 import { InstrumentsService } from './../../../../../core/services/instruments.service';
@@ -46,6 +47,10 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   create(){
     this.selectedItem = new Instrument();
+    this.selectedItem.sections = new Array<Section>();
+    const section = new Section();
+    section.numberSection = 1;
+    this.selectedItem.sections.push(section)
     this.next();
   }
 

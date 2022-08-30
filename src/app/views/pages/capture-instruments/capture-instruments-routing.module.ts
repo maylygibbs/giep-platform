@@ -1,3 +1,4 @@
+import { CommonsListRolesResolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { InstrumentsComponent } from './components/instruments/instruments.component';
 import { NgModule } from '@angular/core';
@@ -32,6 +33,10 @@ const routes: Routes = [
     component: InstrumentsComponent,
     data: {
       title: 'Gestión de instrumentos - GIEp',
+    },
+    resolve:{
+      roles: CommonsListRolesResolver,
+      units: CommonsListUnitsTypeResolver
     }
   },  
 ];

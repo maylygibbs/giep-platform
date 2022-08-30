@@ -60,6 +60,7 @@
     "ngx-custom-validators": "^8.0.0",
     "ngx-dropzone-wrapper": "^10.0.1",
     "ngx-highlightjs": "^6.1.2",
+    "ngx-image-cropper": "^6.2.2",
     "ngx-mask": "^13.1.10",
     "ngx-owl-carousel-o": "^7.0.2",
     "ngx-pagination": "^6.0.2",

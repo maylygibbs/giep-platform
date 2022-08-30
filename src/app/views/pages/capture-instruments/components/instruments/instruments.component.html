@@ -53,7 +53,10 @@
                     *ngFor="let instrument of instruments.data | paginate: { id: 'server', itemsPerPage: 3, currentPage: page, totalItems: instruments.count }">
                     <td>{{instrument.id}}</td>
                     <td>{{instrument.name}}</td>  
-                    <td>{{instrument.path}}</td> 
+                    <td>
+                      <a *ngIf="instrument.path" [routerLink]="instrument.path" [queryParams]="{id: instrument.id, name: instrument.name}" >Ver</a>
+                      <span *ngIf="!instrument.path">No hay resultados</span>
+                    </td> 
                     <td>{{instrument.createAt | date:'short':'yyyy-MM-dd'}}</td>                
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(instrument.id)"></i>

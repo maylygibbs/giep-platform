@@ -10,6 +10,10 @@ import { CategoryStoreComponent } from './components/category-store/category-sto
 import { UnitsComponent } from './components/units/units.component';
 import { UnitStoreComponent } from './components/unit-store/unit-store.component';
 import { InstrumentStoreComponent } from './components/instrument-store/instrument-store.component';
+import { BoxSectionBuilderComponent } from './components/box-section-builder/box-section-builder.component';
+import { BoxQuestionBuilderComponent } from './components/box-question-builder/box-question-builder.component';
+
+
 
 
 
@@ -22,7 +26,9 @@ import { InstrumentStoreComponent } from './components/instrument-store/instrume
     CategoryStoreComponent,
     UnitsComponent,
     UnitStoreComponent,
-    InstrumentStoreComponent
+    InstrumentStoreComponent,
+    BoxSectionBuilderComponent,
+    BoxQuestionBuilderComponent
   ],
   imports: [
     CommonModule,

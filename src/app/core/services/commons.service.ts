@@ -77,46 +77,92 @@ export class CommonsService extends HttpService {
     return countries;
   }
 
-    /**
-  * Get all states by id pais
-  * @returns 
-  */
-     async getAllStates(id:number): Promise<Array<SelectOption>> {
+  /**
+* Get all states by id pais
+* @returns 
+*/
+  async getAllStates(id: number): Promise<Array<SelectOption>> {
 
-      let states: Array<SelectOption> = new Array<SelectOption>();
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/estado/pais/${id}`))
-      states = resp.map((item: any) => {
-        return new SelectOption(item.id, item.nombre);
-      });
-      return states;
-  
-    }
+    let states: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/estado/pais/${id}`))
+    states = resp.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return states;
+
+  }
 
 
-    /**
-  * Get all city by id estados
-  * @returns 
-  */
-     async getAllCities(id:number): Promise<Array<SelectOption>> {
+  /**
+* Get all city by id estados
+* @returns 
+*/
+  async getAllCities(id: number): Promise<Array<SelectOption>> {
 
-      let cities: Array<SelectOption> = new Array<SelectOption>();
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/ciudad/estado/${id}`))
-      cities = resp.map((item: any) => {
-        return new SelectOption(item.id, item.nombre);
-      });
-      return cities;
-  
-    }    
+    let cities: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/ciudad/estado/${id}`))
+    cities = resp.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return cities;
 
-    async getAllSocialNetwork(): Promise<Array<SelectOption>>{
+  }
 
-      let redes: Array<SelectOption> = new Array<SelectOption>();
-      const resp = await firstValueFrom(this.get(environment.apiUrl, '/tiporedes/List'));
-      redes = resp.data.map((item: any) => {
-        return new SelectOption(item.id, item.nombre);
-      });
-      return redes;
-    }
+  /**
+   * Get all social networks
+   * @returns 
+   */
+  async getAllSocialNetwork(): Promise<Array<SelectOption>> {
 
+    let redes: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/tiporedes/List'));
+    redes = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return redes;
+  }
+
+  /**
+   * Get all units type
+   * @returns 
+   */
+  async getAllUnitsType(): Promise<Array<SelectOption>> {
+
+    let unitsType: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/encuesta/tipounidad/list'));
+    unitsType = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return unitsType;
+  }
+
+
+  /**
+* Get all inputs type
+* @returns 
+*/
+  async getAllInputsType(): Promise<Array<SelectOption>> {
+
+    let inputsType: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/encuesta/tipoinpunt/list'));
+    inputsType = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return inputsType;
+  }
+
+  /**
+* Get all categories
+* @returns 
+*/
+  async getAllCategories(): Promise<Array<SelectOption>> {
+
+    let categories: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/tipocategoria/list'));
+    categories = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return categories;
+  }
 
 }

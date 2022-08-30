@@ -1,4 +1,6 @@
 import { Question } from './question';
+import { Section } from './section';
+import { User } from './user';
 
 
 export class Instrument {
@@ -6,6 +8,11 @@ export class Instrument {
     id: string;
     name: string;
     description:string;
+    roles?:any[];
+    users:Array<User>;
+    dutation:string;
+    unitType: string;
+    sections: Array<Section>;
     questions: Array<Question>;
     path:string;
     createAt:Date;

@@ -5,34 +5,168 @@
             <div class="card-body">
                 <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId" class="nav-tabs">
                     <li [ngbNavItem]="1">
-                      <a ngbNavLink>Construir</a>
-                      <ng-template ngbNavContent>
-                        <div class="row">
-                            <div class="col-md-offset-2 col-md-8">
-                                <div class="d-flex align-items-center flex-row">
-                                    <button type="button" style="margin-bottom: 15px" class="btn btn-primary" >Reset</button>
-                                </div>                                
-                            </div>
-                            <div class="col-lg-12 col-md-12">
-                                <form name="instrumentForm" #instrumentForm="ngForm">
-                                    <div class="row">
-                                        
+                        <a ngbNavLink>Construir</a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-md-offset-2 col-md-8">
+                                    <div class="d-flex align-items-center flex-row">
+                                        <button type="button" style="margin-bottom: 15px"
+                                            class="btn btn-primary">Reset</button>
                                     </div>
-                                </form>
+                                </div>
+                                <div class="col-lg-12 col-md-12">
+                                    <form name="instrumentForm" #instrumentForm="ngForm">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputInstrumentName" class="form-label">Nombre de
+                                                        Instrumento</label>
+                                                    <input type="text" name="instrumentName" #instrumentName="ngModel"
+                                                        [(ngModel)]="instrument.name"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : instrumentName.errors && ( instrumentName.dirty || instrumentName.touched || instrumentForm.submitted) }"
+                                                        class="form-control" id="inputInstrumentName" autocomplete="off"
+                                                        minlength="3" maxlength="250" required>
+                                                    <div *ngIf="instrumentName.invalid && instrumentForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="instrumentName.errors?.required">Campo es requerido
+                                                        </div>
+                                                        <div
+                                                            *ngIf="instrumentName.errors?.minlength || instrumentName.errors?.maxlength">
+                                                            Campo permite entre 3 y 100 caracteres</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputInstrumentPath" class="form-label">Ruta de
+                                                        Resultados</label>
+                                                    <input type="text" name="instrumentPath" #instrumentPath="ngModel"
+                                                        [(ngModel)]="instrument.path"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : instrumentPath.errors && ( instrumentPath.dirty || instrumentPath.touched || instrumentForm.submitted) }"
+                                                        class="form-control" id="inputInstrumentPath" autocomplete="off"
+                                                        minlength="3" maxlength="250">
+                                                    <div *ngIf="instrumentPath.invalid && instrumentForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="instrumentPath.errors?.required">Campo es requerido
+                                                        </div>
+                                                        <div
+                                                            *ngIf="instrumentPath.errors?.minlength || instrumentPath.errors?.maxlength">
+                                                            Campo permite entre 3 y 100 caracteres</div>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputRoles" class="form-label">Roles</label>
+                                                    <ng-select id="inputRoles" [items]="data.roles" [multiple]=true [searchable]="false"
+                                                    [closeOnSelect]="false" name="instrumentRole" #instrumentRole="ngModel"
+                                                    [ngClass]="{'ng-dirty ng-invalid' : instrumentRole.errors && ( instrumentRole.dirty || instrumentRole.touched || instrumentForm.submitted) }"
+                                                    bindLabel="label" bindValue="value"
+                                                    [searchable]="false" [(ngModel)]="instrument.roles" required>
+                                                    </ng-select> 
+                                                    <div *ngIf="instrumentRole.invalid && instrumentForm.submitted" class="invalid-feedback">
+                                                        <div *ngIf="instrumentRole.errors?.required">Campo es requerido
+                                                        </div>                          
+                                                    </div>                                    
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputUsers" class="form-label">Usuarios</label>
+                                                    <ng-select id="inputUsers" [items]="users" [multiple]=true [searchable]="false"
+                                                    [closeOnSelect]="false" name="instrumentUsers" #instrumentUsers="ngModel"
+                                                    [ngClass]="{'ng-dirty ng-invalid' : instrumentUsers.errors && ( instrumentUsers.dirty || instrumentUsers.touched || instrumentForm.submitted) }"
+                                                    bindLabel="label" bindValue="value"
+                                                    [searchable]="false" [(ngModel)]="instrument.users" required>
+                                                    </ng-select> 
+                                                    <div *ngIf="instrumentUsers.invalid && instrumentForm.submitted" class="invalid-feedback">
+                                                        <div *ngIf="instrumentUsers.errors?.required">Campo es requerido
+                                                        </div>                          
+                                                    </div>                                    
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputInstrumentDuration" class="form-label">Duración</label>
+                                                    <input type="text" name="instrumentDuration" #instrumentDuration="ngModel"
+                                                        [(ngModel)]="instrument.dutation"
+                                                        [pattern]="environment.form.number.validations.pattern"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : instrumentDuration.errors && ( instrumentDuration.dirty || instrumentDuration.touched || instrumentForm.submitted) }"
+                                                        class="form-control" id="inputInstrumentDuration" autocomplete="off"
+                                                        minlength="3" maxlength="250" required>
+                                                    <div *ngIf="instrumentDuration.invalid && instrumentForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="instrumentDuration.errors?.required">Campo es requerido
+                                                        </div>
+                                                        <div *ngIf="instrumentDuration.errors?.pattern">Campo solo permite números
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputUnitType" class="form-label">Duración (Tipo de unidad)</label>
+                                                    <ng-select id="inputUnitType" [items]="data.units" name="unitType" #unitType="ngModel"
+                                                    [ngClass]="{'ng-dirty ng-invalid' : unitType.errors && ( unitType.dirty || unitType.touched || instrumentForm.submitted) }"
+                                                        [searchable]="false"
+                                                        [(ngModel)]="instrument.unitType" required>
+                                                    </ng-select>
+                                                    <div *ngIf="unitType.invalid && instrumentForm.submitted" class="invalid-feedback">
+                                                        <div *ngIf="unitType.errors?.required">Campo es requerido
+                                                        </div>                          
+                                                    </div>
+                                                </div>
+                                            </div>                                           
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputInstrumentDescription"
+                                                        class="form-label">Descripción</label>
+                                                    <textarea id="inputInstrumentDescription" minlength="3" class="form-control"
+                                                        maxlength="500" name="instrumentDescription"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : instrumentDescription.errors && ( instrumentDescription.dirty || instrumentDescription.touched || instrumentForm.submitted) }"
+                                                        #instrumentDescription="ngModel"
+                                                        [(ngModel)]="instrument.description" required></textarea>
+                                                    <div *ngIf="instrumentDescription.invalid && instrumentForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="instrumentDescription.errors?.required">Campo es
+                                                            requerido
+                                                        </div>
+                                                        <div
+                                                            *ngIf="instrumentDescription.errors?.minlength || instrumentDescription.errors?.maxlength">
+                                                            Campo permite entre 3 y 500 caracteres</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <app-box-section-builder *ngFor="let section of instrument.sections" [section]="section" (onDeleteSection)="deleteSection($event)"></app-box-section-builder>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="row">                                
+                                                    <div class="col-sm-12 text-right">
+                                                        <button type="button"  class="btn btn-primary" (click)="addSection()"><i class="feather icon-file-plus"></i> Sección</button>
+                                                    </div>
+                                                </div>
+                                
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                      </ng-template>
+                        </ng-template>
                     </li>
                     <li [ngbNavItem]="2">
-                      <a ngbNavLink>Visor</a>
-                      <ng-template ngbNavContent>
+                        <a ngbNavLink>Visor</a>
+                        <ng-template ngbNavContent>
 
-                      </ng-template>
+                        </ng-template>
                     </li>
-                  </ul>
-                  
-                  <div [ngbNavOutlet]="defaultNav" class="border border-top-0 p-3"></div>
-                  <p class="mt-2">Active: {{ defaultNavActiveId }}</p>
+                </ul>
+
+                <div [ngbNavOutlet]="defaultNav" class="border border-top-0 p-3"></div>
+                <p class="mt-2">Active: {{ defaultNavActiveId }}</p>
             </div>
         </div>
 
