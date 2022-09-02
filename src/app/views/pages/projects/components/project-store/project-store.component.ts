@@ -12,6 +12,7 @@ import { Filter } from 'src/app/core/models/filter';
 import { PaginationResponse } from 'src/app/core/models/pagination-response';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/core/models/user';
+import { CompanyService } from 'src/app/core/services/company.service';
 
 @Component({
   selector: 'app-project-store',
@@ -49,6 +50,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     private projectService: ProjectService,
     private commonsService: CommonsService,
     private userService: UserService,
+    private companyService: CompanyService,
     private calendar: NgbCalendar, 
     public formatter: NgbDateParserFormatter) {
     super();
@@ -83,14 +85,19 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     
   }
 
-  async onChangeAssignedResources(event: any) {
+  async onChangeProjectManagementOffice(event: any) {
     let filter: Filter;
     filter.page = 1
     filter.rowByPage = 9999;
     filter.word = null
-    console.log('assignedResources', this.project.assignedResources);
-    this.users = await this.userService.getUsersPaginated(filter);
+    console.log('projectManagementOffice', this.project.projectManagementOffice);
+    this.data.users = await this.userService.getUsersPaginated(filter);
 
+  }
+
+  async onChangeCompany(event: any) {
+    console.log('company', this.project.company);
+    this.data.Companies = await this.companyService.getCompanies();
   }
 
   async onSubmit(form: NgForm) {
@@ -109,25 +116,25 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
 
   onDateSelection(date: NgbDate) {
-    if (!this.startDate && !this.endDate) {
-      this.startDate = date;
-    } else if (this.startDate && !this.endDate && date && date.after(this.startDate)) {
-      this.endDate = date;
+    if (!this.project.startDate && !this.project.endDate) {
+      this.project.startDate = date;
+    } else if (this.project.startDate && !this.project.endDate && date && date.after(this.project.startDate)) {
+      this.project.endDate = date;
     } else {
-      this.endDate = null;
-      this.startDate = date;
+      this.project.endDate = null;
+      this.project.startDate = date;
     }
   }
 
   isHovered(date: NgbDate) {
-    return this.startDate && !this.endDate && this.hoveredDate && date.after(this.startDate) &&
+    return this.project.startDate && !this.project.endDate && this.hoveredDate && date.after(this.project.startDate) &&
       date.before(this.hoveredDate);
   }
 
-  isInside(date: NgbDate) { return this.endDate && date.after(this.startDate) && date.before(this.endDate); }
+  isInside(date: NgbDate) { return this.project.endDate && date.after(this.project.startDate) && date.before(this.project.endDate); }
 
   isRange(date: NgbDate) {
-    return date.equals(this.startDate) || (this.endDate && date.equals(this.endDate)) || this.isInside(date) ||
+    return date.equals(this.project.startDate) || (this.project.endDate && date.equals(this.project.endDate)) || this.isInside(date) ||
       this.isHovered(date);
   }
 

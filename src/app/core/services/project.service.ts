@@ -78,7 +78,6 @@ export class ProjectService extends HttpService {
     paginator.data = resp.data.map((item: any) => {
       const project = Project.mapFromObject(item);
       console.log(item, project);
-      debugger
       
       return project;
     })

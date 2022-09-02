@@ -48,7 +48,7 @@
                                 <div class="mb-3">
                                     <div class="input-group" (click)="datepicker.toggle()">
                                         <input #dpStartDate class="form-control" placeholder="yyyy-mm-dd" name="dpStartDate"
-                                            [value]="formatter.format(startDate)" (input)="startDate = validateInput(startDate, dpStartDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.startDate">
+                                            [value]="formatter.format(project.startDate)" (input)="project.startDate = validateInput(project.startDate, dpStartDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.startDate">
                                         <button class="input-group-text" type="button">
                                             <i class="feather icon-calendar icon-md text-muted"></i>
                                         </button>
@@ -57,7 +57,7 @@
                                 <div class="ms-2">
                                     <div class="input-group" (click)="datepicker.toggle()">
                                         <input #dpEndDate class="form-control" placeholder="yyyy-mm-dd" name="dpEndDate"
-                                            [value]="formatter.format(endDate)" (input)="endDate = validateInput(endDate, dpEndDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.endDate">
+                                            [value]="formatter.format(project.endDate)" (input)="project.endDate = validateInput(project.endDate, dpEndDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.endDate">
                                         <button class="input-group-text" type="button">
                                             <i class="feather icon-calendar icon-md text-muted"></i>
                                         </button>
@@ -68,11 +68,27 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputAssignedResources" class="form-label">PMO</label>
-                                <ng-select id="inputAssignedResources" [items]="data.users" name="projectManagementOffice"
+                                <label for="inputCompany" class="form-label">Empresa</label>
+                                <ng-select id="inputCompany" [items]="data.Companies" name="company"
+                                    #company="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : company.errors && ( company.dirty || company.touched || projectForm.submitted) }"
+                                    [searchable]="false" (change)="onChangeCompany($event)"
+                                    [(ngModel)]="project.company" required>
+                                </ng-select>
+                                <div *ngIf="company.invalid && projectForm.submitted"
+                                    class="invalid-feedback">
+                                    <div *ngIf="company.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputProjectManagementOffice" class="form-label">PMO</label>
+                                <ng-select id="inputProjectManagementOffice" [items]="data.users" name="projectManagementOffice"
                                     #projectManagementOffice="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty || projectManagementOffice.touched || projectForm.submitted) }"
-                                    [searchable]="false" (change)="onChangeAssignedResources($event)"
+                                    [searchable]="false" (change)="onChangeProjectManagementOffice($event)"
                                     [(ngModel)]="project.projectManagementOffice" required>
                                 </ng-select>
                                 <div *ngIf="projectManagementOffice.invalid && projectForm.submitted"
