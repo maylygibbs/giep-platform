@@ -4,16 +4,19 @@ import { CommonsService } from './../../../../../core/services/commons.service';
 import { UserService } from './../../../../../core/services/user.service';
 import { AuthService } from './../../../../../core/services/auth.service';
 import { User } from './../../../../../core/models/user';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { CropperPosition, ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent extends BaseComponent implements OnInit {
 
   @ViewChild('inputAvatar')
   inputAvatar: ElementRef<HTMLInputElement>;
@@ -21,15 +24,21 @@ export class ProfileComponent implements OnInit {
   @ViewChild('avatar')
   avatar: ElementRef<HTMLInputElement>;
 
+  imageCropper: ImageCropperComponent;
+
   user: User;
 
   tab: string = 'about';
 
 
   date: Date = new Date();
-  data:any;
-  states:Array<SelectOption>;
-  cities:Array<SelectOption>;
+  data: any;
+  states: Array<SelectOption>;
+  cities: Array<SelectOption>;
+
+  imageChangedEvent: any = '';
+  lastCropperPosition: CropperPosition;
+  lastCroppedImage: any;
 
   //Subcription
   user$: Subscription;
@@ -37,11 +46,13 @@ export class ProfileComponent implements OnInit {
   constructor(private authService: AuthService,
     private route: ActivatedRoute,
     private userService: UserService,
+    private modalService: NgbModal,
     private commonsService: CommonsService) {
-      this.route.data.subscribe((data)=>{      
-        this.data = data;
-      });
-     }
+      super();
+    this.route.data.subscribe((data) => {
+      this.data = data;
+    });
+  }
 
   ngOnInit(): void {
 
@@ -54,18 +65,26 @@ export class ProfileComponent implements OnInit {
   selectTab(tab: string) {
     
     this.tab = tab;
-      if(!this.user.socialNetwork){
-        this.user.socialNetwork = new Array<SelectOption>();
-        this.data.networks.forEach((net:SelectOption) => {
-          this.user.socialNetwork.push({idTipo:net.value, label: net.label, networkDir:null});
-        });
+    if (!this.user.socialNetwork) {
+      this.user.socialNetwork = new Array<SelectOption>();
+      this.data.networks.forEach((net: SelectOption) => {
+        this.user.socialNetwork.push({ idTipo: parseInt(net.value), label: net.label, networkDir: null });
+      });
 
-      } else{
-        this.data.networks.forEach((net:SelectOption) => {
-          const arrayTemp = this.user.socialNetwork
-          this.user.socialNetwork.push({idTipo:net.value, label: net.label, networkDir:null});
+    } else {
+      const arrayTemp = this.user.socialNetwork;
+      this.user.socialNetwork = [];
+      this.data.networks.forEach((net: SelectOption) => { 
+        this.user.socialNetwork.push({ idTipo: parseInt(net.value), label: net.label, networkDir: null });
+      });
+      arrayTemp.forEach(element1 => {
+        this.user.socialNetwork.forEach(element2 => {
+          if (element1.idTipo == element2.idTipo) {
+            element2.networkDir = element1.networkDir
+          }          
         });
-      }
+      });
+    }
   }
 
 
@@ -74,8 +93,8 @@ export class ProfileComponent implements OnInit {
     this.inputAvatar.nativeElement.click();
   }
 
-  async uploadAvatar(event: any) {
-    const file: File = event.target.files[0];
+  async uploadAvatar(file: File) {
+    
     console.log('avatar', file);
     if (file) {
       this.avatar.nativeElement.src = URL.createObjectURL(file)
@@ -105,8 +124,52 @@ export class ProfileComponent implements OnInit {
       console.log('post user', User.mapForEditProfile(this.user));
       await this.userService.updateProfile(User.mapForEditProfile(this.user));
       await this.userService.getInfoUser();
+      this.tab = 'about';
     }
 
+  }
+
+  /**
+   * Event change input file
+   * @param event 
+   * @param content 
+   */
+  fileChangeEvent(event: any, content: TemplateRef<any>): void {
+    this.imageChangedEvent = event;
+    this.modalService.open(content, {centered: true}).result.then((result) => {
+      console.log("Modal closed" + result);
+
+    }).catch((res) => {});
+    
+  }
+
+  /**
+   * Event image cropped
+   * @param event 
+   * @param content 
+   */
+  imageCropped(event: ImageCroppedEvent) {
+    console.log('cropped', event);
+    this.lastCroppedImage = event.base64;
+    this.user.avatar = this.lastCroppedImage;
+    this.uploadAvatar(this.convertBase64ToFile(this.lastCroppedImage, "avatar"));
+  }
+
+    /**
+   * Event load file failed
+   * @param event 
+   * @param content 
+   */
+  loadImageFailed() {
+    /* show message */
+  }
+
+  /**
+   * 
+   */
+  crop(imageCropper:ImageCropperComponent){
+    imageCropper.crop();
+    this.modalService.dismissAll();
   }
 
   ngOnDestroy() {

@@ -120,7 +120,7 @@
                             <div class="mb-3">
                                 <label for="inputBirthDate" class="form-label">Fecha Nacimiento</label>
                                 <div class="input-group">
-                                    <input id="inputBirthDate" name="birthDate" #birthDate="ngModel"  class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                                    <input id="inputBirthDate" name="birthDate" #birthDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}"  class="form-control" placeholder="yyyy-mm-dd" name="dp"
                                     [ngClass]="{'ng-dirty ng-invalid' : birthDate.errors && ( birthDate.dirty || birthDate.touched || userForm.submitted) }"
                                         [(ngModel)]="user.birthDate" ngbDatepicker #dp="ngbDatepicker" required>
                                     <button class="input-group-text" type="button" (click)="dp.toggle()">
@@ -222,6 +222,8 @@
                                     theme="bootstrap"
                                     theme="bootstrap"
                                     [displayBy]="'numero'"
+                                    placeholder="+nuevo nro."
+                                    secondaryPlaceholder="Pulse enter para confirmar"
                                     [ngClass]="{'ng-invalid' : phone.errors && ( phone.dirty || phone.touched || userForm.submitted) }" required>
                                 </tag-input>
                                     <div *ngIf="phone.invalid && userForm.submitted" class="invalid-feedback">

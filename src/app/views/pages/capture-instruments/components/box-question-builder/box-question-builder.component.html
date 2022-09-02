@@ -1,1 +1,73 @@
-<p>box-question-builder works!</p>
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-lg-6">
+                <span>Pregunta Nro. {{question.order}} </span>
+            </div>
+            <div class="col-lg-6 text-right">
+                <i class="feather icon-trash" (click)="deleteQuestion(question)"></i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label for="inputQuestionLabel" class="form-label">Texto de la pregunta</label>
+                    <input type="text" name="questionLabel" #questionLabel="ngModel" [(ngModel)]="question.label"
+                        class="form-control" autocomplete="off" minlength="3" maxlength="250"
+                        required>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label for="inputType" class="form-label">Tipo de input</label>
+                    <ng-select id="inputUnitType" [items]="inputsType" name="inputType" #inputType="ngModel"
+                        [(ngModel)]="question.inputType"
+                        [searchable]="false" required>
+                    </ng-select>
+                </div>
+            </div>
+            <div *ngIf="question.inputType && (question.inputType.label=='select' || question.inputType.label=='select-multple' || question.inputType.label=='radio')" class="col-lg-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div *ngFor="let option of question.options" class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <label for="inputQuestionLabel" class="form-label">Opcion</label>
+                                    <input type="text" name="questionLabel" #questionLabel="ngModel" [(ngModel)]="option.label"
+                                        class="form-control" autocomplete="off" minlength="3" maxlength="255"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <label for="inputQuestionLabel" class="form-label">Valor</label>
+                                    <input type="text" name="questionValue" #questionValue="ngModel" [(ngModel)]="option.value"
+                                        class="form-control" autocomplete="off" minlength="3" maxlength="255"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <i class="feather icon-trash" (click)="deleteOption()"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control" readonly value="Click para agregar nueva opción" (click)="addOption()">                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="col-lg-12">
+                <div class="form-check mb-3"> 
+                    <input type="checkbox" name="inputRequired" #inputRequired="ngModel" [(ngModel)]="question.required" class="form-check-input">
+                    <label class="form-check-label" for="exampleCheck1">
+                        Requerido
+                    </label>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

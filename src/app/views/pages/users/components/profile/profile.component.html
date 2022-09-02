@@ -13,7 +13,32 @@
             <i class="feather icon-edit avatar" (click)="preUploadAvatar()"></i>
             <span class="h4 ms-3 text-dark">{{user?.fullName}}</span>
             <input #inputAvatar type="file" name="avatar" accept="image/*;capture=camera" style="visibility: hidden;"
-              (change)="uploadAvatar($event)">
+            (change)="fileChangeEvent($event, cropModal)">
+            <ng-template #cropModal let-modal>
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crop image</h5>
+                <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <image-cropper 
+                #imageCropper
+                [autoCrop]="false"
+                [imageChangedEvent]="imageChangedEvent" 
+                [maintainAspectRatio]="true" 
+                [aspectRatio]="4 / 4"
+                [resizeToWidth]="150" 
+                [resizeToHeight]="150"
+                format="png" 
+                (imageCropped)="imageCropped($event)" 
+                (loadImageFailed)="loadImageFailed()"></image-cropper>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="crop(imageCropper)">Cortar</button>
+              </div>
+            </ng-template>
+
+
           </div>
           <div class="d-none d-md-block">
             <button class="btn btn-primary btn-icon-text">

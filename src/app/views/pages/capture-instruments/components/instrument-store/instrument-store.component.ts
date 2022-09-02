@@ -1,3 +1,5 @@
+import { InstrumentsService } from './../../../../../core/services/instruments.service';
+import { BaseComponent } from './../../../../shared/components/base/base.component';
 import { User } from './../../../../../core/models/user';
 import { Section } from './../../../../../core/models/section';
 import { Instrument } from './../../../../../core/models/instrument';
@@ -10,7 +12,7 @@ import { environment } from './../../../../../../environments/environment';
   templateUrl: './instrument-store.component.html',
   styleUrls: ['./instrument-store.component.scss']
 })
-export class InstrumentStoreComponent implements OnInit {
+export class InstrumentStoreComponent extends BaseComponent implements OnInit {
 
   @Input()
   instrument: Instrument;
@@ -24,9 +26,13 @@ export class InstrumentStoreComponent implements OnInit {
 
   environment = environment;
 
-  users: Array<User>;
+  users: Array<any>;
+  selectedUsers = [];
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute,
+    private instrumentsService: InstrumentsService) {
+    super();
+   }
 
   ngOnInit(): void {
     this.route.data.subscribe((data)=>{      
@@ -50,6 +56,13 @@ export class InstrumentStoreComponent implements OnInit {
 
   back(){
     this.onBack.emit(null);
+  }
+
+
+  async loadUsersByRoles(){
+    console.log('roles', this.instrument.roles);
+    this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.instrument.roles,'|'));
+    console.log('resp',this.users)
   }
 
 }

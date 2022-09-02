@@ -67,6 +67,7 @@ export class User {
         newInstace.country = user.country;
         newInstace.state = user.state;
         newInstace.city = user.city;
+        newInstace.socialNetwork = user.socialNetwork;
 
         return newInstace
     }

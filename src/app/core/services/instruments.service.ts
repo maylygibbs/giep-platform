@@ -11,6 +11,7 @@ import { Question } from '../models/question';
 import { SelectOption } from '../models/select-option';
 import { ToastrService } from 'ngx-toastr';
 import { UnitType } from '../models/unit-type';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,7 @@ export class InstrumentsService extends HttpService {
    * @param filter 
    * @returns 
    */
-   async getInstrumentsPagined(filter: any): Promise<PaginationResponse> {
+  async getInstrumentsPagined(filter: any): Promise<PaginationResponse> {
     const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/list', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
@@ -135,7 +136,7 @@ export class InstrumentsService extends HttpService {
         const categories = item.resultado.map((itemData: any) => {
           return itemData.categoria;
         });
-        result.optionsChart = this.getOptionsChartBarByCategory(this.obj, data2, categories,true);
+        result.optionsChart = this.getOptionsChartBarByCategory(this.obj, data2, categories, true);
         return result;
       })
 
@@ -145,43 +146,43 @@ export class InstrumentsService extends HttpService {
   }
 
 
-    /**
-   * 
-   * @param id 
-   */
-     async getInstrumentResultByQuestions(id: number): Promise<any> {
+  /**
+ * 
+ * @param id 
+ */
+  async getInstrumentResultByQuestions(id: number): Promise<any> {
 
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/resultados/sincategoria/${id}`));
-  
-      let results: any[] = [];
-      if (resp && resp.preguntas.length > 0) {
-  
-        results = resp.preguntas.map((item: any) => {
-          const result: any = {};
-          result.name = item.pregunta;
-          const data1 = item.resultado.map((itemData: any) => {
-            return {
-              x: itemData.opcion,
-              y: itemData.total
-            }
-          });
-          const data2 = item.resultado.map((itemData: any) => {
-            return itemData.total;
-          });
-          const categories = item.resultado.map((itemData: any) => {
-            return itemData.opcion;
-          });
-          result.optionsChart = this.getOptionsChartBarByQuestions(this.obj, data2, categories, false);
-          return result;
-        })
-  
-      }
-  
-      return results;
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/resultados/sincategoria/${id}`));
+
+    let results: any[] = [];
+    if (resp && resp.preguntas.length > 0) {
+
+      results = resp.preguntas.map((item: any) => {
+        const result: any = {};
+        result.name = item.pregunta;
+        const data1 = item.resultado.map((itemData: any) => {
+          return {
+            x: itemData.opcion,
+            y: itemData.total
+          }
+        });
+        const data2 = item.resultado.map((itemData: any) => {
+          return itemData.total;
+        });
+        const categories = item.resultado.map((itemData: any) => {
+          return itemData.opcion;
+        });
+        result.optionsChart = this.getOptionsChartBarByQuestions(this.obj, data2, categories, false);
+        return result;
+      })
+
     }
 
+    return results;
+  }
 
-  getOptionsChartBarByCategory(obj: any, data: any, categories: any, horizontal:boolean) {
+
+  getOptionsChartBarByCategory(obj: any, data: any, categories: any, horizontal: boolean) {
     return {
       series: [{
         data: data,
@@ -277,7 +278,7 @@ export class InstrumentsService extends HttpService {
     }
   }
 
-  getOptionsChartBarByQuestions(obj: any, data: any, categories: any, horizontal:boolean) {
+  getOptionsChartBarByQuestions(obj: any, data: any, categories: any, horizontal: boolean) {
     return {
       series: [{
         data: data,
@@ -355,7 +356,7 @@ export class InstrumentsService extends HttpService {
         },
         offsetY: 10,
         formatter: function (val, opt) {
-          return  "Total:  " + val
+          return "Total:  " + val
         }
       },
       plotOptions: {
@@ -373,7 +374,7 @@ export class InstrumentsService extends HttpService {
       }
     }
   }
-  
+
 
 
 
@@ -502,10 +503,10 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, { nombre: data.label.toUpperCase()}));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, { nombre: data.label.toUpperCase() }));
         this.toastrService.success('Tipo de categoría actualizada con exito.');
       } else {
-        await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipocategoria', { nombre: data.label.toUpperCase()}));
+        await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipocategoria', { nombre: data.label.toUpperCase() }));
         this.toastrService.success('Tipo de categoría registrada con exito.');
       }
     } catch (error: any) {
@@ -522,7 +523,7 @@ export class InstrumentsService extends HttpService {
   }
 
 
-    /** UNIT TYPES **/
+  /** UNIT TYPES **/
 
 
   /**
@@ -530,7 +531,7 @@ export class InstrumentsService extends HttpService {
   * @param filter 
   * @returns 
   */
-   async getUnitTypesPagined(filter: any): Promise<PaginationResponse> {
+  async getUnitTypesPagined(filter: any): Promise<PaginationResponse> {
     const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipounidad/pagined', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
@@ -578,7 +579,7 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipounidad/actualizar/${id}`, { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase()}));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipounidad/actualizar/${id}`, { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase() }));
         this.toastrService.success('Tipo de unidad actualizada con exito.');
       } else {
         await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipounidad', { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase() }));
@@ -595,6 +596,38 @@ export class InstrumentsService extends HttpService {
       }
 
     }
+  }
+
+
+  /**
+ * Query users by roles
+ * @param id 
+ * @returns 
+ */
+  async getUsersByRoles(roles: any): Promise<Array<any>> {
+
+    try {
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/roles', { roles: roles }));
+      const users = resp.data.map((item:any)=>{
+        return {
+          id: item.id,
+          fullName: item.nombre+' '+item.apellido,
+          role: item.role
+        };
+      })
+      return users;
+    } catch (error: any) {
+
+      console.log(error);
+      if (error.status == 409) {
+        this.toastrService.error('', error.msg);
+      }
+      if (error.status != 500) {
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      }
+
+    }
+
   }
 
 
