@@ -11,6 +11,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { Filter } from 'src/app/core/models/filter';
 import { PaginationResponse } from 'src/app/core/models/pagination-response';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { User } from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-project-store',
@@ -54,6 +55,15 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.project = new Project();
+
+    this.project.name ="proyecto";
+    this.project.description ="Descripcion";
+    this.project.startDate = this.calendar.getToday();
+    this.project.endDate = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
+    this.project.projectManagementOffice = new User();
+    this.project.projectManagementOffice.id = "1";
+    this.project.status = new SelectOption('1');
     this.route.data.subscribe((data) => {
       this.data = data;
     });
@@ -63,6 +73,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     } else {
       this.projectStatus = this.project.status.value == '1' ? true : false;
     }
+    console.log(this.project);
   }
 
   async onChangeStatus(event: any) {
@@ -122,7 +133,14 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
+    console.log(currentValue, input, parsed);
+    
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  onchangeDate(event) {
+    console.log(event);
+    
   }
   /**
    * end fecha

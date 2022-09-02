@@ -29,7 +29,6 @@ export class ProjectService extends HttpService {
     const resp =  await firstValueFrom(this.get(environment.apiUrl,'/project/info/detalle'));
     const project = new Project();
     project.id = resp[0].id;
-    project.token = this.authService.currentUser.token;
     project.name = resp[0].Nombre;
     project.description = resp[0].Descripcion;
     project.assignedResources = resp[0].RecursosAsignados;
@@ -49,7 +48,7 @@ export class ProjectService extends HttpService {
    * @param filter 
    * @returns 
    */
-  async getProjectsPaginated(filter: any): Promise<PaginationResponse> {
+  async getProjectsPaginated2(filter: any): Promise<PaginationResponse> {
     console.info('metodo mockeado');
     
     const resp = await firstValueFrom(this.http.get("assets/data/projectsPaginated.json", filter));
@@ -59,7 +58,6 @@ export class ProjectService extends HttpService {
     paginator.count = 20;
     paginator.data = respJson.data.map((item: any) => {
       const project = Project.mapFromObject(item);
-      project.token = this.authService.currentUser.token;
       return project;
     });
     
@@ -72,22 +70,16 @@ export class ProjectService extends HttpService {
    * @param filter 
    * @returns 
    */
-  async getProjectsPaginated2(filter: any): Promise<PaginationResponse> {
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/project/all', filter));
+  async getProjectsPaginated(filter: any): Promise<PaginationResponse> {
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/proyecto/pagined', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
+    let min = 0, max = 100;
     paginator.data = resp.data.map((item: any) => {
-      const project = new Project();
-      project.id = item.id;
-      project.name = item.name;
-      project.token = this.authService.currentUser.token;
-      project.name = item.Nombre;
-      project.assignedResources = item.RecursosAsignados;
-      project.startDate = item.FechaInicio;
-      project.endDate = item.FechaFinal;
-      project.hoursProject = item.HorasProyecto;
-      project.projectManagementOffice = item.OficinaGetionProyectos;
-      project.status = new SelectOption(item.status.id, item.status.Descripcion);
+      const project = Project.mapFromObject(item);
+      console.log(item, project);
+      debugger
+      
       return project;
     })
     return paginator;
@@ -103,7 +95,6 @@ export class ProjectService extends HttpService {
     const resp = await firstValueFrom(this.get(environment.apiUrl,`/project/${id}`));
     const project = new Project();
     project.id = resp[0].id;
-    project.token = this.authService.currentUser.token;
     project.name = resp[0].Nombre;
     project.assignedResources = resp[0].RecursosAsignados;
     project.startDate = resp[0].FechaInicio;
