@@ -5,6 +5,7 @@ import { ProjectService } from '../../../../../core/services/project.service';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BaseComponent } from '../../../../shared/components/base/base.component';
+import * as _ from 'lodash';
 
 
 
@@ -47,7 +48,7 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.projects = null;
-    this.projects = await this.projectService.getProjectsPaginated({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
+    this.projects = await this.projectService.getProjectsPaginated({ page: this.page, rowByPage: 5, word: this.word ? this.word : null});
   }
 
   create(){

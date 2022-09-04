@@ -11,6 +11,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { Filter } from 'src/app/core/models/filter';
 import { PaginationResponse } from 'src/app/core/models/pagination-response';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { User } from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-project-store',
@@ -54,6 +55,15 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.project = new Project();
+
+    this.project.name ="proyecto";
+    this.project.description ="Descripcion";
+    this.project.startDate = this.calendar.getToday();
+    this.project.endDate = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
+    this.project.projectManagementOffice = new User();
+    this.project.projectManagementOffice.id = "1";
+    this.project.status = new SelectOption('1');
     this.route.data.subscribe((data) => {
       this.data = data;
     });
@@ -63,6 +73,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     } else {
       this.projectStatus = this.project.status.value == '1' ? true : false;
     }
+    console.log(this.project);
   }
 
   async onChangeStatus(event: any) {
@@ -72,12 +83,22 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     
   }
 
-  async onChangeAssignedResources(event: any) {
+  async onChangeProjectManagementOffice(event: any) {
     let filter: Filter;
     filter.page = 1
     filter.rowByPage = 9999;
     filter.word = null
-    console.log('assignedResources', this.project.assignedResources);
+    console.log('projectManagementOffice', this.project.projectManagementOffice);
+    this.users = await this.userService.getUsersPaginated(filter);
+
+  }
+
+  async onChangeCompany(event: any) {
+    let filter: Filter;
+    filter.page = 1
+    filter.rowByPage = 9999;
+    filter.word = null
+    console.log('projectManagementOffice', this.project.projectManagementOffice);
     this.users = await this.userService.getUsersPaginated(filter);
 
   }
@@ -98,31 +119,38 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
 
   onDateSelection(date: NgbDate) {
-    if (!this.startDate && !this.endDate) {
-      this.startDate = date;
-    } else if (this.startDate && !this.endDate && date && date.after(this.startDate)) {
-      this.endDate = date;
+    if (!this.project.startDate && !this.project.endDate) {
+      this.project.startDate = date;
+    } else if (this.project.startDate && !this.project.endDate && date && date.after(this.project.startDate)) {
+      this.project.endDate = date;
     } else {
-      this.endDate = null;
-      this.startDate = date;
+      this.project.endDate = null;
+      this.project.startDate = date;
     }
   }
 
   isHovered(date: NgbDate) {
-    return this.startDate && !this.endDate && this.hoveredDate && date.after(this.startDate) &&
+    return this.project.startDate && !this.project.endDate && this.hoveredDate && date.after(this.project.startDate) &&
       date.before(this.hoveredDate);
   }
 
-  isInside(date: NgbDate) { return this.endDate && date.after(this.startDate) && date.before(this.endDate); }
+  isInside(date: NgbDate) { return this.project.endDate && date.after(this.project.startDate) && date.before(this.project.endDate); }
 
   isRange(date: NgbDate) {
-    return date.equals(this.startDate) || (this.endDate && date.equals(this.endDate)) || this.isInside(date) ||
+    return date.equals(this.project.startDate) || (this.project.endDate && date.equals(this.project.endDate)) || this.isInside(date) ||
       this.isHovered(date);
   }
 
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
+    console.log(currentValue, input, parsed);
+    
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  onchangeDate(event) {
+    console.log(event);
+    
   }
   /**
    * end fecha

@@ -2,31 +2,121 @@
     <div class="col-lg-12 col-md-12 stretch-card">
         <div class="card">
             <div class="card-body">
-                <form name="projectForm" #projectForm="ngForm" (ngSubmit)="onSubmit(projectForm)" class="forms-sample">
+                <form name="projectForm" #projectForm="ngForm" (ngSubmit)="onSubmit(projectForm)" class="forms-sample range-selection">
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 p-1">
-                            <div class="d-flex align-items-left pt-3 pb-5">
-                                <div class="d-flex" style="flex-direction: column; vertical-align: middle;">
-                                    <span class="h4 ms-3 text-dark"></span>
-                                    <div class="mb-3 ms-3">
-                                        <div class="form-check form-switch mb-2">
-                                            <input type="checkbox" name=status #status="ngModel"
-                                                [(ngModel)]="projectStatus" (change)="onChangeStatus($event)"
-                                                class="form-check-input" id="formSwitch1">
-                                            <label class="form-check-label" for="formSwitch1">Activo</label>
-                                        </div>
-                                    </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputName" class="form-label">Titulo Proyecto</label>
+                                <input type="text" name="name" #name="ngModel"
+                                    [(ngModel)]="project.name"
+                                    [ngClass]="{'ng-dirty ng-invalid' : name.errors && ( name.dirty || name.touched || projectForm.submitted) }"
+                                    class="form-control" id="inputName" autocomplete="off" required>
+                                <div *ngIf="name.invalid && projectForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="name.errors?.required">Campo es requerido</div>
                                 </div>
-
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputAssignedResources" class="form-label">PMO</label>
-                                <ng-select id="inputAssignedResources" [items]="data.users" name="projectManagementOffice"
+                                <label for="inputDescription" class="form-label">Descripcion</label>
+                                <input type="text" name="description" #description="ngModel"
+                                    [(ngModel)]="project.description"
+                                    [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || projectForm.submitted) }"
+                                    class="form-control" id="inputDescription" autocomplete="off" required>
+                                <div *ngIf="description.invalid && projectForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="description.errors?.required">Campo es requerido</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex ">
+                                <div class="col-12">
+                                    <div class="dp-hidden position-absolute">
+                                        <div class="input-group">
+                                            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+                                                outsideDays="hidden" [startDate]="project.startDate!" tabindex="-1">
+                                            <ng-template #t let-date let-focused="focused">
+                                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                                    (mouseleave)="hoveredDate = null">
+                                                    {{ date.day }}
+                                                </span>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <input #dpStartDate class="form-control" placeholder="yyyy-mm-dd" name="dpStartDate"
+                                            [value]="formatter.format(project.startDate)" (input)="project.startDate = validateInput(project.startDate, dpStartDate.value)">
+                                        <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input #dpEndDate class="form-control" placeholder="yyyy-mm-dd" name="dpEndDate"
+                                            [value]="formatter.format(project.endDate)" (input)="project.endDate = validateInput(project.endDate, dpEndDate.value)">
+                                        <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group hidden ">
+                                    <div class="input-group">
+                                        <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'"
+                                            (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" (change)="onchangeDate($event)"
+                                            [startDate]="startDate!">
+                                        <ng-template #t let-date let-focused="focused">
+                                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                                [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                                (mouseleave)="hoveredDate = null">
+                                                {{ date.day }}
+                                            </span>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group" (click)="datepicker.toggle()">
+                                        <input #dpStartDate class="form-control" placeholder="yyyy-mm-dd" name="dpStartDate"
+                                            [value]="formatter.format(project.startDate)" (input)="project.startDate = validateInput(project.startDate, dpStartDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.startDate">
+                                        <button class="input-group-text" type="button">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="ms-2">
+                                    <div class="input-group" (click)="datepicker.toggle()">
+                                        <input #dpEndDate class="form-control" placeholder="yyyy-mm-dd" name="dpEndDate"
+                                            [value]="formatter.format(project.endDate)" (input)="project.endDate = validateInput(project.endDate, dpEndDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.endDate">
+                                        <button class="input-group-text" type="button">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                    </div>
+                                </div> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputCompany" class="form-label">Empresa</label>
+                                <ng-select id="inputCompany" [items]="data.Companies" name="company"
+                                    #company="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : company.errors && ( company.dirty || company.touched || projectForm.submitted) }"
+                                    [searchable]="false" (change)="onChangeCompany($event)"
+                                    [(ngModel)]="project.company" required>
+                                </ng-select>
+                                <div *ngIf="company.invalid && projectForm.submitted"
+                                    class="invalid-feedback">
+                                    <div *ngIf="company.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputProjectManagementOffice" class="form-label">PMO</label>
+                                <ng-select id="inputProjectManagementOffice" [items]="data.users" name="projectManagementOffice"
                                     #projectManagementOffice="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty || projectManagementOffice.touched || projectForm.submitted) }"
-                                    [searchable]="false" (change)="onChangeAssignedResources($event)"
+                                    [searchable]="false" (change)="onChangeProjectManagementOffice($event)"
                                     [(ngModel)]="project.projectManagementOffice" required>
                                 </ng-select>
                                 <div *ngIf="projectManagementOffice.invalid && projectForm.submitted"
@@ -37,93 +127,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                
-                                <div class="form-group hidden">
-                                    <div class="input-group">
-                                        <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
-                                            [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
-                                            outsideDays="hidden" [startDate]="startDate!">
-                                        <ng-template #t let-date let-focused="focused">
-                                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                                [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                                                (mouseleave)="hoveredDate = null">
-                                                {{ date.day }}
-                                            </span>
-                                        </ng-template>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <div class="input-group" (click)="datepicker.toggle()">
-                                        <input #dpStartDate class="form-control" placeholder="yyyy-mm-dd" name="dpStartDate"
-                                            [value]="formatter.format(startDate)" (input)="startDate = validateInput(startDate, dpStartDate.value)">
-                                        <button class="input-group-text" type="button">
-                                            <i class="feather icon-calendar icon-md text-muted"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <div class="input-group" (click)="datepicker.toggle()">
-                                        <input #dpEndDate class="form-control" placeholder="yyyy-mm-dd" name="dpEndDate"
-                                            [value]="formatter.format(endDate)" (input)="endDate = validateInput(endDate, dpEndDate.value)">
-                                        <button class="input-group-text" type="button">
-                                            <i class="feather icon-calendar icon-md text-muted"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputHoursProject" class="form-label">Horas de Proyecto</label>
-                                <input type="text" name="hoursProject" #hoursProject="ngModel"
-                                    [(ngModel)]="project.hoursProject"
-                                    [ngClass]="{'ng-dirty ng-invalid' : hoursProject.errors && ( hoursProject.dirty || hoursProject.touched || projectForm.submitted) }"
-                                    class="form-control" id="inputHoursProject" autocomplete="off" required>
-                                <div *ngIf="hoursProject.invalid && projectForm.submitted" class="invalid-feedback">
-                                    <div *ngIf="hoursProject.errors?.required">Campo es requerido</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputAssignedResources" class="form-label">Recursos asignados</label>
-                                <ng-select id="inputAssignedResources" [items]="data.users"
-                                    name="assignedResources" #assignedResources="ngModel"
-                                    [ngClass]="{'ng-dirty ng-invalid' : assignedResources.errors && ( assignedResources.dirty || assignedResources.touched || projectForm.submitted) }"
-                                    [searchable]="false" (change)="onChangeAssignedResources($event)"
-                                    [(ngModel)]="project.assignedResources" [multiple]=true required>
-                                </ng-select>
-                                <div *ngIf="assignedResources.invalid && projectForm.submitted"
-                                    class="invalid-feedback">
-                                    <div *ngIf="assignedResources.errors?.required">Campo es requerido
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputStatus" class="form-label">Estatus</label>
-                                <ng-select id="inputStatus" [items]="data.statusList" name="status" #status="ngModel"
-                                [ngClass]="{'ng-dirty ng-invalid' : status.errors && ( status.dirty || status.touched || projectForm.submitted) }"
-                                    [searchable]="false"
-                                    (change)="onChangeStatus($event)"
-                                    [(ngModel)]="project.status" required>
-                                </ng-select>
-                                <div *ngIf="status.invalid && projectForm.submitted" class="invalid-feedback">
-                                    <div *ngIf="status.errors?.required">Campo es requerido
-                                    </div>                          
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="row">
                         <div class="col-lg-12 col-md-12 text-right">
                             <button class="btn btn-secondary" (click)="back()">Cancelar</button>
