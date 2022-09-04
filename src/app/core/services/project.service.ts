@@ -26,19 +26,8 @@ export class ProjectService extends HttpService {
    * Get info of project
    */
   async getInfoProject(){
-    const resp =  await firstValueFrom(this.get(environment.apiUrl,'/project/info/detalle'));
-    const project = new Project();
-    project.id = resp[0].id;
-    project.name = resp[0].Nombre;
-    project.description = resp[0].Descripcion;
-    project.assignedResources = resp[0].RecursosAsignados;
-    project.startDate = resp[0].FechaInicio;
-    project.endDate = resp[0].FechaFinal;
-    project.hoursProject = resp[0].HorasProyecto;
-    project.progress = resp[0].Progreso;
-    project.projectManagementOffice = resp[0].OficinaGetionProyectos;
-    project.status = new SelectOption(resp[0].estatus.id, resp[0].estatus.Descripcion);
-    
+    const resp =  await firstValueFrom(this.get(environment.apiUrl,'/proyecto/info/detalle'));
+    const project = Project.mapFromObject(resp[0]);
     return project;
   }
 
@@ -91,16 +80,8 @@ export class ProjectService extends HttpService {
    * @returns 
    */
   async getProjectById(id:number):Promise<Project>{
-    const resp = await firstValueFrom(this.get(environment.apiUrl,`/project/${id}`));
-    const project = new Project();
-    project.id = resp[0].id;
-    project.name = resp[0].Nombre;
-    project.assignedResources = resp[0].RecursosAsignados;
-    project.startDate = resp[0].FechaInicio;
-    project.endDate = resp[0].FechaFinal;
-    project.hoursProject = resp[0].HorasProyecto;
-    project.projectManagementOffice = resp[0].OficinaGetionProyectos;
-    project.status = new SelectOption(resp[0].status.id, resp[0].status.Descripcion);
+    const resp = await firstValueFrom(this.get(environment.apiUrl,`/proyecto/${id}`));
+    const project = Project.mapFromObject(resp[0]);
     return project;
   }
 
@@ -109,7 +90,7 @@ export class ProjectService extends HttpService {
    * @param id 
    */
   async deleteProject(id:number){
-    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/project/${id}`));
+    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/proyecto/${id}`));
   }
 
   /**
@@ -121,7 +102,7 @@ export class ProjectService extends HttpService {
       if(data.id){
         const id = data.id;
         delete data.id;
-        await firstValueFrom(this.put(environment.apiUrl,`/project/${id}`, data));
+        await firstValueFrom(this.put(environment.apiUrl,`/proyecto/${id}`, data));
         this.toastrService.success('Proyecto actualizado con exito.');
       }else{
         await firstValueFrom(this.post(environment.apiUrl,'/project', data));

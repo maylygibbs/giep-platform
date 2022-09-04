@@ -5,6 +5,7 @@ import { ProjectService } from '../../../../../core/services/project.service';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BaseComponent } from '../../../../shared/components/base/base.component';
+import * as _ from 'lodash';
 
 
 

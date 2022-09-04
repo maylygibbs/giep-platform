@@ -12,7 +12,6 @@ import { Filter } from 'src/app/core/models/filter';
 import { PaginationResponse } from 'src/app/core/models/pagination-response';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/core/models/user';
-import { CompanyService } from 'src/app/core/services/company.service';
 
 @Component({
   selector: 'app-project-store',
@@ -50,7 +49,6 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     private projectService: ProjectService,
     private commonsService: CommonsService,
     private userService: UserService,
-    private companyService: CompanyService,
     private calendar: NgbCalendar, 
     public formatter: NgbDateParserFormatter) {
     super();
@@ -91,13 +89,18 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     filter.rowByPage = 9999;
     filter.word = null
     console.log('projectManagementOffice', this.project.projectManagementOffice);
-    this.data.users = await this.userService.getUsersPaginated(filter);
+    this.users = await this.userService.getUsersPaginated(filter);
 
   }
 
   async onChangeCompany(event: any) {
-    console.log('company', this.project.company);
-    this.data.Companies = await this.companyService.getCompanies();
+    let filter: Filter;
+    filter.page = 1
+    filter.rowByPage = 9999;
+    filter.word = null
+    console.log('projectManagementOffice', this.project.projectManagementOffice);
+    this.users = await this.userService.getUsersPaginated(filter);
+
   }
 
   async onSubmit(form: NgForm) {
