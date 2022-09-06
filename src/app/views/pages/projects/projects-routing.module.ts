@@ -1,10 +1,10 @@
 
-import { CommonsListCountriesResolver, CommonsListPositionsResolver, CommonsListRolesResolver, CommonsListStatusResolver } from '../../../core/resolvers/commons.resolver';
+import { CommonsListCountriesResolver, CommonsListRolesResolver, CommonsListStatusResolver } from '../../../core/resolvers/commons.resolver';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CommonsListDependencesResolver } from '../../../core/resolvers/commons.resolver';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { GetAllUserResolver } from 'src/app/core/resolvers/user.resolver';
+import { GetAllCompanyResolver } from 'src/app/core/resolvers/company.resolver';
 
 const routes: Routes = [
   {
@@ -16,7 +16,8 @@ const routes: Routes = [
     resolve:{
       statusList: CommonsListStatusResolver,
       countries: CommonsListCountriesResolver,
-      users: GetAllUserResolver
+      users: GetAllUserResolver,
+      Companies: GetAllCompanyResolver
     }
   }
 ];

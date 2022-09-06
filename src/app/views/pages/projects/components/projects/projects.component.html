@@ -44,11 +44,12 @@
                   <th>Id</th>
                   <th>Nombre</th>
                   <th>Descripcion</th>
+                  <th>Empresa</th>
                   <th>PMO</th>
                   <th>Fecha Inicio</th>
                   <th>Fecha Entrega</th>
                   <th>Progreso</th>
-                  <th>Estado</th>
+                  <!-- <th>Estado</th> -->
                   <th data-priority="1">Accion</th>
                 </tr>
               </thead>
@@ -58,11 +59,12 @@
                   <td>{{project.id}}</td>
                   <td>{{project.name}}</td>
                   <td>{{project.description}}</td>
-                  <td>{{project.projectManagementOffice?.primerNombre}} {{project.projectManagementOffice?.primerApellido}}</td>
+                  <td>{{project.company?.name}}</td>
+                  <td>{{project.projectManagementOffice?.firstName}} {{project.projectManagementOffice?.lastName}}</td>
                   <td>{{project.startDate}}</td>
                   <td>{{project.endDate}}</td>
                   <td><ngb-progressbar type="primary" [value]="project.progress"></ngb-progressbar></td>
-                  <td>{{project.status.label}}</td>
+                  <!-- <td>{{project.status.label}}</td> -->
                   <td class="text-center">
                     <i class="feather icon-settings" (click)="config(project.id)"></i>
                     <i class="feather icon-edit-2" (click)="select(project.id)"></i>

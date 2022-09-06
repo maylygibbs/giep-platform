@@ -11,6 +11,8 @@ import { UserService } from 'src/app/core/services/user.service';
 import { Filter } from 'src/app/core/models/filter';
 import { PaginationResponse } from 'src/app/core/models/pagination-response';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { User } from 'src/app/core/models/user';
+import { CompanyService } from 'src/app/core/services/company.service';
 
 @Component({
   selector: 'app-project-store',
@@ -48,12 +50,22 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     private projectService: ProjectService,
     private commonsService: CommonsService,
     private userService: UserService,
+    private companyService: CompanyService,
     private calendar: NgbCalendar, 
     public formatter: NgbDateParserFormatter) {
     super();
   }
 
   ngOnInit(): void {
+    // this.project = new Project();
+
+    // this.project.name ="proyecto";
+    // this.project.description ="Descripcion";
+    // this.project.startDate = this.calendar.getToday();
+    // this.project.endDate = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
+    // this.project.projectManagementOffice = new User();
+    // this.project.projectManagementOffice.id = "1";
+    // this.project.status = new SelectOption('1');
     this.route.data.subscribe((data) => {
       this.data = data;
     });
@@ -66,26 +78,24 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   }
 
   async onChangeStatus(event: any) {
-    console.log(this.statusList);
     this.statusList = await this.commonsService.getAllStatus();
-    console.log(this.statusList);
-    
   }
 
-  async onChangeAssignedResources(event: any) {
-    let filter: Filter;
-    filter.page = 1
+  async onChangeProjectManagementOffice(event: any) {
+    let filter = new Filter();
+    filter.page = 1;
     filter.rowByPage = 9999;
-    filter.word = null
-    console.log('assignedResources', this.project.assignedResources);
+    filter.word = null;
     this.users = await this.userService.getUsersPaginated(filter);
 
   }
 
+  async onChangeCompany(event: any) {
+    this.data.companies = await this.companyService.getCompanies();
+  }
+
   async onSubmit(form: NgForm) {
     if (form.valid) {
-      console.log('project', this.project)
-      console.log('post project', Project.mapForPost(this.project));
       await this.projectService.storeProject(Project.mapForPost(this.project));
       this.back();
     }
@@ -98,31 +108,36 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
 
   onDateSelection(date: NgbDate) {
-    if (!this.startDate && !this.endDate) {
-      this.startDate = date;
-    } else if (this.startDate && !this.endDate && date && date.after(this.startDate)) {
-      this.endDate = date;
+    if (!this.project.startDate && !this.project.endDate) {
+      this.project.startDate = date;
+    } else if (this.project.startDate && !this.project.endDate && date && date.after(this.project.startDate)) {
+      this.project.endDate = date;
     } else {
-      this.endDate = null;
-      this.startDate = date;
+      this.project.endDate = null;
+      this.project.startDate = date;
     }
   }
 
   isHovered(date: NgbDate) {
-    return this.startDate && !this.endDate && this.hoveredDate && date.after(this.startDate) &&
+    return this.project.startDate && !this.project.endDate && this.hoveredDate && date.after(this.project.startDate) &&
       date.before(this.hoveredDate);
   }
 
-  isInside(date: NgbDate) { return this.endDate && date.after(this.startDate) && date.before(this.endDate); }
+  isInside(date: NgbDate) { return this.project.endDate && date.after(this.project.startDate) && date.before(this.project.endDate); }
 
   isRange(date: NgbDate) {
-    return date.equals(this.startDate) || (this.endDate && date.equals(this.endDate)) || this.isInside(date) ||
+    return date.equals(this.project.startDate) || (this.project.endDate && date.equals(this.project.endDate)) || this.isInside(date) ||
       this.isHovered(date);
   }
 
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  onchangeDate(event) {
+    console.log(event);
+    
   }
   /**
    * end fecha
