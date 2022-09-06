@@ -6,6 +6,7 @@ import { Instrument } from './../../../../../core/models/instrument';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from './../../../../../../environments/environment';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-instrument-store',
@@ -22,7 +23,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
 
   defaultNavActiveId = 1;
 
-  data:any;
+  data: any;
 
   environment = environment;
 
@@ -32,37 +33,47 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private instrumentsService: InstrumentsService) {
     super();
-   }
+  }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data)=>{      
+    this.route.data.subscribe((data) => {
       this.data = data;
     });
   }
 
 
-  addSection(){
+  addSection() {
     const section = new Section();
     section.numberSection = this.instrument.sections.length + 1;
     this.instrument.sections.push(section)
   }
 
-  deleteSection(section:Section){
-    this.instrument.sections = this.instrument.sections.filter((item)=>item.numberSection != section.numberSection);
-    
+  deleteSection(section: Section) {
+    this.instrument.sections = this.instrument.sections.filter((item) => item.numberSection != section.numberSection);
+    if (this.instrument.sections && this.instrument.sections.length > 0) {
+      this.instrument.sections.forEach((sectionItem: Section, index: number) => {
+        sectionItem.numberSection = index + 1;
+      });
+    }
   }
 
 
 
-  back(){
+  back() {
     this.onBack.emit(null);
   }
 
 
-  async loadUsersByRoles(){
+  async loadUsersByRoles() {
     console.log('roles', this.instrument.roles);
-    this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.instrument.roles,'|'));
-    console.log('resp',this.users)
+    this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.instrument.roles, '|'));
+    console.log('resp', this.users)
+  }
+
+  onSubmit(form: NgForm){
+    if(form.valid){
+      console.log('instrumento',this.instrument);
+    }
   }
 
 }

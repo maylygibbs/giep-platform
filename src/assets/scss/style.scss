@@ -121,3 +121,8 @@
 
 // Custom scss
 @import "./custom";
+
+.required:after {
+    content:" *";
+    color: red;
+  }

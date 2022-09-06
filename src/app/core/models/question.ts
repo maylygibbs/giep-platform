@@ -1,3 +1,4 @@
+import { QuestionOption } from './question-option';
 import { SelectOption } from './select-option';
 export class Question {
 
@@ -15,7 +16,8 @@ export class Question {
     maxlength:number;
     createAt:Date;
     updateAt:Date;
-    options:Array<SelectOption>
+    options:Array<QuestionOption>;
+    isReady:boolean;
 
 
 

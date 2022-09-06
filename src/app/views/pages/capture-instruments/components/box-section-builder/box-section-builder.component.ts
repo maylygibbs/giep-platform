@@ -32,7 +32,17 @@ export class BoxSectionBuilderComponent implements OnInit {
       this.section.questions = new Array<Question>();
     }
     question.order = this.section.questions.length + 1;
+    question.isReady = false;
     this.section.questions.push(question);    
+  }
+
+  deleteQuestion(question:Question){
+    this.section.questions = this.section.questions.filter((item)=>item.order != question.order);
+    if(this.section.questions && this.section.questions.length >0){
+      this.section.questions.forEach((questionItem:Question, index:number)=>{
+        questionItem.order = index + 1;
+      });
+    }
   }
 
 }

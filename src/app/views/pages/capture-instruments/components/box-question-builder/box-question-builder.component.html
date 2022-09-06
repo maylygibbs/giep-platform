@@ -1,72 +1,262 @@
-<div class="card mb-3">
+<div class="card mb-3" *ngIf="!question.isReady">
+    <div class="card-body">
+        <form name="questionForm" #questionForm="ngForm" (ngSubmit)="readyQuestion(questionForm)">
+            <div class="row mb-3">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <span>Pregunta Nro. {{question.order}} </span>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                    <i class="feather icon-trash" (click)="deleteQuestion(question)"></i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                        <label for="inputQuestionLabel" class="form-label required">Texto de la pregunta</label>
+                        <input type="text" name="questionLabel" #questionLabel="ngModel" [(ngModel)]="question.label"
+                            class="form-control" autocomplete="off" minlength="3" maxlength="500" required>
+                        <div *ngIf="questionLabel.invalid && questionForm.submitted" class="invalid-feedback">
+                            <div *ngIf="questionLabel.errors?.required">Campo es requerido
+                            </div>
+                            <div *ngIf="questionLabel.errors?.minlength || questionLabel.errors?.maxlength">
+                                Campo permite entre 3 y 500 caracteres</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                        <label for="inputScore" class="form-label required">Puntos</label>
+                        <input type="text" name="inputScore" #inputScore="ngModel" [(ngModel)]="question.score"
+                        [pattern]="environment.form.number.validations.pattern"
+                            class="form-control" required>
+                        <div *ngIf="inputScore.invalid && questionForm.submitted" class="invalid-feedback">
+                            <div *ngIf="inputScore.errors?.required">Campo es requerido
+                            </div>
+                            <div *ngIf="inputScore.errors?.pattern">
+                                Campo permite solo números</div>
+                        </div>
+
+                    </div>
+                </div>                
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                        <label for="inputType" class="form-label required">Tipo de pregunta</label>
+                        <ng-select id="inputUnitType" [items]="inputsType" name="inputType" #inputType="ngModel"
+                            [(ngModel)]="question.inputType" [searchable]="false" required>
+                        </ng-select>
+                        <div *ngIf="inputType.invalid && questionForm.submitted" class="invalid-feedback">
+                            <div *ngIf="inputType.errors?.required">Campo es requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="question.inputType && (question.inputType.label=='select' || question.inputType.label=='select-multple' || question.inputType.label=='radio' || question.inputType.label=='checkbox')"
+                    class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div *ngFor="let option of question.options" class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <div class="mb-3">
+                                        <label for="inputOptionLabel" class="form-label required">Opción</label>
+                                        <input type="text" [name]="option.nameInputLabel" [(ngModel)]="option.label"
+                                            class="form-control" autocomplete="off" minlength="1" maxlength="255"
+                                            required>
+                                        <div *ngIf="questionForm.form.controls[option.nameInputLabel]?.invalid && questionForm.submitted"
+                                            class="invalid-feedback">
+                                            <div
+                                                *ngIf="questionForm.form.controls[option.nameInputLabel]?.errors?.required">
+                                                Campo es requerido
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <div class="mb-3">
+                                        <label for="inputOptionValue" class="form-label required">Valor</label>
+                                        <input type="text" [name]="option.nameInputValue" [(ngModel)]="option.value"
+                                            class="form-control" autocomplete="off" minlength="1" maxlength="255"
+                                            required>
+                                        <div *ngIf="questionForm.form.controls[option.nameInputLabel]?.invalid && questionForm.submitted"
+                                            class="invalid-feedback">
+                                            <div
+                                                *ngIf="questionForm.form.controls[option.nameInputLabel]?.errors?.required">
+                                                Campo es requerido
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                    <div class="mb-3">
+                                        <label for="inputOptionScore" class="form-label required">Puntos</label>
+                                        <input type="text" [name]="option.nameInputScore" [(ngModel)]="option.score"
+                                        [pattern]="environment.form.number.validations.pattern"
+                                            class="form-control" required>
+                                        <div *ngIf="questionForm.form.controls[option.nameInputScore]?.invalid && questionForm.submitted" class="invalid-feedback">
+                                            <div *ngIf="questionForm.form.controls[option.nameInputScore]?.errors?.required">Campo es requerido
+                                            </div>
+                                            <div *ngIf="questionForm.form.controls[option.nameInputScore]?.errors?.pattern">
+                                                Campo permite solo números</div>
+                                        </div>
+                
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 d-flex align-items-center">
+                                    <i class="feather icon-trash" (click)="deleteOption(option)"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" value="Click para agregar nueva opción" readonly
+                                        (click)="addOption()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="question.inputType && question.inputType.label=='text'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" placeholder="Campo tipo texto" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="question.inputType && question.inputType.label=='number'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" placeholder="Campo tipo numero"
+                                            disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="question.inputType && question.inputType.label=='email'" class="col-lg-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <input type="text" email class="form-control" placeholder="Campo tipo email"
+                                            disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="question.inputType && question.inputType.label=='date'" class="col-lg-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <input type="text" email class="form-control" placeholder="Campo tipo fecha"
+                                            disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="question.inputType && question.inputType.label=='textarea'" class="col-lg-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <textarea row="3" class="form-control" placeholder="Campo tipo descripción/observación"
+                                            disabled></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-check mb-3">
+                        <input type="checkbox" name="inputRequired" #inputRequired="ngModel"
+                            [(ngModel)]="question.required" class="form-check-input">
+                        <label class="form-check-label" for="exampleCheck1">
+                            Requerido
+                        </label>
+
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card mb-3" *ngIf="question.isReady">
     <div class="card-body">
         <div class="row mb-3">
             <div class="col-lg-6">
                 <span>Pregunta Nro. {{question.order}} </span>
             </div>
             <div class="col-lg-6 text-right">
+                <i class="feather icon-edit-2" (click)="questionEdit()"></i>
                 <i class="feather icon-trash" (click)="deleteQuestion(question)"></i>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="mb-3">
-                    <label for="inputQuestionLabel" class="form-label">Texto de la pregunta</label>
-                    <input type="text" name="questionLabel" #questionLabel="ngModel" [(ngModel)]="question.label"
-                        class="form-control" autocomplete="off" minlength="3" maxlength="250"
-                        required>
+                <div class="mb-3"
+                    *ngIf="question.inputType.label == 'text' || question.inputType.label == 'number' || question.inputType.label == 'email' || question.inputType.label == 'date' || question.inputType.label == 'textarea'">
+                    <label class="form-label" [ngClass]="{'required': question.required}">{{question.label}}</label>
+                    <input *ngIf="question.inputType.label == 'text'" type="text" class="form-control"
+                        placeholder="Campo tipo texto" disabled>
+                    <input *ngIf="question.inputType.label == 'number'" type="text" class="form-control"
+                        placeholder="Campo tipo numero" disabled>
+                    <input *ngIf="question.inputType.label == 'email'" type="text" email class="form-control"
+                        placeholder="Campo tipo email" disabled>
+                    <input *ngIf="question.inputType.label == 'date'" type="text" class="form-control"
+                        placeholder="Campo tipo fecha" disabled>
+                    <textarea *ngIf="question.inputType.label == 'textarea'" row="3" class="form-control" placeholder="Campo tipo descripción/observación"
+                        disabled></textarea>
                 </div>
-            </div>
-            <div class="col-lg-12">
-                <div class="mb-3">
-                    <label for="inputType" class="form-label">Tipo de input</label>
-                    <ng-select id="inputUnitType" [items]="inputsType" name="inputType" #inputType="ngModel"
-                        [(ngModel)]="question.inputType"
-                        [searchable]="false" required>
-                    </ng-select>
+                <div class="mb-3"
+                    *ngIf="question.inputType.label == 'select' || question.inputType.label == 'select-multple'">
+                    <label class="form-label" [ngClass]="{'required': question.required}">{{question.label}}</label>
+                    <select class="form-control" placeholder="Campo tipo seleccion" disabled>
+                        <option>Selección</option>
+                    </select>
                 </div>
-            </div>
-            <div *ngIf="question.inputType && (question.inputType.label=='select' || question.inputType.label=='select-multple' || question.inputType.label=='radio')" class="col-lg-12">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div *ngFor="let option of question.options" class="row">
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label for="inputQuestionLabel" class="form-label">Opcion</label>
-                                    <input type="text" name="questionLabel" #questionLabel="ngModel" [(ngModel)]="option.label"
-                                        class="form-control" autocomplete="off" minlength="3" maxlength="255"
-                                        required>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label for="inputQuestionLabel" class="form-label">Valor</label>
-                                    <input type="text" name="questionValue" #questionValue="ngModel" [(ngModel)]="option.value"
-                                        class="form-control" autocomplete="off" minlength="3" maxlength="255"
-                                        required>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <i class="feather icon-trash" (click)="deleteOption()"></i>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <input type="text" class="form-control" readonly value="Click para agregar nueva opción" (click)="addOption()">                              
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           
-            <div class="col-lg-12">
-                <div class="form-check mb-3"> 
-                    <input type="checkbox" name="inputRequired" #inputRequired="ngModel" [(ngModel)]="question.required" class="form-check-input">
-                    <label class="form-check-label" for="exampleCheck1">
-                        Requerido
-                    </label>
-
-                </div>
+                <div class="mb-3"
+                    *ngIf="question.inputType.label == 'radio'">
+                    <label class="form-label" [ngClass]="{'required': question.required}">{{question.label}}</label>
+                    <div *ngFor="let option of question.options" class="form-check mb-2">
+                        <input type="radio" class="form-check-input" name="radioDisabled" id="radioDisabled" disabled>
+                        <label class="form-check-label" for="radioDisabled">
+                            {{option.label}}
+                        </label>
+                      </div>
+                </div> 
+                <div class="mb-3"
+                    *ngIf="question.inputType.label == 'checkbox'">
+                    <label class="form-label" [ngClass]="{'required': question.required}">{{question.label}}</label>
+                    <div *ngFor="let option of question.options" class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" id="checkDisabled" disabled>
+                        <label class="form-check-label" for="checkDisabled">
+                            {{option.label}}
+                        </label>
+                      </div>
+                </div>                                             
             </div>
         </div>
     </div>
