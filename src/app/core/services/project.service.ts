@@ -66,8 +66,6 @@ export class ProjectService extends HttpService {
     let min = 0, max = 100;
     paginator.data = resp.data.map((item: any) => {
       const project = Project.mapFromObject(item);
-      console.log(item, project);
-      
       return project;
     })
     return paginator;
@@ -105,7 +103,7 @@ export class ProjectService extends HttpService {
         await firstValueFrom(this.put(environment.apiUrl,`/proyecto/${id}`, data));
         this.toastrService.success('Proyecto actualizado con exito.');
       }else{
-        await firstValueFrom(this.post(environment.apiUrl,'/project', data));
+        await firstValueFrom(this.post(environment.apiUrl,'/proyecto', data));
         this.toastrService.success('Proyecto registrado con exito.');
       }
     } catch (error:any) {

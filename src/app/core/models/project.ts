@@ -42,15 +42,12 @@ export class Project {
         if (project.id) {
             Object.assign(projectMap, { id: project.id })
         }
-        Object.assign(projectMap, { Nombre: project.name });
-        Object.assign(projectMap, { Descripcion: project.name });
-        Object.assign(projectMap, { RecursosAsignados: project.assignedResources });
-        Object.assign(projectMap, { FechaInicio: project.startDate });
-        Object.assign(projectMap, { FechaFinal: project.endDate });
-        Object.assign(projectMap, { HorasProyecto: project.hoursProject });
-        Object.assign(projectMap, { UserPmo: project.projectManagementOffice });
-        Object.assign(projectMap, { Empresa: project.company });
-        Object.assign(projectMap, { idStatus: parseInt(project.status.value) });
+        Object.assign(projectMap, { nombre: project.name });
+        Object.assign(projectMap, { descripcion: project.description });
+        Object.assign(projectMap, { fechainicio: `${project.startDate.year}-${project.startDate.month}-${project.startDate.day}` });
+        Object.assign(projectMap, { IdUserPmo: project.projectManagementOffice.id });
+        Object.assign(projectMap, { idempresa: project.company.id });
+        
         return projectMap;
     }
 
@@ -75,21 +72,16 @@ export class Project {
         project.company = Company.mapFromObject(projectObj.idempresa);
         project.springs = Spring.loadSpringsList(projectObj.springs);
 
-        
         if (project.springs)
             project.endDate = Project.getEndDate(project.springs);
-        console.log(project.endDate);
-            
+
         if (projectObj.estatus)
             project.status = new SelectOption(projectObj.estatus.id, projectObj.estatus.Descripcion);
         return project;
     }
 
     public static getEndDate(springs){
-        console.log(springs);
-        console.log(_.orderBy(springs, ['fechaFin'], ['asc']));
-        console.log(_.orderBy(springs, ['fechaFin'], ['asc'])[0]);
-        return _.orderBy(springs, ['user', 'age'], ['asc', 'desc'])[0].endDate;
+        return _.orderBy(springs, ['fechaFin'], ['asc'])[0].endDate;
     }
 
 }

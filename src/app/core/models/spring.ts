@@ -33,7 +33,6 @@ export class Spring {
     }
 
     public static mapFromObject(springObj: any) {
-        console.log(springObj);
         if (!springObj)
             return;
         let spring = new Spring();
@@ -42,7 +41,6 @@ export class Spring {
         spring.endDate = springObj.fechaFin;
         spring.iteration = springObj.total;
         spring.activities = Activity.loadActivitiesList(springObj.actividades);
-        console.log(spring, springObj);
         return spring;
     }
 
@@ -50,12 +48,9 @@ export class Spring {
         let springsList: Array<Spring> = new Array<Spring>();
         springs.forEach(a => {
             let spring = Spring.mapFromObject(a);
-            console.log(spring,a);
-            
             if (spring)
                 springsList.push(spring);
         });
-        console.log(springsList);
         
         return springsList;
     }

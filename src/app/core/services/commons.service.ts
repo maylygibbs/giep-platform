@@ -104,7 +104,6 @@ export class CommonsService extends HttpService {
     status = resp.data.map((item: any) => {
     return new SelectOption(item.id, item.descripcion);
   });
-  console.log(status);
 
   return status;
 

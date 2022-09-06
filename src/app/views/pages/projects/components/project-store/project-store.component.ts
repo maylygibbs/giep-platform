@@ -12,6 +12,7 @@ import { Filter } from 'src/app/core/models/filter';
 import { PaginationResponse } from 'src/app/core/models/pagination-response';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/core/models/user';
+import { CompanyService } from 'src/app/core/services/company.service';
 
 @Component({
   selector: 'app-project-store',
@@ -49,21 +50,22 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     private projectService: ProjectService,
     private commonsService: CommonsService,
     private userService: UserService,
+    private companyService: CompanyService,
     private calendar: NgbCalendar, 
     public formatter: NgbDateParserFormatter) {
     super();
   }
 
   ngOnInit(): void {
-    this.project = new Project();
+    // this.project = new Project();
 
-    this.project.name ="proyecto";
-    this.project.description ="Descripcion";
-    this.project.startDate = this.calendar.getToday();
-    this.project.endDate = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
-    this.project.projectManagementOffice = new User();
-    this.project.projectManagementOffice.id = "1";
-    this.project.status = new SelectOption('1');
+    // this.project.name ="proyecto";
+    // this.project.description ="Descripcion";
+    // this.project.startDate = this.calendar.getToday();
+    // this.project.endDate = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
+    // this.project.projectManagementOffice = new User();
+    // this.project.projectManagementOffice.id = "1";
+    // this.project.status = new SelectOption('1');
     this.route.data.subscribe((data) => {
       this.data = data;
     });
@@ -73,40 +75,27 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     } else {
       this.projectStatus = this.project.status.value == '1' ? true : false;
     }
-    console.log(this.project);
   }
 
   async onChangeStatus(event: any) {
-    console.log(this.statusList);
     this.statusList = await this.commonsService.getAllStatus();
-    console.log(this.statusList);
-    
   }
 
   async onChangeProjectManagementOffice(event: any) {
-    let filter: Filter;
-    filter.page = 1
+    let filter = new Filter();
+    filter.page = 1;
     filter.rowByPage = 9999;
-    filter.word = null
-    console.log('projectManagementOffice', this.project.projectManagementOffice);
+    filter.word = null;
     this.users = await this.userService.getUsersPaginated(filter);
 
   }
 
   async onChangeCompany(event: any) {
-    let filter: Filter;
-    filter.page = 1
-    filter.rowByPage = 9999;
-    filter.word = null
-    console.log('projectManagementOffice', this.project.projectManagementOffice);
-    this.users = await this.userService.getUsersPaginated(filter);
-
+    this.data.companies = await this.companyService.getCompanies();
   }
 
   async onSubmit(form: NgForm) {
     if (form.valid) {
-      console.log('project', this.project)
-      console.log('post project', Project.mapForPost(this.project));
       await this.projectService.storeProject(Project.mapForPost(this.project));
       this.back();
     }
@@ -143,8 +132,6 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
-    console.log(currentValue, input, parsed);
-    
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 

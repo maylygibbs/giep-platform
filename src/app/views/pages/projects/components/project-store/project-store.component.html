@@ -18,6 +18,25 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
+                                <label for="inputStartDate" class="form-label">Fecha Inicio</label>
+                                <div class="input-group">
+                                    <input id="inputStartDate" name="startDate" #startDate="ngModel"  class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                                    [ngClass]="{'ng-dirty ng-invalid' : startDate.errors && ( startDate.dirty || startDate.touched || projectForm.submitted) }"
+                                        [(ngModel)]="project.startDate" ngbDatepicker #dp="ngbDatepicker" required>
+                                    <button class="input-group-text" type="button" (click)="dp.toggle()">
+                                        <i class="feather icon-calendar icon-md text-muted"></i>
+                                    </button>
+                                    <div *ngIf="startDate.invalid && projectForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="startDate.errors?.required">Campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="mb-3">
                                 <label for="inputDescription" class="form-label">Descripcion</label>
                                 <input type="text" name="description" #description="ngModel"
                                     [(ngModel)]="project.description"
@@ -27,70 +46,6 @@
                                     <div *ngIf="description.errors?.required">Campo es requerido</div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex ">
-                                <div class="col-12">
-                                    <div class="dp-hidden position-absolute">
-                                        <div class="input-group">
-                                            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
-                                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
-                                                outsideDays="hidden" [startDate]="project.startDate!" tabindex="-1">
-                                            <ng-template #t let-date let-focused="focused">
-                                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                                                    (mouseleave)="hoveredDate = null">
-                                                    {{ date.day }}
-                                                </span>
-                                            </ng-template>
-                                        </div>
-                                    </div>
-                                    <div class="input-group">
-                                        <input #dpStartDate class="form-control" placeholder="yyyy-mm-dd" name="dpStartDate"
-                                            [value]="formatter.format(project.startDate)" (input)="project.startDate = validateInput(project.startDate, dpStartDate.value)">
-                                        <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="input-group">
-                                        <input #dpEndDate class="form-control" placeholder="yyyy-mm-dd" name="dpEndDate"
-                                            [value]="formatter.format(project.endDate)" (input)="project.endDate = validateInput(project.endDate, dpEndDate.value)">
-                                        <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
-                                    </div>
-                                </div>
-                                <!-- <div class="form-group hidden ">
-                                    <div class="input-group">
-                                        <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'"
-                                            (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" (change)="onchangeDate($event)"
-                                            [startDate]="startDate!">
-                                        <ng-template #t let-date let-focused="focused">
-                                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                                [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                                                (mouseleave)="hoveredDate = null">
-                                                {{ date.day }}
-                                            </span>
-                                        </ng-template>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="input-group" (click)="datepicker.toggle()">
-                                        <input #dpStartDate class="form-control" placeholder="yyyy-mm-dd" name="dpStartDate"
-                                            [value]="formatter.format(project.startDate)" (input)="project.startDate = validateInput(project.startDate, dpStartDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.startDate">
-                                        <button class="input-group-text" type="button">
-                                            <i class="feather icon-calendar icon-md text-muted"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="ms-2">
-                                    <div class="input-group" (click)="datepicker.toggle()">
-                                        <input #dpEndDate class="form-control" placeholder="yyyy-mm-dd" name="dpEndDate"
-                                            [value]="formatter.format(project.endDate)" (input)="project.endDate = validateInput(project.endDate, dpEndDate.value)" (change)="onchangeDate($event)" [(ngModel)]="project.endDate">
-                                        <button class="input-group-text" type="button">
-                                            <i class="feather icon-calendar icon-md text-muted"></i>
-                                        </button>
-                                    </div>
-                                </div> -->
                         </div>
                     </div>
                     <div class="row">

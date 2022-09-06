@@ -45,7 +45,6 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
   }
 
   async loadPage(pageInfo: any) {
-    console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.projects = null;
     this.projects = await this.projectService.getProjectsPaginated({ page: this.page, rowByPage: 5, word: this.word ? this.word : null});
