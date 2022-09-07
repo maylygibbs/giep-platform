@@ -61,14 +61,14 @@
                   <td>{{project.description}}</td>
                   <td>{{project.company?.name}}</td>
                   <td>{{project.projectManagementOffice?.firstName}} {{project.projectManagementOffice?.lastName}}</td>
-                  <td>{{project.startDate}}</td>
-                  <td>{{project.endDate}}</td>
+                  <td>{{formatingDate(project.startDate)}}</td>
+                  <td>{{formatingDate(project.endDate)}}</td>
                   <td><ngb-progressbar type="primary" [value]="project.progress"></ngb-progressbar></td>
                   <!-- <td>{{project.status.label}}</td> -->
                   <td class="text-center">
                     <i class="feather icon-settings" (click)="config(project.id)"></i>
                     <i class="feather icon-edit-2" (click)="select(project.id)"></i>
-                    <i class="feather icon-trash" (click)="delete(project.id)"></i>
+                    <!-- <i class="feather icon-trash" (click)="delete(project.id)"></i> -->
                   </td>
                 </tr>
               </tbody>
