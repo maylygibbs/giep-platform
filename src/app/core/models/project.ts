@@ -58,8 +58,7 @@ export class Project {
         project.id = projectObj.id;
         project.name = projectObj.nombre;
         project.assignedResources = projectObj.recursos;
-        // TODO: FIx convention Name camelCase
-        project.startDate = projectObj.fechainicio; //fechaInicio;
+        project.startDate = projectObj.fechaInicio;
         project.endDate = projectObj.fechaFin;
         project.hoursProject = projectObj.total;
         project.description = projectObj.descripcion;
@@ -69,7 +68,6 @@ export class Project {
         project.progress = Math.floor(Math.random() * (max - min + 1) + min);
         project.projectManagementOffice = User.mapFromObject(projectObj.userPmo);
         project.company = Company.mapFromObject(projectObj.empresa);
-        project.company = Company.mapFromObject(projectObj.idempresa);
         project.springs = Spring.loadSpringsList(projectObj.springs);
 
         if (project.springs)
@@ -80,8 +78,12 @@ export class Project {
         return project;
     }
 
-    public static getEndDate(springs){
-        return _.orderBy(springs, ['fechaFin'], ['asc'])[0].endDate;
+    public static getEndDate(springs:Array<Spring>){
+        if (!springs || springs.length == 0) {
+            return null;
+        }
+        
+        return _.orderBy(springs, ['endDate'], ['desc'])[0].endDate;
     }
 
 }

@@ -6,6 +6,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BaseComponent } from '../../../../shared/components/base/base.component';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 
 
@@ -89,6 +90,14 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
 
   ngOnDestroy(): void {
     
+  }
+
+  formatingDate(date: string): string {
+    let dateFormatted = moment(date, 'YYYY-MM-DD');
+    if (dateFormatted.isValid()) {
+      return dateFormatted.format('DD-MM-YYYY');
+    }
+    else return null;
   }
 
 }
