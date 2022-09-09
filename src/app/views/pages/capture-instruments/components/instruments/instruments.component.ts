@@ -5,6 +5,8 @@ import { InstrumentsService } from './../../../../../core/services/instruments.s
 import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
+import { filter, Subscription } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-instruments',
@@ -30,12 +32,20 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   selectedItem: Instrument;
   word:string;
 
-  constructor(private instrumentsService: InstrumentsService) { 
+  private $eventNavigationEnd: Subscription;
+
+  constructor(private instrumentsService: InstrumentsService,
+    private router: Router) { 
     super();
   }
 
   async ngOnInit() {
     this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: 1, rowByPage: 3, word: null });
+    this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.step = 1;
+      this.loadPage(1);
+    });
   }
 
   async loadPage(pageInfo: any) {
@@ -77,6 +87,12 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   search(){
     if (this.word && this.word.length > 0) {
       this.loadPage(1);
+    }
+  }
+
+  ngOnDestroy(){
+    if (this.$eventNavigationEnd) {
+      this.$eventNavigationEnd.unsubscribe()
     }
   }
 

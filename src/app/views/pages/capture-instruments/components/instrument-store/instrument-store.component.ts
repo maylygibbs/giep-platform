@@ -21,6 +21,8 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
   @Output()
   onBack: EventEmitter<any> = new EventEmitter<any>();
 
+  show:boolean;
+
   defaultNavActiveId = 1;
 
   data: any;
@@ -29,6 +31,8 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
 
   users: Array<any>;
   selectedUsers = [];
+
+  sectionActive:number;
 
   constructor(private route: ActivatedRoute,
     private instrumentsService: InstrumentsService) {
@@ -70,9 +74,32 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
     console.log('resp', this.users)
   }
 
+
+  reset(){
+    this.instrument = new Instrument();
+    this.instrument.sections = new Array<Section>();
+    const section = new Section();
+    section.numberSection = 1;
+    this.instrument.sections.push(section)
+  }
+
+  seeInstrument(){
+    this.show = false;
+    this.sectionActive = 0;
+  }
+
+  nextSection(){
+    this.sectionActive++;
+  }
+
+  backSection(){
+    this.sectionActive--;
+  }
+
   onSubmit(form: NgForm){
     if(form.valid){
-      console.log('instrumento',this.instrument);
+      console.log('users',this.selectedUsers)
+      console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedUsers));
     }
   }
 

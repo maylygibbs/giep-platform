@@ -45,6 +45,8 @@
                     <th>Instrumento</th>
                     <th>Resultados</th>
                     <th>Fecha creación</th>
+                    <th>Fecha publicación</th>
+                    <th>Fecha expiración</th>
                     <th data-priority="1" class="text-center">Accion</th>
                   </tr>
                 </thead>
@@ -57,7 +59,9 @@
                       <a *ngIf="instrument.path" [routerLink]="instrument.path" [queryParams]="{id: instrument.id, name: instrument.name}" >Ver</a>
                       <span *ngIf="!instrument.path">No hay resultados</span>
                     </td> 
-                    <td>{{instrument.createAt | date:'short':'yyyy-MM-dd'}}</td>                
+                    <td>{{instrument.createAt | date:'short':'yyyy-MM-dd'}}</td> 
+                    <td>'yyyy-MM-dd'</td>
+                    <td>'yyyy-MM-dd'</td>               
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(instrument.id)"></i>
                       <!--<i class="feather icon-trash" (click)="delete(input.id)"></i>-->
@@ -66,7 +70,7 @@
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="5" class="text-right">
+                    <th colspan="7" class="text-right">
                       <app-pager (onChangePage)="loadPage($event)"></app-pager>
                     </th>
                   </tr>    

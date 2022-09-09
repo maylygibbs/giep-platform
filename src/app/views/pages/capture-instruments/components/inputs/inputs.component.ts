@@ -6,6 +6,8 @@ import { PaginationResponse } from './../../../../../core/models/pagination-resp
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { Component, OnInit } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
+import { filter, Subscription } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-inputs',
@@ -31,12 +33,20 @@ export class InputsComponent extends BaseComponent  implements OnInit {
   selectedItem: InputType;
   word:string;
 
-  constructor(private instrumentsService: InstrumentsService) { 
+  private $eventNavigationEnd: Subscription;
+
+  constructor(private instrumentsService: InstrumentsService,
+    private router: Router) { 
     super()
   }
 
   async ngOnInit() {
     this.inputs = await this.instrumentsService.getInputTypesPagined({ page: 1, rowByPage: 3, word: null });
+    this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.step = 1;
+      this.loadPage(1);
+    });
   }
 
 
@@ -75,6 +85,12 @@ export class InputsComponent extends BaseComponent  implements OnInit {
   search(){
     if (this.word && this.word.length > 0) {
       this.loadPage(1);
+    }
+  }
+
+  ngOnDestroy(){
+    if (this.$eventNavigationEnd) {
+      this.$eventNavigationEnd.unsubscribe()
     }
   }
 

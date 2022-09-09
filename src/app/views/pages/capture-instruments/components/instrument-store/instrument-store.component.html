@@ -4,23 +4,26 @@
         <div class="card">
             <div class="card-body">
                 <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId" class="nav-tabs">
+                    <!--build-->
                     <li [ngbNavItem]="1">
                         <a ngbNavLink>Construir</a>
                         <ng-template ngbNavContent>
-                            
+
                             <div class="row">
-                                <div class="col-md-offset-2 col-md-8">
+                                <div class="col-md-offset-2 col-md-8" *ngIf="!instrument.id">
                                     <div class="d-flex align-items-center flex-row">
-                                        <button type="button" style="margin-bottom: 15px"
-                                            class="btn btn-primary">Reset</button>
+                                        <button type="button" style="margin-bottom: 15px" class="btn btn-primary"
+                                            (click)="reset()">Reset</button>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 col-md-12">
-                                    <form name="instrumentForm" #instrumentForm="ngForm" (ngSubmit)="onSubmit(instrumentForm)">
+                                <div class="mt-2 col-lg-12 col-md-12">
+                                    <form name="instrumentForm" #instrumentForm="ngForm"
+                                        (ngSubmit)="onSubmit(instrumentForm)">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
-                                                    <label for="inputInstrumentName" class="form-label required">Nombre de
+                                                    <label for="inputInstrumentName" class="form-label required">Nombre
+                                                        de
                                                         Instrumento</label>
                                                     <input type="text" name="instrumentName" #instrumentName="ngModel"
                                                         [(ngModel)]="instrument.name"
@@ -79,7 +82,8 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
-                                                    <label for="inputUnitType" class="form-label required">Duración (Tipo de
+                                                    <label for="inputUnitType" class="form-label required">Duración
+                                                        (Tipo de
                                                         unidad)</label>
                                                     <ng-select id="inputUnitType" [items]="data.units" name="unitType"
                                                         #unitType="ngModel"
@@ -91,6 +95,56 @@
                                                         <div *ngIf="unitType.errors?.required">Campo es requerido
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputBirthDate" class="form-label required">Fecha
+                                                        Expiración</label>
+                                                    <div class="input-group">
+                                                        <input id="inputBirthDate" name="expirationDate"
+                                                            #expirationDate="ngModel"
+                                                            [minDate]="{year: 1930 , month: 9, day: 1}"
+                                                            class="form-control" placeholder="yyyy-mm-dd"
+                                                            [ngClass]="{'ng-dirty ng-invalid' : expirationDate.errors && ( expirationDate.dirty || expirationDate.touched || instrumentForm.submitted) }"
+                                                            [(ngModel)]="instrument.expirationDate" ngbDatepicker
+                                                            #dp="ngbDatepicker" required>
+                                                        <button class="input-group-text" type="button"
+                                                            (click)="dp.toggle()">
+                                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                                        </button>
+                                                        <div *ngIf="expirationDate.invalid && instrumentForm.submitted"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="expirationDate.errors?.required">Campo es
+                                                                requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputBirthDate" class="form-label required">¿Agrupar
+                                                        preguntas por categorías?</label>
+                                                    <div class="mt-2 d-flex align-items-center">
+                                                        <div class="form-check mb-2">
+                                                            <input type="radio" class="form-check-input"
+                                                                name="byCategory" value="true"
+                                                                [(ngModel)]="instrument.questionsByCategory">
+                                                            <label class="form-check-label">
+                                                                Si
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check mb-2 mx-3">
+                                                            <input type="radio" class="form-check-input"
+                                                                name="byCategory" value="false"
+                                                                [(ngModel)]="instrument.questionsByCategory">
+                                                            <label class="form-check-label">
+                                                                No
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -124,12 +178,14 @@
                                                         <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
                                                             let-index="index">
                                                             <input id="item-{{index}}" type="checkbox"
-                                                                name="itemgroup1-{{index}}" [ngModel]="item$.selected" /> {{item.role}}
+                                                                name="itemgroup1-{{index}}"
+                                                                [ngModel]="item$.selected" /> {{item.role}}
                                                         </ng-template>
                                                         <ng-template ng-option-tmp let-item="item" let-item$="item$"
                                                             let-index="index">
                                                             <input id="item-{{index}}" type="checkbox"
-                                                            name="item-{{index}}" [ngModel]="item$.selected" /> {{item.fullName}}
+                                                                name="item-{{index}}" [ngModel]="item$.selected" />
+                                                            {{item.fullName}}
                                                         </ng-template>
                                                     </ng-select>
                                                     <div *ngIf="instrumentUsers.invalid && instrumentForm.submitted"
@@ -162,7 +218,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-2">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <app-box-section-builder *ngFor="let section of instrument.sections"
                                                     [section]="section" (onDeleteSection)="deleteSection($event)">
@@ -179,10 +235,10 @@
 
                                             </div>
                                         </div>
-                                        <div class="row mt-4">
-                                            <div class="col-lg-12 text-center">
-                                                <button type="button" class="btn btn-primary">Cancelar</button>
-                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                        <div class="row mt-5">
+                                            <div class="col-lg-12 text-right">
+                                                <button type="button" class="btn btn-secondary">Cancelar</button>
+                                                <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
                                             </div>
                                         </div>
                                     </form>
@@ -191,16 +247,184 @@
 
                         </ng-template>
                     </li>
+                    <!--viewer-->
                     <li [ngbNavItem]="2">
-                        <a ngbNavLink>Visor</a>
+                        <a ngbNavLink (click)="seeInstrument()">Visor</a>
                         <ng-template ngbNavContent>
+                            <div *ngIf="instrument" class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="mt-3">
+                                                <h6>Lea con detenimiento.</h6>
+                                            </div>
+                                            <div class="mt-3">
+                                                <label class="tx-11 fw-bolder mb-0 text-uppercase">Encuesta</label>
+                                                <p class="text-muted">{{instrument.name}}</p>
+                                            </div>
+                                            <div class="mt-3">
+                                                <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción</label>
+                                                <p class="text-muted"
+                                                    [innerHtml]="instrument.description ? instrument.description : 'Breve leyenda'">
+                                                </p>
+                                            </div>
+                                            <div class="mt-3">
+                                                <button class="btn btn-primary" (click)="show = true;">Iniciar</button>
+                                            </div>
 
+                                        </div>
+                                        <div class="card-body" [hidden]="!show">
+                                            <section *ngFor="let section of instrument.sections; let i = index;">
+                                                <div class="row" *ngIf="sectionActive == i">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <div class="row" *ngIf="section.name">
+                                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <h6 class="card-title mb-5">{{section.name}}</h6>                                                                        
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row"
+                                                                    *ngFor="let question of section.questions">
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='select'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <ng-select [searchable]="false">
+                                                                                <ng-option
+                                                                                    *ngFor="let option of question.options"
+                                                                                    [value]="option.value">
+                                                                                    {{option.label}}</ng-option>
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='select-multiple'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <ng-select [searchable]="false"
+                                                                                [multiple]="true">
+                                                                                <ng-option
+                                                                                    *ngFor="let option of question.options"
+                                                                                    [value]="option.value">
+                                                                                    {{option.label}}</ng-option>
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='radio'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <div class="form-check mb-2"
+                                                                                *ngFor="let option of question.options">
+                                                                                <input type="radio"
+                                                                                    class="form-check-input"
+                                                                                    name="inputRadio"
+                                                                                    [value]="option.value">
+                                                                                <label class="form-check-label">
+                                                                                    {{option.label}}
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='checkbox'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <div class="form-check mb-2"
+                                                                                *ngFor="let option of question.options">
+                                                                                <input type="checkbox"
+                                                                                    class="form-check-input"
+                                                                                    [value]="option.value">
+                                                                                <label class="form-check-label">
+                                                                                    {{option.label}}
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='text'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <input type="text" class="form-control">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='email'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <input type="text" email
+                                                                                class="form-control">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='date'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <input type="text" class="form-control">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div *ngIf="question.inputType.label =='textarea'"
+                                                                            class="mb-3">
+                                                                            <label class="form-label"
+                                                                                [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                                {{question.label}}</label>
+                                                                            <textarea class="form-control"
+                                                                                rows="4"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right mt-3">
+                                                        <button type="button" *ngIf="i > 0" class="btn btn-primary"
+                                                        (click)="backSection()">Atras</button>
+                                                        <button type="button" *ngIf="i < (instrument.sections.length-1)" class="btn btn-primary ms-2 me-2"
+                                                        (click)="nextSection()">Siguiente</button>
+                                                        <button type="button" *ngIf="i == (instrument.sections.length-1)" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                                    </div>
+
+                                                </div>
+                                            </section>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </ng-template>
                     </li>
                 </ul>
 
                 <div [ngbNavOutlet]="defaultNav" class="border border-top-0 p-3"></div>
-                <p class="mt-2">Active: {{ defaultNavActiveId }}</p>
+
             </div>
         </div>
 

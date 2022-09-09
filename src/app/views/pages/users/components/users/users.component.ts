@@ -5,6 +5,8 @@ import { UserService } from './../../../../../core/services/user.service';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
+import { filter, Subscription } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
 
 
 
@@ -33,14 +35,21 @@ export class UsersComponent extends BaseComponent implements  OnInit {
   selectedItem: User;
   word:string;
 
+  private $eventNavigationEnd: Subscription;
 
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+    private router: Router) {
     super();
    }
 
   async ngOnInit() {
     this.users = await this.userService.getUsersPaginated({ page: 1, rowByPage: 3, word: null });
+    this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.step = 1;
+      this.loadPage(1);
+    });
   }
 
   async loadPage(pageInfo: any) {
@@ -81,5 +90,11 @@ export class UsersComponent extends BaseComponent implements  OnInit {
     }
   }
 
+
+  ngOnDestroy(){
+    if (this.$eventNavigationEnd) {
+      this.$eventNavigationEnd.unsubscribe()
+    }
+  }
 
 }
