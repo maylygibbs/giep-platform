@@ -5,13 +5,14 @@ import { Question } from './../../../../../core/models/question';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { environment } from './../../../../../../environments/environment';
+import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 
 @Component({
   selector: 'app-box-question-builder',
   templateUrl: './box-question-builder.component.html',
   styleUrls: ['./box-question-builder.component.scss']
 })
-export class BoxQuestionBuilderComponent implements OnInit {
+export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit {
 
   @Input()
   question:Question;
@@ -25,16 +26,33 @@ export class BoxQuestionBuilderComponent implements OnInit {
 
   environment = environment;
 
-  constructor(private commonsService: CommonsService) { }
+  constructor(private commonsService: CommonsService) {
+    super();
+   }
 
   async ngOnInit() {
     this.inputsType = await this.commonsService.getAllInputsType();
   }
 
+  /**
+   * Delete question of instrument
+   * @param question 
+   */
   deleteQuestion(question:Question){
     this.onDeleteQuestion.emit(question);
   }
 
+  /**
+   * Reset options if change input type
+   * @param event 
+   */
+  onChangeInputType(event:any){
+    this.question.options = null;
+  }
+
+  /**
+   * Add option to question of type selects options
+   */
   addOption(){
     if (!this.question.options) {
       this.question.options = new Array<QuestionOption>()
@@ -47,18 +65,67 @@ export class BoxQuestionBuilderComponent implements OnInit {
     this.question.options.push(option);
   }
 
+  /**
+   * Delete option of question
+   * @param option 
+   */
   deleteOption(option: QuestionOption){
     this.question.options = this.question.options.filter((item)=>item.nameInputLabel != option.nameInputLabel);
   }
 
-
+  /**
+   * Confirm and validation question
+   * @param form 
+   */
   readyQuestion(form: NgForm){
     if(form.valid){
-      this.question.isReady = true;
+      if (this.isValidQuestion(this.question)) {
+        this.question.isReady = true;
+      }
+      
     }
     
   }
 
+  /**
+   * Valid if question is valid
+   * @param question 
+   * @returns 
+   */
+  isValidQuestion(question:Question){
+    if (question.inputType.label == 'select' || question.inputType.label == 'radio' ||  question.inputType.label == 'checkbox' || question.inputType.label == 'select-multiple') {
+      const busquedaLabel = question.options.reduce((acc, option) => {
+        acc[option.label] = ++acc[option.label] || 0;
+        return acc;
+      }, {});
+      
+      const duplicadosLabel = question.options.filter( (option) => {
+        return busquedaLabel[option.label];
+      });
+      if (duplicadosLabel.length > 0) {
+          this.setInputError('Valide las opciones. Existe opciones duplicadas.');
+          return false;
+      }
+
+      const busquedaValue = question.options.reduce((acc, option) => {
+        acc[option.value] = ++acc[option.value] || 0;
+        return acc;
+      }, {});
+      
+      const duplicadosValue = question.options.filter( (option) => {
+        return busquedaValue[option.value];
+      });
+      if (duplicadosValue.length > 0) {
+        this.setInputError('Valide los valores de las opciones. Existe valores duplicados.');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Edit question
+   */
   questionEdit(){
     this.question.isReady = false;
   }

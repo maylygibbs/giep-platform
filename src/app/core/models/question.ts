@@ -18,6 +18,7 @@ export class Question {
     updateAt:Date;
     options:Array<QuestionOption>;
     isReady:boolean;
+    categoryBy:any
 
 
 

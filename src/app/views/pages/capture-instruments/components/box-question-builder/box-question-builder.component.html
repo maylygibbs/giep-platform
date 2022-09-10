@@ -43,7 +43,7 @@
                     <div class="mb-3">
                         <label for="inputType" class="form-label required">Tipo de pregunta</label>
                         <ng-select id="inputUnitType" [items]="inputsType" name="inputType" #inputType="ngModel"
-                            [(ngModel)]="question.inputType" [searchable]="false" required>
+                            [(ngModel)]="question.inputType" [searchable]="false" (change)="onChangeInputType($event)" required>
                         </ng-select>
                         <div *ngIf="inputType.invalid && questionForm.submitted" class="invalid-feedback">
                             <div *ngIf="inputType.errors?.required">Campo es requerido
@@ -105,7 +105,17 @@
                                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 d-flex align-items-center">
                                     <i class="feather icon-trash" (click)="deleteOption(option)"></i>
                                 </div>
+
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div *ngIf="inputError"
+                                    class="invalid-feedback d-flex pt-2 invalid-content-error">
+                                    <div [innerHtml]="inputError"></div>
+                                    </div> 
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                     <input type="text" class="form-control" value="Click para agregar nueva opción" readonly

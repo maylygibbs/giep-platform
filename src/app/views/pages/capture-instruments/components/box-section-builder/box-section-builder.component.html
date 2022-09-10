@@ -28,7 +28,9 @@
                 <app-box-question-builder *ngFor="let question of section.questions" [question]="question" (onDeleteQuestion)="deleteQuestion($event)"></app-box-question-builder>
             </div>
             <div class="col-lg-12">
-                <i class="mdi mdi-plus" (click)="addQuestion()"></i><span>Pregunta</span>
+                <button type="button" class="btn btn-secondary"
+                (click)="addQuestion()"><i
+                    class="feather icon-file-plus"></i> Pregunta</button>                
             </div>
         </div>
     </div>

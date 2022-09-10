@@ -96,6 +96,33 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
     this.sectionActive--;
   }
 
+  preview(defaultNav){
+    if(this.instrument.sections && this.instrument.sections.length>0){
+      let isComplete = true;
+      this.instrument.sections.forEach((section:Section)=>{
+        if (section.questions && section.questions.length>0) { 
+          const arrayTemp = section.questions.filter((question)=> question.isReady == false);
+          if (arrayTemp.length>0) {
+            isComplete = false;
+          }
+        }else{
+          isComplete = false;
+        }
+      })
+
+      if (isComplete == true) {
+        this.show = false;
+        this.sectionActive = 0;
+        defaultNav.select(2);
+      }else{
+        defaultNav.select(1);
+      }
+    }else{
+      defaultNav.select(1);
+    }
+    
+  }
+
   onSubmit(form: NgForm){
     if(form.valid){
       console.log('users',this.selectedUsers)
