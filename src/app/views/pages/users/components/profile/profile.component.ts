@@ -39,6 +39,9 @@ export class ProfileComponent extends BaseComponent implements OnInit {
   imageChangedEvent: any = '';
   lastCropperPosition: CropperPosition;
   lastCroppedImage: any;
+  showEditPass: boolean;
+  newPass: string;
+  confirmNewPass: string;
 
   //Subcription
   user$: Subscription;
@@ -48,22 +51,26 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private modalService: NgbModal,
     private commonsService: CommonsService) {
-      super();
+    super();
     this.route.data.subscribe((data) => {
       this.data = data;
     });
   }
 
   ngOnInit(): void {
-
+    this.showEditPass = false;
     this.user$ = this.authService.currentUser$.subscribe((user: User) => {
       this.user = user ? user : this.authService.currentUser;
       console.log(this.user)
     });
   }
 
+  /**
+   * Select tab of info
+   * @param tab 
+   */
   selectTab(tab: string) {
-    
+
     this.tab = tab;
     if (!this.user.socialNetwork) {
       this.user.socialNetwork = new Array<SelectOption>();
@@ -74,27 +81,33 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     } else {
       const arrayTemp = this.user.socialNetwork;
       this.user.socialNetwork = [];
-      this.data.networks.forEach((net: SelectOption) => { 
+      this.data.networks.forEach((net: SelectOption) => {
         this.user.socialNetwork.push({ idTipo: parseInt(net.value), label: net.label, networkDir: null });
       });
       arrayTemp.forEach(element1 => {
         this.user.socialNetwork.forEach(element2 => {
           if (element1.idTipo == element2.idTipo) {
             element2.networkDir = element1.networkDir
-          }          
+          }
         });
       });
     }
   }
 
 
-
+  /**
+   * Action before upload image
+   */
   preUploadAvatar() {
     this.inputAvatar.nativeElement.click();
   }
 
+  /**
+   * Upload image avatar
+   * @param file 
+   */
   async uploadAvatar(file: File) {
-    
+
     console.log('avatar', file);
     if (file) {
       this.avatar.nativeElement.src = URL.createObjectURL(file)
@@ -106,18 +119,30 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     }
   }
 
+  /**
+   * Event to load states
+   * @param event 
+   */
   async onChangeCountry(event: any) {
     console.log('country', this.user.country);
     this.states = await this.commonsService.getAllStates(this.user.country.id);
 
   }
 
+  /**
+   * Event to load cities
+   * @param event 
+   */
   async onChangeStates(event: any) {
     console.log('state', this.user.state);
     this.cities = await this.commonsService.getAllCities(this.user.state.id);
 
   }
 
+  /**
+   * Call endpoint edit profile
+   * @param form 
+   */
   async onSubmit(form: NgForm) {
     if (form.valid) {
       console.log('user', this.user)
@@ -130,17 +155,31 @@ export class ProfileComponent extends BaseComponent implements OnInit {
   }
 
   /**
+   * Change password
+   * @param form 
+   */
+  async ngOnSubmitChangePass(form: NgForm) {
+    if (form.valid) {
+      const result = await this.userService.resetPass({ password: this.newPass });
+      if (result) {
+        this.showEditPass = false;
+        form.resetForm();
+      }
+    }
+  }
+
+  /**
    * Event change input file
    * @param event 
    * @param content 
    */
   fileChangeEvent(event: any, content: TemplateRef<any>): void {
     this.imageChangedEvent = event;
-    this.modalService.open(content, {centered: true}).result.then((result) => {
+    this.modalService.open(content, { centered: true }).result.then((result) => {
       console.log("Modal closed" + result);
 
-    }).catch((res) => {});
-    
+    }).catch((res) => { });
+
   }
 
   /**
@@ -155,19 +194,27 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     this.uploadAvatar(this.convertBase64ToFile(this.lastCroppedImage, "avatar"));
   }
 
-    /**
-   * Event load file failed
-   * @param event 
-   * @param content 
-   */
+  /**
+ * Event load file failed
+ * @param event 
+ * @param content 
+ */
   loadImageFailed() {
     /* show message */
   }
 
   /**
-   * 
+   * Cancel edit password
+   * @param change 
    */
-  crop(imageCropper:ImageCropperComponent){
+  cancelChangePass(change: boolean) {
+    this.showEditPass = change;
+  }
+
+  /**
+   * Action crop image
+   */
+  crop(imageCropper: ImageCropperComponent) {
     imageCropper.crop();
     this.modalService.dismissAll();
   }

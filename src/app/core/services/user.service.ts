@@ -311,6 +311,27 @@ export class UserService extends HttpService {
     
   }
 
+
+    /**
+   * Reset password
+   * @param data 
+   * @returns 
+   */
+     async resetPass(data:any):Promise<any>{
+      try {
+        const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/changepassword/perfil',data));
+        this.toastrService.success('','Su password fué cambiado con éxito.');
+        return true;
+      } catch (error: any) {
+        console.log(error)
+        if (error.status != 500) {
+          this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+        }
+        return false;
+      }
+      
+    }
+
 }
 
 

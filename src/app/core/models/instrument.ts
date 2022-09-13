@@ -16,6 +16,7 @@ export class Instrument {
     dutation:string;
     unitType: SelectOption;
     expirationDate:any;
+    publicationDate:Date;
     questionsByCategory:any;
     sections: Array<Section>;
     questions: Array<Question>;

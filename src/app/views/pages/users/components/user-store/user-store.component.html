@@ -25,29 +25,29 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputFirstName" class="form-label">Primer Nombre</label>
+                                <label for="inputFirstName" class="form-label required">Primer Nombre</label>
                                 <input type="text" name="firstName" #firstName="ngModel" [(ngModel)]="user.firstName"
                                 [ngClass]="{'ng-dirty ng-invalid' : firstName.errors && ( firstName.dirty || firstName.touched || userForm.submitted) }"
-                                    class="form-control" id="inputFirstName" autocomplete="off" minlength="3" maxlength="100" required>
+                                    class="form-control" id="inputFirstName" autocomplete="off" minlength="3" maxlength="50" required>
                                 <div *ngIf="firstName.invalid && userForm.submitted" class="invalid-feedback">
                                     <div *ngIf="firstName.errors?.required">Campo es requerido
                                     </div>
                                     <div *ngIf="firstName.errors?.minlength || firstName.errors?.maxlength">
-                                        Campo permite entre 3 y 100 caracteres</div>
+                                        Campo permite entre 3 y 50 caracteres</div>
                                 </div>                                    
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputSecondName" class="form-label">Segundo Nombre</label>
+                                <label for="inputSecondName" class="form-label required">Segundo Nombre</label>
                                 <input name="secondName" #secondName="ngModel" [(ngModel)]="user.secondName" type="text"
                                 [ngClass]="{'ng-dirty ng-invalid' : secondName.errors && ( secondName.dirty || secondName.touched || userForm.submitted) }"
-                                    class="form-control" id="inputSecondName" autocomplete="off" minlength="3" maxlength="100" required>
+                                    class="form-control" id="inputSecondName" autocomplete="off" minlength="3" maxlength="50" required>
                                 <div *ngIf="secondName.invalid && userForm.submitted" class="invalid-feedback">
                                     <div *ngIf="secondName.errors?.required">Campo es requerido
                                     </div>
                                     <div *ngIf="secondName.errors?.minlength || secondName.errors?.maxlength">
-                                        Campo permite entre 3 y 100 caracteres</div>
+                                        Campo permite entre 3 y 50 caracteres</div>
                                 </div>
                             </div>
                         </div>
@@ -55,29 +55,29 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputLastName" class="form-label">Primer Apellido</label>
+                                <label for="inputLastName" class="form-label required">Primer Apellido</label>
                                 <input type="text" name="lastName" #lastName="ngModel" [(ngModel)]="user.lastName"
                                 [ngClass]="{'ng-dirty ng-invalid' : lastName.errors && ( lastName.dirty || lastName.touched || userForm.submitted) }"
-                                    class="form-control" id="inputLastName" autocomplete="off" minlength="3" maxlength="100" required>
+                                    class="form-control" id="inputLastName" autocomplete="off" minlength="3" maxlength="50" required>
                                     <div *ngIf="lastName.invalid && userForm.submitted" class="invalid-feedback">
                                         <div *ngIf="lastName.errors?.required">Campo es requerido
                                         </div>
                                         <div *ngIf="lastName.errors?.minlength || lastName.errors?.maxlength">
-                                            Campo permite entre 3 y 100 caracteres</div>
+                                            Campo permite entre 3 y 50 caracteres</div>
                                     </div>                                    
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputSecondLastName" class="form-label">Segundo Apellido</label>
+                                <label for="inputSecondLastName" class="form-label required">Segundo Apellido</label>
                                 <input name="secondLastName" #secondLastName="ngModel" [(ngModel)]="user.secondLastName"
                                 [ngClass]="{'ng-dirty ng-invalid' : secondLastName.errors && ( secondLastName.dirty || secondLastName.touched || userForm.submitted) }"
-                                    type="text" class="form-control" id="inputSecondLastName" autocomplete="off" minlength="3" maxlength="100" required>
+                                    type="text" class="form-control" id="inputSecondLastName" autocomplete="off" minlength="3" maxlength="50" required>
                                 <div *ngIf="secondLastName.invalid && userForm.submitted" class="invalid-feedback">
                                     <div *ngIf="secondLastName.errors?.required">Campo es requerido
                                     </div>
                                     <div *ngIf="secondLastName.errors?.minlength || secondLastName.errors?.maxlength">
-                                        Campo permite entre 3 y 100 caracteres</div>
+                                        Campo permite entre 3 y 50 caracteres</div>
                                 </div>                                      
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputDocumentType" class="form-label">Tipo Documento</label>
+                                <label for="inputDocumentType" class="form-label required">Tipo Documento</label>
                                 <ng-select id="inputDocumentType" name="documentType" #documentType="ngModel" [(ngModel)]="user.documentType"
                                 [ngClass]="{'ng-dirty ng-invalid' : documentType.errors && ( documentType.dirty || documentType.touched || userForm.submitted) }"    
                                 [searchable]="false" required>
@@ -101,11 +101,11 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputDocumentNumber" class="form-label">Nº Documento</label>
+                                <label for="inputDocumentNumber" class="form-label required">Nº Documento</label>
                                 <input name="documentNumber" #documentNumber="ngModel" [(ngModel)]="user.documentNumber"
                                 [pattern]="environment.form.number.validations.pattern"
                                 [ngClass]="{'ng-dirty ng-invalid' : documentNumber.errors && ( documentNumber.dirty || documentNumber.touched || userForm.submitted) }" 
-                                    type="text" class="form-control" id="inputDocumentNumber" autocomplete="off" minlength="3" maxlength="20" required>
+                                    type="text" class="form-control" id="inputDocumentNumber" autocomplete="off" minlength="3" maxlength="50" required>
                                     <div *ngIf="documentNumber.invalid && userForm.submitted" class="invalid-feedback">
                                         <div *ngIf="documentNumber.errors?.required">Campo es requerido
                                         </div>
@@ -118,7 +118,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputBirthDate" class="form-label">Fecha Nacimiento</label>
+                                <label for="inputBirthDate" class="form-label required">Fecha Nacimiento</label>
                                 <div class="input-group">
                                     <input id="inputBirthDate" name="birthDate" #birthDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}"  class="form-control" placeholder="yyyy-mm-dd"
                                     [ngClass]="{'ng-dirty ng-invalid' : birthDate.errors && ( birthDate.dirty || birthDate.touched || userForm.submitted) }"
@@ -137,7 +137,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputCountry" class="form-label">País</label>
+                                <label for="inputCountry" class="form-label required">País</label>
                                 <ng-select id="inputCountry" [items]="data.countries" name="country" #country="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : country.errors && ( country.dirty || country.touched || userForm.submitted) }"
                                     [searchable]="false"
@@ -152,7 +152,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputState" class="form-label">Estado</label>
+                                <label for="inputState" class="form-label required">Estado</label>
                                 <ng-select id="inputState" [items]="states" name="state" #state="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : state.errors && ( state.dirty || state.touched || userForm.submitted) }"
                                     (change)="onChangeStates($event)"
@@ -168,7 +168,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputCity" class="form-label">Ciudad</label>
+                                <label for="inputCity" class="form-label required">Ciudad</label>
                                 <ng-select id="inputCity" [items]="cities" name="city" #city="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : city.errors && ( city.dirty || city.touched || userForm.submitted) }"
                                     [searchable]="false"
@@ -183,7 +183,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputSex" class="form-label">Sexo</label>
+                                <label for="inputSex" class="form-label required">Sexo</label>
                                 <ng-select id="inputSex" name="sex" #sex="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : sex.errors && ( sex.dirty || sex.touched || userForm.submitted) }"
                                     (change)="onChangeStates($event)"
@@ -201,10 +201,10 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputEmail" class="form-label">Email</label>
+                                <label for="inputEmail" class="form-label required">Email</label>
                                 <input type="text" email name="email" #email="ngModel" [(ngModel)]="user.email"
                                 [ngClass]="{'ng-dirty ng-invalid' : email.errors && ( email.dirty || email.touched || userForm.submitted) }"
-                                    class="form-control" id="inputEmail" autocomplete="off" required>
+                                    class="form-control" id="inputEmail" autocomplete="off" maxlength="50" required>
                                 <div *ngIf="email.invalid && userForm.submitted" class="invalid-feedback">
                                     <div *ngIf="email.errors?.required">Campo es requerido
                                     </div>
@@ -215,7 +215,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputPhone" class="form-label">Telefono/Cel</label>
+                                <label for="inputPhone" class="form-label required">Telefono/Cel</label>
                                 <tag-input [(ngModel)]="user.phones"
                                     name="phone" 
                                     #phone="ngModel" 
@@ -237,7 +237,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputDependence" class="form-label">Dependencia</label>
+                                <label for="inputDependence" class="form-label required">Dependencia</label>
                                 <ng-select id="inputDependence" [items]="data.dependences" name="dependence" #dependence="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : dependence.errors && ( dependence.dirty || dependence.touched || userForm.submitted) }"
                                     [searchable]="false"
@@ -251,7 +251,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputPosition" class="form-label">Cargo</label>
+                                <label for="inputPosition" class="form-label required">Cargo</label>
                                 <ng-select id="inputPosition" [items]="data.positions" name="position" #position="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : position.errors && ( position.dirty || position.touched || userForm.submitted) }"
                                     [searchable]="false" [(ngModel)]="user.position" required>
@@ -273,7 +273,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputRoles" class="form-label">Roles</label>
+                                <label for="inputRoles" class="form-label required">Roles</label>
                                 <ng-select id="inputRoles" [items]="data.roles" [multiple]=true [searchable]="false"
                                 [closeOnSelect]="false" name="rolesuser" #rolesuser="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : rolesuser.errors && ( rolesuser.dirty || rolesuser.touched || userForm.submitted) }"

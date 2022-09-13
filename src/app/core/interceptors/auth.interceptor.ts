@@ -36,13 +36,11 @@ export class AuthInterceptor implements HttpInterceptor {
     isOnTheWhiteList(url:string, paths: string[]):boolean{
     
         let isInclude:boolean = false;
-    
         paths.forEach((path:string)=>{
           if(url.endsWith(path)){
             isInclude = true;
           }
         });
-
         return isInclude;
     }
 }

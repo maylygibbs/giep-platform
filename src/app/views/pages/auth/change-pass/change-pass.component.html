@@ -18,7 +18,7 @@
                 <div class="form-group mb-3">
                   <input name="password" #password="ngModel" [(ngModel)]="passwordInput" type="password"  class="form-control"
                   [ngClass]="{'ng-dirty ng-invalid' : password.errors && ( password.dirty || password.touched || changePassForm.submitted) }"
-                  [pattern]="environment.form.password.validations.pattern" placeholder="Indica un password" required>
+                  [pattern]="environment.form.password.validations.pattern" placeholder="Nuevo password" required>
                   <div *ngIf="password.invalid && ( password.dirty || password.touched || changePassForm.submitted)" class="invalid-feedback">
                     <div *ngIf="password.errors?.required">Campo requerido.
                     </div>

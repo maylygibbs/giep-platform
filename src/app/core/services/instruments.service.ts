@@ -60,6 +60,8 @@ export class InstrumentsService extends HttpService {
       instrument.name = item.nombre;
       instrument.description = item.descripcion;
       instrument.createAt = item.createAt;
+      instrument.expirationDate = item.fechaVigencia;
+      instrument.publicationDate = item.fechaPublicacion;
       instrument.path = item.path;
       return instrument;
     });
