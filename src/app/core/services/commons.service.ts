@@ -134,7 +134,9 @@ export class CommonsService extends HttpService {
     let redes: Array<SelectOption> = new Array<SelectOption>();
     const resp = await firstValueFrom(this.get(environment.apiUrl, '/tiporedes/List'));
     redes = resp.data.map((item: any) => {
-      return new SelectOption(item.id, item.nombre);
+      const socialNetwork = new SelectOption(item.id, item.nombre);
+      socialNetwork.icon = item.icono;
+      return socialNetwork;
     });
     return redes;
   }

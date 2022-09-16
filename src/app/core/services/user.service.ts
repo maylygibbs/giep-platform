@@ -150,6 +150,7 @@ export class UserService extends HttpService {
       user.country = new SelectOption(item.pais?.id);
       user.state = new SelectOption(item.estado?.id);
       user.city = new SelectOption(item.ciudad?.id);
+      user.avatar = item.foto;
       return user;
     })
     return paginator;

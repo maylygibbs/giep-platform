@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 import { CropperPosition, ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
+import { environment } from '../../../../../../environments/environment';
+
 
 @Component({
   selector: 'app-profile',
@@ -42,6 +44,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
   showEditPass: boolean;
   newPass: string;
   confirmNewPass: string;
+  environment = environment;
 
   //Subcription
   user$: Subscription;
@@ -75,14 +78,14 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     if (!this.user.socialNetwork) {
       this.user.socialNetwork = new Array<SelectOption>();
       this.data.networks.forEach((net: SelectOption) => {
-        this.user.socialNetwork.push({ idTipo: parseInt(net.value), label: net.label, networkDir: null });
+        this.user.socialNetwork.push({ idTipo: parseInt(net.value), label: net.label, networkDir: null, icon: net.icon });
       });
 
     } else {
       const arrayTemp = this.user.socialNetwork;
       this.user.socialNetwork = [];
       this.data.networks.forEach((net: SelectOption) => {
-        this.user.socialNetwork.push({ idTipo: parseInt(net.value), label: net.label, networkDir: null });
+        this.user.socialNetwork.push({ idTipo: parseInt(net.value), label: net.label, networkDir: null, icon: net.icon });
       });
       arrayTemp.forEach(element1 => {
         this.user.socialNetwork.forEach(element2 => {

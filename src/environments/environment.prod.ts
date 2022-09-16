@@ -15,7 +15,7 @@ export const environment = {
     },
     password: {
       validations: {
-        pattern: '^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&.+=]).*$',
+        pattern: '^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&.+=*]).*$',
       }
     },
     number: {
@@ -32,6 +32,10 @@ export const environment = {
     file_imagen_extension:['png', 'jpg', 'jpge'],
     file_acordo_extension:['pdf'],
     file_extension_pdf: ['pdf']
+  },
+  paginator: {
+    default_page: 1,
+    row_per_page: 5
   },
   endpoints:{
     handle_error_blackList:[

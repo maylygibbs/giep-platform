@@ -15,12 +15,13 @@ import { TagInputModule } from 'ngx-chips';
 import { MustMatchDirective } from './directive/must-match.directive';
 import { BoxInstrumentsComponent } from './components/box-instruments/box-instruments.component';
 import { BoxMessageComponent } from './components/box-message/box-message.component';
+import { BoxUtilViewsComponent } from './components/box-util-views/box-util-views.component';
 
 
 
 
 @NgModule({
-  declarations: [BaseComponent, PagerComponent, MustMatchDirective, BoxInstrumentsComponent, BoxMessageComponent],
+  declarations: [BaseComponent, PagerComponent, MustMatchDirective, BoxInstrumentsComponent, BoxMessageComponent, BoxUtilViewsComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -52,7 +53,8 @@ import { BoxMessageComponent } from './components/box-message/box-message.compon
     TagInputModule,
     MustMatchDirective,
     BoxInstrumentsComponent,
-    BoxMessageComponent
+    BoxMessageComponent,
+    BoxUtilViewsComponent
   ]
 
 })

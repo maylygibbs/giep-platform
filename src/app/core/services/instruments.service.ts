@@ -44,6 +44,30 @@ export class InstrumentsService extends HttpService {
 
   /** INSTRUMENTS **/
 
+  async storeInstrument(data: any) {
+    try {
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura', data));
+    } catch (error: any) {
+      console.log(error)
+    }
+
+  }
+
+  /**
+ * Publish instrument
+ * @param id 
+ */
+  async publishInstrument(id: string, data:any) {
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/publicar/${id}`,data));
+    } catch (error: any) {
+      console.log(error);
+      if (error.status == 409) {
+        this.toastrService.error('', error.msg);
+      }
+    }
+  }
+
 
   /**
    * Check all instruments, supports pagination and filter
@@ -62,6 +86,7 @@ export class InstrumentsService extends HttpService {
       instrument.createAt = item.createAt;
       instrument.expirationDate = item.fechaVigencia;
       instrument.publicationDate = item.fechaPublicacion;
+      instrument.isPublished = item.publicar && item.publicar==1 ? true : false;
       instrument.path = item.path;
       return instrument;
     });
@@ -107,13 +132,14 @@ export class InstrumentsService extends HttpService {
       const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/respuesta', data));
       await this.userService.getInfoUser();
       this.toastrService.success('Sus respuestas se han registrado con exito.');
-    } catch (error) {
-      this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+    } catch (error: any) {
+      if (error.status != 500)
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
     }
   }
 
   /**
-   * 
+   * Get results by category
    * @param id 
    */
   async getInstrumentResultByCategory(id: number): Promise<any> {
@@ -149,9 +175,9 @@ export class InstrumentsService extends HttpService {
 
 
   /**
- * 
- * @param id 
- */
+   * Get results by questions
+   * @param id 
+   */
   async getInstrumentResultByQuestions(id: number): Promise<any> {
 
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/resultados/sincategoria/${id}`));
@@ -376,6 +402,8 @@ export class InstrumentsService extends HttpService {
       }
     }
   }
+
+
 
 
 
@@ -610,10 +638,10 @@ export class InstrumentsService extends HttpService {
 
     try {
       const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/roles', { roles: roles }));
-      const users = resp.data.map((item:any)=>{
+      const users = resp.data.map((item: any) => {
         return {
           id: item.id,
-          fullName: item.nombre+' '+item.apellido,
+          fullName: item.nombre + ' ' + item.apellido,
           role: item.role
         };
       })
@@ -631,6 +659,7 @@ export class InstrumentsService extends HttpService {
     }
 
   }
+
 
 
 }

@@ -17,7 +17,7 @@
                 <div class="form-group mb-3">
                   <input name="emailInput" #emailInput="ngModel" [(ngModel)]="email" type="text" class="form-control"
                   [ngClass]="{'ng-dirty ng-invalid' : emailInput.errors && ( emailInput.dirty || emailInput.touched || recoverPassForm.submitted) }"
-                    id="exampleInputEmail1" placeholder="Indica tu email" email required>
+                    id="exampleInputEmail1" placeholder="Indica tu email" maxlength="100" email required>
                   <div *ngIf="emailInput.invalid && recoverPassForm.submitted" class="invalid-feedback">
                     <div *ngIf="emailInput.errors?.required">Campo requerido
                     </div>

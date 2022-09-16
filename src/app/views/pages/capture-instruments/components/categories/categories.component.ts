@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment';
 import { InstrumentsService } from './../../../../../core/services/instruments.service';
 import { SelectOption } from './../../../../../core/models/select-option';
 import { PaginationResponse } from './../../../../../core/models/pagination-response';
@@ -30,6 +31,8 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
   
   selectedItem: SelectOption;
   word:string;
+
+  environment = environment;
   
   private $eventNavigationEnd: Subscription;
 
@@ -39,11 +42,11 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
    }
 
   async ngOnInit() {
-    this.categories = await this.instrumentsService.getCategoriesPagined({ page: this.page, rowByPage: 3, word: null});
+    this.categories = await this.instrumentsService.getCategoriesPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null});
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     });
   }
 
@@ -51,7 +54,7 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.categories = null;
-    this.categories = await this.instrumentsService.getCategoriesPagined({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
+    this.categories = await this.instrumentsService.getCategoriesPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
   }
 
   create(){
@@ -81,7 +84,7 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
 
   search(){
     if (this.word && this.word.length > 0) {
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     }
   }
 

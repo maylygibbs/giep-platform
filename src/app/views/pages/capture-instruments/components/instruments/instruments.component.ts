@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment';
 import { Section } from './../../../../../core/models/section';
 import { Instrument } from './../../../../../core/models/instrument';
 import { PaginationResponse } from './../../../../../core/models/pagination-response';
@@ -32,6 +33,8 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   selectedItem: Instrument;
   word:string;
 
+  environment = environment;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
@@ -40,11 +43,11 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: 1, rowByPage: 3, word: null });
+    this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     });
   }
 
@@ -52,7 +55,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.instruments = null;
-    this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
+    this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
   }
 
   create(){
@@ -86,8 +89,13 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   search(){
     if (this.word && this.word.length > 0) {
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     }
+  }
+
+  async publishIntrument(instrument:Instrument){
+    await this.instrumentsService.publishInstrument(instrument.id, {publicar: instrument.isPublished ? 1 : 0});
+    this.loadPage(this.page);
   }
 
   ngOnDestroy(){

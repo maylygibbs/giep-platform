@@ -11,6 +11,7 @@ export class SelectOption{
   public isSelected:boolean;
   public link_google: string;
   public morada:string;
+  public icon:string;
 
   /**
    * Used to display data in forms.

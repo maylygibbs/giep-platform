@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment';
 import { InputType } from './../../../../../core/models/input-type';
 import { SelectOption } from './../../../../../core/models/select-option';
 import { InstrumentsService } from './../../../../../core/services/instruments.service';
@@ -33,6 +34,8 @@ export class InputsComponent extends BaseComponent  implements OnInit {
   selectedItem: InputType;
   word:string;
 
+  environment = environment;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
@@ -41,11 +44,11 @@ export class InputsComponent extends BaseComponent  implements OnInit {
   }
 
   async ngOnInit() {
-    this.inputs = await this.instrumentsService.getInputTypesPagined({ page: 1, rowByPage: 3, word: null });
+    this.inputs = await this.instrumentsService.getInputTypesPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     });
   }
 
@@ -54,7 +57,7 @@ export class InputsComponent extends BaseComponent  implements OnInit {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.inputs = null;
-    this.inputs = await this.instrumentsService.getInputTypesPagined({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
+    this.inputs = await this.instrumentsService.getInputTypesPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
   }
 
   create(){
@@ -84,7 +87,7 @@ export class InputsComponent extends BaseComponent  implements OnInit {
 
   search(){
     if (this.word && this.word.length > 0) {
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     }
   }
 

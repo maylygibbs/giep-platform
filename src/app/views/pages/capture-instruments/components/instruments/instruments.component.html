@@ -45,23 +45,30 @@
                     <th>Instrumento</th>
                     <th>Resultados</th>
                     <th>Fecha creación</th>
-                    <th>Fecha publicación</th>
                     <th>Fecha expiración</th>
+                    <th>Publicado</th>
+                    <th>Fecha publicación</th>
                     <th data-priority="1" class="text-center">Accion</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    *ngFor="let instrument of instruments.data | paginate: { id: 'server', itemsPerPage: 3, currentPage: page, totalItems: instruments.count }">
+                    *ngFor="let instrument of instruments.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: instruments.count }">
                     <td>{{instrument.id}}</td>
                     <td>{{instrument.name}}</td>  
                     <td>
                       <a *ngIf="instrument.path" [routerLink]="instrument.path" [queryParams]="{id: instrument.id, name: instrument.name}" >Ver</a>
                       <span *ngIf="!instrument.path">No hay resultados</span>
                     </td> 
-                    <td>{{instrument.createAt | date:'yyyy-MM-dd'}}</td> 
-                    <td>{{instrument.publicationDate | date:'yyyy-MM-dd'}}</td>
-                    <td>{{instrument.expirationDate | date:'yyyy-MM-dd'}}</td>               
+                    <td>{{instrument.createAt | date:'yyyy-MM-dd'}}</td>                    
+                    <td>{{instrument.expirationDate | date:'yyyy-MM-dd'}}</td> 
+                    <th>
+                      <div class="form-check form-switch mb-2">
+                        <input type="checkbox" [(ngModel)]="instrument.isPublished" (change)="publishIntrument(instrument)" class="form-check-input" id="formSwitch1">
+                        <label class="form-check-label" for="formSwitch1">{{instrument.isPublished? 'Sí' : 'No'}}</label>
+                      </div>
+                    </th>  
+                    <td>{{instrument.publicationDate | date:'yyyy-MM-dd'}}</td>            
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(instrument.id)"></i>
                       <!--<i class="feather icon-trash" (click)="delete(input.id)"></i>-->
@@ -70,7 +77,7 @@
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="7" class="text-right">
+                    <th colspan="8" class="text-right">
                       <app-pager (onChangePage)="loadPage($event)"></app-pager>
                     </th>
                   </tr>    

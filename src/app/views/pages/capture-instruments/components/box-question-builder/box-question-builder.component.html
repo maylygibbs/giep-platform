@@ -14,12 +14,12 @@
                     <div class="mb-3">
                         <label for="inputQuestionLabel" class="form-label required">Texto de la pregunta</label>
                         <input type="text" name="questionLabel" #questionLabel="ngModel" [(ngModel)]="question.label"
-                            class="form-control" autocomplete="off" minlength="3" maxlength="500" required>
+                            class="form-control" autocomplete="off" minlength="3" maxlength="1000" required>
                         <div *ngIf="questionLabel.invalid && questionForm.submitted" class="invalid-feedback">
                             <div *ngIf="questionLabel.errors?.required">Campo es requerido
                             </div>
                             <div *ngIf="questionLabel.errors?.minlength || questionLabel.errors?.maxlength">
-                                Campo permite entre 3 y 500 caracteres</div>
+                                Campo permite entre 3 y 1000 caracteres</div>
                         </div>
 
                     </div>
@@ -29,7 +29,7 @@
                         <label for="inputScore" class="form-label required">Puntos</label>
                         <input type="text" name="inputScore" #inputScore="ngModel" [(ngModel)]="question.score"
                         [pattern]="environment.form.number.validations.pattern"
-                            class="form-control" required>
+                            class="form-control" maxlength="11" required>
                         <div *ngIf="inputScore.invalid && questionForm.submitted" class="invalid-feedback">
                             <div *ngIf="inputScore.errors?.required">Campo es requerido
                             </div>
@@ -61,7 +61,7 @@
                                     <div class="mb-3">
                                         <label for="inputOptionLabel" class="form-label required">Opción</label>
                                         <input type="text" [name]="option.nameInputLabel" [(ngModel)]="option.label"
-                                            class="form-control" autocomplete="off" minlength="1" maxlength="255"
+                                            class="form-control" autocomplete="off" minlength="1" maxlength="1000"
                                             required>
                                         <div *ngIf="questionForm.form.controls[option.nameInputLabel]?.invalid && questionForm.submitted"
                                             class="invalid-feedback">
@@ -91,7 +91,7 @@
                                     <div class="mb-3">
                                         <label for="inputOptionScore" class="form-label required">Puntos</label>
                                         <input type="text" [name]="option.nameInputScore" [(ngModel)]="option.score"
-                                        [pattern]="environment.form.number.validations.pattern"
+                                        [pattern]="environment.form.number.validations.pattern" maxlength="11"
                                             class="form-control" required>
                                         <div *ngIf="questionForm.form.controls[option.nameInputScore]?.invalid && questionForm.submitted" class="invalid-feedback">
                                             <div *ngIf="questionForm.form.controls[option.nameInputScore]?.errors?.required">Campo es requerido

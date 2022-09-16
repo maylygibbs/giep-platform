@@ -114,15 +114,13 @@ export class AuthService extends HttpService {
       const resp = await firstValueFrom(this.post(environment.apiAuth, '/account/recovery-password',{email}));
       this.toastrService.success('','Le fué enviado un email con éxito para que restablezca su password.');
     } catch (error: any) {
-      debugger
+      
       if (error.status == 404) {
         this.toastrService.error('','No existe el correo electrónico.');
         return;
       }
-      if (error.status != 500) {
-        this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
-      }
-      
+      this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+     
       return;
     }
   }

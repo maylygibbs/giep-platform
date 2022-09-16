@@ -73,17 +73,10 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     this.$instruments = this.userService.$instruments;
     this.currentDate = this.calendar.getToday();
 
-    if(this.user.roles.includes('ROLE_ADMINISTRADOR') ){
-      this.instrumentsService.getInstrumentResultByQuestions(2).then((resp)=>{
-        this.results = resp;
-        console.log('results',this.results)
-      });
-    }
-
     //this.customersChartOptions = getCustomerseChartOptions(this.obj);
     ///this.ordersChartOptions = getOrdersChartOptions(this.obj);
     //this.growthChartOptions = getGrowthChartOptions(this.obj);
-    //this.revenueChartOptions = getRevenueChartOptions(this.obj);
+    this.revenueChartOptions = getRevenueChartOptions(this.obj);
     this.monthlySalesChartOptions = getInstrumentResult(this.obj);
     //this.cloudStorageChartOptions = getCloudStorageChartOptions(this.obj);
 
@@ -318,7 +311,7 @@ function getGrowthChartOptions(obj: any) {
 function getRevenueChartOptions(obj: any) {
   return {
     series: [{
-      name: "Revenue",
+      name: "Participación",
       data: [
         49.3,
         48.7,
@@ -520,7 +513,7 @@ function getRevenueChartOptions(obj: any) {
     },
     yaxis: {
       title: {
-        text: 'Revenue ( $1000 x )',
+        text: 'Participación (%)',
         style:{
           size: 9,
           color: obj.muted

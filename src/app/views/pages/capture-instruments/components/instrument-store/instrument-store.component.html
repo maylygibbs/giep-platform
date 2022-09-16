@@ -29,14 +29,14 @@
                                                         [(ngModel)]="instrument.name"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentName.errors && ( instrumentName.dirty || instrumentName.touched || instrumentForm.submitted) }"
                                                         class="form-control" id="inputInstrumentName" autocomplete="off"
-                                                        minlength="3" maxlength="250" required>
+                                                        minlength="3" maxlength="255" required>
                                                     <div *ngIf="instrumentName.invalid && instrumentForm.submitted"
                                                         class="invalid-feedback">
                                                         <div *ngIf="instrumentName.errors?.required">Campo es requerido
                                                         </div>
                                                         <div
                                                             *ngIf="instrumentName.errors?.minlength || instrumentName.errors?.maxlength">
-                                                            Campo permite entre 3 y 100 caracteres</div>
+                                                            Campo permite entre 3 y 255 caracteres</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -48,14 +48,14 @@
                                                         [(ngModel)]="instrument.path"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentPath.errors && ( instrumentPath.dirty || instrumentPath.touched || instrumentForm.submitted) }"
                                                         class="form-control" id="inputInstrumentPath" autocomplete="off"
-                                                        minlength="3" maxlength="250">
+                                                        minlength="3" maxlength="300">
                                                     <div *ngIf="instrumentPath.invalid && instrumentForm.submitted"
                                                         class="invalid-feedback">
                                                         <div *ngIf="instrumentPath.errors?.required">Campo es requerido
                                                         </div>
                                                         <div
                                                             *ngIf="instrumentPath.errors?.minlength || instrumentPath.errors?.maxlength">
-                                                            Campo permite entre 3 y 100 caracteres</div>
+                                                            Campo permite entre 3 y 300 caracteres</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -68,7 +68,7 @@
                                                         [pattern]="environment.form.number.validations.pattern"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentDuration.errors && ( instrumentDuration.dirty || instrumentDuration.touched || instrumentForm.submitted) }"
                                                         class="form-control" id="inputInstrumentDuration"
-                                                        autocomplete="off" minlength="1" maxlength="250" required>
+                                                        autocomplete="off" minlength="1" maxlength="11" required>
                                                     <div *ngIf="instrumentDuration.invalid && instrumentForm.submitted"
                                                         class="invalid-feedback">
                                                         <div *ngIf="instrumentDuration.errors?.required">Campo es
@@ -200,7 +200,7 @@
                                                     <label for="inputInstrumentDescription"
                                                         class="form-label required">Descripción</label>
                                                     <textarea id="inputInstrumentDescription" minlength="3"
-                                                        class="form-control" maxlength="500"
+                                                        class="form-control" maxlength="1000"
                                                         name="instrumentDescription"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentDescription.errors && ( instrumentDescription.dirty || instrumentDescription.touched || instrumentForm.submitted) }"
                                                         #instrumentDescription="ngModel"
@@ -212,7 +212,7 @@
                                                         </div>
                                                         <div
                                                             *ngIf="instrumentDescription.errors?.minlength || instrumentDescription.errors?.maxlength">
-                                                            Campo permite entre 3 y 500 caracteres</div>
+                                                            Campo permite entre 3 y 1000 caracteres</div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -18,7 +18,7 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class UsersComponent extends BaseComponent implements  OnInit {
 
-
+  defaultView:boolean=true
   step:number = 1;
   users: PaginationResponse;
 
@@ -35,6 +35,8 @@ export class UsersComponent extends BaseComponent implements  OnInit {
   selectedItem: User;
   word:string;
 
+  environment = environment;
+
   private $eventNavigationEnd: Subscription;
 
 
@@ -44,11 +46,11 @@ export class UsersComponent extends BaseComponent implements  OnInit {
    }
 
   async ngOnInit() {
-    this.users = await this.userService.getUsersPaginated({ page: 1, rowByPage: 3, word: null });
+    this.users = await this.userService.getUsersPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     });
   }
 
@@ -56,7 +58,7 @@ export class UsersComponent extends BaseComponent implements  OnInit {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.users = null;
-    this.users = await this.userService.getUsersPaginated({ page: this.page, rowByPage: 3, word: this.word ? this.word : null});
+    this.users = await this.userService.getUsersPaginated({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
   }
 
   create(){
@@ -86,8 +88,12 @@ export class UsersComponent extends BaseComponent implements  OnInit {
 
   search(){
     if (this.word && this.word.length > 0) {
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     }
+  }
+
+  changeView(change:boolean){
+    this.defaultView = change;
   }
 
 

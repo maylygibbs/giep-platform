@@ -16,12 +16,28 @@ export class BoxInstrumentsComponent implements OnInit {
   show:boolean = false;
   submitted:boolean = false;
 
+  sectionActive: number;
+
   constructor(private instrumentsService:InstrumentsService) { }
 
   async ngOnInit() {
     this.instrument = await this.instrumentsService.getInstrumentsById(this.instruments[0].id);
 
   }
+
+    /**
+   * Go to next section
+   */
+     nextSection() {
+      this.sectionActive++;
+    }
+  
+    /**
+     * Go to back section
+     */
+    backSection() {
+      this.sectionActive--;
+    }
 
   /**
    * stores user responses

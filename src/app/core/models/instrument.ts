@@ -20,6 +20,7 @@ export class Instrument {
     questionsByCategory:any;
     sections: Array<Section>;
     questions: Array<Question>;
+    isPublished:boolean
     path:string;
     createAt:Date;
     updateAt:Date;

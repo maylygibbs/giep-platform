@@ -18,11 +18,13 @@
                 <div class="form-group mb-3">
                   <input name="password" #password="ngModel" [(ngModel)]="passwordInput" type="password"  class="form-control"
                   [ngClass]="{'ng-dirty ng-invalid' : password.errors && ( password.dirty || password.touched || changePassForm.submitted) }"
-                  [pattern]="environment.form.password.validations.pattern" placeholder="Nuevo password" required>
+                  [pattern]="environment.form.password.validations.pattern" minlength="6" maxlength="10" placeholder="Nuevo password" required>
                   <div *ngIf="password.invalid && ( password.dirty || password.touched || changePassForm.submitted)" class="invalid-feedback">
                     <div *ngIf="password.errors?.required">Campo requerido.
                     </div>
-                    <div *ngIf="password.errors?.pattern">Password debe tener 1 mayúscula, 1 minúscula, 1 número, 1 no alfanumérico y al menos 6 caracteres.
+                    <div *ngIf="password.errors?.minlength || password.errors?.maxlength">Password permite entre 6 y 10 caracteres.
+                    </div>
+                    <div *ngIf="password.errors?.pattern">Password debe tener entre 6 y 10 caracteres; debe contener al menos 1 mayúscula, 1 minúscula, 1 número, 1 no alfanumérico.
                     </div>
                   </div>
                 </div>

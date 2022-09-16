@@ -10,7 +10,7 @@
           <div>
             <img #avatar class="wd-70 rounded-circle"
               [src]="user.avatar ? user.avatar : 'https://via.placeholder.com/100x100'" alt="profile">
-            <i class="feather icon-edit avatar" (click)="preUploadAvatar()"></i>
+            <i class="feather icon-edit avatar" placement="bottom" ngbTooltip="Editar avatar" (click)="preUploadAvatar()"></i>
             <span class="h4 ms-3 text-dark">{{user?.fullName}}</span>
             <input #inputAvatar type="file" name="avatar" accept="image/*;capture=camera" style="visibility: hidden;"
               (change)="fileChangeEvent($event, cropModal)">
@@ -45,15 +45,15 @@
       <div class="d-flex justify-content-center p-3 rounded-bottom mt-3">
         <ul class="d-flex align-items-center m-0 p-1">
           <li class="ms-3 ps-3 border-start d-flex align-items-center" (click)="selectTab('about')">
-            <i class="feather icon-user me-1 icon-md" ></i>
+            <i class="feather icon-user me-1 icon-md" [ngClass]="{'text-primary':tab=='about', 'text-body': tab!='about'}"></i>
             <a class="pt-1px d-none d-md-block" [ngClass]="{'text-primary':tab=='about', 'text-body': tab!='about'}">Mis datos</a>
           </li>
           <li class="ms-3 ps-3 border-start d-flex align-items-center"  (click)="selectTab('social')">
-            <i class="feather icon-globe me-1 icon-md"></i>
+            <i class="feather icon-globe me-1 icon-md" [ngClass]="{'text-primary':tab=='social', 'text-body': tab!='social'}"></i>
             <a class="pt-1px d-none d-md-block" [ngClass]="{'text-primary':tab=='social', 'text-body': tab!='social'}">Mis redes</a>
           </li>
           <li class="ms-3 ps-3 border-start d-flex align-items-center" (click)="selectTab('security')">
-            <i class="feather icon-key me-1 icon-md"></i>
+            <i class="feather icon-key me-1 icon-md" [ngClass]="{'text-primary':tab=='security', 'text-body': tab!='security'}"></i>
             <a class="pt-1px d-none d-md-block"
               [ngClass]="{'text-primary':tab=='security', 'text-body': tab!='security'}"
               >Seguridad</a>
@@ -132,16 +132,11 @@
             </div>
           </div>
         </div>
-        <div class="mt-3 d-flex social-links">
-          <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
-            <i class="feather icon-github"></i>
+        <div class="mt-3 ms-5 d-flex" *ngFor="let network of user.socialNetwork">
+          <a class="btn btn-icon border me-2 mb-3" >
+            <i [class]="'feather icon-'+network.icon" placement="bottom" [ngbTooltip]="network.networkDir"></i>
           </a>
-          <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
-            <i class="feather icon-twitter"></i>
-          </a>
-          <a href="" (click)="false" class="btn btn-icon border btn-xs me-2">
-            <i class="feather icon-instagram"></i>
-          </a>
+          <span class="ms-2">{{network.networkDir}}</span>
         </div>
       </div>
     </div>
@@ -177,10 +172,16 @@
             [mustMatch]="['password', 'confirmPassword']">
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 offset-lg-4 offset-md-4 text-center">
               <div class="form-group mb-3">
-                <input type="password" name="password" #password="ngModel" [(ngModel)]="newPass" placeholder="Nuevo password" class="form-control" maxlength="50"
+                <input type="password" name="password" #password="ngModel" minlength="6" maxlength="10"
+                 [(ngModel)]="newPass" placeholder="Nuevo password" class="form-control"
+                 [pattern]="environment.form.password.validations.pattern"
                   required>
                 <div *ngIf="password.invalid && changePassForm.submitted" class="invalid-feedback">
                   <div *ngIf="password.errors?.required">Campo es requerido
+                  </div>
+                  <div *ngIf="password.errors?.minlength || password.errors?.maxlength">Password permite entre 6 y 10 caracteres.
+                  </div>
+                  <div *ngIf="password.errors?.pattern">Password debe tener entre 6 y 10 caracteres; debe contener al menos 1 mayúscula, 1 minúscula, 1 número, 1 no alfanumérico.
                   </div>
                 </div>
               </div>
@@ -189,7 +190,7 @@
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 offset-lg-4 offset-md-4 text-center">
               <div class="form-group mb-3">
                 <input type="password" name="confirmPassword" #confirmPassword="ngModel" [(ngModel)]="confirmNewPass"
-                placeholder="Confirma el password" class="form-control" maxlength="50" required>
+                placeholder="Confirma el password" class="form-control" maxlength="10" required>
                 <div
                   *ngIf="confirmPassword.invalid && ( confirmPassword.dirty || confirmPassword.touched || changePassForm.submitted)"
                   class="invalid-feedback">
