@@ -2,6 +2,7 @@ import { InstrumentsService } from './../../../../core/services/instruments.serv
 import { Instrument } from './../../../../core/models/instrument';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-box-instruments',
@@ -16,13 +17,15 @@ export class BoxInstrumentsComponent implements OnInit {
   show:boolean = false;
   submitted:boolean = false;
 
-  sectionActive: number;
+  sectionActive: number = 0;
+
+  environment = environment;
 
   constructor(private instrumentsService:InstrumentsService) { }
 
   async ngOnInit() {
     this.instrument = await this.instrumentsService.getInstrumentsById(this.instruments[0].id);
-
+    console.log('instrument', this.instrument);
   }
 
     /**

@@ -9,7 +9,7 @@ export class Question {
     inputType:SelectOption;
     className:string;
     score:string;
-    valueResp:string | any[];
+    valueResp:any | any[];
     valueType:string; // number, alphanumeric, etc
     required:boolean;
     minlength:number;

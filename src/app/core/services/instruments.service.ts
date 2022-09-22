@@ -1,3 +1,5 @@
+import { QuestionOption } from './../models/question-option';
+import { Section } from './../models/section';
 import { InputType } from './../models/input-type';
 import { PaginationResponse } from './../models/pagination-response';
 import { UserService } from './user.service';
@@ -12,6 +14,7 @@ import { SelectOption } from '../models/select-option';
 import { ToastrService } from 'ngx-toastr';
 import { UnitType } from '../models/unit-type';
 import { User } from '../models/user';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +49,14 @@ export class InstrumentsService extends HttpService {
 
   async storeInstrument(data: any) {
     try {
-      const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura', data));
+      if(!data.id){
+        const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura', data));
+        this.toastrService.success('El instrumento fué creado con éxito.')
+      }else{
+        const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/actualizar/${data.id}`, data));
+        this.toastrService.success('El instrumento fué actualizado con éxito.')
+      }
+     
     } catch (error: any) {
       console.log(error)
     }
@@ -69,6 +79,25 @@ export class InstrumentsService extends HttpService {
   }
 
 
+  async clone(id: number) {
+    try {
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/clonar`));
+    } catch (error: any) {
+      console.log(error)
+    }
+
+  }
+
+  async deleteInstrument(id: number) {
+    try {
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
+    } catch (error: any) {
+      console.log(error)
+    }
+
+  }
+
+
   /**
    * Check all instruments, supports pagination and filter
    * @param filter 
@@ -78,7 +107,9 @@ export class InstrumentsService extends HttpService {
     const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/list', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
     paginator.data = resp.data.map((item: any) => {
+      
       const instrument = new Instrument();
       instrument.id = item.id;
       instrument.name = item.nombre;
@@ -86,6 +117,8 @@ export class InstrumentsService extends HttpService {
       instrument.createAt = item.createAt;
       instrument.expirationDate = item.fechaVigencia;
       instrument.publicationDate = item.fechaPublicacion;
+      instrument.isEditable = item.editable == 1 ? true: false;
+      instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar==1 ? true : false;
       instrument.path = item.path;
       return instrument;
@@ -93,6 +126,7 @@ export class InstrumentsService extends HttpService {
 
     return paginator;
   }
+
   /**
    * get pending instruments to answer
    * @param id 
@@ -104,24 +138,136 @@ export class InstrumentsService extends HttpService {
     instrument.id = resp.data[0].id;
     instrument.name = resp.data[0].nombre;
     instrument.description = resp.data[0].descripcion;
-    instrument.questions = resp.data[0].pregunta.map((item: any) => {
-      const question = new Question();
-      question.id = item.id;
-      question.label = item.pregunta;
-      question.nameImput = 'question-' + item.idInput.Descripcion + '-' + item.id;
-      question.order = item.orden;
-      question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
-      question.className = item.class;
-      question.required = item.obligatorio == 1 ? true : false;
-      question.score = item.puntos;
-      question.options = item.opciones.map((itemOption: any) => {
-        const option = new SelectOption(itemOption.id, itemOption.Name);
-        return option;
+    instrument.dutation = resp.data[0].duracion;
+    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id , resp.data[0].idTipoUnidad.Descripcion);
+    instrument.path = resp.data[0].path;
+
+    const d = new Date(resp.data[0].fechaVigencia);
+    instrument.expirationDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    instrument.isEditable = resp.data[0].editable == 1 ? true : false;
+    instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
+    instrument.roles = resp.data[0].roles;
+    if(resp.data[0].users){
+      instrument.users = resp.data[0].users.map((u)=>{
+        const user = new User();
+        user.id = u.id;
+        user.firstName = u.nombre;
+        user.answered = u.respondida == 1 ? true:false;
+        return user;
+      })
+    }
+
+    instrument.sections = resp.data[0].secciones.map((sectionItem:any) =>{
+
+      const section = new Section();
+      section.id = sectionItem.id;
+      section.name = sectionItem.nombre;
+      section.numberSection = sectionItem.orden;
+      section.questions = sectionItem.preguntas.map((item: any) => {
+        const question = new Question();
+        question.id = item.id;
+        question.label = item.pregunta;
+        question.nameImput = 'question-' + item.idInput.Descripcion + '-' + item.id;
+        question.order = item.orden;
+        question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
+        question.className = item.class;
+        question.required = item.obligatorio == 1 ? true : false;
+        question.score = item.puntos;
+        //question.categoryBy = item.IdCategoria; //TODO
+        question.isReady = true;
+        if(item.opciones && item.opciones.length){
+          question.options = item.opciones.map((itemOption: any) => {
+            const option = new QuestionOption(itemOption.id, itemOption.Name);
+            option.nameInputLabel = "optionLabel"+question.order;
+            option.nameInputValue = "optionValue"+question.order;
+            option.nameInputScore = "optionScore"+question.order;
+            return option;
+          });
+        }
+
+        return question;
       });
-      return question;
+
+      return section;
+
     });
-    return instrument;
+
+
+     return instrument;
   }
+
+  /**
+   * get pending instruments to answer
+   * @param id 
+   * @returns 
+   */
+   async getInstrumentsByIdForUpdate(id: number): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
+    const instrument = new Instrument();
+    instrument.id = resp.data[0].id;
+    instrument.name = resp.data[0].nombre;
+    instrument.description = resp.data[0].descripcion;
+    instrument.dutation = resp.data[0].duracion;
+    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id , resp.data[0].idTipoUnidad.Descripcion);
+    instrument.path = resp.data[0].path;
+    console.log(resp.data[0].fechaVigencia)
+    const d = moment(resp.data[0].fechaVigencia).toDate();
+    console.log(d)
+    instrument.expirationDate = {year: d.getFullYear(), month:(d.getMonth() + 1) , day: d.getDate()};
+    instrument.isEditable = resp.data[0].editable == 1 ? true : false;
+    instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
+    instrument.roles = resp.data[0].roles;
+    if(resp.data[0].users){
+      instrument.users = resp.data[0].users.map((u)=>{
+        const user = new User();
+        user.id = u.id;
+        user.firstName = u.nombre;
+        user.answered = u.respondida == 1 ? true:false;
+        return user;
+      })
+    }
+
+    instrument.sections = resp.data[0].secciones.map((sectionItem:any) =>{
+
+      const section = new Section();
+      section.id = sectionItem.id;
+      section.name = sectionItem.nombre;
+      section.numberSection = sectionItem.orden;
+      section.questions = sectionItem.preguntas.map((item: any) => {
+        let question = new Question();
+        question.id = item.id;
+        question.label = item.pregunta;
+        question.nameImput = 'question-' + item.idInput.Descripcion + '-' + item.id;
+        question.order = item.orden;
+        question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
+        question.className = item.class;
+        question.required = item.obligatorio == 1 ? true : false;
+        question.score = item.puntos;
+        //question.categoryBy = item.IdCategoria; //TODO
+        question.isReady = true;
+        if(item.opciones && item.opciones.length){
+          question.options = item.opciones.map((itemOption: any, index:number) => {
+            let option = new QuestionOption(itemOption.Valor, itemOption.Name);
+            option.score = itemOption.Puntos;
+            option.nameInputLabel = "optionLabel"+question.order+''+index;
+            option.nameInputValue = "optionValue"+question.order+''+index;
+            option.nameInputScore = "optionScore"+question.order+''+index;
+            return option;
+          });
+        }
+
+        return question;
+      });
+
+      return section;
+
+    });
+
+
+     return instrument;
+  }
+
+  
 
   /**
    * stores user responses
@@ -659,7 +805,5 @@ export class InstrumentsService extends HttpService {
     }
 
   }
-
-
 
 }

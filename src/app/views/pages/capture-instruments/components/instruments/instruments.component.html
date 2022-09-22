@@ -28,7 +28,7 @@
               <button type="button" class="btn btn-display-dt">
                 <i class="feather icon-grid"></i>
               </button>
-              <button type="button" class="btn btn-primary btn-create-dt">
+              <button type="button" class="btn btn-primary btn-create-dt" placement="start" ngbTooltip="Crear Intrumento">
                 <i class="mdi mdi-plus" (click)="create()"></i>
               </button>
             </div>
@@ -46,7 +46,7 @@
                     <th>Resultados</th>
                     <th>Fecha creación</th>
                     <th>Fecha expiración</th>
-                    <th>Publicado</th>
+                    <th data-priority="1">Publicado</th>
                     <th>Fecha publicación</th>
                     <th data-priority="1" class="text-center">Accion</th>
                   </tr>
@@ -63,15 +63,20 @@
                     <td>{{instrument.createAt | date:'yyyy-MM-dd'}}</td>                    
                     <td>{{instrument.expirationDate | date:'yyyy-MM-dd'}}</td> 
                     <th>
-                      <div class="form-check form-switch mb-2">
+                      <div *ngIf="!instrument.isExpired" class="form-check form-switch mb-2">
                         <input type="checkbox" [(ngModel)]="instrument.isPublished" (change)="publishIntrument(instrument)" class="form-check-input" id="formSwitch1">
                         <label class="form-check-label" for="formSwitch1">{{instrument.isPublished? 'Sí' : 'No'}}</label>
+                      </div>
+                      <div *ngIf="instrument.isExpired">
+                        <label class="form-label">Expiró</label>
                       </div>
                     </th>  
                     <td>{{instrument.publicationDate | date:'yyyy-MM-dd'}}</td>            
                     <td class="text-center">
-                      <i class="feather icon-edit-2" (click)="select(instrument.id)"></i>
-                      <!--<i class="feather icon-trash" (click)="delete(input.id)"></i>-->
+                      <i *ngIf="instrument.isEditable && !instrument.isExpired" class="feather icon-edit-2" (click)="select(instrument.id)" placement="start" ngbTooltip="Editar Intrumento"></i>
+                      <i *ngIf="!instrument.isEditable" class="feather icon-eye ms-1" (click)="select(instrument.id)" placement="start" ngbTooltip="Ver Intrumento"></i>
+                      <i class="feather icon-copy ms-1" (click)="clone(instrument.id)" placement="start" ngbTooltip="Copiar Intrumento" ></i>
+                      <i *ngIf="instrument.isEditable"  class="feather icon-trash ms-1" (click)="delete(instrument.id)"></i>
                     </td>
                   </tr>
                 </tbody>

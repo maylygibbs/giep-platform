@@ -25,7 +25,7 @@
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex justify-content-end">
             <app-box-util-views (onChangeView)="changeView($event)"></app-box-util-views>
             <button type="button" class="btn btn-primary btn-create-dt">
-              <i class="feather icon-user-plus" (click)="create()"></i>
+              <i class="feather icon-user-plus" (click)="create()" placement="start" ngbTooltip="Crear Usuario"></i>
             </button>
           </div>
 
@@ -57,8 +57,8 @@
                   <td>{{user.position.label}}</td>
                   <td>{{user.status.label}}</td>
                   <td class="text-center">
-                    <i class="feather icon-edit-2" (click)="select(user.id)"></i>
-                    <i class="feather icon-trash" (click)="delete(user.id)"></i>
+                    <i class="feather icon-edit-2" (click)="select(user.id)" placement="start" ngbTooltip="Editar Usuario"></i>
+                    <i class="feather icon-trash" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
                   </td>
                 </tr>
               </tbody>
@@ -105,8 +105,8 @@
                       <p class="text-muted" *ngFor="let phone of  user.phones">{{phone.numero}}</p>
                     </div>
                     <div class="mt-2 w-100 text-right">
-                      <i class="feather icon-edit-2" (click)="select(user.id)"></i>
-                      <i class="feather icon-trash" (click)="delete(user.id)"></i>
+                      <i class="feather icon-edit-2" (click)="select(user.id)" placement="start" ngbTooltip="Editar Usuario"></i>
+                      <i class="feather icon-trash" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
                     </div>
                   </div>
                 </div>

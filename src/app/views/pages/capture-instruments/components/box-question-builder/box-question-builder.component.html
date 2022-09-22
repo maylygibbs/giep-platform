@@ -52,7 +52,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="question.inputType && (question.inputType.label=='select' || question.inputType.label=='select-multple' || question.inputType.label=='radio' || question.inputType.label=='checkbox')"
+                <div *ngIf="question.inputType && (question.inputType.label=='select' || question.inputType.label=='select-multiple' || question.inputType.label=='radio' || question.inputType.label=='checkbox')"
                     class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card mb-3">
                         <div class="card-body">
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                     <div class="mb-3">
-                                        <label for="inputOptionValue" class="form-label required">Valor</label>
+                                        <label for="inputOptionValue" class="form-label required">Identificador</label>
                                         <input type="text" [name]="option.nameInputValue" [(ngModel)]="option.value"
                                             class="form-control" autocomplete="off" minlength="1" maxlength="255"
                                             required>
@@ -205,7 +205,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar Pregunta</button>
                 </div>
 
 
@@ -241,7 +241,7 @@
                         disabled></textarea>
                 </div>
                 <div class="mb-3"
-                    *ngIf="question.inputType.label == 'select' || question.inputType.label == 'select-multple'">
+                    *ngIf="question.inputType.label == 'select' || question.inputType.label == 'select-multiple'">
                     <label class="form-label" [ngClass]="{'required': question.required}">{{question.label}}</label>
                     <select class="form-control" placeholder="Campo tipo seleccion" disabled>
                         <option>Selección</option>

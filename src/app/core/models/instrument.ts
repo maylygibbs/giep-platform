@@ -21,6 +21,8 @@ export class Instrument {
     sections: Array<Section>;
     questions: Array<Question>;
     isPublished:boolean
+    isExpired:boolean;
+    isEditable:boolean
     path:string;
     createAt:Date;
     updateAt:Date;
@@ -35,28 +37,42 @@ export class Instrument {
         const instrumentOutput = {};
 
         Object.assign(instrumentOutput,{id: instrumentInput.id});
-        Object.assign(instrumentOutput,{questions: this.getQuestionsResponse(instrumentInput.questions)});
+        Object.assign(instrumentOutput,{questions: this.getQuestionsResponse(instrumentInput.sections)});
 
         return instrumentOutput;
     }
 
-    private static getQuestionsResponse(questions: Array<Question>){
-        const questionsOutput = questions.map((question:Question)=>{
+    private static getQuestionsResponse(sections: Array<Section>){
+        const questionsOutput:any[]=[];
+         sections.forEach((section:Section)=>{
+            const arrayTemp = section.questions.map((question:Question)=>{
                 let valueResp;
                 if(question.valueResp instanceof Array){
                     valueResp = question.valueResp.map((vr)=>{
                         return {idOption: vr, text:null}
                     })
                 }else{
-                    valueResp = [{idOption:question.valueResp, text:null}];
+                    if(question.inputType.label=='date'){
+                        valueResp = [{idOption:null, text: moment().year(question.valueResp.year).month(question.valueResp.month - 1).date(question.valueResp.day).format('YYYY-MM-DD')}];
+                    }else{
+                        valueResp = [{idOption:null, text:question.valueResp}];
+                        
+                    }
+                    
                 }
                 return {
                     id:question.id,
                     response: valueResp
                 }
+            });
+            questionsOutput.push(...arrayTemp);
         });
         return questionsOutput;
     }
+
+
+   /* */
+
 
     /**
      * Process for post instrument new
@@ -65,6 +81,10 @@ export class Instrument {
      */
     public static mapForPost(instrumentInput: Instrument, users:number[]){
         const instrumentOutput = {};
+
+        if (instrumentInput.id) {
+            Object.assign(instrumentOutput,{id: instrumentInput.id});  
+        }
 
         Object.assign(instrumentOutput,{name: instrumentInput.name});
         Object.assign(instrumentOutput,{dutation: parseInt(instrumentInput.dutation)});

@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from './../../../../../../environments/environment';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-instrument-store',
@@ -35,6 +36,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
   sectionActive: number;
 
   constructor(private route: ActivatedRoute,
+    private toastrService: ToastrService,
     private instrumentsService: InstrumentsService) {
     super();
   }
@@ -43,6 +45,13 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.data = data;
     });
+    if (this.instrument.id) {
+      this.loadUsersByRoles();
+      this.selectedUsers = this.instrument.users.map((user:User)=>{
+        return user.id;
+      })
+    }
+    
   }
 
   /**
@@ -139,10 +148,12 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
         this.sectionActive = 0;
         defaultNav.select(2);
       } else {
+        this.toastrService.error('Asegurese agergar y confirmar cada pregunta antes de tener una vista previa del mismo.');
         defaultNav.select(1);
       }
     } else {
       defaultNav.select(1);
+      this.toastrService.error('Complete el instrumento antes de tener una vista previa del mismo.');
     }
 
   }
@@ -152,9 +163,39 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
    */
   async onSubmit(form: NgForm) {
     if (form.valid) {
-      console.log('users', this.selectedUsers)
-      console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedUsers));
-      await this.instrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedUsers))
+
+      if (this.instrument.sections && this.instrument.sections.length > 0) {
+        let isComplete = true;
+        this.instrument.sections.forEach((section: Section) => {
+          if (section.questions && section.questions.length > 0) {
+            debugger
+            const arrayTemp = section.questions.filter((question) => question.isReady == false);
+            if (arrayTemp.length > 0) {
+              isComplete = false;
+            }
+          } else {
+            isComplete = false;
+          }
+        })
+  
+        if (isComplete == true) {
+          this.show = false;
+          this.sectionActive = 0;
+          console.log('users', this.selectedUsers)
+          console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedUsers));
+          await this.instrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedUsers));
+          this.onBack.emit(null);
+        } else {
+          this.toastrService.error('Asegurese de agergar y confirmar cada pregunta antes de guardar.');
+        }
+      } else {
+         this.toastrService.error('Complete el instrumento antes de guardar.');
+      }
+
+
+
+
+
     }
   }
 

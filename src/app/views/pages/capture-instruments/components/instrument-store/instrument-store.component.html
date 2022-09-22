@@ -237,8 +237,8 @@
                                         </div>
                                         <div class="row mt-5">
                                             <div class="col-lg-12 text-right">
-                                                <button type="button" class="btn btn-secondary">Cancelar</button>
-                                                <button type="button" class="btn btn-secondary ms-2" (click)="preview(defaultNav)">Preview</button>
+                                                <button type="button" class="btn btn-secondary" (click)="back()">Cancelar</button>
+                                                <button type="button" class="btn btn-secondary ms-2" (click)="preview(defaultNav)">Vista Previa</button>
                                                 <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
                                             </div>
                                         </div>
@@ -250,7 +250,7 @@
                     </li>
                     <!--viewer-->
                     <li [ngbNavItem]="2">
-                        <a ngbNavLink (click)="preview(defaultNav)">Visor</a>
+                        <a ngbNavLink (click)="preview(defaultNav)">Vista Previa</a>
                         <ng-template ngbNavContent>
                             <div *ngIf="instrument" class="row">
                                 <div class="col-lg-12 col-md-12">
@@ -386,6 +386,16 @@
                                                                             <input type="text" class="form-control">
                                                                         </div>
                                                                     </div>
+                                                                    <div
+                                                                    class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                    <div *ngIf="question.inputType.label =='number'"
+                                                                        class="mb-3">
+                                                                        <label class="form-label"
+                                                                            [ngClass]="{'required': question.required}">{{question.order}}.-
+                                                                            {{question.label}}</label>
+                                                                        <input type="text" class="form-control">
+                                                                    </div>
+                                                                </div>
                                                                     <div
                                                                         class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div *ngIf="question.inputType.label =='textarea'"

@@ -32,6 +32,7 @@ export class User {
     state: SelectOption;
     city: SelectOption;
     socialNetwork: Array<any>;
+    answered:boolean;
 
 
     get fullName() {
