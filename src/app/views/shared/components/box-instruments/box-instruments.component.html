@@ -154,7 +154,22 @@
                                                             </div>
                                                         </div> 
                                                     </div>
-                                                </div>                        
+                                                </div>  
+                                                <div *ngIf="question.inputType.label =='checkbox'" class="mb-3">
+                                                    <label for="question.nameImput" class="form-label" [ngClass]="{'required': question.required}">{{question.order}}.- {{question.label}}</label>
+                                                    <div class="mt-2">
+                                                        <div class="form-check mb-2" *ngFor="let option of question.options">
+                                                            <input type="checkbox" class="form-check-input" [name]="question.nameImput" [value]="option.value" [(ngModel)]="question.valueResp" [required]="question.required">
+                                                            <label class="form-check-label" for="checkInput-{{question.id}}">
+                                                                {{option.label}}
+                                                            </label>
+                                                          </div>
+                                                          <div *ngIf="instrumentForm.form.controls[question.nameImput]?.invalid && instrumentForm.submitted" class="invalid-feedback">
+                                                            <div *ngIf="instrumentForm.form.controls[question.nameImput]?.errors?.required">Campo es requerido
+                                                            </div>
+                                                        </div> 
+                                                    </div>
+                                                </div>                       
                                             </div>
                                         </div>
                                        <!--<div class="row">

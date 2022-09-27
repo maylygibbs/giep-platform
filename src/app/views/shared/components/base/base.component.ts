@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 
 @Component({
@@ -234,5 +235,7 @@ export class BaseComponent {
     let file = new File([uint8Array], fileName, { type: mime });
     return file;
   }
+
+
 
 }

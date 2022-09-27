@@ -16,12 +16,13 @@ import { MustMatchDirective } from './directive/must-match.directive';
 import { BoxInstrumentsComponent } from './components/box-instruments/box-instruments.component';
 import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { BoxUtilViewsComponent } from './components/box-util-views/box-util-views.component';
+import { ModalConfirmComponent } from './components/modal-confirm/modal-confirm.component';
 
 
 
 
 @NgModule({
-  declarations: [BaseComponent, PagerComponent, MustMatchDirective, BoxInstrumentsComponent, BoxMessageComponent, BoxUtilViewsComponent],
+  declarations: [BaseComponent, PagerComponent, MustMatchDirective, BoxInstrumentsComponent, BoxMessageComponent, BoxUtilViewsComponent, ModalConfirmComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -54,7 +55,8 @@ import { BoxUtilViewsComponent } from './components/box-util-views/box-util-view
     MustMatchDirective,
     BoxInstrumentsComponent,
     BoxMessageComponent,
-    BoxUtilViewsComponent
+    BoxUtilViewsComponent,
+    ModalConfirmComponent
   ]
 
 })

@@ -49,7 +49,9 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
       this.loadUsersByRoles();
       this.selectedUsers = this.instrument.users.map((user:User)=>{
         return user.id;
-      })
+      });
+      this.defaultNavActiveId = this.instrument.isEditable ? 1 : 2;
+      this.sectionActive = 0;
     }
     
   }

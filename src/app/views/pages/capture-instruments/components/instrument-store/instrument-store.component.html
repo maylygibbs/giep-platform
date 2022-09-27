@@ -5,7 +5,7 @@
             <div class="card-body">
                 <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId" class="nav-tabs">
                     <!--build-->
-                    <li [ngbNavItem]="1">
+                    <li *ngIf="instrument.isEditable" [ngbNavItem]="1">
                         <a ngbNavLink>Construir</a>
                         <ng-template ngbNavContent>
 

@@ -51,10 +51,10 @@ export class InstrumentsService extends HttpService {
     try {
       if(!data.id){
         const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura', data));
-        this.toastrService.success('El instrumento fué creado con éxito.')
+        this.toastrService.success('El instrumento fué creado con éxito.');
       }else{
         const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/actualizar/${data.id}`, data));
-        this.toastrService.success('El instrumento fué actualizado con éxito.')
+        this.toastrService.success('El instrumento fué actualizado con éxito.');
       }
      
     } catch (error: any) {
@@ -70,11 +70,10 @@ export class InstrumentsService extends HttpService {
   async publishInstrument(id: string, data:any) {
     try {
       const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/publicar/${id}`,data));
+      this.toastrService.success('El instrumento fué publicado con éxito.');
     } catch (error: any) {
       console.log(error);
-      if (error.status == 409) {
-        this.toastrService.error('', error.msg);
-      }
+      this.toastrService.error('Ha ocurrido un error eliminando instrumento.');
     }
   }
 
@@ -82,8 +81,9 @@ export class InstrumentsService extends HttpService {
   async clone(id: number) {
     try {
       const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/clonar`));
+      this.toastrService.success('El instrumento fué copiado con éxito.');
     } catch (error: any) {
-      console.log(error)
+      this.toastrService.error('Ha ocurrido un error eliminando instrumento.');
     }
 
   }
@@ -91,8 +91,11 @@ export class InstrumentsService extends HttpService {
   async deleteInstrument(id: number) {
     try {
       const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
+      this.toastrService.success('El instrumento fué eliminado con éxito.');
     } catch (error: any) {
-      console.log(error)
+     
+      this.toastrService.error('Ha ocurrido un error eliminando instrumento.');
+ 
     }
 
   }

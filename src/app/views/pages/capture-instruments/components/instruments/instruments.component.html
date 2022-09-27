@@ -1,14 +1,15 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink=".">Instrumentos</a></li>
+      <li class="breadcrumb-item"><a (click)="back(null)">Instrumentos</a></li>
       <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Nuevo instrumento</li>
-      <li *ngIf="selectedItem && selectedItem.id" class="breadcrumb-item active" aria-current="page">Actualizar instrumento</li>
+      <li *ngIf="selectedItem && selectedItem.id && selectedItem.isEditable" class="breadcrumb-item active" aria-current="page">Actualizar instrumento</li>
+      <li *ngIf="selectedItem && selectedItem.id && !selectedItem.isEditable" class="breadcrumb-item active" aria-current="page">Ver instrumento</li>
     </ol>
   </nav>
   
   <div *ngIf="step==1 && instruments && instruments.data.length>0" class="row">
     <div class="col-lg-12 col-md-12 stretch-card">
-      <div class="card card-dt">
+      <div class="card">
         <div class="card-header">
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
@@ -22,19 +23,19 @@
               </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-              <button type="button" class="btn btn-display-dt">
+              <!--<button type="button" class="btn btn-display-dt">
                 <i class="feather icon-list"></i>
               </button>
               <button type="button" class="btn btn-display-dt">
                 <i class="feather icon-grid"></i>
-              </button>
+              </button>-->
               <button type="button" class="btn btn-primary btn-create-dt" placement="start" ngbTooltip="Crear Intrumento">
                 <i class="mdi mdi-plus" (click)="create()"></i>
               </button>
             </div>
           </div>
         </div>
-        <div class="card-body">
+        <div class="card-body card-dt">
           <h6 class="card-title"></h6>
           <div class="row">
             <div class="col-lg-12">
@@ -64,7 +65,7 @@
                     <td>{{instrument.expirationDate | date:'yyyy-MM-dd'}}</td> 
                     <th>
                       <div *ngIf="!instrument.isExpired" class="form-check form-switch mb-2">
-                        <input type="checkbox" [(ngModel)]="instrument.isPublished" (change)="publishIntrument(instrument)" class="form-check-input" id="formSwitch1">
+                        <input type="checkbox" [(ngModel)]="instrument.isPublished"  class="form-check-input" id="formSwitch1" (change)="confirm(instrument, 'publish', confirmModal)">
                         <label class="form-check-label" for="formSwitch1">{{instrument.isPublished? 'Sí' : 'No'}}</label>
                       </div>
                       <div *ngIf="instrument.isExpired">
@@ -74,9 +75,10 @@
                     <td>{{instrument.publicationDate | date:'yyyy-MM-dd'}}</td>            
                     <td class="text-center">
                       <i *ngIf="instrument.isEditable && !instrument.isExpired" class="feather icon-edit-2" (click)="select(instrument.id)" placement="start" ngbTooltip="Editar Intrumento"></i>
-                      <i *ngIf="!instrument.isEditable" class="feather icon-eye ms-1" (click)="select(instrument.id)" placement="start" ngbTooltip="Ver Intrumento"></i>
-                      <i class="feather icon-copy ms-1" (click)="clone(instrument.id)" placement="start" ngbTooltip="Copiar Intrumento" ></i>
-                      <i *ngIf="instrument.isEditable"  class="feather icon-trash ms-1" (click)="delete(instrument.id)"></i>
+                      <i *ngIf="!instrument.isEditable" class="feather icon-eye ms-1" (click)="select(instrument.id)" placement="start" ngbTooltip="Ver Intrumento" placement="start" ngbTooltip="Ver Intrumento"></i>
+                      <i class="feather icon-copy ms-1" (click)="clone(instrument.id)" placement="start" ngbTooltip="Copiar Intrumento"></i>
+                      <i *ngIf="instrument.isEditable"  class="feather icon-trash ms-1" (click)="confirm(instrument, 'delete', confirmModal)" placement="start" ngbTooltip="Eliminar Intrumento"></i>
+                      
                     </td>
                   </tr>
                 </tbody>
@@ -95,7 +97,11 @@
         </div>
       </div>
     </div>
-  </div>
+   </div>
   <div *ngIf="step==2">
    <app-instrument-store [instrument]="selectedItem" (onBack)="back($event)"></app-instrument-store>
   </div>
+  <ng-template #confirmModal let-modal>
+    <app-modal-confirm [message]="messageModal" (onFinish)="processEvent($event)"></app-modal-confirm>
+  </ng-template>
+ 

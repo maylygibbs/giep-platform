@@ -3,11 +3,12 @@ import { Section } from './../../../../../core/models/section';
 import { Instrument } from './../../../../../core/models/instrument';
 import { PaginationResponse } from './../../../../../core/models/pagination-response';
 import { InstrumentsService } from './../../../../../core/services/instruments.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { filter, Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-instruments',
@@ -33,13 +34,16 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   selectedItem: Instrument;
   word: string;
 
+  action:string;
+
   environment = environment;
 
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
+    protected modalService: NgbModal,
     private router: Router) {
-    super();
+      super();
   }
 
   async ngOnInit() {
@@ -94,7 +98,9 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   back(item: any) {
     this.selectedItem = item;
-    this.step--;
+    if(this.step > 1){
+      this.step--;
+    }    
     this.loadPage(this.page);
   }
 
@@ -107,6 +113,47 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   async publishIntrument(instrument: Instrument) {
     await this.instrumentsService.publishInstrument(instrument.id, { publicar: instrument.isPublished ? 1 : 0 });
     this.loadPage(this.page);
+  }
+
+  /**
+ * Confirm delete / publish instrument
+ * @param documento 
+ */
+  confirm(instrument: Instrument, action:string, modalRef?:TemplateRef<any>) {
+    this.selectedItem = instrument;
+    this.action = action;
+    switch (action) {
+      case 'publish':
+        this.messageModal =instrument.isPublished ? 'Esta seguro que desea publicar el instrumento?' : 'Esta seguro que desea despublicar el instrumento?';         
+        break;
+      case 'delete':
+        this.messageModal = 'Esta seguro que desea eliminar el instrumento?';
+        break;        
+    }
+    this.modalService.open(modalRef, {}).result.then((result) => {
+      console.log("Modal closed" + result);
+    }).catch((res) => {});
+  
+  }
+
+  /**
+   * Process event to confirm o not
+   * @param result 
+   */
+  processEvent(result: boolean) {
+    if (result) {
+      switch (this.action) {
+        case 'publish':
+          this.publishIntrument(this.selectedItem);
+          break;
+        case 'delete':
+          this.delete(parseInt(this.selectedItem.id));
+          break;        
+      }
+    }
+    this.selectedItem = null;
+    this.action = null;
+    this.modalService.dismissAll();
   }
 
   ngOnDestroy() {
