@@ -11,6 +11,7 @@ export class Project {
     id: string;
     name: string;
     description: string;
+    condition: string;
     assignedResources?: User[];
     startDate: NgbDate;
     endDate: NgbDate;
@@ -34,6 +35,7 @@ export class Project {
         newInstace.projectManagementOffice = project.projectManagementOffice;
         newInstace.company = project.company;
         newInstace.status = project.status;
+        newInstace.condition = project.condition;
         return newInstace
     }
 
@@ -63,6 +65,7 @@ export class Project {
         project.hoursProject = projectObj.total;
         project.description = projectObj.descripcion;
         project.progress = projectObj.progreso;
+        project.condition = projectObj.estado;
 
         let min = 0, max = 100;
         project.progress = Math.floor(Math.random() * (max - min + 1) + min);
@@ -75,6 +78,9 @@ export class Project {
 
         if (projectObj.estatus)
             project.status = new SelectOption(projectObj.estatus.id, projectObj.estatus.Descripcion);
+
+        
+
         return project;
     }
 

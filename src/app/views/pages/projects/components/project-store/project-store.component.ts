@@ -69,7 +69,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.data = data;
     });
-    if (!this.project.id) {
+    if (!this.project.id) { 
       this.project.status = new SelectOption('1');
       this.projectStatus = true;
     } else {
