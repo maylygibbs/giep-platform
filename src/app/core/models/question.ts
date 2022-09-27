@@ -10,6 +10,7 @@ export class Question {
     className:string;
     score:string;
     valueResp:any | any[];
+    valueRespCheckBox: any[];
     valueType:string; // number, alphanumeric, etc
     required:boolean;
     minlength:number;
@@ -19,6 +20,7 @@ export class Question {
     options:Array<QuestionOption>;
     isReady:boolean;
     categoryBy:any
+
 
 
 
