@@ -52,6 +52,8 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
       });
       this.defaultNavActiveId = this.instrument.isEditable ? 1 : 2;
       this.sectionActive = 0;
+    }else{
+      this.defaultNavActiveId = 1;
     }
     
   }

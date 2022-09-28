@@ -131,7 +131,7 @@ export class InstrumentsService extends HttpService {
   }
 
   /**
-   * get pending instruments to answer
+   * get pending instruments to answer (final user)
    * @param id 
    * @returns 
    */
@@ -187,7 +187,9 @@ export class InstrumentsService extends HttpService {
             return option;
           });
         }
-
+        if(question.inputType.label == 'checkbox'){
+          question.valueRespCheckBox = [];
+        }
         return question;
       });
 

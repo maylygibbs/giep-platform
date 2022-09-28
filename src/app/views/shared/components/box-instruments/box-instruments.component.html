@@ -158,8 +158,8 @@
                                                 <div *ngIf="question.inputType.label =='checkbox'" class="mb-3">
                                                     <label for="question.nameImput" class="form-label" [ngClass]="{'required': question.required}">{{question.order}}.- {{question.label}}</label>
                                                     <div class="mt-2">
-                                                        <div class="form-check mb-2" *ngFor="let option of question.options">
-                                                            <input type="checkbox" class="form-check-input" [name]="question.nameImput" [value]="option.value" [(ngModel)]="question.valueResp" [required]="question.required">
+                                                        <div class="form-check mb-2" *ngFor="let option of question.options; let i = index">
+                                                            <input type="checkbox" class="form-check-input" [name]="question.nameImput" [value]="option.value" [(ngModel)]="question.valueRespCheckBox[i]" (change)="onChangeCheckbox($event, question, option.value)" [required]="question.required">
                                                             <label class="form-check-label" for="checkInput-{{question.id}}">
                                                                 {{option.label}}
                                                             </label>
