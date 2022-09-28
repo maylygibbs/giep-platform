@@ -60,10 +60,11 @@
                   <td>{{formatingDate(project.endDate)}}</td>
                   <td><ngb-progressbar type="primary" [value]="project.progress"></ngb-progressbar></td>
                   <!-- <td>{{project.status.label}}</td> -->
+                  
                   <td>{{project.condition}}</td>
                   <td class="text-center">
-                    <i class="feather icon-settings" (click)="config(project.id)"></i>
-                    <i class="feather icon-edit-2" (click)="select(project.id)"></i>
+                    <i class="feather icon-settings" (click)="config(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
+                    <i class="feather icon-edit-2" (click)="select(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
                     <!-- <i class="feather icon-trash" (click)="delete(project.id)"></i> -->
                   </td>
                 </tr>

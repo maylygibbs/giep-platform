@@ -37,6 +37,7 @@ export class Project {
         newInstace.status = project.status;
         newInstace.condition = project.condition;
         return newInstace
+        
     }
 
     public static mapForPost(project: Project) {
