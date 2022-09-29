@@ -36,6 +36,10 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   /** Select options list **/
   statusList: Array<SelectOption>;
 
+  /** All selected users **/
+  userseleced:Array<SelectOption>;
+  //const userselected: Array<MenuItem> = new Array<MenuItem>();
+
   defaultImage = 'https://via.placeholder.com/200x200';
   image = 'https://via.placeholder.com/200x200';
 
@@ -45,6 +49,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   startDate: NgbDate | null;
   endDate: NgbDate | null;
 
+  public names: string[];
 
   constructor(private route: ActivatedRoute,
     private projectService: ProjectService,
@@ -57,6 +62,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     // this.project = new Project();
 
     // this.project.name ="proyecto";
@@ -81,13 +87,16 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     this.statusList = await this.commonsService.getAllStatus();
   }
 
+
   async onChangeProjectManagementOffice(event: any) {
     let filter = new Filter();
     filter.page = 1;
     filter.rowByPage = 9999;
     filter.word = null;
     this.users = await this.userService.getUsersPaginated(filter);
-
+    this.userseleced = event; 
+    //console.log(this.data.users.filter((item)=>item.id));
+    //console.log(this.project.assignedResources);
   }
 
   async onChangeCompany(event: any) {
