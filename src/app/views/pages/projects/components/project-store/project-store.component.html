@@ -85,15 +85,31 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                        
                                 <label for="inputProjectManagementOffice" class="form-label required" >PMO</label>
 
-                                <ng-select id="inputProjectManagementOffice" [items]="data.users" [multiple]=true name="projectManagementOffice" 
+                                <ng-select id="inputProjectManagementOffice" [items]="data.users" [multiple]=false name="projectManagementOffice" 
                                     #projectManagementOffice="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty || projectManagementOffice.touched || projectForm.submitted) }"
                                     bindLabel="label" bindValue="value"
-                                    [searchable]="false" (change)="onChangeProjectManagementOffice($event)"
+                                    [searchable]="false" (change)="onChangeProjectManagementOfficePmo($event)"
                                     [(ngModel)]="project.projectManagementOffice" required>
+                                </ng-select>
+                                <div *ngIf="projectManagementOffice.invalid && projectForm.submitted"
+                                    class="invalid-feedback">
+                                    <div *ngIf="projectManagementOffice.errors?.required">Campo es requerido
+                                    </div>
+                                </div>       
+                           
+
+                        
+                                <label for="inputProjectAssignedResources" class="form-label required" >Recursos</label>
+
+                                <ng-select id="inputProjectAssignedResources" [items]="data.users" [multiple]=true name="projectAssignedResources" 
+                                    #projectAssignedResources="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : projectAssignedResources.errors && ( projectAssignedResources.dirty || projectAssignedResources.touched || projectForm.submitted) }"
+                                    bindLabel="label" bindValue="value"
+                                    [searchable]="false" (change)="onChangeProjectManagementOffice($event)"
+                                    [(ngModel)]="project.assignedResources" required>
                                 </ng-select>
 
                                 <ul>

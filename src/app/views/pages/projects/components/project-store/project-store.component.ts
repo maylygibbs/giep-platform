@@ -24,6 +24,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   @Input()
   project: Project;
 
+  
   @Output()
   onBack: EventEmitter<any> = new EventEmitter<any>();
 
@@ -97,6 +98,14 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     this.userseleced = event; 
     //console.log(this.data.users.filter((item)=>item.id));
     //console.log(this.project.assignedResources);
+  }
+
+  async onChangeProjectManagementOfficePmo(event: any) {
+    // let filter = new Filter();
+    // filter.page = 1;
+    // filter.rowByPage = 9999;
+    // filter.word = null;
+    // this.users = await this.userService.getUsersPaginated(filter);
   }
 
   async onChangeCompany(event: any) {

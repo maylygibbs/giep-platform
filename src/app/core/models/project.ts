@@ -18,6 +18,7 @@ export class Project {
     hoursProject: number;
     progress: number;
     projectManagementOffice: User;
+    projectManagementOffice1: User;
     springs: Array<Spring>;
     company: Company;
     status: SelectOption;
