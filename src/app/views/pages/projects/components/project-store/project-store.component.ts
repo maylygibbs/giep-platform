@@ -39,6 +39,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
   /** All selected users **/
   userseleced:Array<SelectOption>;
+  userselecedresorce:Array<User>;
   //const userselected: Array<MenuItem> = new Array<MenuItem>();
 
   defaultImage = 'https://via.placeholder.com/200x200';
@@ -89,13 +90,52 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   }
 
 
-  async onChangeProjectManagementOffice(event: any) {
-    let filter = new Filter();
-    filter.page = 1;
-    filter.rowByPage = 9999;
-    filter.word = null;
-    this.users = await this.userService.getUsersPaginated(filter);
-    this.userseleced = event; 
+  async onChangeUserResorces(event: any) {
+    console.log(this.userseleced);
+    
+    
+      if (userselecedresorce == '' ) {
+        await this.projectService.storeProject(Project.mapForPost(this.project));
+        await this.projectService.storeResources(Project.map2ForPost(this.project));
+        this.back();
+      } 
+    
+
+    //hoursdedication: string; 
+    //nameInputHours:  string; 
+
+
+    // var tablarows = $("#datatableResources1").DataTable().rows().data()
+    // //clear datatable
+    // tablarows.clear().draw()
+    // var t = $('#datatableResources1').DataTable();
+    // //var counter = 1;
+    // var counteruser=0;
+    // var name='';
+    // var id='';
+    // var cjtext= "";
+    // $.each(event, function (ind, elem) { 
+    //   //console.log('¡Hola :'+elem+'!'); 
+    //   name=event[counteruser].label;
+    //   id= event[counteruser].value;
+    //   cjtext= "<input type='text' name='" + id +"' maxlength='6' [pattern]='environment.form.number.validations.pattern' class='form-control' id='" + id +"' autocomplete='off' required>";
+    //   // Automatically add a first row of data
+    //   t.row.add([id, name, cjtext]).draw(false);
+    //   //num='#'+elem;
+    //   //var ta1 = $(num).val()
+    //   counteruser++;
+    // });    
+
+    // Automatically add a first row of data
+    //$('#addRow').click();
+    
+    // let filter = new Filter();
+    // filter.page = 1;
+    // filter.rowByPage = 9999;
+    // filter.word = null;
+    // this.users = await this.userService.getUsersPaginated(filter);
+    // this.userseleced = event; 
+
     //console.log(this.data.users.filter((item)=>item.id));
     //console.log(this.project.assignedResources);
   }
@@ -112,10 +152,35 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     this.data.companies = await this.companyService.getCompanies();
   }
 
+  
+  
   async onSubmit(form: NgForm) {
+    var valores = [];
+    var errorusers=false;
+    var tablarows = $("#datatableResources1").DataTable().rows().data()
+    $(tablarows).each(function() {
+      valores.push($(this)[0]);
+    });
+    var idusers='';
+    //var ta1 ='';
+    $.each(valores, function (ind, elem) { 
+      //console.log('¡Hola :'+elem+'!'); 
+      idusers='#'+elem;
+      var ta1 = $(idusers).val()
+      if (ta1 == '') {
+        errorusers=true;
+        $(idusers).focus();
+        alert('El Usuario Nr: '+elem+' Debe colocarle las horas estimadas' );
+        throw "Error";
+      } 
+    });
+
     if (form.valid) {
-      await this.projectService.storeProject(Project.mapForPost(this.project));
-      this.back();
+      if (errorusers == false) {
+        await this.projectService.storeProject(Project.mapForPost(this.project));
+        await this.projectService.storeResources(Project.map2ForPost(this.project));
+        this.back();
+      } 
     }
 
   }
@@ -123,7 +188,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   /**
    * begin fecha
    */
-
+   
 
   onDateSelection(date: NgbDate) {
     if (!this.project.startDate && !this.project.endDate) {

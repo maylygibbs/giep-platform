@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputName" class="form-label">Titulo Proyecto</label>
+                                <label for="inputName" class="form-label required">Titulo Proyecto</label>
                                 <input type="text" name="name" #name="ngModel" maxlength="255"
                                     [(ngModel)]="project.name"
                                     [ngClass]="{'ng-dirty ng-invalid' : name.errors && ( name.dirty || name.touched || projectForm.submitted) }"
@@ -19,7 +19,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputCompany" class="form-label">Empresa</label>
+                                <label for="inputCompany" class="form-label required">Empresa</label>
                                 <ng-select id="inputCompany" [items]="data.Companies" name="company"
                                     #company="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : company.errors && ( company.dirty || company.touched || projectForm.submitted) }"
@@ -38,7 +38,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputStartDate" class="form-label">Fecha Inicio</label>
+                                <label for="inputStartDate" class="form-label required">Fecha Inicio</label>
                                 <div class="input-group">
                                     <input id="inputStartDate" name="startDate" #startDate="ngModel"  class="form-control" placeholder="yyyy-mm-dd" name="dp"
                                     [ngClass]="{'ng-dirty ng-invalid' : startDate.errors && ( startDate.dirty || startDate.touched || projectForm.submitted) }"
@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputName" class="form-label">Tiempo Estimado</label>
+                                <label for="inputName" class="form-label required">Tiempo Dedicación</label>
                                 <input type="text" name="hoursProject" #name="ngModel" maxlength="6"
                                     [(ngModel)]="project.hoursProject"
                                     [ngClass]="{'ng-dirty ng-invalid' : name.errors && ( name.dirty || name.touched || projectForm.submitted) }"
@@ -70,13 +70,15 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputDescription" class="form-label">Descripcion</label>
+                                <label for="inputDescription" class="form-label required">Descripcion</label>
                                 <textarea row="3" id="description" minlength="3" placeholder="Campo tipo descripción"
                                 class="form-control" maxlength="2000"
                                 name="description"
                                 #description="ngModel"
                                 [(ngModel)]="project.description" required></textarea>
-
+                                <div *ngIf="description.invalid && projectForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="description.errors?.required">Campo es requerido</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,67 +101,72 @@
                                     <div *ngIf="projectManagementOffice.errors?.required">Campo es requerido
                                     </div>
                                 </div>       
-                           
+                         
+                                
 
-                        
-                                <label for="inputProjectAssignedResources" class="form-label required" >Recursos</label>
-
-                                <ng-select id="inputProjectAssignedResources" [items]="data.users" [multiple]=true name="projectAssignedResources" 
-                                    #projectAssignedResources="ngModel"
-                                    [ngClass]="{'ng-dirty ng-invalid' : projectAssignedResources.errors && ( projectAssignedResources.dirty || projectAssignedResources.touched || projectForm.submitted) }"
-                                    bindLabel="label" bindValue="value"
-                                    [searchable]="false" (change)="onChangeProjectManagementOffice($event)"
-                                    [(ngModel)]="project.assignedResources" required>
-                                </ng-select>
-
-                                <ul>
-                                    <li>Selección Usuarios</li>
-                                </ul>    
-
-
-                                <div class="col-lg-12">
-                                    <table datatable [dtOptions]="dtOptions" class="table table-striped" id="datatableResources">
-                                      <thead>
-                                        <tr>
-                                          <th>Usuario</th>
-                                          <th>Horas Estimadas</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr
-                                        *ngFor="let usercard of userseleced">
-                                          <td>{{ usercard.label }}</td>
-                                          <td>
-                                            <input type="text" name="{{usercard.value}}" maxlength="6" [pattern]="environment.form.number.validations.pattern"
-                                            class="form-control" id="{{usercard.value}}" autocomplete="off" required>
-                                          </td>
-                                        </tr>
-
-                                      </tbody>
-                                      <tfoot>
-                                        <tr>
-                                          <th colspan="10" class="text-right">
-                                              Usuarios Seleccionados
-                                          </th>
-                                        </tr>
-                          
-                                      </tfoot>
-                          
-                                    </table>
-                                  </div>
-
-
-                    
-
-                                <div *ngIf="projectManagementOffice.invalid && projectForm.submitted"
-                                    class="invalid-feedback">
-                                    <div *ngIf="projectManagementOffice.errors?.required">Campo es requerido
-                                    </div>
-                                </div>       
+                               
 
                             </div>
                         </div>
+                        
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label for="inputProjectAssignedResources" class="form-label required" >Recursos</label>
 
+                            <ng-select id="inputProjectAssignedResources" [items]="data.users" [multiple]=true name="projectAssignedResources" 
+                                #projectAssignedResources="ngModel"
+                                [ngClass]="{'ng-dirty ng-invalid' : projectAssignedResources.errors && ( projectAssignedResources.dirty || projectAssignedResources.touched || projectForm.submitted) }"
+                                [searchable]="false" (change)="onChangeUserResorces($event)"
+                                [(ngModel)]="userseleced" required>
+                                <ul>
+                                    <div *ngIf="projectAssignedResources.invalid && projectForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="projectAssignedResources.errors?.required">Campo es requerido</div>
+                                    </div>
+                                </ul>
+                                
+                            </ng-select>
+
+                        </div>
+
+                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="row">
+                                <div class="col-lg-6"></div>
+                                <div class="col-lg-6"></div>
+                            </div>  
+                            
+
+                            <table datatable [dtOptions]="dtOptions" class="table table-striped" id="datatableResources1" name="datatableResources1">
+                                <thead>
+                                  <tr>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                    <th>Horas Estimadas</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                  </tr>
+                                </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <th colspan="10" class="text-right">
+                                      
+                                    </th>
+                                  </tr>
+                    
+                                </tfoot>
+                    
+                              </table>
+
+
+                          </div>
+                    </div> 
+
+                    <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
                                 
@@ -186,8 +193,6 @@
                             </div>
                         </div>
                     </div>
-
-                    
 
                     <div class="row">
                         <div class="col-lg-12 col-md-12 text-right">

@@ -56,6 +56,8 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
     this.next();
   }
 
+  
+
   async config(id: number) {
     this.selectedItem = await this.projectService.getProjectById(id);
     this.next();

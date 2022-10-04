@@ -102,9 +102,43 @@ export class ProjectService extends HttpService {
         delete data.id;
         await firstValueFrom(this.put(environment.apiUrl,`/proyecto/${id}`, data));
         this.toastrService.success('Proyecto actualizado con exito.');
+        
       }else{
-        await firstValueFrom(this.post(environment.apiUrl,'/proyecto', data));
+        const resp = await firstValueFrom(this.post(environment.apiUrl,'/proyecto', data));
+        //Object.assign(data, { idproyectoasig: resp.id});
+        const jsonData = JSON.stringify(resp.id)
+        localStorage.setItem('idusersproyecadd', jsonData)
         this.toastrService.success('Proyecto registrado con exito.');
+      }
+    } catch (error:any) {
+      debugger
+      console.log(error);
+      if (error.status == 409) {
+        this.toastrService.error('',error.msg);
+      }
+      if (error.status != 500) {
+        this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+      }
+      
+    }
+    
+  }
+
+  /**
+   * Persists resources data
+   * @param data 
+   */
+   async storeResources(data:any){
+    try {
+      if(data.id){
+        const id = data.id;
+        delete data.id;
+        await firstValueFrom(this.put(environment.apiUrl,`/recursosproyecto/${id}`, data));
+        this.toastrService.success('Recurso actualizado con exito.');
+        
+      }else{
+        await firstValueFrom(this.post(environment.apiUrl,'/recursosproyecto', data));
+        this.toastrService.success('Recurso registrado con exito.');
       }
     } catch (error:any) {
       debugger

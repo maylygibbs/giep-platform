@@ -33,7 +33,8 @@ export class User {
     city: SelectOption;
     socialNetwork: Array<any>;
     answered:boolean;
-
+    hoursdedication: string; 
+    nameInputHours:  string; 
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');
