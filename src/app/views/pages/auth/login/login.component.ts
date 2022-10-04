@@ -32,6 +32,10 @@ export class LoginComponent extends BaseComponent  implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
+  /**
+   * Process authentication
+   * @param form 
+   */
   async onLoggedin(form:NgForm) {        
     if (form.valid) {
       const resp = await this.authService.login(this.email, this.password);

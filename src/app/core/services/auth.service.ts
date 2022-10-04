@@ -20,7 +20,9 @@ export class AuthService extends HttpService {
     super(http);
   }
 
-
+/**
+ * Get current user from local
+ */
   public get currentUser(): User{
     
     const info = localStorage.getItem(environment.localstorage.userKey) || null;

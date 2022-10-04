@@ -44,6 +44,13 @@ export class HttpService extends BaseService {
     return this.http.put(url, data, options);
   }
 
+  /**
+   * Execute the DELETE request to the PeyGold API.
+   * @param baseUrl 
+   * @param url 
+   * @param data 
+   * @returns 
+   */
   delete(baseUrl:string, url: string, data?: any):Observable<any>{
     url = baseUrl + url;
     return this.http.delete(url, data);
