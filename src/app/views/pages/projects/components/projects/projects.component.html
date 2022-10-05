@@ -29,7 +29,7 @@
          </div>
          
       </div>
-      <div class="card-body">
+      <div class="card-body card-dt">
         <h6 class="card-title"></h6>
         <div class="row">
           <div class="col-lg-12">
@@ -45,12 +45,12 @@
                   <th>Fecha Entrega</th>
                   <th>Progreso</th>
                   <th>Estado</th>
-                  <th data-priority="1">Accion</th>
+                  <th data-priority="1" class="text-center">Accion</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
-                  *ngFor="let project of projects.data | paginate: { id: 'server', itemsPerPage: 5, currentPage: page, totalItems: projects.count }">
+                  *ngFor="let project of projects.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: projects.count }">
                   <td>{{project.id}}</td>
                   <td>{{project.name}}</td>
                   <td>{{project.description}}</td>
@@ -64,7 +64,7 @@
                   <td>{{project.condition}}</td>
                   <td class="text-center">
                     <i class="feather icon-settings" (click)="config(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
-                    <i class="feather icon-edit-2" (click)="select(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
+                    <i class="feather icon-edit-2 ms-1" (click)="select(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
                     <!-- <i class="feather icon-trash" (click)="delete(project.id)"></i> -->
                   </td>
                 </tr>

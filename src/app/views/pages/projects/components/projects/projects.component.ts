@@ -7,6 +7,8 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BaseComponent } from '../../../../shared/components/base/base.component';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { filter, Subscription } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
 
 
 
@@ -35,20 +37,29 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
   selectedItem: Project;
   word:string;
 
+  environment = environment;
+  
+  private $eventNavigationEnd: Subscription;
 
 
-  constructor(private projectService: ProjectService) {
+  constructor(private projectService: ProjectService,
+    private router: Router) {
     super();
    }
 
   async ngOnInit() {
-    this.projects = await this.projectService.getProjectsPaginated({ page: 1, rowByPage: 5, word: null });
+    this.projects = await this.projectService.getProjectsPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
+    this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.step = 1;
+      this.loadPage(environment.paginator.default_page);
+    });
   }
 
   async loadPage(pageInfo: any) {
     this.page = pageInfo;
     this.projects = null;
-    this.projects = await this.projectService.getProjectsPaginated({ page: this.page, rowByPage: 5, word: this.word ? this.word : null});
+    this.projects = await this.projectService.getProjectsPaginated({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
   }
 
   create(){
@@ -85,13 +96,15 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
 
   search(){
     if (this.word && this.word.length > 0) {
-      this.loadPage(1);
+      this.loadPage(environment.paginator.default_page);
     }
   }
 
 
   ngOnDestroy(): void {
-    
+    if (this.$eventNavigationEnd) {
+      this.$eventNavigationEnd.unsubscribe()
+    }
   }
 
   formatingDate(date: string): string {

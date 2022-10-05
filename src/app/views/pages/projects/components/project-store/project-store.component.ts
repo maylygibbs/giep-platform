@@ -24,7 +24,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   @Input()
   project: Project;
 
-  
+
   @Output()
   onBack: EventEmitter<any> = new EventEmitter<any>();
 
@@ -38,8 +38,8 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   statusList: Array<SelectOption>;
 
   /** All selected users **/
-  userseleced:Array<SelectOption>;
-  userselecedresorce:Array<User>;
+  selectedUsers: Array<SelectOption>;
+  assignedResources: Array<User>;
   //const userselected: Array<MenuItem> = new Array<MenuItem>();
 
   defaultImage = 'https://via.placeholder.com/200x200';
@@ -56,15 +56,14 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private projectService: ProjectService,
     private commonsService: CommonsService,
-    private userService: UserService,
     private companyService: CompanyService,
-    private calendar: NgbCalendar, 
+    private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter) {
     super();
   }
 
   ngOnInit(): void {
-    
+
     // this.project = new Project();
 
     // this.project.name ="proyecto";
@@ -77,7 +76,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.data = data;
     });
-    if (!this.project.id) { 
+    if (!this.project.id) {
       this.project.status = new SelectOption('1');
       this.projectStatus = true;
     } else {
@@ -91,96 +90,61 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
 
   async onChangeUserResorces(event: any) {
-    console.log(this.userseleced);
-    
-    
-      if (userselecedresorce == '' ) {
-        await this.projectService.storeProject(Project.mapForPost(this.project));
-        await this.projectService.storeResources(Project.map2ForPost(this.project));
-        this.back();
-      } 
-    
+    console.log(this.selectedUsers);
 
-    //hoursdedication: string; 
-    //nameInputHours:  string; 
-
-
-    // var tablarows = $("#datatableResources1").DataTable().rows().data()
-    // //clear datatable
-    // tablarows.clear().draw()
-    // var t = $('#datatableResources1').DataTable();
-    // //var counter = 1;
-    // var counteruser=0;
-    // var name='';
-    // var id='';
-    // var cjtext= "";
-    // $.each(event, function (ind, elem) { 
-    //   //console.log('¡Hola :'+elem+'!'); 
-    //   name=event[counteruser].label;
-    //   id= event[counteruser].value;
-    //   cjtext= "<input type='text' name='" + id +"' maxlength='6' [pattern]='environment.form.number.validations.pattern' class='form-control' id='" + id +"' autocomplete='off' required>";
-    //   // Automatically add a first row of data
-    //   t.row.add([id, name, cjtext]).draw(false);
-    //   //num='#'+elem;
-    //   //var ta1 = $(num).val()
-    //   counteruser++;
-    // });    
-
-    // Automatically add a first row of data
-    //$('#addRow').click();
-    
-    // let filter = new Filter();
-    // filter.page = 1;
-    // filter.rowByPage = 9999;
-    // filter.word = null;
-    // this.users = await this.userService.getUsersPaginated(filter);
-    // this.userseleced = event; 
-
-    //console.log(this.data.users.filter((item)=>item.id));
-    //console.log(this.project.assignedResources);
+    this.assignedResources = this.selectedUsers.map((u: SelectOption, index: number) => {
+      const user = new User();
+      user.id = u.value;
+      user.firstName = u.label;
+      user.nameInputHours = 'inputHoursDedication-' + index;
+      return user;
+    });
   }
 
-  async onChangeProjectManagementOfficePmo(event: any) {
-    // let filter = new Filter();
-    // filter.page = 1;
-    // filter.rowByPage = 9999;
-    // filter.word = null;
-    // this.users = await this.userService.getUsersPaginated(filter);
+
+  /**
+   * 
+   * @param user 
+   */
+  deleteResource(user:User){
+    //TO DO: ELIMIAR DE assignedResources Y DE selectedUsers
   }
+
+
 
   async onChangeCompany(event: any) {
     this.data.companies = await this.companyService.getCompanies();
   }
 
-  
-  
+
+
   async onSubmit(form: NgForm) {
     var valores = [];
-    var errorusers=false;
+    var errorusers = false;
     var tablarows = $("#datatableResources1").DataTable().rows().data()
-    $(tablarows).each(function() {
+    $(tablarows).each(function () {
       valores.push($(this)[0]);
     });
-    var idusers='';
+    var idusers = '';
     //var ta1 ='';
-    $.each(valores, function (ind, elem) { 
+    $.each(valores, function (ind, elem) {
       //console.log('¡Hola :'+elem+'!'); 
-      idusers='#'+elem;
+      idusers = '#' + elem;
       var ta1 = $(idusers).val()
       if (ta1 == '') {
-        errorusers=true;
+        errorusers = true;
         $(idusers).focus();
-        alert('El Usuario Nr: '+elem+' Debe colocarle las horas estimadas' );
+        alert('El Usuario Nr: ' + elem + ' Debe colocarle las horas estimadas');
         throw "Error";
-      } 
+      }
     });
 
     if (form.valid) {
       if (errorusers == false) {
         await this.projectService.storeProject(Project.mapForPost(this.project));
-        await this.projectService.storeResources(Project.map2ForPost(this.project));
+        //await this.projectService.storeResources(Project.map2ForPost(this.project));
         this.back();
-      } 
+      }
     }
 
   }
@@ -188,7 +152,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   /**
    * begin fecha
    */
-   
+
 
   onDateSelection(date: NgbDate) {
     if (!this.project.startDate && !this.project.endDate) {
@@ -220,7 +184,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
 
   onchangeDate(event) {
     console.log(event);
-    
+
   }
   /**
    * end fecha

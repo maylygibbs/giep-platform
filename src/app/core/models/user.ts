@@ -33,7 +33,7 @@ export class User {
     city: SelectOption;
     socialNetwork: Array<any>;
     answered:boolean;
-    hoursdedication: string; 
+    hoursDedication: string; 
     nameInputHours:  string; 
 
     get fullName() {

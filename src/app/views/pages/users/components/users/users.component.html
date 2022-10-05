@@ -44,7 +44,7 @@
                   <th>Dependencias</th>
                   <th>Cargo</th>
                   <th>Estado</th>
-                  <th data-priority="1">Accion</th>
+                  <th data-priority="1" class="text-center">Accion</th>
                 </tr>
               </thead>
               <tbody>
@@ -58,7 +58,7 @@
                   <td>{{user.status.label}}</td>
                   <td class="text-center">
                     <i class="feather icon-edit-2" (click)="select(user.id)" placement="start" ngbTooltip="Editar Usuario"></i>
-                    <i class="feather icon-trash" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
+                    <i class="feather icon-trash ms-1" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
                   </td>
                 </tr>
               </tbody>
@@ -86,7 +86,7 @@
                     <h5 class="card-title mt-4">{{user.fullName}}</h5>
                   </div>
 
-                  <div class="card-body">
+                  <div class="card-body card-dt">
 
                     <div class="mt-2">
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Email:</label>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="mt-2 w-100 text-right">
                       <i class="feather icon-edit-2" (click)="select(user.id)" placement="start" ngbTooltip="Editar Usuario"></i>
-                      <i class="feather icon-trash" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
+                      <i class="feather icon-trash ms-1" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
                     </div>
                   </div>
                 </div>
