@@ -81,4 +81,27 @@ export class CommonsListUnitsTypeResolver implements Resolve<any> {
 }
 
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListColorsCalendarResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllColorSticker();
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListUsersEmailsResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllUsersEmails();
+  }
+}
+
+
+
+
 

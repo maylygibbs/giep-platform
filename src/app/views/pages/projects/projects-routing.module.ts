@@ -3,8 +3,8 @@ import { CommonsListCountriesResolver, CommonsListRolesResolver, CommonsListStat
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectsComponent } from './components/projects/projects.component';
-import { GetAllUserResolver } from 'src/app/core/resolvers/user.resolver';
-import { GetAllCompanyResolver } from 'src/app/core/resolvers/company.resolver';
+import { GetAllUserResolver } from '../../../core/resolvers/user.resolver';
+import { GetAllCompanyResolver } from '../../../core/resolvers/company.resolver';
 
 const routes: Routes = [
   {

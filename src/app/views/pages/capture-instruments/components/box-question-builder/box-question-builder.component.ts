@@ -47,6 +47,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
    * @param event 
    */
   onChangeInputType(event:any){
+    console.log('tipo pregunta', this.question.inputType.label)
     this.question.options = null;
   }
 

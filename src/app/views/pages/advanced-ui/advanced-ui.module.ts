@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { FeatherIconModule } from 'src/app/core/feather-icon/feather-icon.module';
+import { FeatherIconModule } from '../../../core/feather-icon/feather-icon.module';
 
 import { AngularCropperjsModule } from 'angular-cropperjs';
 import { CarouselModule } from 'ngx-owl-carousel-o';

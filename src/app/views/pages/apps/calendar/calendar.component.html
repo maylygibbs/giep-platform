@@ -1,51 +1,183 @@
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-lg-12 col-md-12 col-sm-12">
     <div class="row">
-      <div class="col-md-3 d-none d-md-block">
+      <div class="col-lg-3 col-md-3 col-sm-12 d-none d-md-block">
         <div class="card">
           <div class="card-body">
-            <h6 class="card-title mb-4">Full calendar</h6>
+            <h6 class="card-title mb-4">Tipos</h6>
             <div class='external-events'>
               <div #externalEvents>
                 <h6 class="mb-2 text-muted">Draggable Events</h6>
-                <div class='fc-event' [ngStyle]="{'background-color': 'rgba(253,126,20,.25)', 'border-color': '#fd7e14'}" [attr.bgColor]="'rgba(253,126,20,.25)'" [attr.bdcolor]="'#fd7e14'">Birth Day</div>
-                <div class='fc-event' [ngStyle]="{'background-color': 'rgba(241,0,117,.25)', 'border-color': '#f10075'}" [attr.bgColor]="'rgba(241,0,117,.25)'" [attr.bdColor]="'#f10075'">New Project</div>
-                <div class='fc-event' [ngStyle]="{'background-color': 'rgba(0,204,204,.25)', 'border-color': '#00cccc'}" [attr.bgColor]="'rgba(0,204,204,.25)'" [attr.bdColor]="'#00cccc'">Anniversary</div>
-                <div class='fc-event' [ngStyle]="{'background-color': 'rgb(18,182,89,.25)', 'border-color': '#10b759'}" [attr.bgColor]="'rgb(18,182,89,.25)'" [attr.bdColor]="'#10b759'">Clent Meeting</div>
-                <div class='fc-event' [ngStyle]="{'background-color': 'rgba(91,71,251,.2)', 'border-color': '#5b47fb'}" [attr.bgColor]="'rgba(91,71,251,.2)'" [attr.bdColor]="'#5b47fb'">Office Trip</div>
+                <div class='fc-event bgcolor-orange'
+                  [ngStyle]="{'background-color': 'rgba(253,126,20,.25)', 'border-color': '#fd7e14'}"
+                  [attr.bgColor]="'rgba(253,126,20,.25)'" [attr.bdcolor]="'#fd7e14'">Birth Day</div>
+                <div class='fc-event bgcolor-pink' [ngStyle]="{'background-color': 'rgba(241,0,117,.25)', 'border-color': '#f10075'}"
+                  [attr.bgColor]="'rgba(241,0,117,.25)'" [attr.bdColor]="'#f10075'" >New Project</div>
+                <div class='fc-event bgcolor-emerald' [ngStyle]="{'background-color': 'rgba(0,204,204,.25)', 'border-color': '#00cccc'}"
+                  [attr.bgColor]="'rgba(0,204,204,.25)'" [attr.bdColor]="'#00cccc'">Anniversary</div>
+                <div class='fc-event bgcolor-green' [ngStyle]="{'background-color': 'rgb(18,182,89,.25)', 'border-color': '#10b759'}"
+                  [attr.bgColor]="'rgb(18,182,89,.25)'" [attr.bdColor]="'#10b759'">Clent Meeting</div>
+                <div class='fc-event bgcolor-lilac' [ngStyle]="{'background-color': 'rgba(91,71,251,.2)', 'border-color': '#5b47fb'}"
+                  [attr.bgColor]="'rgba(91,71,251,.2)'" [attr.bdColor]="'#5b47fb'">Office Trip</div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-12 col-md-9">
+      <div class="col-sm-12" [ngClass]="{'col-lg-6 col-md-6': showCardEvents, 'col-lg-9 col-md-9': !showCardEvents}">
         <div class="card">
           <div class="card-body">
-            <full-calendar
-              [options]='calendarOptions'
-            ></full-calendar>
+            <full-calendar #calendar [options]='calendarOptions'></full-calendar>
           </div>
+        </div>
+      </div>
+      <!-- SHOW CARD WITH EVENT LIST -->
+      <div *ngIf="showCardEvents" class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card card-dt">
+          <div class="card-header d-flex justify-content-between">
+            <h6 class="card-title">{{selectedDay| date:'yyyy-MM-dd'}}</h6>
+            <i class="feather icon-x" (click)="closeCardEventByDay()"></i>
           </div>
+          <div class="card-body">
+            <div class='external-events'>
+              <div>
+                <h6 class="mb-2 text-muted">Eventos</h6>
+                <div *ngFor="let event of eventsByDay" class='fc-event'
+                  [ngStyle]="{'background-color': 'rgba(253,126,20,.25)', 'border-color': '#fd7e14'}"
+                  [attr.bgColor]="'rgba(253,126,20,.25)'" [attr.bdcolor]="'#fd7e14'">{{event.title}}</div>
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div id="fullCalModal" class="modal fade">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 id="modalTitle1" class="modal-title"></h4>
-        <button type="button" class="btn-close" data-dismiss="modal"><span class="visually-hidden">close</span></button>
+<ng-template #addEvent let-modal>
+  <div class="modal-header">
+    <h4 id="modalTitle1" class="modal-title">Nuevo evento</h4>
+    <button type="button" class="btn-close" (click)="close(modalAddEvent)"><span
+        class="visually-hidden">close</span></button>
+  </div>
+  <form name="calendarForm" #calendarForm="ngForm" (ngSubmit)="onSubmit(calendarForm, modalAddEvent)">
+  <div id="modalBody1" class="modal-body">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="mb-3">
+          <label for="inputTitle" class="form-label required">Título</label>
+          <input type="text" name="title" #title="ngModel" [(ngModel)]="eventDetail.title"
+            [ngClass]="{'ng-dirty ng-invalid' : title.errors && ( title.dirty || title.touched || calendarForm.submitted) }"
+            class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="255" required>
+          <div *ngIf="title.invalid && calendarForm.submitted" class="invalid-feedback">
+            <div *ngIf="title.errors?.required">Campo es requerido
+            </div>
+            <div *ngIf="title.errors?.minlength || title.errors?.maxlength">
+              Campo permite entre 3 y 255 caracteres</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="inputTitle" class="form-label required">Descripción</label>
+          <textarea type="text" name="description" #description="ngModel" [(ngModel)]="eventDetail.description" rows="3"
+            [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || calendarForm.submitted) }"
+            class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="255" required></textarea>
+          <div *ngIf="description.invalid && calendarForm.submitted" class="invalid-feedback">
+            <div *ngIf="description.errors?.required">Campo es requerido
+            </div>
+            <div *ngIf="description.errors?.minlength || title.errors?.maxlength">
+              Campo permite entre 3 y 255 caracteres</div>
+          </div>
+        </div>
       </div>
-      <div id="modalBody1" class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button class="btn btn-primary">Event Page</button>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="mb-3">
+          <label for="inputTitle" class="form-label required">Fecha</label>
+          <div class="input-group">
+            <input id="inputEventDate" name="eventDate" #eventDate="ngModel" [minDate]="minDateEvent"
+              class="form-control" placeholder="yyyy-mm-dd"
+              [ngClass]="{'ng-dirty ng-invalid' : eventDate.errors && ( eventDate.dirty || eventDate.touched || calendarForm.submitted) }"
+              [(ngModel)]="eventDetail.eventDate" ngbDatepicker #dp="ngbDatepicker" required>
+            <button class="input-group-text" type="button" (click)="dp.toggle()">
+              <i class="feather icon-calendar icon-md text-muted"></i>
+            </button>
+            <div *ngIf="eventDate.invalid && calendarForm.submitted" class="invalid-feedback">
+              <div *ngIf="eventDate.errors?.required">Campo es requerido
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-6">
+        <div class="mb-3">
+          <label for="inputTitle" class="form-label required">Hora Inicio</label>
+          <ngb-timepicker type="text" name="startHour" #startHour="ngModel" [(ngModel)]="eventDetail.startHour"
+            [ngClass]="{'ng-dirty ng-invalid' : startHour.errors && ( startHour.dirty || startHour.touched || calendarForm.submitted) }"
+            class="form-control" id="inputTitle" required></ngb-timepicker>
+          <div *ngIf="startHour.invalid && calendarForm.submitted" class="invalid-feedback">
+            <div *ngIf="startHour.errors?.required">Campo es requerido
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mb-3">
+          <label for="inputTitle" class="form-label required">Hora Fin</label>
+          <ngb-timepicker type="text" name="endHour" #endHour="ngModel" [(ngModel)]="eventDetail.endHour"
+            [ngClass]="{'ng-dirty ng-invalid' : endHour.errors && ( endHour.dirty || endHour.touched || calendarForm.submitted) }"
+            class="form-control" id="inputTitle" required></ngb-timepicker>
+          <div *ngIf="endHour.invalid && calendarForm.submitted" class="invalid-feedback">
+            <div *ngIf="endHour.errors?.required">Campo es requerido
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="mb-3">
+          <label for="inputUsers" class="form-label">Añade Invitados</label>
+          <ng-select id="inputUsers" [items]="data.users" [multiple]=true
+              [searchable]="true" [closeOnSelect]="true"
+              name="usersInvited" #usersInvited="ngModel"
+              bindValue="value" [searchable]="true"
+              [(ngModel)]="eventDetail.usersInvited">
+          </ng-select>
+      </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="mb-3">
+          <label for="inputTitle" class="form-label required">Color</label>
+
+          <div class="mt-2 d-flex align-items-center">
+            <div *ngFor="let color of data.colors" class="form-check mb-2 ms-3 d-flex align-items-center">
+                <input type="radio" class="form-check-input"
+                    name="eventColor" [value]="color.value"
+                    [(ngModel)]="eventDetail.classNames">
+                <label class="form-check-label ms-2">
+                  {{color.label}}
+                  <i class="mdi mdi-select-inverse" [style.color]="color.color" [style.font-size]="'20px'"></i>
+                    
+                </label>
+            </div>
+        </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close(modalAddEvent)">Cancelar</button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </div>
+  </form>
+</ng-template>
+
 
 <div id="createEventModal" class="modal fade">
   <div class="modal-dialog modal-dialog-centered">

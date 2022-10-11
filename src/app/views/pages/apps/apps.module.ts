@@ -24,6 +24,8 @@ import { ComposeComponent } from './email/compose/compose.component';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { SharedModule } from '../../shared/shared.module';
+import { CommonsListColorsCalendarResolver, CommonsListUsersEmailsResolver } from '../../../core/resolvers/commons.resolver';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -75,7 +77,11 @@ const routes: Routes = [
       },
       {
         path: 'calendar',
-        component: CalendarComponent
+        component: CalendarComponent,
+        resolve:{
+          colors: CommonsListColorsCalendarResolver,
+          users: CommonsListUsersEmailsResolver
+        }
       },
     ]
   }
@@ -94,6 +100,7 @@ const routes: Routes = [
     NgbNavModule,
     NgbCollapseModule,
     NgSelectModule,
+    SharedModule,
     SimplemdeModule.forRoot({
       provide: SIMPLEMDE_CONFIG,
       useValue: {}

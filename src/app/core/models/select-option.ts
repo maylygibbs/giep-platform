@@ -12,6 +12,7 @@ export class SelectOption{
   public link_google: string;
   public morada:string;
   public icon:string;
+  public color:string
 
   /**
    * Used to display data in forms.
@@ -21,11 +22,13 @@ export class SelectOption{
   constructor(
     value?: string,
     label?: string,
-    disabled?:boolean
+    disabled?:boolean,
+    color?:string
   ) {
     this.value = String(value);
     this.label = label;
-    this.disabled = disabled
+    this.disabled = disabled;
+    this.color = color;
   }
 
   /**

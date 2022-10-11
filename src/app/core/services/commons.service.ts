@@ -90,24 +90,24 @@ export class CommonsService extends HttpService {
     });
     return states;
 
-}
+  }
 
 
   /**
 * Get all status
 * @returns 
 */
-  async getAllStatus(): Promise < Array < SelectOption >> {
+  async getAllStatus(): Promise<Array<SelectOption>> {
 
-  let status: Array < SelectOption > = new Array<SelectOption>();
-  const resp = await firstValueFrom(this.get(environment.apiUrl, `/status/list`))
+    let status: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/status/list`))
     status = resp.data.map((item: any) => {
-    return new SelectOption(item.id, item.descripcion);
-  });
+      return new SelectOption(item.id, item.descripcion);
+    });
 
-  return status;
+    return status;
 
-}
+  }
 
 
   /**
@@ -182,6 +182,34 @@ export class CommonsService extends HttpService {
       return new SelectOption(item.id, item.nombre);
     });
     return categories;
+  }
+
+
+  /**
+* Get all categories
+* @returns 
+*/
+  async getAllColorSticker(): Promise<Array<SelectOption>> {
+
+    let colors: Array<SelectOption> = new Array<SelectOption>();
+    colors.push(new SelectOption('bgcolor-orange','Naranja',false,'rgb(253, 126, 20)'));
+    colors.push(new SelectOption('bgcolor-pink','Rosado',false,'rgb(241, 0, 117)'));
+    colors.push(new SelectOption('bgcolor-emerald','Esmeralda',false,'rgb(0, 204, 204)'));
+    colors.push(new SelectOption('bgcolor-green','Verde',false,'rgb(16, 183, 89)'));
+    colors.push(new SelectOption('bgcolor-lilac','Lila',false,'rgb(91, 71, 251)'));
+    return this.resolveWith(colors) ;
+  }
+
+  /**
+   * get all users emails
+   */
+  async getAllUsersEmails(){
+    let usersEmails: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/calendario/event/usuarios'));
+    usersEmails = resp.data.map((item: any) => {
+      return new SelectOption(item.email, item.nombre+' | '+item.email);
+    });
+    return usersEmails;
   }
 
 }

@@ -47,18 +47,21 @@ export class Instrument {
          sections.forEach((section:Section)=>{
             const arrayTemp = section.questions.map((question:Question)=>{
                 let valueResp;
-                if(question.valueResp instanceof Array){
+                
+                if( question.inputType.label === 'select-multiple'  || question.inputType.label === 'checkbox'){
                     valueResp = question.valueResp.map((vr)=>{
                         return {idOption: vr, text:null}
                     })
+                }else if(question.inputType.label === 'select' || question.inputType.label === 'radio'){
+                    valueResp = [{idOption:question.valueResp, text:null}];
+
                 }else{
                     if(question.inputType.label=='date'){
                         valueResp = [{idOption:null, text: moment().year(question.valueResp.year).month(question.valueResp.month - 1).date(question.valueResp.day).format('YYYY-MM-DD')}];
                     }else{
                         valueResp = [{idOption:null, text:question.valueResp}];
                         
-                    }
-                    
+                    }                    
                 }
                 return {
                     id:question.id,

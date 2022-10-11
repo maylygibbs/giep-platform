@@ -5,7 +5,7 @@ import { DashboardComponent } from './dashboard.component';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { FormsModule } from '@angular/forms';
-import { FeatherIconModule } from 'src/app/core/feather-icon/feather-icon.module';
+import { FeatherIconModule } from '../../../core/feather-icon/feather-icon.module';
 import { NgbDatepickerModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutModule } from '../../layout/layout.module';
 import { SharedModule } from '../../shared/shared.module';

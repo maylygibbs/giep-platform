@@ -166,3 +166,39 @@ table.dataTable{
     color: #6571ff;
   }
 }
+
+
+/** Calendar colors **/
+
+.event-font{
+  color: white !important;
+}
+
+.event-past{
+  background-color:  #4E4E4E !important;
+}
+
+.bgcolor-orange{
+  background-color: rgba(253, 126, 20, 0.25);
+  border-color: rgb(253, 126, 20);
+}
+
+.bgcolor-pink{
+  background-color: rgba(241, 0, 117, 0.25);
+  border-color: rgb(241, 0, 117);
+}
+
+.bgcolor-emerald{
+  background-color: rgba(0, 204, 204, 0.25);
+  border-color: rgb(0, 204, 204);
+}
+
+.bgcolor-green{
+  background-color: rgba(18, 182, 89, 0.25);
+  border-color: rgb(16, 183, 89);
+}
+
+.bgcolor-lilac{
+  background-color: rgba(91, 71, 251, 0.2);
+  border-color: rgb(91, 71, 251);
+}

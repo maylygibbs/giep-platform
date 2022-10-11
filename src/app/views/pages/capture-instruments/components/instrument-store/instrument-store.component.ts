@@ -172,7 +172,6 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
         let isComplete = true;
         this.instrument.sections.forEach((section: Section) => {
           if (section.questions && section.questions.length > 0) {
-            debugger
             const arrayTemp = section.questions.filter((question) => question.isReady == false);
             if (arrayTemp.length > 0) {
               isComplete = false;
@@ -187,7 +186,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
           this.sectionActive = 0;
           console.log('users', this.selectedUsers)
           console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedUsers));
-          await this.instrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedUsers));
+          //await this.instrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedUsers));
           this.onBack.emit(null);
         } else {
           this.toastrService.error('Asegurese de agergar y confirmar cada pregunta antes de guardar.');

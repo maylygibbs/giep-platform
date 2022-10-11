@@ -3,7 +3,7 @@ import { Instrument } from './../../../../core/models/instrument';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
-import { Question } from 'src/app/core/models/question';
+import { Question } from '../../../../core/models/question';
 
 @Component({
   selector: 'app-box-instruments',
@@ -65,7 +65,7 @@ export class BoxInstrumentsComponent implements OnInit {
       this.submitted = true;
       console.log('instrument resp', this.instrument);
       console.log('instrument map', Instrument.mapForPostResponse(this.instrument));
-      await this.instrumentsService.storeInstrumetsResponse(Instrument.mapForPostResponse(this.instrument))
+      //await this.instrumentsService.storeInstrumetsResponse(Instrument.mapForPostResponse(this.instrument))
       this.submitted = false;
     }
 
