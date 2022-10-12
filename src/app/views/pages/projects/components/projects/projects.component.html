@@ -58,10 +58,11 @@
                   <td>{{project.projectManagementOffice?.firstName}} {{project.projectManagementOffice?.lastName}}</td>
                   <td>{{formatingDate(project.startDate)}}</td>
                   <td>{{formatingDate(project.endDate)}}</td>
-                  <td><ngb-progressbar type="primary" [value]="project.progress"></ngb-progressbar></td>
+                  <td>
+                      <p><ngb-progressbar [showValue]="true" type="{{project.TypeGbProgressbar}}" [value]="project.progress" [max]="100"></ngb-progressbar></p>
+                  </td>
                   <!-- <td>{{project.status.label}}</td> -->
-                  
-                  <td>{{project.condition}}</td>
+                  <td>{{project.condition}}</td> 
                   <td class="text-center">
                     <i class="feather icon-settings" (click)="config(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
                     <i class="feather icon-edit-2 ms-1" (click)="select(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>

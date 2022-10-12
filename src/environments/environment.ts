@@ -39,7 +39,7 @@ export const environment = {
   },
   paginator: {
     default_page: 1,
-    row_per_page: 5
+    row_per_page: 8
   },
   endpoints:{
     handle_error_blackList:[

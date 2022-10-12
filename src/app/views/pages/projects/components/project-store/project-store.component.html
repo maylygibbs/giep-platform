@@ -44,7 +44,9 @@
                                         <input id="inputStartDate" name="startDate" #startDate="ngModel"
                                             class="form-control" placeholder="yyyy-mm-dd" name="dp"
                                             [ngClass]="{'ng-dirty ng-invalid' : startDate.errors && ( startDate.dirty || startDate.touched || projectForm.submitted) }"
-                                            [(ngModel)]="project.startDate" ngbDatepicker #dp="ngbDatepicker" required>
+                                            [(ngModel)]="project.startDate" [minDate]="minDate1" ngbDatepicker  #dp="ngbDatepicker" 
+
+                                               required>
                                         <button class="input-group-text" type="button" (click)="dp.toggle()">
                                             <i class="feather icon-calendar icon-md text-muted"></i>
                                         </button>
@@ -58,14 +60,24 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
-                                    <label for="inputName" class="form-label required">Tiempo Estimado</label>
-                                    <input type="text" name="hoursProject" #name="ngModel" maxlength="6"
-                                        [(ngModel)]="project.hoursProject"
-                                        [ngClass]="{'ng-dirty ng-invalid' : name.errors && ( name.dirty || name.touched || projectForm.submitted) }"
-                                        class="form-control" id="inputHoursProject" autocomplete="off" required>
-                                    <div *ngIf="name.invalid && projectForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="name.errors?.required">Campo es requerido</div>
-                                    </div>
+                                   <label for="inputhoursProject"
+                                   class="form-label required">Tiempo Estimado</label>
+                               <input type="text" name="hoursProject"
+                                   #hoursProject="ngModel" [(ngModel)]="project.hoursProject"
+                                   [pattern]="environment.form.number.validations.pattern"
+                                   [ngClass]="{'ng-dirty ng-invalid' : hoursProject.errors && ( hoursProject.dirty || hoursProject.touched || projectForm.submitted) }"
+                                   class="form-control" id="inputhoursProject"
+                                   autocomplete="off" minlength="1" maxlength="11" required>
+                               <div *ngIf="hoursProject.invalid && projectForm.submitted"
+                                   class="invalid-feedback">
+                                   <div *ngIf="hoursProject.errors?.required">Campo es
+                                       requerido
+                                   </div>
+                                   <div *ngIf="hoursProject.errors?.pattern">Campo solo
+                                       permite números
+                                   </div>
+                               </div>
+
                                 </div>
                             </div>
                         </div>
@@ -77,6 +89,8 @@
                                     <textarea row="3" id="description" minlength="3"
                                         placeholder="Campo tipo descripción" class="form-control" maxlength="2000"
                                         name="description" #description="ngModel" [(ngModel)]="project.description"
+                                        [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || projectForm.submitted) }"
+                                        class="form-control" id="inputName" autocomplete="off" required>
                                         required></textarea>
                                     <div *ngIf="description.invalid && projectForm.submitted" class="invalid-feedback">
                                         <div *ngIf="description.errors?.required">Campo es requerido</div>
@@ -150,11 +164,13 @@
                                                 <div class="mb-3">
                                                     <input type="text" [name]="user.nameInputHours" maxlength="255"
                                                         [(ngModel)]="user.hoursDedication"
+                                                        [pattern]="environment.form.number.validations.pattern"
                                                         [ngClass]="{'ng-dirty ng-invalid' : projectForm.form.controls[user.nameInputHours]?.errors && ( projectForm.form.controls[user.nameInputHours]?.dirty || projectForm.form.controls[user.nameInputHours]?.touched || projectForm.submitted) }"
                                                         class="form-control" id="inputName" autocomplete="off" required>
                                                     <div *ngIf="projectForm.form.controls[user.nameInputHours]?.invalid && projectForm.submitted"
                                                         class="invalid-feedback">
                                                         <div *ngIf="projectForm.form.controls[user.nameInputHours]?.errors?.required">Campo es requerido</div>
+                                                        <div *ngIf="projectForm.form.controls[user.nameInputHours].errors?.pattern">Campo solo permite números</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -189,6 +205,7 @@
                                                 value="false">
                                             <label class="form-check-label">
                                                 Calendario Customizado
+                                                
                                             </label>
                                         </div>
                                     </div>
@@ -197,6 +214,7 @@
                             </div>
                         </div>
                     </section>
+
                     <div class="row">
                         <div class="col-lg-12 col-md-12 text-right">
                             <button class="btn btn-secondary" (click)="back()">Cancelar</button>
