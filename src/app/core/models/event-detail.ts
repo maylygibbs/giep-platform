@@ -14,6 +14,7 @@ export class EventDetail {
     description:string;
     classNames:string; 
     usersInvited: any[];
+    ownerEvent:string;
 
 
 
@@ -28,7 +29,7 @@ export class EventDetail {
         return eventOut;
     }
 
-    private static getStartEvent(eventDetail: EventDetail){
+    public static getStartEvent(eventDetail: EventDetail){
 
         const hour = eventDetail.startHour.hour < 10 ? '0'+eventDetail.startHour.hour : eventDetail.startHour.hour;
         const minute = eventDetail.startHour.minute < 10 ? '0'+eventDetail.startHour.minute : eventDetail.startHour.minute;
@@ -39,7 +40,7 @@ export class EventDetail {
 
     }
 
-    private static getEndEvent(eventDetail: EventDetail){
+    public static getEndEvent(eventDetail: EventDetail){
         const hour = eventDetail.endHour.hour < 10 ? '0'+eventDetail.endHour.hour : eventDetail.endHour.hour;
         const minute = eventDetail.endHour.minute < 10 ? '0'+eventDetail.endHour.minute : eventDetail.endHour.minute;
         const second = '00';
