@@ -18,6 +18,20 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { ToastrModule } from 'ngx-toastr';
 
+import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
+import dayGridPlugin from '@fullcalendar/daygrid'; 
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import interactionPlugin from '@fullcalendar/interaction';
+
+
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
+  interactionPlugin
+])
 
 
 @NgModule({
@@ -27,6 +41,7 @@ import { ToastrModule } from 'ngx-toastr';
   ],
   imports: [
     BrowserModule,
+    FullCalendarModule, // import the FullCalendar module! will make the FullCalendar component available
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

@@ -1,0 +1,67 @@
+<div class="status-list">
+	<div class="px-3 pb-4 pt-3">
+		{{ lane.title }}
+	</div>
+
+	<div class="issue-card-container pl-2" cdkDropList [cdkDropListData]="lane.issues"
+		(cdkDropListDropped)="drop($event)" [id]="lane.id" >
+
+<!-- 		<div class="card" style="width: 18rem;"> -->
+<!-- 			<img src="..." class="card-img-top" alt="..."> -->
+			<div class="card-body"  *ngFor="let issue of lane.issues"
+		     [cdkDragData]="issue" cdkDrag >
+             <div class="card text-center">
+				<div>
+					<h5 class="card-title">Actividad:{{issue.title}}</h5>
+				</div>
+				<div>
+				  <h4 class="card-title">Tarea:</h4>
+				  <p class="card-text">{{issue.title}}</p>
+				</div>
+				<div class="card-footer text-muted">
+				  2 days ago
+				</div>
+				<div class="card text-left">
+					<div *ngFor="let user of users.data">
+						<div class="d-flex flex-row-reverse" *ngIf="user.fullName=='Juan Blanco'">
+							<div *ngIf="user.fullName=='Juan Blanco'"> 
+								<img ngbTooltip="{{user.fullName}}" [src]="user.avatar" class="wd-30 ht-30 rounded-circle card-img-top mt-1">
+							</div>
+							
+						</div>
+
+
+						
+					</div>
+			    </div> 
+
+				<!-- <div class="card text-right">
+				   <i class="feather icon-edit-2" placement="start" ngbTooltip="Editar"></i>
+			    </div>  -->
+				
+			</div> 
+
+
+
+			  <!-- <h5 class="card-title">Card title</h5>
+			  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+
+
+
+			  
+			</div>
+		  <!-- </div>  --> 
+
+		<!-- <issue-card *ngFor="let issue of lane.issues"
+		    [issue]="issue" [cdkDragData]="issue" cdkDrag>
+			
+
+		</issue-card> -->
+		
+	</div>
+</div>
+
+<!-- <div class="mt-2 w-100 text-right">
+	<i class="feather icon-edit-2" (click)="select(user.id)" placement="start" ngbTooltip="Editar Usuario"></i>
+	<i class="feather icon-trash ms-1" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
+  </div> -->

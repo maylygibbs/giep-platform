@@ -7,3 +7,28 @@
     height: 0;
     width: 0;
   }
+  h6 {
+    background-color:#00bbff;
+    color:rgb(10, 0, 0);
+    padding: 8px;
+    font-weight: normal;
+    font-size: 8px;
+    font-family: Arial;
+    text-transform: lowercase;
+  }
+  h5 {
+    background-color:#c23d23;
+    color:rgb(10, 0, 0);
+    padding: 8px;
+    font-weight: normal;
+    font-size: 8px;
+    font-family: Arial;
+    text-transform: lowercase;
+  }
+  .fc-event {
+    border: 1px solid #3a87ad; /* default BORDER color */
+    background-color: #3a87ad; /* default BACKGROUND color */
+    color: #fff;               /* default TEXT color */
+    font-size: 1em;            /* EDIT HERE */
+    cursor: default;
+}

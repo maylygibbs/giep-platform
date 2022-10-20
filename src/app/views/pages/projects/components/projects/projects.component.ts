@@ -71,12 +71,20 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
 
   async config(id: number) {
     this.selectedItem = await this.projectService.getProjectById(id);
-    this.next();
+    this.step++;
+    this.step++;
+    //this.next();
   }
 
   async select(id: number) {
     this.selectedItem = await this.projectService.getProjectById(id);
     this.next();
+  }
+
+  async selectsproyects(id: string) {
+    this.selectedItem = await this.projectService.getProjectById(parseInt(id));
+    //this.next();
+    this.step--;
   }
 
   async delete(id: number) {
