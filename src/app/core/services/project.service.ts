@@ -211,6 +211,7 @@ export class ProjectService extends HttpService {
    * @param data 
    */
    async storeNonworkingDays(data:any){
+    
     try {
       if(data.id){
         const id = data.id;

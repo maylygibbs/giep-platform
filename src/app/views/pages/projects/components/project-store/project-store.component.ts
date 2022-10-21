@@ -208,8 +208,9 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   //Initialization Method
   ngOnInit(): void {
 
+    //this.selectedCityId = this.cities[0].id;
     this.selectedCityId = this.cities[0].id;
-    
+
     this.route.data.subscribe((data) => {
       this.data = data;
     });
