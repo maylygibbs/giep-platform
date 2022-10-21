@@ -56,7 +56,14 @@ const now = new Date();
 export class ProjectStoreComponent extends BaseComponent implements OnInit {
   
   // references the #calendar in the template
-  @ViewChild('calendar') calendarComponent: FullCalendarComponent;
+  calendarComponent: FullCalendarComponent;
+  @ViewChild('calendar') set customCalendar(elRef: FullCalendarComponent) {
+      this.calendarComponent = elRef;
+  }
+
+
+
+
   @ViewChild('addEvent') addEvent: TemplateRef<any>;
 
   @ViewChild('externalEvents', { static: true }) externalEvents: ElementRef;
@@ -83,12 +90,13 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   /** Select options list **/
   statusList: Array<SelectOption>;
 
+
   /** All selected users **/
   selectedUsers: Array<SelectOption>;
   assignedResources: Array<User>;
   assignNonWorkingDays: Array<ProyectCalendar>;
   
-  //const userselected: Array<MenuItem> = new Array<MenuItem>();
+
   defaultImage = 'https://via.placeholder.com/200x200';
   image = 'https://via.placeholder.com/200x200';
 
@@ -123,69 +131,6 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   eventDetail: EventDetail;
 
 
-  selectedcars: string = '5a15b13c663ea0af9ad0dae8';
-  //selectedPeople = [{ id: "5a15b13c663ea0af9ad0dae8", name: 'Mendoza Ruiz' }];
-
-   //selectedCar: number;
- /*  selectedCar = [1];
-  selectedCars = [{ id: '1' }]; */
-    /* cars = [
-        { id: 1, name: 'Volvo' },
-        { id: 2, name: 'Saab', disabled: true },
-        { id: 3, name: 'Opel', },
-        { id: 4, name: 'Audi' },
-    ]; */
-    selectedCityId: number = null;
-
-    cities = [
-      { id: 1, name: 'Vilnius' },
-      { id: 2, name: 'Kaunas' },
-      { id: 3, name: 'Pavilnys', disabled: true }
-  ];
-
-    cars = [
-      {
-          'id': '5a15b13c36e7a7f00cf0d7cb',
-          'index': 2,
-          'isActive': true,
-          'picture': 'http://placehold.it/32x32',
-          'age': 23,
-          'name': 'Karyn Wright',
-          'gender': 'female',
-          'company': 'ZOLAR',
-          'email': 'karynwright@zolar.com',
-          'phone': '+1 (851) 583-2547'
-      },
-      {
-          'id': '5a15b13c2340978ec3d2c0ea',
-          'index': 3,
-          'isActive': false,
-          'picture': 'http://placehold.it/32x32',
-          'age': 35,
-          'name': 'Rochelle Estes',
-          'disabled': true,
-          'gender': 'female',
-          'company': 'EXTRAWEAR',
-          'email': 'rochelleestes@extrawear.com',
-          'phone': '+1 (849) 408-2029'
-      },
-      {
-          'id': '5a15b13c663ea0af9ad0dae8',
-          'index': 4,
-          'isActive': false,
-          'picture': 'http://placehold.it/32x32',
-          'age': 25,
-          'name': 'Mendoza Ruiz',
-          'gender': 'male',
-          'company': 'ZYTRAX',
-          'email': 'mendozaruiz@zytrax.com',
-          'phone': '+1 (904) 536-2020'
-      }
-  ]
-
-
-
-
   minDateEvent = { 
         year: new Date().getFullYear(), month: (new Date().getMonth()) + 1, day: new Date().getDate() 
   }
@@ -208,21 +153,24 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   //Initialization Method
   ngOnInit(): void {
 
-    //this.selectedCityId = this.cities[0].id;
-    this.selectedCityId = this.cities[0].id;
-
     this.route.data.subscribe((data) => {
       this.data = data;
+      console.log(this.data)
     });
 
     console.log("MARIANO DATOS DEL PROYECTO");
     console.log(this.project);
 
-    if (!this.project.id) {
+    if (!this.project.id) {//BIFURCACION CUANDO SE TRATA DE UN PROY NUEVO
+      
       this.project.status = new SelectOption('1');
-      this.projectStatus = true;
-    } else {
-      this.projectStatus = this.project.status.value == '1' ? true : false;
+      this.projectStatus = true; // ESTA LINEA NO SE PARA QUE ES, projectStatus NO SE UTILIZA EN EL HTML
+    } else { //BIFURCACION CUANDO SE TRATA DE UN PROY NUEVO
+     
+      //this.projectStatus = this.project.status.value == '1' ? true : false;  //<-- LA LINEA NO SE PARA QUE ES, projectStatus NO SE UTILIZA EN EL HTML Y DE PASO ESTABA GENERANDO UN ERROR EN COSOLA, ERROR QUE IMPIDE QUE EL RESTO DE COMPONENTE NO SE RENDERICE CORRECTAMENTE.
+      this.selectedUsers = this.project.assignedResources.map((item: User)=>{
+        return new SelectOption(item.id, item.firstName+' '+item.lastName)
+      })
     }
 
     this.events2 = [];
@@ -231,30 +179,8 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
     this.Loaddatesfromdatabase();
     this.initCalendar();
 
-    /* this.currentViewCalendar = 'dayGridMonth';
-    this.initCalendar(); */
-    // For external-events dragging
-    new Draggable(this.externalEvents.nativeElement, {
-      itemSelector: '.fc-event',
-      eventData: (eventEl) => {
-        return {
-          title: eventEl.innerText,
-          classNames: ['bgcolor-orange'],
-          backgroundColor: eventEl.getAttribute('bgColor'),
-          borderColor: eventEl.getAttribute('bdColor')
-        };
-      }
-    });
-
   }
 
-
-
-async ngAfterViewInit() {
-    this.calendarApi = this.calendarComponent.getApi();
-    this.loadCalendarByRangeDate(this.currentViewCalendar);
- }
-  
   /** 
    * Init options to calendar 
    **/
@@ -506,6 +432,9 @@ async ngAfterViewInit() {
   */  
   validcalendar(view: boolean) {
    this.typeCalendar=view;
+   setTimeout(() => {
+    this.calendarApi = this.calendarComponent.getApi();
+   }, 150);
   }
 
    //Change User Resources Method
@@ -575,9 +504,10 @@ async ngAfterViewInit() {
     this.statusList = await this.commonsService.getAllStatus();
   }
 
+
   //Change User Resources Method
   async onChangeUserResorces(event: any) {
-    //console.log(this.project.projectManagementOffice.value);
+    console.log(this.selectedUsers);
 
     if (event.length == 0) {
       this.assignedResources.pop();

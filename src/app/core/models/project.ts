@@ -22,11 +22,8 @@ export class Project {
     hoursProject: number;
     progress: number;
     TypeGbProgressbar: string;
-    projectManagementOffice: User;
-    //projectManagementOffice: SelectOption;
-    //projectManagementOffice: any[];
-    
-    projectManagementOffice1: User;
+    projectManagementOffice: number;
+
     springs: Array<Spring>;
     assignNonWorkingDays?: ProyectCalendar[];
     //company: Company;
@@ -127,7 +124,13 @@ export class Project {
         let project = new Project();
         project.id = projectObj.id;
         project.name = projectObj.nombre;
-        project.assignedResources = projectObj.recursos;
+        project.assignedResources = projectObj.recursos.map((item:any)=>{
+            const user = new User();
+            user.id = item.id;
+            user.firstName = item.primerNombre;
+            user.lastName = item.primerApellido;
+            return user;
+        });
         project.startDate = projectObj.fechaInicio;
         project.endDate = projectObj.fechaFin;
         project.hoursProject = projectObj.horaestimadas;
@@ -138,10 +141,10 @@ export class Project {
         // project.progress = Math.floor(Math.random() * (max - min + 1) + min);
          project.progress = projectObj.total[0].totalprogress;
          project.TypeGbProgressbar=projectObj.total[0].colorprogress;
-         project.projectManagementOffice = User.mapFromObject(projectObj.userPmo);
+         project.projectManagementOffice = projectObj.userPmo.id;
         //project.company = Company.mapFromObject(projectObj.empresa);
 
-        project.company = new SelectOption(projectObj.empresa.id, projectObj.empresa.Descripcion);
+        project.company = new SelectOption(projectObj.empresa.id, projectObj.empresa.nombre);
 
         project.springs = Spring.loadSpringsList(projectObj.springs);
         if (project.springs)
