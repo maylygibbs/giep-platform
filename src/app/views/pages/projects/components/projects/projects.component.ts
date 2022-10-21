@@ -41,13 +41,13 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
   
   private $eventNavigationEnd: Subscription;
 
-
   constructor(private projectService: ProjectService,
     private router: Router) {
     super();
    }
 
   async ngOnInit() {
+    
     this.projects = await this.projectService.getProjectsPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
