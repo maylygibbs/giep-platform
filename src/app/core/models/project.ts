@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Company } from './company';
 import { SelectOption } from './select-option';
 import { Spring } from './spring';
+import { ProyectCalendar } from './project-calendar';
 import { User } from './user';
 
 
@@ -14,15 +15,23 @@ export class Project {
     condition: string;
     assignedResources?: User[];
     assignedResourcesf?: User[];
-    startDate: NgbDate;
+    //startDate: NgbDate;
+    startDate: any;
+
     endDate: NgbDate;
     hoursProject: number;
     progress: number;
     TypeGbProgressbar: string;
     projectManagementOffice: User;
+    //projectManagementOffice: SelectOption;
+    //projectManagementOffice: any[];
+    
     projectManagementOffice1: User;
     springs: Array<Spring>;
-    company: Company;
+    assignNonWorkingDays?: ProyectCalendar[];
+    //company: Company;
+    company: SelectOption;
+
     status: SelectOption;
     idProject: string;
     idResorce: string;
@@ -42,6 +51,7 @@ export class Project {
         newInstace.endDate = project.endDate;
         newInstace.hoursProject = project.hoursProject;
         newInstace.projectManagementOffice = project.projectManagementOffice;
+        newInstace.assignNonWorkingDays = project.assignNonWorkingDays;
         newInstace.company = project.company;
         newInstace.status = project.status;
         newInstace.condition = project.condition;
@@ -82,6 +92,34 @@ export class Project {
 
     }
 
+    //Map variables of non-working days
+    public static map3ForPost(options: Array<ProyectCalendar>){
+        let optionsOutput;
+        var dataProyectCalendar = [];
+        let proyectoCalendarMap: any = {};
+        options.forEach((sectionItem, index) => {
+            dataProyectCalendar.push({ id_proyecto: localStorage.getItem('idusersproyecadd'), fecha_inicio_nolaboral: sectionItem.start, fecha_fin_nolaboral: sectionItem.start});    
+        });
+        const jsonData = JSON.stringify(dataProyectCalendar) 
+        localStorage.setItem('arrayofnon-working-daysAdd', jsonData)
+        Object.assign(proyectoCalendarMap, { arrayofnonworkingdays: dataProyectCalendar });
+        return proyectoCalendarMap; 
+
+        /* optionsOutput = options.map((opt:ProyectCalendar)=>{
+            return {
+                idproyecto: localStorage.getItem('idusersproyecadd'),
+                startDate: opt.start,
+                endDate: opt.start
+                datauserresorce.push({ idproyecto: localStorage.getItem('idusersproyecadd'), idrecurso: sectionItem.id, horasdedicacion: sectionItem.hoursDedication});    
+            }
+        }); */
+
+
+
+        //return optionsOutput;
+
+    }
+
     //Object Map Method
     public static mapFromObject(projectObj: any) {
         if (!projectObj)
@@ -100,8 +138,11 @@ export class Project {
         // project.progress = Math.floor(Math.random() * (max - min + 1) + min);
          project.progress = projectObj.total[0].totalprogress;
          project.TypeGbProgressbar=projectObj.total[0].colorprogress;
-        project.projectManagementOffice = User.mapFromObject(projectObj.userPmo);
-        project.company = Company.mapFromObject(projectObj.empresa);
+         project.projectManagementOffice = User.mapFromObject(projectObj.userPmo);
+        //project.company = Company.mapFromObject(projectObj.empresa);
+
+        project.company = new SelectOption(projectObj.empresa.id, projectObj.empresa.Descripcion);
+
         project.springs = Spring.loadSpringsList(projectObj.springs);
         if (project.springs)
             project.endDate = Project.getEndDate(project.springs);

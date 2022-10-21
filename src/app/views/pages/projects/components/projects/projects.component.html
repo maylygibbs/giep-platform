@@ -2,7 +2,8 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink=".">Proyectos</a></li>
     <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Nuevo proyecto</li>
-    <li *ngIf="selectedItem && selectedItem.id" class="breadcrumb-item active" aria-current="page">Actualizar datos</li>
+    <li *ngIf="selectedItem && selectedItem.id" class="breadcrumb-item active" aria-current="page">Panel {{ selectedItem.name }}</li>
+    <!-- <i  *ngIf="selectedItem && selectedItem.id" class="feather icon-edit-2 ms-1" (click)="select(1)" placement="start" ngbTooltip="Actualizar Datos"></i> -->
   </ol>
 </nav>
 
@@ -64,7 +65,7 @@
                   <!-- <td>{{project.status.label}}</td> -->
                   <td>{{project.condition}}</td> 
                   <td class="text-center">
-                    <i class="feather icon-settings" (click)="config(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
+                    <i class="feather icon-settings" (click)="config(project.id)" placement="start" ngbTooltip="Panel Proyecto"></i>
                     <i class="feather icon-edit-2 ms-1" (click)="select(project.id)" placement="start" ngbTooltip="Actualizar Datos"></i>
                     <!-- <i class="feather icon-trash" (click)="delete(project.id)"></i> -->
                   </td>
@@ -88,6 +89,17 @@
     </div>
   </div>
 </div>
+
+
+<!-- {{step}} -->
 <div *ngIf="step==2">
   <app-project-store [project]="selectedItem" (onBack)="back($event)"></app-project-store>
+</div>
+<div *ngIf="step==4">
+  <app-project-store [project]="selectedItem" (onBack)="back($event)"></app-project-store>
+</div>
+<div *ngIf="step==3">
+  {{ selectedItem.name }}
+  <i class="feather icon-edit-2" (click)=selectsproyects(selectedItem.id) placement="start" ngbTooltip="Editar Proyecto {{ selectedItem.name }}"></i>
+  <board-dnd (onBack)="back($event)"></board-dnd>
 </div>

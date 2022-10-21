@@ -39,12 +39,13 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
+                                    {{project.startDate}}
                                     <label for="inputStartDate" class="form-label required">Fecha Inicio</label>
                                     <div class="input-group">
                                         <input id="inputStartDate" name="startDate" #startDate="ngModel"
                                             class="form-control" placeholder="yyyy-mm-dd" name="dp"
                                             [ngClass]="{'ng-dirty ng-invalid' : startDate.errors && ( startDate.dirty || startDate.touched || projectForm.submitted) }"
-                                            [(ngModel)]="project.startDate" [minDate]="minDate1" ngbDatepicker  #dp="ngbDatepicker" 
+                                            [(ngModel)]="project.startDate" ngbDatepicker  #dp="ngbDatepicker" 
 
                                                required>
                                         <button class="input-group-text" type="button" (click)="dp.toggle()">
@@ -58,6 +59,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                    <label for="inputhoursProject"
@@ -101,15 +103,20 @@
                     </section>
                     <section>
                         <h4 class="mb-5 mt-4">Asignación de Recursos</h4>
+
+                        
+
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                              
                                 <div class="mb-3">
                                     <label for="inputProjectManagementOffice" class="form-label required">PMO</label>
-                                    <ng-select id="inputProjectManagementOffice" [items]="data.users" [multiple]=false
+                                    <ng-select id="inputProjectManagementOffice" [items]="data.users"  [multiple]=false
+                                    
                                         name="projectManagementOffice" #projectManagementOffice="ngModel"
                                         [ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty || projectManagementOffice.touched || projectForm.submitted) }"
-                                        bindLabel="label" bindValue="value" [searchable]="false"
-                                        [(ngModel)]="project.projectManagementOffice" required>
+                                        bindLabel="label" bindValue="value"  [searchable]="false"
+                                        [(ngModel)]="project.projectManagementOffice"  required>
                                     </ng-select>
                                     <div *ngIf="projectManagementOffice.invalid && projectForm.submitted"
                                         class="invalid-feedback">
@@ -189,23 +196,25 @@
                     </section>
                     <section>
                         <h4 class="mb-5 mt-4">Configuración de Calendario</h4>
+
                         <div class="row mt-3">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputBirthDate" class="form-label required">Tipo de Calendario</label>
                                     <div class="mt-2 d-flex align-items-center">
+                                        
                                         <div class="form-check mb-2">
-                                            <input type="radio" class="form-check-input" name="byCategory" value="true">
+                                            <input type="radio" (change)="validcalendar(false)" class="form-check-input" name="byCategory" value="false" checked>
                                             <label class="form-check-label">
+                                                <h6></h6>
                                                 Calendario General
                                             </label>
                                         </div>
                                         <div class="form-check mb-2 mx-3">
-                                            <input type="radio" class="form-check-input" name="byCategory"
-                                                value="false">
+                                            <input type="radio" (change)="validcalendar(true)" class="form-check-input" name="byCategory" value="true">
                                             <label class="form-check-label">
+                                                <h5></h5>
                                                 Calendario Customizado
-                                                
                                             </label>
                                         </div>
                                     </div>
@@ -213,6 +222,59 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div *ngIf="typeCalendar" class="row mt-3 mb-3">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                  <div class="row">
+                                    <!-- <div class="col-sm-12" [ngClass]="{'col-lg-8 col-md-8': showCardEvents, 'col-lg-9 col-md-9': !showCardEvents}">
+                                      <div class="card">
+                                        <div class="card-body">
+                                          <full-calendar #calendar [options]='calendarOptions'></full-calendar>
+                                        </div>
+                                      </div>
+                                    </div> -->
+
+                                    <div class="col-12 col-md-9">
+                                        <div class="card">
+                                          <div class="card-body">
+                                            <full-calendar
+                                              [options]='calendarOptions'
+                                            ></full-calendar>
+                                          </div>
+                                          </div>
+                                      </div>  
+
+                                    <!-- SHOW CARD WITH EVENT LIST -->
+                                    <div *ngIf="showCardEvents" class="col-lg-3 col-md-3 col-sm-12">
+                                      <div class="card card-dt">
+
+                                    <div *ngFor="let events of events2">
+                                        <div *ngIf="events.base=='t'"> 
+                                            <div class="card-header d-flex justify-content-between">
+                                            <h6 class="card-title">{{events.start}}</h6>
+                                            <i id={{events.start}} class="feather icon-x" (click)="closeCardEventByDay1($event)"></i>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="events.base=='f'"> 
+                                            <div class="card-header d-flex justify-content-between">
+                                            <h5 class="card-title">{{events.start}}</h5>
+                                            <i id={{events.start}} class="feather icon-x" (click)="closeCardEventByDay1($event)"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> 
+
+                       </div>
+
+                       
                     </section>
 
                     <div class="row">
@@ -221,6 +283,33 @@
                             <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
                         </div>
                     </div>
+
+                    <div class="row">
+
+                       <!--   <ng-select [(ngModel)]="selectedCar">
+                             <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+                          </ng-select> -->
+                          
+                          <!--Using items input-->
+                       <!--    <ng-select [items]="cars" 
+                                     bindLabel="name" 
+                                     bindValue="id" 
+                                     [(ngModel)]="selectedPeople">
+                          </ng-select>
+  -->
+<!--                          <ng-select
+                         [items]="cars"
+                         [(ngModel)]="selectedcars">
+                         </ng-select>
+ -->
+                         <ng-select [items]="cities"
+                                bindLabel="name"
+                                bindValue="id"
+                                [(ngModel)]="selectedCityId">
+                        </ng-select>
+ 
+                         </div>
+                  
 
                 </form>
 
