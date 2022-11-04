@@ -5,12 +5,14 @@ import { ResultsRoutingModule } from './results-routing.module';
 import { ByCategoryComponent } from './components/by-category/by-category.component';
 import { ByQuestionsComponent } from './components/by-questions/by-questions.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { ByCounterComponent } from './components/by-counter/by-counter.component';
 
 
 @NgModule({
   declarations: [
     ByCategoryComponent,
-    ByQuestionsComponent
+    ByQuestionsComponent,
+    ByCounterComponent
   ],
   imports: [
     CommonModule,

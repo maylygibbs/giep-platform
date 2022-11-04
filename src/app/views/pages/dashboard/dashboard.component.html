@@ -22,7 +22,7 @@
 </div>
 <div *ngIf="$instruments | async" class="row">
   <div class="col-12 col-xl-12 grid-margin">
-    <app-box-instruments [instruments]="$instruments | async" ></app-box-instruments>
+    <app-box-instruments [instruments]="$instruments | async" (onFinish)="reload($event)"></app-box-instruments>
   </div>
 </div>
 <div  *ngIf="!($instruments | async) && user.roles.includes('ROLE_REGULAR')">

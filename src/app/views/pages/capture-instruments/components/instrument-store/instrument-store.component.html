@@ -150,7 +150,7 @@
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputRoles" class="form-label required">Roles</label>
-                                                    <ng-select id="inputRoles" [items]="data.roles" [multiple]=true
+                                                    <ng-select id="inputRoles" [items]="data.roles" [multiple]="true"
                                                         [searchable]="false" [closeOnSelect]="true"
                                                         name="instrumentRole" #instrumentRole="ngModel"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentRole.errors && ( instrumentRole.dirty || instrumentRole.touched || instrumentForm.submitted) }"
@@ -168,7 +168,7 @@
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputUsers" class="form-label required">Usuarios</label>
-                                                    <ng-select id="inputUsers" [items]="users" [multiple]=true
+                                                    <ng-select id="inputUsers" [items]="users" [multiple]="true"
                                                         [searchable]="false" groupBy="role" [selectableGroup]="true"
                                                         [selectableGroupAsModel]="false" [closeOnSelect]="true"
                                                         name="instrumentUsers" #instrumentUsers="ngModel"
@@ -239,7 +239,7 @@
                                             <div class="col-lg-12 text-right">
                                                 <button type="button" class="btn btn-secondary" (click)="back()">Cancelar</button>
                                                 <button type="button" class="btn btn-secondary ms-2" (click)="preview(defaultNav)">Vista Previa</button>
-                                                <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                                <button type="submit" class="btn btn-primary ms-2 me-2" [disabled]="submitted">Guardar</button>
                                             </div>
                                         </div>
                                     </form>

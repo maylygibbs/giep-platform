@@ -35,6 +35,8 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
 
   sectionActive: number;
 
+  submitted: boolean = false;
+
   constructor(private route: ActivatedRoute,
     private toastrService: ToastrService,
     private instrumentsService: InstrumentsService) {
@@ -186,8 +188,10 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
           this.sectionActive = 0;
           console.log('users', this.selectedUsers)
           console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedUsers));
+          this.submitted = true;
           await this.instrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedUsers));
           this.onBack.emit(null);
+          this.submitted = false;
         } else {
           this.toastrService.error('Asegurese de agergar y confirmar cada pregunta antes de guardar.');
         }

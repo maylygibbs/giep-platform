@@ -101,6 +101,15 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     this.monthlySalesChartOptions.yaxis.title.offsetX = -70;
   }
 
+  /**
+   * Reload page
+   */
+  reload(event:boolean){
+    if(event==true){
+      window.location.reload();
+    }
+  }
+
   ngOnDestroy(){
     if(this.user$){
       this.user$.unsubscribe();

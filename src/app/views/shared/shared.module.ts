@@ -17,8 +17,11 @@ import { BoxInstrumentsComponent } from './components/box-instruments/box-instru
 import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { BoxUtilViewsComponent } from './components/box-util-views/box-util-views.component';
 import { ModalConfirmComponent } from './components/modal-confirm/modal-confirm.component';
+import { CountdownConfig, CountdownGlobalConfig, CountdownModule } from 'ngx-countdown';
 
-
+export function countdownConfigFactory(): CountdownConfig {
+  return {};
+}
 
 
 @NgModule({
@@ -36,8 +39,8 @@ import { ModalConfirmComponent } from './components/modal-confirm/modal-confirm.
     NgbModule,
     NgSelectModule,
     LazyLoadImageModule,
-    TagInputModule
-    
+    TagInputModule,
+    CountdownModule
   ],
   exports:[
     FormsModule,
@@ -57,6 +60,9 @@ import { ModalConfirmComponent } from './components/modal-confirm/modal-confirm.
     BoxMessageComponent,
     BoxUtilViewsComponent,
     ModalConfirmComponent
+  ],
+  providers:[
+    { provide: CountdownGlobalConfig, useFactory: countdownConfigFactory }
   ]
 
 })

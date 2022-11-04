@@ -7,8 +7,9 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { filter, Subscription } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-instruments',
@@ -38,12 +39,22 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   environment = environment;
 
+  idInstrument:number;
+  roles?:any[];
+  users: Array<any>;
+  selectedUsers = [];
+  data: any;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
+    private route: ActivatedRoute,
     protected modalService: NgbModal,
     private router: Router) {
       super();
+      this.route.data.subscribe((data) => {
+        this.data = data;
+      });
   }
 
   async ngOnInit() {
@@ -154,6 +165,53 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     this.selectedItem = null;
     this.action = null;
     this.modalService.dismissAll();
+  }
+
+    /**
+   * Load users by rol
+   */
+     async loadUsersByRoles() {      
+      this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.roles, '|'));
+      console.log('resp', this.users)
+    }
+
+  /**
+   * Open modal for add users to instruments
+   * @param modalRef 
+   */
+  openModalUsers(modalRef:TemplateRef<any>, id:number) {
+    this.idInstrument = id;
+    this.modalService.open(modalRef, {}).result.then((result) => {
+      console.log("Modal closed" + result);
+    }).catch((res) => {});
+  }
+
+
+  /**
+   * Close users modal
+   */
+  closeAddUsersModal(){
+    this.modalService.dismissAll();
+    this.selectedUsers = null;
+  }
+
+  /**
+   * Add users to instrument
+   * @param form 
+   */
+  async addUsers(form:NgForm){
+    if(form.valid){
+      this.selectedUsers
+      console.log(this.selectedUsers);
+      console.log(Instrument.getUsers(this.selectedUsers));
+      await this.instrumentsService.addUsersToInstrument(this.idInstrument, {users: Instrument.getUsers(this.selectedUsers)} );
+      this.closeAddUsersModal();
+
+    }
+  }
+
+  onChangeInputOrder(order: number, id:number){
+    
   }
 
   ngOnDestroy() {

@@ -44,6 +44,7 @@
                   <tr>
                     <th>Id</th>
                     <th>Instrumento</th>
+                    <th>Orden</th>
                     <th>Resultados</th>
                     <th>Fecha creación</th>
                     <th>Fecha expiración</th>
@@ -57,6 +58,7 @@
                     *ngFor="let instrument of instruments.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: instruments.count }">
                     <td>{{instrument.id}}</td>
                     <td>{{instrument.name}}</td>  
+                    <td><input type="text" name="inputName-{{instrument.id}}" [(ngModel)]="instrument.order" (keyup.enter)="onChangeInputOrder(instrument.order, instrument.id)" style="width: 40px;text-align: center;" readonly></td>
                     <td>
                       <a *ngIf="instrument.path" [routerLink]="instrument.path" [queryParams]="{id: instrument.id, name: instrument.name}" >Ver</a>
                       <span *ngIf="!instrument.path">No hay resultados</span>
@@ -78,13 +80,13 @@
                       <i *ngIf="!instrument.isEditable" class="feather icon-eye ms-1" (click)="select(instrument.id)" placement="start" ngbTooltip="Ver Intrumento" placement="start" ngbTooltip="Ver Intrumento"></i>
                       <i class="feather icon-copy ms-1" (click)="clone(instrument.id)" placement="start" ngbTooltip="Copiar Intrumento"></i>
                       <i *ngIf="instrument.isEditable"  class="feather icon-trash ms-1" (click)="confirm(instrument, 'delete', confirmModal)" placement="start" ngbTooltip="Eliminar Intrumento"></i>
-                      
+                      <i class="feather icon-user-plus ms-1" (click)="openModalUsers(addUsersModal,instrument.id)" placement="start" ngbTooltip="Vincular Usuarios"></i>
                     </td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="8" class="text-right">
+                    <th colspan="9" class="text-right">
                       <app-pager (onChangePage)="loadPage($event)"></app-pager>
                     </th>
                   </tr>    
@@ -104,4 +106,70 @@
   <ng-template #confirmModal let-modal>
     <app-modal-confirm [message]="messageModal" (onFinish)="processEvent($event)"></app-modal-confirm>
   </ng-template>
+  <ng-template #addUsersModal let-modal>
+    <div class="modal-header">
+      <button type="button" class="btn-close" (click)="closeAddUsersModal()" aria-label="Close"></button>
+  </div>
+  <form name="addUserForm" #addUserForm="ngForm" (ngSubmit)="addUsers(addUserForm)">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+              <label for="inputRoles" class="form-label required">Roles</label>
+              <ng-select id="inputRoles" [items]="data.roles" [multiple]="true"
+                  [searchable]="false" [closeOnSelect]="true"
+                  name="instrumentRole" #instrumentRole="ngModel"
+                  [ngClass]="{'ng-dirty ng-invalid' : instrumentRole.errors && ( instrumentRole.dirty || instrumentRole.touched || addUserForm.submitted) }"
+                  bindLabel="label" bindValue="value" [searchable]="false"
+                  [(ngModel)]="roles" (change)="loadUsersByRoles()"
+                  required>
+              </ng-select>
+              <div *ngIf="instrumentRole.invalid && addUserForm.submitted"
+                  class="invalid-feedback">
+                  <div *ngIf="instrumentRole.errors?.required">Campo es requerido
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+              <label for="inputUsers" class="form-label required">Usuarios</label>
+              <ng-select id="inputUsers" [items]="users" [multiple]="true"
+                  [searchable]="true" groupBy="role" [selectableGroup]="true"
+                  [selectableGroupAsModel]="false" [closeOnSelect]="true"
+                  name="instrumentUsers" #instrumentUsers="ngModel"
+                  [ngClass]="{'ng-dirty ng-invalid' : instrumentUsers.errors && ( instrumentUsers.dirty || instrumentUsers.touched || addUserForm.submitted) }"
+                  bindLabel="fullName" bindValue="id" [searchable]="false"
+                  [(ngModel)]="selectedUsers" required>
+                  <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="item-{{index}}" type="checkbox"
+                          name="itemgroup1-{{index}}"
+                          [ngModel]="item$.selected" /> {{item.role}}
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="item-{{index}}" type="checkbox"
+                          name="item-{{index}}" [ngModel]="item$.selected" />
+                      {{item.fullName}}
+                  </ng-template>
+              </ng-select>
+              <div *ngIf="instrumentUsers.invalid && addUserForm.submitted"
+                  class="invalid-feedback">
+                  <div *ngIf="instrumentUsers.errors?.required">Campo es requerido
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAddUsersModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" >Vincular</button>
+    </div>
+
+  </form>
+
+  </ng-template>
+
  

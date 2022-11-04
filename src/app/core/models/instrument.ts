@@ -24,6 +24,7 @@ export class Instrument {
     isExpired:boolean;
     isEditable:boolean
     path:string;
+    order:number;
     createAt:Date;
     updateAt:Date;
 
@@ -103,7 +104,7 @@ export class Instrument {
         return instrumentOutput;
     }
 
-    private static getUsers( users:number[]){
+    public static getUsers( users:number[]){
         return users.map((item)=>{
             return {userId:item}
         })

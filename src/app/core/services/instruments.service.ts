@@ -49,14 +49,14 @@ export class InstrumentsService extends HttpService {
 
   async storeInstrument(data: any) {
     try {
-      if(!data.id){
+      if (!data.id) {
         const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura', data));
         this.toastrService.success('El instrumento fué creado con éxito.');
-      }else{
+      } else {
         const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/actualizar/${data.id}`, data));
         this.toastrService.success('El instrumento fué actualizado con éxito.');
       }
-     
+
     } catch (error: any) {
       console.log(error)
     }
@@ -67,9 +67,9 @@ export class InstrumentsService extends HttpService {
  * Publish instrument
  * @param id 
  */
-  async publishInstrument(id: string, data:any) {
+  async publishInstrument(id: string, data: any) {
     try {
-      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/publicar/${id}`,data));
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/publicar/${id}`, data));
       this.toastrService.success('El instrumento fué publicado con éxito.');
     } catch (error: any) {
       console.log(error);
@@ -93,9 +93,9 @@ export class InstrumentsService extends HttpService {
       const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
       this.toastrService.success('El instrumento fué eliminado con éxito.');
     } catch (error: any) {
-     
+
       this.toastrService.error('Ha ocurrido un error eliminando instrumento.');
- 
+
     }
 
   }
@@ -112,7 +112,7 @@ export class InstrumentsService extends HttpService {
     paginator.count = resp.count;
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
     paginator.data = resp.data.map((item: any) => {
-      
+
       const instrument = new Instrument();
       instrument.id = item.id;
       instrument.name = item.nombre;
@@ -120,9 +120,10 @@ export class InstrumentsService extends HttpService {
       instrument.createAt = item.createAt;
       instrument.expirationDate = item.fechaVigencia;
       instrument.publicationDate = item.fechaPublicacion;
-      instrument.isEditable = item.editable == 1 ? true: false;
+      instrument.isEditable = item.editable == 1 ? true : false;
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
-      instrument.isPublished = item.publicar && item.publicar==1 ? true : false;
+      instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
+      instrument.order = item.orden;
       instrument.path = item.path;
       return instrument;
     });
@@ -142,25 +143,25 @@ export class InstrumentsService extends HttpService {
     instrument.name = resp.data[0].nombre;
     instrument.description = resp.data[0].descripcion;
     instrument.dutation = resp.data[0].duracion;
-    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id , resp.data[0].idTipoUnidad.Descripcion);
+    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id, resp.data[0].idTipoUnidad.Descripcion);
     instrument.path = resp.data[0].path;
 
     const d = new Date(resp.data[0].fechaVigencia);
-    instrument.expirationDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    instrument.expirationDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
     instrument.isEditable = resp.data[0].editable == 1 ? true : false;
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
-    if(resp.data[0].users){
-      instrument.users = resp.data[0].users.map((u)=>{
+    if (resp.data[0].users) {
+      instrument.users = resp.data[0].users.map((u) => {
         const user = new User();
         user.id = u.id;
         user.firstName = u.nombre;
-        user.answered = u.respondida == 1 ? true:false;
+        user.answered = u.respondida == 1 ? true : false;
         return user;
       })
     }
 
-    instrument.sections = resp.data[0].secciones.map((sectionItem:any) =>{
+    instrument.sections = resp.data[0].secciones.map((sectionItem: any) => {
 
       const section = new Section();
       section.id = sectionItem.id;
@@ -178,16 +179,16 @@ export class InstrumentsService extends HttpService {
         question.score = item.puntos;
         //question.categoryBy = item.IdCategoria; //TODO
         question.isReady = true;
-        if(item.opciones && item.opciones.length){
+        if (item.opciones && item.opciones.length) {
           question.options = item.opciones.map((itemOption: any) => {
             const option = new QuestionOption(itemOption.id, itemOption.Name);
-            option.nameInputLabel = "optionLabel"+question.order;
-            option.nameInputValue = "optionValue"+question.order;
-            option.nameInputScore = "optionScore"+question.order;
+            option.nameInputLabel = "optionLabel" + question.order;
+            option.nameInputValue = "optionValue" + question.order;
+            option.nameInputScore = "optionScore" + question.order;
             return option;
           });
         }
-        if(question.inputType.label == 'checkbox'){
+        if (question.inputType.label == 'checkbox') {
           question.valueRespCheckBox = [];
         }
         return question;
@@ -198,7 +199,7 @@ export class InstrumentsService extends HttpService {
     });
 
 
-     return instrument;
+    return instrument;
   }
 
   /**
@@ -206,33 +207,33 @@ export class InstrumentsService extends HttpService {
    * @param id 
    * @returns 
    */
-   async getInstrumentsByIdForUpdate(id: number): Promise<any> {
+  async getInstrumentsByIdForUpdate(id: number): Promise<any> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
     const instrument = new Instrument();
     instrument.id = resp.data[0].id;
     instrument.name = resp.data[0].nombre;
     instrument.description = resp.data[0].descripcion;
     instrument.dutation = resp.data[0].duracion;
-    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id , resp.data[0].idTipoUnidad.Descripcion);
+    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id, resp.data[0].idTipoUnidad.Descripcion);
     instrument.path = resp.data[0].path;
     console.log(resp.data[0].fechaVigencia)
     const d = moment(resp.data[0].fechaVigencia).toDate();
     console.log(d)
-    instrument.expirationDate = {year: d.getFullYear(), month:(d.getMonth() + 1) , day: d.getDate()};
+    instrument.expirationDate = { year: d.getFullYear(), month: (d.getMonth() + 1), day: d.getDate() };
     instrument.isEditable = resp.data[0].editable == 1 ? true : false;
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
-    if(resp.data[0].users){
-      instrument.users = resp.data[0].users.map((u)=>{
+    if (resp.data[0].users) {
+      instrument.users = resp.data[0].users.map((u) => {
         const user = new User();
         user.id = u.id;
         user.firstName = u.nombre;
-        user.answered = u.respondida == 1 ? true:false;
+        user.answered = u.respondida == 1 ? true : false;
         return user;
       })
     }
 
-    instrument.sections = resp.data[0].secciones.map((sectionItem:any) =>{
+    instrument.sections = resp.data[0].secciones.map((sectionItem: any) => {
 
       const section = new Section();
       section.id = sectionItem.id;
@@ -250,13 +251,13 @@ export class InstrumentsService extends HttpService {
         question.score = item.puntos;
         //question.categoryBy = item.IdCategoria; //TODO
         question.isReady = true;
-        if(item.opciones && item.opciones.length){
-          question.options = item.opciones.map((itemOption: any, index:number) => {
+        if (item.opciones && item.opciones.length) {
+          question.options = item.opciones.map((itemOption: any, index: number) => {
             let option = new QuestionOption(itemOption.Valor, itemOption.Name);
             option.score = itemOption.Puntos;
-            option.nameInputLabel = "optionLabel"+question.order+''+index;
-            option.nameInputValue = "optionValue"+question.order+''+index;
-            option.nameInputScore = "optionScore"+question.order+''+index;
+            option.nameInputLabel = "optionLabel" + question.order + '' + index;
+            option.nameInputValue = "optionValue" + question.order + '' + index;
+            option.nameInputScore = "optionScore" + question.order + '' + index;
             return option;
           });
         }
@@ -267,12 +268,57 @@ export class InstrumentsService extends HttpService {
       return section;
 
     });
-
-
-     return instrument;
+    return instrument;
   }
 
-  
+  /**
+   * Add user to Instrument
+   * @param id 
+   * @param data 
+   */
+  async addUsersToInstrument(id: number, data: any) {
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/adduser`, data));
+      this.toastrService.success('Los usuarios se han vinculado al instrumento con exito.');
+    } catch (error: any) {
+      if (error.status != 500)
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+    }
+  }
+
+  /**
+   * Add user to Instrument
+   * @param id 
+   * @param data 
+   */
+  async changeOrderOfInstrument(id: number, order: any) {
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/orden/${order}`));
+      this.toastrService.success('El orden del instrumento fué actualizado con exito.');
+    } catch (error: any) {
+      if (error.status != 500)
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+    }
+  }
+
+  /**
+   * Register hour of init answer
+   */
+  registerInitAnswarInstrument(){
+    console.log('TODO: call endpoint register start time')
+  }
+
+
+  /**
+   * Register hour of init answer
+   */
+  registerTimeoutInstrument(){
+    console.log('TODO: timeout instrument');
+    this.toastrService.warning('El tiempo establecido para responder esta encuesta ha terminado. Por favor, complete la encuesta a la brevedad posible y presione "Guardar".')
+
+  } 
+
+
 
   /**
    * stores user responses
@@ -352,6 +398,37 @@ export class InstrumentsService extends HttpService {
           return itemData.opcion;
         });
         result.optionsChart = this.getOptionsChartBarByQuestions(this.obj, data2, categories, false);
+        return result;
+      })
+
+    }
+
+    return results;
+  }
+
+  async getIntrumentResultByCounter(id: number):Promise<any>{
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/${id}/resultados/contador`));
+
+    let results: any[] = [];
+    if (resp && resp.usuarios.length > 0) {
+
+      results = resp.usuarios.map((item: any) => {
+        const result: any = {};
+        result.name = item.nombre;
+        result.warning = !item.resultado || item.resultado.length==0 ? ': Falta por participar en la encuesta':null;
+        const data1 = item.resultado.map((itemData: any) => {
+          return {
+            x: itemData.valor,
+            y: itemData.puntos
+          }
+        });
+        const data2 = item.resultado?.map((itemData: any) => {
+          return itemData.puntos;
+        });
+        const categories = item.resultado.map((itemData: any) => {
+          return itemData.valor;
+        });
+        result.optionsChart = this.getOptionsChartBarByCounter(this.obj, data2, categories, true);
         return result;
       })
 
@@ -548,6 +625,102 @@ export class InstrumentsService extends HttpService {
           dataLabels: {
             position: 'bottom',
             orientation: 'vertical',
+          }
+        },
+      }
+    }
+  }
+
+  getOptionsChartBarByCounter(obj: any, data: any, categories: any, horizontal: boolean) {
+    return {
+      series: [{
+        data: data,
+      }],
+      chart: {
+        type: 'bar',
+        height: '180',
+        //parentHeightOffset: 0,
+        //foreColor: obj.bodyColor,
+        background: obj.cardBg,
+        toolbar: {
+          show: false
+        },
+      },
+      colors: ['#33b230', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#33b2df', '#f9a3a4', '#90ee7e',
+        '#f48024', '#69d2e7', '#2b908f', '#546E5E'
+      ],
+      fill: {
+        opacity: .9
+      },
+      grid: {
+        padding: {
+          bottom: -1
+        },
+        borderColor: obj.gridBorder,
+        xaxis: {
+          lines: {
+            show: true
+          }
+        }
+      },
+      xaxis: {
+        type: 'category',
+        categories: categories,
+        axisBorder: {
+          color: obj.gridBorder,
+        },
+        axisTicks: {
+          color: obj.gridBorder,
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Categorias',
+          style: {
+            size: 12,
+            color: obj.muted
+          }
+        },
+        labels: {
+          //offsetX: 0,
+          show: false
+        },
+      },
+      legend: {
+        show: false,
+        position: "bottom",
+        horizontalAlign: 'center',
+        fontFamily: obj.fontFamily,
+        itemMargin: {
+          horizontal: 8,
+          vertical: 0
+        },
+      },
+      stroke: {
+        width: 0
+      },
+      dataLabels: {
+        enabled: true,
+        textAnchor: 'start',
+        distributed: false,
+        style: {
+          fontSize: '12px',
+          fontFamily: obj.fontFamily,
+        },
+        formatter: function (val, opt) {
+          return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: horizontal,
+          barHeight: '85%',
+          distributed: true,
+          columnWidth: "50%",
+          borderRadius: 4,
+          dataLabels: {
+            position: 'bottom',
+            orientation: 'horizontal',
           }
         },
       }

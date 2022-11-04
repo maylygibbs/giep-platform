@@ -1,0 +1,14 @@
+.count-fixed {
+    position: fixed;
+    left: 90%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 6px;
+    z-index: 1;
+    color: white;
+    background-color: black;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 600;
+ }
+
