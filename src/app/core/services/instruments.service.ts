@@ -291,7 +291,7 @@ export class InstrumentsService extends HttpService {
    * @param id 
    * @param data 
    */
-  async changeOrderOfInstrument(id: number, order: any) {
+  async changeOrderOfInstrument(id: number, order: string) {
     try {
       const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/orden/${order}`));
       this.toastrService.success('El orden del instrumento fué actualizado con exito.');
@@ -304,8 +304,14 @@ export class InstrumentsService extends HttpService {
   /**
    * Register hour of init answer
    */
-  registerInitAnswarInstrument(){
-    console.log('TODO: call endpoint register start time')
+   async registerInitAnswarInstrument(id: string){
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/iniciar`));
+      
+    } catch (error: any) {
+      if (error.status != 500)
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+    }
   }
 
 

@@ -58,7 +58,12 @@
                     *ngFor="let instrument of instruments.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: instruments.count }">
                     <td>{{instrument.id}}</td>
                     <td>{{instrument.name}}</td>  
-                    <td><input type="text" name="inputName-{{instrument.id}}" [(ngModel)]="instrument.order" (keyup.enter)="onChangeInputOrder(instrument.order, instrument.id)" style="width: 40px;text-align: center;" readonly></td>
+                    <td>
+                      <input type="text" name="inputName-{{instrument.id}}" [(ngModel)]="instrument.order" (keyup.enter)="onChangeInputOrder(instrument.order, instrument.id)" style="width: 40px;text-align: center;">
+                      <div  class="invalid-feedback">
+                        <div id="order-{{instrument.id}}" style="display: none;">El campo solo permite numeros enteros</div>
+                    </div>                    
+                    </td>
                     <td>
                       <a *ngIf="instrument.path" [routerLink]="instrument.path" [queryParams]="{id: instrument.id, name: instrument.name}" >Ver</a>
                       <span *ngIf="!instrument.path">No hay resultados</span>

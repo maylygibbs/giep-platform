@@ -209,9 +209,31 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
     }
   }
+ 
+  /**
+   * Change order of instrument
+   * @param order 
+   * @param id 
+   */
+  async onChangeInputOrder(order: string, id:number){
+    const divError:HTMLElement = document.getElementById('order-'+id);
+    if (!isNaN(Number(order))) {
+      if (Number(order) > 0) {
+       await this.instrumentsService.changeOrderOfInstrument(id, order);
+      }else{      
+        divError.style.display = 'inline-block';
+        setTimeout(() => {
+          divError.style.display = 'none';
+        }, 1500);
+      }
 
-  onChangeInputOrder(order: number, id:number){
-    
+    }else{
+      console.log('order', order);        
+      divError.style.display = 'inline-block';
+      setTimeout(() => {
+        divError.style.display = 'none';
+      }, 1500);
+    }
   }
 
   ngOnDestroy() {

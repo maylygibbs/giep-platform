@@ -1,6 +1,6 @@
 import { InstrumentsService } from './../../../../core/services/instruments.service';
 import { Instrument } from './../../../../core/models/instrument';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
 import { Question } from '../../../../core/models/question';
@@ -32,7 +32,7 @@ export class BoxInstrumentsComponent implements OnInit {
 
   config: CountdownConfig;
 
-  constructor(private instrumentsService: InstrumentsService) { }
+  constructor(private instrumentsService: InstrumentsService, private el: ElementRef) { }
 
   async ngOnInit() {
     this.instrument = await this.instrumentsService.getInstrumentsById(this.instruments[0].id);
@@ -107,7 +107,7 @@ export class BoxInstrumentsComponent implements OnInit {
     console.log('event coutdown', event);
     switch (event.action) {
       case 'start':
-          this.instrumentsService.registerInitAnswarInstrument();
+          this.instrumentsService.registerInitAnswarInstrument(this.instrument.id);
         break;
       case 'done':
           this.instrumentsService.registerTimeoutInstrument();
@@ -115,6 +115,31 @@ export class BoxInstrumentsComponent implements OnInit {
       default:
         break;
     }
+  }
+
+
+  /**
+   * Scroll to first error
+   */
+  private scrollToFirstInvalidControl() {
+    
+    const firstInvalidControl: HTMLElement = this.el.nativeElement.querySelector(
+      ".ng-invalid"
+    );
+    window.scroll({
+      top: this.getTopOffset(firstInvalidControl),
+      left: 0,
+      behavior: "smooth"
+    });
+    
+  }
+
+    /**
+   * Go to offset to control
+   */
+  private getTopOffset(controlEl: HTMLElement): number {
+    const labelOffset = 50;
+    return controlEl.getBoundingClientRect().top + window.scrollY - labelOffset;
   }
 
 
@@ -134,8 +159,9 @@ export class BoxInstrumentsComponent implements OnInit {
         this.submitted = false;
       }, 1000);
 
+    }else{
+      this.scrollToFirstInvalidControl();
     }
-
   }
 
 
