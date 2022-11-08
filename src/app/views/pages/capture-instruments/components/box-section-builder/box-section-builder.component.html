@@ -25,7 +25,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <app-box-question-builder *ngFor="let question of section.questions" [question]="question" (onDeleteQuestion)="deleteQuestion($event)"></app-box-question-builder>
+                <app-box-question-builder *ngFor="let question of section.questions" [question]="question" [byCategory]="byCategory" (onDeleteQuestion)="deleteQuestion($event)"></app-box-question-builder>
             </div>
             <div class="col-lg-12">
                 <button type="button" class="btn btn-secondary"

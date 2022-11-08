@@ -177,7 +177,6 @@ export class InstrumentsService extends HttpService {
         question.className = item.class;
         question.required = item.obligatorio == 1 ? true : false;
         question.score = item.puntos;
-        //question.categoryBy = item.IdCategoria; //TODO
         question.isReady = true;
         if (item.opciones && item.opciones.length) {
           question.options = item.opciones.map((itemOption: any) => {
@@ -249,7 +248,10 @@ export class InstrumentsService extends HttpService {
         question.className = item.class;
         question.required = item.obligatorio == 1 ? true : false;
         question.score = item.puntos;
-        //question.categoryBy = item.IdCategoria; //TODO
+        
+        if(item.IdCategoria ){
+          question.categoryBy = String(item.IdCategoria.id);
+        }
         question.isReady = true;
         if (item.opciones && item.opciones.length) {
           question.options = item.opciones.map((itemOption: any, index: number) => {

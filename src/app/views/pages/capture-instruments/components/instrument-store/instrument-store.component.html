@@ -127,22 +127,10 @@
                                                     <label for="inputBirthDate" class="form-label required">¿Agrupar
                                                         preguntas por categorías?</label>
                                                     <div class="mt-2 d-flex align-items-center">
-                                                        <div class="form-check mb-2">
-                                                            <input type="radio" class="form-check-input"
-                                                                name="byCategory" value="true"
-                                                                [(ngModel)]="instrument.questionsByCategory">
-                                                            <label class="form-check-label">
-                                                                Si
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check mb-2 mx-3">
-                                                            <input type="radio" class="form-check-input"
-                                                                name="byCategory" value="false"
-                                                                [(ngModel)]="instrument.questionsByCategory">
-                                                            <label class="form-check-label">
-                                                                No
-                                                            </label>
-                                                        </div>
+                                                        <div class="form-check form-switch mb-2">
+                                                            <input type="checkbox" name=byCategory #byCategory="ngModel" [(ngModel)]="instrument.questionsByCategory" (change)="changeQuestionAgrupation()" class="form-check-input" id="formSwitch1">
+                                                            <label class="form-check-label" for="formSwitch">{{instrument.questionsByCategory ? 'Sí' : 'No'}}</label>
+                                                          </div>
                                                     </div>
 
                                                 </div>
@@ -220,7 +208,7 @@
                                         </div>
                                         <div class="row mb-2">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <app-box-section-builder *ngFor="let section of instrument.sections"
+                                                <app-box-section-builder *ngFor="let section of instrument.sections" [byCategory]="this.instrument.questionsByCategory"
                                                     [section]="section" (onDeleteSection)="deleteSection($event)">
                                                 </app-box-section-builder>
                                             </div>

@@ -17,7 +17,7 @@ export class Instrument {
     unitType: SelectOption;
     expirationDate:any;
     publicationDate:Date;
-    questionsByCategory:any;
+    questionsByCategory:boolean;
     sections: Array<Section>;
     questions: Array<Question>;
     isPublished:boolean
@@ -96,7 +96,7 @@ export class Instrument {
         Object.assign(instrumentOutput,{expirationDate: moment().year(instrumentInput.expirationDate.year).month(instrumentInput.expirationDate.month - 1).date(instrumentInput.expirationDate.day).format('YYYY-MM-DD') });
         Object.assign(instrumentOutput,{roles: instrumentInput.roles});
         Object.assign(instrumentOutput,{users: this.getUsers(users)});
-        Object.assign(instrumentOutput,{questionsByCategory: instrumentInput.questionsByCategory =='true' ? 1 : 0});
+        Object.assign(instrumentOutput,{questionsByCategory: instrumentInput.questionsByCategory ? 1 : 0});
         Object.assign(instrumentOutput,{description: instrumentInput.description});
         Object.assign(instrumentOutput,{path: instrumentInput.path? instrumentInput.path:null});
         Object.assign(instrumentOutput,{sections: this.getSections(instrumentInput.sections)});
@@ -133,15 +133,14 @@ export class Instrument {
                 label: question.label,
                 score: parseInt(question.score),
                 required: question.required,
-                categoryId:null,
+                categoryId: question.categoryBy ? parseInt(question.categoryBy) : null,
                 inputType: {id: parseInt(question.inputType.value) , label: question.inputType.label}
             };
             if(question.options && question.options.length > 0){
                 Object.assign(questionOutput , {options: this.getOptions(question.options)})
             }
             return questionOutput;
-        })
-
+        });
         return questionsOutput;
     }
 

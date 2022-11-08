@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { environment } from './../../../../../../environments/environment';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-box-question-builder',
@@ -15,6 +16,9 @@ import { BaseComponent } from '../../../../../views/shared/components/base/base.
 export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit {
 
   @Input()
+  byCategory:boolean;
+
+  @Input()
   question:Question;
 
   @Output()
@@ -22,16 +26,23 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
 
   inputsType: Array<SelectOption>;
 
-  
+
 
   environment = environment;
 
-  constructor(private commonsService: CommonsService) {
+  data: any;
+
+  constructor(private commonsService: CommonsService,
+    private route: ActivatedRoute,) {
     super();
+
    }
 
   async ngOnInit() {
     this.inputsType = await this.commonsService.getAllInputsType();
+      this.route.data.subscribe((data) => {
+        this.data = data;
+      });
   }
 
   /**
@@ -94,6 +105,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
    * @returns 
    */
   isValidQuestion(question:Question){
+    
     if (question.inputType.label == 'select' || question.inputType.label == 'radio' ||  question.inputType.label == 'checkbox' || question.inputType.label == 'select-multiple') {
       const busquedaLabel = question.options.reduce((acc, option) => {
         acc[option.label] = ++acc[option.label] || 0;

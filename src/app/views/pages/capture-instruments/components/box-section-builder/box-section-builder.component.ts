@@ -12,6 +12,9 @@ export class BoxSectionBuilderComponent implements OnInit {
   @Input()
   section: Section;
 
+  @Input()
+  byCategory:boolean;
+
   @Output()
   onDeleteSection: EventEmitter<Section> = new EventEmitter<Section>();
 

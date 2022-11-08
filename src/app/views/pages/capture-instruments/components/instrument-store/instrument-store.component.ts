@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { environment } from './../../../../../../environments/environment';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { SelectOption } from 'src/app/core/models/select-option';
 
 @Component({
   selector: 'app-instrument-store',
@@ -37,6 +38,8 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
 
   submitted: boolean = false;
 
+  categories: Array<SelectOption>;
+
   constructor(private route: ActivatedRoute,
     private toastrService: ToastrService,
     private instrumentsService: InstrumentsService) {
@@ -55,6 +58,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
       this.defaultNavActiveId = this.instrument.isEditable ? 1 : 2;
       this.sectionActive = 0;
     }else{
+      this.instrument.questionsByCategory = false;
       this.defaultNavActiveId = 1;
     }
     
@@ -163,6 +167,16 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
     }
 
   }
+
+
+  changeQuestionAgrupation(){
+    if(this.instrument.questionsByCategory){
+      this.categories = this.data.categories;
+    }else{
+      this.categories = null;
+    }
+  }
+
   /**
    * Save instrument
    * @param form 

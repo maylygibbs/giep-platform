@@ -1,4 +1,4 @@
-import { CommonsListRolesResolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
+import { CommonsListCategoyTypeResolver, CommonsListRolesResolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { InstrumentsComponent } from './components/instruments/instruments.component';
 import { NgModule } from '@angular/core';
@@ -36,7 +36,8 @@ const routes: Routes = [
     },
     resolve:{
       roles: CommonsListRolesResolver,
-      units: CommonsListUnitsTypeResolver
+      units: CommonsListUnitsTypeResolver,
+      categories: CommonsListCategoyTypeResolver
     }
   },  
 ];

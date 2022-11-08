@@ -177,7 +177,7 @@ export class CommonsService extends HttpService {
   async getAllCategories(): Promise<Array<SelectOption>> {
 
     let categories: Array<SelectOption> = new Array<SelectOption>();
-    const resp = await firstValueFrom(this.get(environment.apiUrl, '/tipocategoria/list'));
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/encuesta/tipocategoria/list'));
     categories = resp.data.map((item: any) => {
       return new SelectOption(item.id, item.nombre);
     });
