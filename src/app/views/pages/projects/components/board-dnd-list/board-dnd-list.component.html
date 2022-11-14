@@ -1,25 +1,169 @@
 <div class="status-list">
+
 	<div class="px-3 pb-4 pt-3">
-		{{ lane.title }}
+           <!-- --------- modal de nuevo --------- -->
+		   <ng-template class="flex w-full flex-wrap pb-16" #contenidonew let-modal>
+			<div *ngFor="let issue of lane.issues; let i = index;" [cdkDragData]="issue" cdkDrag >
+		     <div *ngIf="i < 1">
+			   <div class="modal-header">
+				   {{ lane.title }}
+
+				   <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+					   <span aria-hidden="true">&times;</span>
+				   </button>
+			   </div>
+			   <div class="modal-body">
+	   
+				   <div *ngIf="lane; "
+				   class="w-full h-full" >
+				  <div class="flex items-center pt-4 text-textDarkest">
+					  <div class="flex-auto"></div>
+					  
+				  </div>
+	   
+				  <div class="flex w-full flex-wrap pb-16">
+	   
+				   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					   
+					   <label for="inputProjectManagementOffice" class="form-label required">Pmo</label>
+	   
+					   <ng-select id="inputProjectManagementOffice" [items]="data.users" [multiple]=false
+						   name="projectManagementOffice" #projectManagementOffice="ngModel"
+						   [ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty) }"
+						   [searchable]="false" (change)="onChangeUserPMO($event)"
+						   [(ngModel)]="selectedUserLabel" required>
+						   <ul>
+							   <div *ngIf="projectManagementOffice.invalid "
+								   class="invalid-feedback">
+								   <div *ngIf="projectManagementOffice.errors?.required">Campo es requerido
+								   </div>
+							   </div>
+						   </ul>
+	   
+					   </ng-select>
+	   
+				   </div>
+
+				   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<label for="inputProjectAssignedResources" class="form-label required">Recursos</label>
+
+					<ng-select id="inputProjectAssignedResources" [items]="data.users" [multiple]=true
+						name="projectAssignedResources" #projectAssignedResources="ngModel"
+						[ngClass]="{'ng-dirty ng-invalid' : projectAssignedResources.errors && ( projectAssignedResources.dirty || projectAssignedResources.touched) }"
+						[searchable]="false" 
+						[(ngModel)]="selectedUserLabel2" required>
+						<ul>
+							<div *ngIf="projectAssignedResources.invalid"
+								class="invalid-feedback">
+								<div *ngIf="projectAssignedResources.errors?.required">Campo es requerido
+								</div>
+							</div>
+						</ul>
+
+					</ng-select>
+
+				</div>
+	   
+				   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	   
+					   <label for="inputName" class="form-label required">Titulo Proyecto</label>
+					   <input type="text" name="name" #name="ngModel" maxlength="255"
+						   [(ngModel)]="titleLabel"
+						   [ngClass]="{'ng-dirty ng-invalid' : name.errors && ( name.dirty || name.touched) }"
+						   class="form-control" id="inputName" autocomplete="off" required>
+					   <div *ngIf="name.invalid" class="invalid-feedback">
+						   <div *ngIf="name.errors?.required">Campo es requerido</div>
+					   </div>
+	   
+						   <label for="inputDescription" class="form-label required">Descripcion</label>
+						   <textarea row="3" id="description" minlength="3"
+							   placeholder="Campo tipo descripción" class="form-control" maxlength="2000"
+							   name="description" #description="ngModel" [(ngModel)]="descripcionLabel"
+							   [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched) }"
+							   class="form-control" id="inputName" autocomplete="off" required>
+							   required></textarea>
+						   <div *ngIf="description.invalid" class="invalid-feedback">
+							   <div *ngIf="description.errors?.required">Campo es requerido</div>
+						   </div>
+	   
+				   </div>
+				  
+				   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					   <div class="mb-3">
+						  <label for="inputhoursProject"
+						  class="form-label required">Peso</label>
+					  <input type="text" name="hoursProject"
+						  #hoursProject="ngModel" [(ngModel)]="peso"
+						  [pattern]="environment.form.number.validations.pattern"
+						  [ngClass]="{'ng-dirty ng-invalid' : hoursProject.errors && ( hoursProject.dirty || hoursProject.touched) }"
+						  class="form-control" id="inputhoursProject"
+						  autocomplete="off" minlength="1" maxlength="11" required>
+					  <div *ngIf="hoursProject.invalid"
+						  class="invalid-feedback">
+						  <div *ngIf="hoursProject.errors?.required">Campo es
+							  requerido
+						  </div>
+						  <div *ngIf="hoursProject.errors?.pattern">Campo solo
+							  permite números
+						  </div>
+					  </div>
+	   
+					   </div>
+				   </div>
+	   
+				   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					   <div class="mb-3">
+						   <label for="inputCompany" class="form-label required">Prioridad</label>
+						   <ng-select id="inputCompany" [items]="data.statusActivityTask " bindLabel="name"
+							   #prioridad="ngModel"
+							   [ngClass]="{'ng-dirty ng-invalid' : prioridad.errors && ( prioridad.dirty || prioridad.touched) }"
+							   [searchable]="false"
+							   [(ngModel)]="comp" required>
+						   </ng-select>
+						   <div *ngIf="prioridad.invalid" class="invalid-feedback">
+							   <div *ngIf="prioridad.errors?.required">Campo es requerido
+							   </div>
+						   </div>
+					   </div>
+				   </div>
+
+				   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<div class="mb-3">
+						<label for="inputStatus" class="form-label required">Status</label>
+						<ng-select id="inputStatus" [items]="data.statusActivityTask" [multiple]=false
+							name="ProjectStatus" #projectStatus="ngModel"
+							[searchable]="false" 
+							[(ngModel)]="status[0]" required>
+						</ng-select>
+					</div>
+				   </div> 
+				  </div>
+			     </div>
+			   </div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-success" (click)="modal.close()">Guardar!</button>
+						</div>
+			 </div>
+		   </div>
+		  </ng-template>
+		   <!-- ---------------------------------- -->
 	</div>
+	<div class="issue-card-container pl-2" cdkDropList [cdkDropListData]="lane.issues" (cdkDropListDropped)="drop($event)" [id]="lane.id" >
+			<div class="card-body"  *ngFor="let issue of lane.issues ; let i = index;" [cdkDragData]="issue" cdkDrag >
+					<button *ngIf="lane.title=='ACTIVIDADES'" type="button" class="btn btn-primary btn-create-dt" placement="bottom" ngbTooltip="Crear">
+						<i class="feather icon-plus" (click)="openNewSM(contenidonew)"></i>
+					</button>
+					<div *ngIf="i==0">
+						<div *ngIf="lane.title=='QUE HACER'">
+						<button *ngIf="lane.title=='QUE HACER'" type="button" class="btn btn-primary btn-create-dt" placement="bottom" ngbTooltip="Crear">
+							<i class="feather icon-plus" (click)="openNewSM(contenidonew)"></i>
+						</button>
+					  </div>
+				    </div> 
 
-	<div class="issue-card-container pl-2" cdkDropList [cdkDropListData]="lane.issues"
-		(cdkDropListDropped)="drop($event)" [id]="lane.id" >
-
-<!-- 		<div class="card" style="width: 18rem;"> -->
-<!-- 			<img src="..." class="card-img-top" alt="..."> -->
-			<div class="card-body"  *ngFor="let issue of lane.issues"
-		     [cdkDragData]="issue" cdkDrag >
              <div class="card text-center">
 				<div>
-					<h5 class="card-title">Actividad:{{issue.title}}</h5>
-				</div>
-				<div>
-				  <h4 class="card-title">Tarea:</h4>
-				  <p class="card-text">{{issue.title}}</p>
-				</div>
-				<div class="card-footer text-muted">
-				  2 days ago
+				 <p class="card-text">{{issue.title}}</p>
 				</div>
 				<div class="card text-left">
 					<div *ngFor="let user of users.data">
@@ -30,38 +174,124 @@
 							
 						</div>
 
-
-						
 					</div>
 			    </div> 
 
-				<!-- <div class="card text-right">
-				   <i class="feather icon-edit-2" placement="start" ngbTooltip="Editar"></i>
-			    </div>  -->
+				<div class="flex items-center">
+					<div class="flex items-left">
+					 <i class="{{issue.imagepriority}}"  placement="start" ngbTooltip="{{issue.priorityactivitask}}"></i> 
+					</div>     
+					<div class="flex items-center">
+					<i class="feather icon-edit" (click)="openEditSM(contenidoedit)" placement="start" ngbTooltip="Editar"></i>
+				    </div>     
+				</div>     
 				
+                <!-- ------------ modal modififcar ---------------------------------- -->
+				<ng-template #contenidoedit let-modal>
+					<div class="modal-header">
+						{{ lane.title }}
+						<h4 class="modal-title">{{issue.id}}</h4>
+
+					
+						<button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div *ngIf="lane; "
+						class="w-full h-full" >
+					   <div class="flex items-center pt-4 text-textDarkest">
+						   <div class="flex-auto"></div>
+						   
+					   </div>
+
+					   <div class="card text-left">
+						<div *ngFor="let user of users.data">
+							<div class="d-flex flex-row-reverse" *ngIf="user.fullName=='Juan Blanco'">
+								<div *ngIf="user.fullName=='Juan Blanco'"> 
+									<img ngbTooltip="{{user.fullName}}" [src]="user.avatar" class="wd-30 ht-30 rounded-circle card-img-top mt-1">
+								</div>
+								
+							</div>
+	
+						</div>
+					</div> 
+
+                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+							
+						<label for="inputProjectManagementOffice" class="form-label required">Pmo</label>
+
+						<ng-select id="inputProjectManagementOffice" [items]="data.users" [multiple]=false
+							name="projectManagementOffice" #projectManagementOffice="ngModel"
+							[ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty) }"
+							[searchable]="false" (change)="onChangeUserPMO($event)"
+							[(ngModel)]="data.users[0]" required>
+							<ul>
+								<div *ngIf="projectManagementOffice.invalid "
+									class="invalid-feedback">
+									<div *ngIf="projectManagementOffice.errors?.required">Campo es requerido
+									</div>
+								</div>
+							</ul>
+
+						</ng-select>
+
+					</div>
+
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+						<div class="mb-3">
+							<label for="inputCompany" class="form-label required">Prioridad</label>
+							<ng-select id="inputCompany" [items]="data.statusActivityTask" bindLabel="name"
+								#company="ngModel"
+								[ngClass]="{'ng-dirty ng-invalid' : company.errors && ( company.dirty || company.touched) }"
+								[searchable]="false"
+								[(ngModel)]="data.statusActivityTask[0]" required>
+							</ng-select>
+							<div *ngIf="company.invalid" class="invalid-feedback">
+								<div *ngIf="company.errors?.required">Campo es requerido
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<label for="inputDescription" class="form-label required">Descripcion</label>
+								<textarea row="3" id="description" minlength="3" 
+									placeholder="Campo tipo descripción" class="form-control" maxlength="2000"
+									name="description" #description="ngModel" [(ngModel)]="descripcionLabel"
+									[ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched) }"
+									class="form-control" id="inputName" autocomplete="off" required>
+									</textarea>
+								<div *ngIf="description.invalid" class="invalid-feedback">
+									<div *ngIf="description.errors?.required">Campo es requerido</div>
+								</div>
+
+								<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+									<div class="mb-3">
+										<label for="inputStatus" class="form-label required">Status</label>
+										<ng-select id="inputStatus" [items]="status" [multiple]=false
+											name="ProjectStatus" #projectStatus="ngModel"
+											[searchable]="false" 
+											[(ngModel)]="status[0]" required>
+										</ng-select>
+									</div>
+								   </div> 
+
+					   <div class="flex w-full flex-wrap pb-16">
+						   <div class="sm:w-full md:w-7/12 lg:w-4/6 pr-10">
+							  <div class="pt-4 pb-2 text-15 font-medium">Description</div>
+							     <div class="flex items-center pt-4 text-textDarkest">
+								    <h4 class="modal-title">{{issue.title}}</h4>
+							      </div>
+						   </div>
+					   </div>
+				   </div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success" (click)="modal.close()">Guardar!</button>
+					</div>
+				</ng-template>
+				<!-- ---------------------------------------------------------------- -->
 			</div> 
-
-
-
-			  <!-- <h5 class="card-title">Card title</h5>
-			  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-
-
-
-			  
 			</div>
-		  <!-- </div>  --> 
-
-		<!-- <issue-card *ngFor="let issue of lane.issues"
-		    [issue]="issue" [cdkDragData]="issue" cdkDrag>
-			
-
-		</issue-card> -->
-		
 	</div>
 </div>
-
-<!-- <div class="mt-2 w-100 text-right">
-	<i class="feather icon-edit-2" (click)="select(user.id)" placement="start" ngbTooltip="Editar Usuario"></i>
-	<i class="feather icon-trash ms-1" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
-  </div> -->

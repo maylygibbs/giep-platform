@@ -1,13 +1,19 @@
-
+<form name="springForm" #springForm="ngForm" (ngSubmit)="onSubmit(springForm)"class="forms-sample range-selection">  
    <div class="row">
-	  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex justify-content-end">
-		<!-- <div class="col-1 text-center">
-		<button routerLink="/users/profile" type="button" class="btn btn-primary btn-create-dt" placement="bottom" ngbTooltip="Mariano">
-			<i class="feather-battery-charging" ></i>
-		</button>
-	    </div> 
-        -->
-	</div>
+	<div class="px-3 pb-4 pt-3">
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+			<button type="button" class="btn btn-primary btn-create-dt" placement="bottom" ngbTooltip="Crear">
+					<i class="feather icon-plus" (click)="openNewSpring()"></i>
+				</button>
+			<label for="inputProjectSpring" class="form-label required">Spring</label>
+			<ng-select id="inputProjectSpring" [items]="springProyect" [multiple]=false
+				name="ProjectSpring" #projectManagementOffice="ngModel"
+				[searchable]="false" (change)="onChangeSpring($event)"
+				[(ngModel)]="springProyect[0]" required>
+  		  </ng-select>
+		</div>
+    </div> 
+	   <!-- ---------------------------------- -->
 		<div class="col-1 text-center">PMO
 		<div *ngFor="let user of users.data">
 		<div class="d-flex flex-row-reverse" *ngIf="user.fullName=='Juan Blanco'">
@@ -17,28 +23,76 @@
 		</div>
 		</div>
 		</div>
+		<div class="d-flex" cdkDropListGroup>
+			<div 
+						*ngFor="let user of users.data">
+						<!-- <div class="card"> -->
+						  <!-- <div class="card-header text-center"> -->
+							<img ngbTooltip="{{user.fullName}}" [src]="user.avatar" class="wd-35 ht-35 rounded-circle card-img-top mt-1">
+							<!-- <h30 class="card-title mt-1" ngbTooltip="{{user.fullName}}">{{user.fullName}}</h30> -->
+						  <!-- </div> -->
+						<!-- </div> -->
+				</div>
+		</div>
    </div>
-
-   <div class="d-flex" cdkDropListGroup>
-	<div 
-                *ngFor="let user of users.data">
-                <!-- <div class="card"> -->
-                  <!-- <div class="card-header text-center"> -->
-                    <img ngbTooltip="{{user.fullName}}" [src]="user.avatar" class="wd-35 ht-35 rounded-circle card-img-top mt-1">
-                    <!-- <h30 class="card-title mt-1" ngbTooltip="{{user.fullName}}">{{user.fullName}}</h30> -->
-                  <!-- </div> -->
-                <!-- </div> -->
-        </div>
-</div>
-   
-
+   <div class="row">
+	<nav class="navbar navbar-default navbar-fixed-top">
+	  <div class="container-fluid row">
+		  <p class="col navbar-text text-center">ACTIVIDADES</p>
+		  <p class="col navbar-text text-center">QUE HACER</p>
+		  <p class="col navbar-text text-center">EN PROGRESO</p>
+		  <p class="col navbar-text text-center">LISTO</p>
+	  </div>
+	</nav>
+  </div>
+<div *ngIf="lanes"> 
 <div class="d-flex" cdkDropListGroup>
-
-	<div class="board-dnd-list" board-dnd-list 
-	*ngFor="let lane of lanes"
-	[lane]="lane">
-	   
-
+   <div class="board-dnd-list" board-dnd-list *ngFor="let lane of lanes" [lane]="lane">
    </div>
 </div>
+</div>
+<div *ngIf="lanes1"> 
+<div class="d-flex" cdkDropListGroup>
+	<div class="board-dnd-list" board-dnd-list *ngFor="let lane1 of lanes1" [lane]="lane1">
+	</div>
+ </div>
+</div>
+<div *ngIf="lanes2"> 
+<div class="d-flex" cdkDropListGroup>
+   <div class="board-dnd-list" board-dnd-list *ngFor="let lane2 of lanes2" [lane]="lane2">
+   </div>
+</div>
+</div>
+<div *ngIf="lanes3"> 
+<div class="d-flex" cdkDropListGroup>
+<div class="board-dnd-list" board-dnd-list *ngFor="let lane3 of lanes3" [lane]="lane3">
+</div>
+</div>
+</div>
+<div *ngIf="lanes4"> 
+<div class="d-flex" cdkDropListGroup>
+<div class="board-dnd-list" board-dnd-list *ngFor="let lane4 of lanes4" [lane]="lane4">
+</div>
+</div>
+</div>
+<div *ngIf="lanes5"> 
+<div class="d-flex" cdkDropListGroup>
+<div class="board-dnd-list" board-dnd-list *ngFor="let lane5 of lanes5" [lane]="lane5">
+</div>
+</div>
+</div>
+<div *ngIf="lanes6"> 
+<div class="d-flex" cdkDropListGroup>
+<div class="board-dnd-list" board-dnd-list *ngFor="let lane6 of lanes6" [lane]="lane6">
+</div>
+</div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 text-right">
+      <button class="btn btn-secondary" (click)="back()">Cancelar</button>
+    </div>
+</div>
+
 <!-- [lane]="lane"> -->
+</form>

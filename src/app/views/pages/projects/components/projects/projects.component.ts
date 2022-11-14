@@ -11,7 +11,6 @@ import { filter, Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 
 
-
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
@@ -49,6 +48,9 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
   async ngOnInit() {
     
     this.projects = await this.projectService.getProjectsPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
+
+    console.log(this.projects);
+
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
@@ -71,6 +73,7 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
 
   async config(id: number) {
     this.selectedItem = await this.projectService.getProjectById(id);
+    localStorage.setItem('projectidselect', id.toString());
     this.step++;
     this.step++;
     //this.next();

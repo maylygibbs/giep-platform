@@ -1,3 +1,26 @@
+.oscuro .modal-content {
+  background-color: #021f2e;
+  color: #0fa1eb;
+  
+}
+.oscuro .close {
+  color: white;
+}
+
+.center-modal {
+  position: fixed;
+  top: 10%;
+  left: 18.5%;
+  z-index: 1050;
+  width: 80%;
+  height: 80%;
+  margin-left: -10%;
+}
+
+.azul {
+   background-color: #0fa1eb; 
+}
+
 .status-list {
   margin-right: .5rem;
   display: flex;

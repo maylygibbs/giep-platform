@@ -22,7 +22,11 @@ export class Project {
     hoursProject: number;
     progress: number;
     TypeGbProgressbar: string;
-    projectManagementOffice: number;
+    projectManagementOfficeF?: User[];
+    projectManagementOffice: User;
+    
+
+    userPmo?: User[];
 
     springs: Array<Spring>;
     assignNonWorkingDays?: ProyectCalendar[];
@@ -48,6 +52,10 @@ export class Project {
         newInstace.endDate = project.endDate;
         newInstace.hoursProject = project.hoursProject;
         newInstace.projectManagementOffice = project.projectManagementOffice;
+        newInstace.projectManagementOfficeF = project.projectManagementOfficeF;
+        newInstace.userPmo = project.userPmo;
+        
+        
         newInstace.assignNonWorkingDays = project.assignNonWorkingDays;
         newInstace.company = project.company;
         newInstace.status = project.status;
@@ -90,10 +98,15 @@ export class Project {
     }
 
     //Map variables of non-working days
-    public static map3ForPost(options: Array<ProyectCalendar>){
-        let optionsOutput;
+    public static map3ForPost(options: Array<ProyectCalendar>,proyect: Project){
+        //let optionsOutput;
+        //let calendarMap: any = {};
         var dataProyectCalendar = [];
         let proyectoCalendarMap: any = {};
+        if (proyect.id) {
+            Object.assign(proyectoCalendarMap, { id: proyect.id })
+        }
+
         options.forEach((sectionItem, index) => {
             dataProyectCalendar.push({ id_proyecto: localStorage.getItem('idusersproyecadd'), fecha_inicio_nolaboral: sectionItem.start, fecha_fin_nolaboral: sectionItem.start});    
         });
@@ -129,8 +142,10 @@ export class Project {
             user.id = item.id;
             user.firstName = item.primerNombre;
             user.lastName = item.primerApellido;
+            user.hoursDedication = item.horasdedicadas;
             return user;
         });
+        
         project.startDate = projectObj.fechaInicio;
         project.endDate = projectObj.fechaFin;
         project.hoursProject = projectObj.horaestimadas;
@@ -141,11 +156,9 @@ export class Project {
         // project.progress = Math.floor(Math.random() * (max - min + 1) + min);
          project.progress = projectObj.total[0].totalprogress;
          project.TypeGbProgressbar=projectObj.total[0].colorprogress;
-         project.projectManagementOffice = projectObj.userPmo.id;
-        //project.company = Company.mapFromObject(projectObj.empresa);
-
+        project.projectManagementOfficeF = projectObj.userPmo.id;
+         project.projectManagementOffice = User.mapFromObject(projectObj.userPmo);
         project.company = new SelectOption(projectObj.empresa.id, projectObj.empresa.nombre);
-
         project.springs = Spring.loadSpringsList(projectObj.springs);
         if (project.springs)
             project.endDate = Project.getEndDate(project.springs);

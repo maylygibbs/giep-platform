@@ -10,6 +10,8 @@ import { SelectOption } from '../models/select-option';
 import { ToastrService } from 'ngx-toastr';
 import { MenuItem } from '../models/menu.model';
 import { User } from './../models/user';
+import { Spring } from '../models/spring';
+import { StatusActivityTask } from '../models/statusactivitytask';
 
 @Injectable({
   providedIn: 'root'
@@ -78,60 +80,10 @@ export class ProjectService extends HttpService {
    * @returns 
    */
   async getProjectById(id:number):Promise<Project>{
-
-    
-    
-
     const resp = await firstValueFrom(this.get(environment.apiUrl,`/proyecto/${id}`));
     const project = Project.mapFromObject(resp[0]);
-    
-    //const project = new Project();
-    
-    /* project.name = resp[0].nombre;
-    project.hoursProject= resp[0].horaestimadas;
-    project.description= resp[0].descripcion;
-
-    project.company = new SelectOption(resp[0].empresa.id, resp[0].empresa.nombre) ; */
-
-
-
-    //project.projectManagementOffice = new SelectOption(resp[0].empresa.id, resp[0].empresa.nombre) ;
-
-    /* project.projectManagementOffice = resp[0].userPmo.map((item:any)=>{
-      return {item.id,item.xssd};
-    }); */
-
-    /* project.projectManagementOffice = resp[0].userPmo.map((u: SelectOption, index: number) => {
-      const user = new User();
-      user.id = '1';
-      user.firstName = 'Juan Blanco';
-      return user;
-    }); */
-
-   
-    //project.projectManagementOffice = new SelectOption(resp[0].userPmo.id, resp[0].userPmo.primerNombre+' '+ resp[0].userPmo.primerApellido) ;
-    //project.projectManagementOffice = resp[0].userPmo;
-    //project.projectManagementOffice = new SelectOption(resp[0].userPmo.id,resp[0].userPmo.id) ;
-
-    /* id: string;
-    username: string;
-    token?: string;
-    roles?: any[];
-    firstName: string;
-    secondName: string;
-    lastName: string; */
-
-
-    //dependence, dependenceId, position, positionId
-
-
-    //console.log(resp[0].userPmo);
-   // project.projectManagementOffice = {email: 'sirjcbg1@hotmail.com', firstName: 'Juan',  id: '1',lastName:'Blanco',username: 'Juan Blanco',secondName:'mariano',secondLastName:'baez'};
-
-    //const d = new Date(resp[0].fechaInicio);
-    //project.startDate = {year: d.getFullYear(), month: d.getMonth() , day: d.getDate()};
-
-    //const project = Project.mapFromObject(resp[0]);
+    const d = new Date(resp[0].fechaInicio);
+    project.startDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() + 1};
     return project;
   }
 
@@ -152,7 +104,7 @@ export class ProjectService extends HttpService {
       if(data.id){
         const id = data.id;
         delete data.id;
-        await firstValueFrom(this.put(environment.apiUrl,`/proyecto/${id}`, data));
+        await firstValueFrom(this.put(environment.apiUrl,`/proyecto/actualizar/${id}`, data));
         this.toastrService.success('Proyecto actualizado con exito.');
         
       }else{
@@ -185,7 +137,7 @@ export class ProjectService extends HttpService {
       if(data.id){
         const id = data.id;
         delete data.id;
-        await firstValueFrom(this.put(environment.apiUrl,`/recursosproyecto/${id}`, data));
+        await firstValueFrom(this.put(environment.apiUrl,`/recursosproyecto/actualizar/${id}`, data));
         this.toastrService.success('Recurso actualizado con exito.');
         
       }else{
@@ -216,7 +168,7 @@ export class ProjectService extends HttpService {
       if(data.id){
         const id = data.id;
         delete data.id;
-        await firstValueFrom(this.put(environment.apiUrl,`/calendarioproyecto/${id}`, data));
+        await firstValueFrom(this.put(environment.apiUrl,`/calendarioproyecto/actualizar/${id}`, data));
         this.toastrService.success('Recurso actualizado con exito.');
         
       }else{
@@ -237,9 +189,6 @@ export class ProjectService extends HttpService {
     
   }
  
-
-  
-
    /**
    * Persists project data
    * @param data 
@@ -255,10 +204,6 @@ export class ProjectService extends HttpService {
           
         }else{
           const resp = await firstValueFrom(this.get(environment.apiUrl,`/calendarios/List`, data));
-          //Object.assign(data, { idproyectoasig: resp.id});
-          /* const jsonData = JSON.stringify(resp.id)
-          localStorage.setItem('idusersproyecadd', jsonData) */
-          //this.toastrService.success('Proyecto registrado con exito.');
           events = resp.data?.map((item:any)=>{
             return {
               id: item.id,
@@ -285,6 +230,216 @@ export class ProjectService extends HttpService {
       }
       
     }
+
+
+   /**
+   * Query project by id
+   * @param id 
+   * @returns 
+   */
+  async getProjectCalendarById(data:any){
+    let events: Array<any> = new Array<any>();
+      try {
+          const id = data;
+          const resp = await firstValueFrom(this.get(environment.apiUrl,`/calendarioproyecto/${id}`, data));
+          events = resp.data?.map((item:any)=>{
+            return {
+              id: item.id,
+              title: 'No Laborable',
+              start: item.fecha_inicio_nolaboral,
+              end: item.fecha_fin_nolaboral,
+              base: 'f',
+            }
+    
+          });
+          return events;
+        
+      } catch (error:any) {
+        debugger
+        console.log(error);
+        if (error.status == 409) {
+          this.toastrService.error('',error.msg);
+        }
+        if (error.status != 500) {
+          this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+        }
+        
+      }
+      
+    //return project;
+  }
+
+
+   
+
+
+      /**
+   * Query project by id
+   * @param id 
+   * @returns 
+   */
+  async getBoardPanelById(data:any){
+    let events: Array<any> = new Array<any>();
+      try {
+          const id = data;
+          let results: any[] = [];
+          let issues: any[] = [];
+          const resp = await firstValueFrom(this.get(environment.apiUrl,`/proyecto/boardpanel/${id}`, data));  
+          return resp;
+        
+      } catch (error:any) {
+        debugger
+        console.log(error);
+        if (error.status == 409) {
+          this.toastrService.error('',error.msg);
+        }
+        if (error.status != 500) {
+          this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+        }
+        
+      }
+      
+    //return project;
+  }
+
+
+    /**
+   * Query project by id baglog
+   * @param id 
+   * @returns 
+   */
+     async getBoardPanelBagLogById(data:any){
+      let events: Array<any> = new Array<any>();
+        try {
+            const id = data;
+            let results: any[] = [];
+            let issues: any[] = [];
+            const resp = await firstValueFrom(this.get(environment.apiUrl,`/proyecto/boardpanelbacklog/${id}`, data));  
+            return resp;
+        } catch (error:any) {
+          debugger
+          console.log(error);
+          if (error.status == 409) {
+            this.toastrService.error('',error.msg);
+          }
+          if (error.status != 500) {
+            this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+          }
+          
+        }
+        
+      //return project;
+    }
+  
+    /**
+   * Query project by id baglog spring
+   * @param id 
+   * @returns 
+   */
+     async getBoardpanelspringbacklogById(data:any){
+      let events: Array<any> = new Array<any>();
+        try {
+            const id = data;
+            let results: any[] = [];
+            let issues: any[] = [];
+            const resp = await firstValueFrom(this.get(environment.apiUrl,`/proyecto/boardpanelspringbacklog/${id}`, data));  
+            return resp;
+        } catch (error:any) {
+          debugger
+          console.log(error);
+          if (error.status == 409) {
+            this.toastrService.error('',error.msg);
+          }
+          if (error.status != 500) {
+            this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+          }
+          
+        }
+        
+      //return project;
+    }
+  
+  
+        /**
+   * Query project by id
+   * @param id 
+   * @returns 
+   */
+         async getBoardPanelActivityById(data:any){
+          let events: Array<any> = new Array<any>();
+            try {
+                const id = data;
+                const idproyct = localStorage.getItem('projectidselect');
+                let results: any[] = [];
+                let issues: any[] = [];
+      
+                const resp = await firstValueFrom(this.get(environment.apiUrl,`/proyecto/boardpanelactivity/${idproyct}/${id}`, data));  
+                return resp;
+              
+            } catch (error:any) {
+              debugger
+              console.log(error);
+              if (error.status == 409) {
+                this.toastrService.error('',error.msg);
+              }
+              if (error.status != 500) {
+                this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+              }
+              
+            }
+            
+          //return project;
+        }
+       
+
+
+
+
+     /**
+   * Check all status Activity
+   * @param filter 
+   * @returns 
+   */
+  async getStatusActivityTask(): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/actividades/status/List'));
+    const data = resp.data.map((item: any) => {
+      const company = StatusActivityTask.mapFromObject(item);
+      return company;
+    });
+    return data;
+  }
+
+  /**
+   * Query project by id spring
+   * @param id 
+   * @returns 
+   */
+   async getSpringBoardPanelById(data:any){
+    let events: Array<any> = new Array<any>();
+      try {
+          const id = data;
+          let results: any[] = [];
+          let issues: any[] = [];
+          const resp = await firstValueFrom(this.get(environment.apiUrl,`/proyecto/springboardpanel/${id}`, data));  
+          return resp;
+      } catch (error:any) {
+        debugger
+        console.log(error);
+        if (error.status == 409) {
+          this.toastrService.error('',error.msg);
+        }
+        if (error.status != 500) {
+          this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+        }
+        
+      }
+  }
+
+
+   
+
+
+
 
 
 

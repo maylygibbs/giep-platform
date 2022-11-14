@@ -106,5 +106,7 @@
 <div *ngIf="step==3">
   {{ selectedItem.name }}
   <i class="feather icon-edit-2" (click)=selectsproyects(selectedItem.id) placement="start" ngbTooltip="Editar Proyecto {{ selectedItem.name }}"></i>
+  
+
   <board-dnd (onBack)="back($event)"></board-dnd>
 </div>

@@ -42,15 +42,13 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
-                                    {{project.startDate}}
                                     <label for="inputStartDate" class="form-label required">Fecha Inicio</label>
                                     <div class="input-group">
                                         <input id="inputStartDate" name="startDate" #startDate="ngModel"
                                             class="form-control" placeholder="yyyy-mm-dd" name="dp"
                                             [ngClass]="{'ng-dirty ng-invalid' : startDate.errors && ( startDate.dirty || startDate.touched || projectForm.submitted) }"
-                                            [(ngModel)]="project.startDate" ngbDatepicker  #dp="ngbDatepicker" 
+                                            [(ngModel)]="project.startDate" [minDate]="minDate1" ngbDatepicker  #dp="ngbDatepicker" required>
 
-                                               required>
                                         <button class="input-group-text" type="button" (click)="dp.toggle()">
                                             <i class="feather icon-calendar icon-md text-muted"></i>
                                         </button>
@@ -113,25 +111,28 @@
                         
 
                         <div class="row">
+           
                            
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                              
-                                <div class="mb-3">
-                                    <label for="inputProjectManagementOffice" class="form-label required">PMO</label>
-                                    <ng-select id="inputProjectManagementOffice" [items]="data.users"  [multiple]=false
-                                    
-                                        name="projectManagementOffice" #projectManagementOffice="ngModel"
-                                        [ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty || projectManagementOffice.touched || projectForm.submitted) }"
-                                        bindLabel="name" bindValue="id"  [searchable]="false"
-                                        [(ngModel)]="project.projectManagementOffice"  required>
-                                    </ng-select>
-                                    <div *ngIf="projectManagementOffice.invalid && projectForm.submitted"
-                                        class="invalid-feedback">
-                                        <div *ngIf="projectManagementOffice.errors?.required">Campo es requerido
+                                <label for="inputProjectManagementOffice" class="form-label required">Pmo</label>
+
+                                <ng-select id="inputProjectManagementOffice" [items]="data.users" [multiple]=false
+                                    name="projectManagementOffice" #projectManagementOffice="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : projectManagementOffice.errors && ( projectManagementOffice.dirty || projectManagementOffice.touched || projectForm.submitted) }"
+                                    [searchable]="false" (change)="onChangeUserPMO($event)"
+                                    [(ngModel)]="selectedUserLabel" required>
+                                    <ul>
+                                        <div *ngIf="projectManagementOffice.invalid && projectForm.submitted"
+                                            class="invalid-feedback">
+                                            <div *ngIf="projectManagementOffice.errors?.required">Campo es requerido
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </ul>
+
+                                </ng-select>
+
                             </div>
+ 
 
 
 
@@ -178,7 +179,7 @@
                                             </td>
                                             <td>
                                                 <div class="mb-3">
-                                                    <input type="text" [name]="user.nameInputHours" maxlength="255"
+                                                    <input type="text" [name]="user.nameInputHours" value="user.hoursDedication" maxlength="255"
                                                         [(ngModel)]="user.hoursDedication"
                                                         [pattern]="environment.form.number.validations.pattern"
                                                         [ngClass]="{'ng-dirty ng-invalid' : projectForm.form.controls[user.nameInputHours]?.errors && ( projectForm.form.controls[user.nameInputHours]?.dirty || projectForm.form.controls[user.nameInputHours]?.touched || projectForm.submitted) }"

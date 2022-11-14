@@ -1,12 +1,13 @@
 export enum IssueStatus {
-  BACKLOG = 'TRABAJO PENDIENTE',
-  SELECTED = 'SELECCIONADO PARA DESARROLLO',
+  BACKLOG = 'ACTIVIDADES',
+  SELECTED = 'SELECCIONADO',
   IN_PROGRESS = 'EN PROGRESO',
   DONE = 'LISTO'
 }
 
 export enum IssueType {
   STORY = 'Story',
+  ACTIVITY = 'Activity',
   TASK = 'Task',
   BUG = 'Bug'
 }

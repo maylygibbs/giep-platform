@@ -5,6 +5,10 @@ import { Activity } from './activity';
 export class Spring {
 
     id: string;
+    title: string;
+    description: string;
+    iduser: number;
+    nomuser: string;
     startDate: NgbDate;
     endDate: NgbDate;
     iteration: number;
@@ -21,15 +25,30 @@ export class Spring {
     }
 
     public static mapForPost(spring: Spring) {
+        console.log(spring);
+        
         let springMap: any = {};
         if (spring.id) {
             Object.assign(springMap, { id: spring.id })
         }
-        Object.assign(springMap, { FechaInicio: spring.startDate });
-        Object.assign(springMap, { FechaFin: spring.endDate });
-        Object.assign(springMap, { Actividades: spring.activities });
-        Object.assign(springMap, { Iteracion: spring.iteration });
+        Object.assign(springMap, { fechainicio: `${spring.startDate.year}-${spring.startDate.month}-${spring.startDate.day}` });
+        Object.assign(springMap, { fechafin: `${spring.endDate.year}-${spring.endDate.month}-${spring.endDate.day}` });
+        //Object.assign(springMap, { FechaInicio: spring.startDate });
+        //Object.assign(springMap, { FechaFin: spring.endDate });
+        //Object.assign(springMap, { Actividades: spring.activities });
+        Object.assign(springMap, { iteracion: spring.iteration });
         return springMap;
+    }
+
+    public static mapFromObjectlist(springObj: any) {
+        if (!springObj)
+            return;
+        let spring = new Spring();
+        spring.id = springObj.id;
+        spring.title = springObj.titulo;
+        spring.description = springObj.descripcion;
+        spring.nomuser = springObj.nameuser;
+        return spring;
     }
 
     public static mapFromObject(springObj: any) {

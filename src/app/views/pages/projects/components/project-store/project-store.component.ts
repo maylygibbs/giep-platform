@@ -61,13 +61,8 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
       this.calendarComponent = elRef;
   }
 
-
-
-
   @ViewChild('addEvent') addEvent: TemplateRef<any>;
-
   @ViewChild('externalEvents', { static: true }) externalEvents: ElementRef;
-  
 
   modalAddEvent: NgbModalRef;
 
@@ -86,18 +81,31 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   projectStatus: boolean;
 
   typeCalendar: boolean=false;
+  mapSelectUsers: boolean=false;
 
   /** Select options list **/
   statusList: Array<SelectOption>;
 
-
   /** All selected users **/
   selectedUsers: Array<SelectOption>;
+  assignPmomf: Array<SelectOption>;
+
   assignedResources: Array<User>;
   assignNonWorkingDays: Array<ProyectCalendar>;
-  
+  assignPmo: number = null;
 
-  defaultImage = 'https://via.placeholder.com/200x200';
+  selectedUserId: number = null;
+  selectedUserLabel: string; 
+
+ /*  userPmo = [
+        { id:1 , value: 'Juan Blanco', label: 'Juan Blanco' },
+        { id:2 , value: 'Mayly Gibbs', label: 'Mayly Gibbs' },
+        { id:3 , value: 'Anibal Briceño', label: 'Anibal Briceño' },
+        { id:4 , value: 'Marilu Pulido', label: 'Marilu Pulido' }
+    ]; */
+
+
+    defaultImage = 'https://via.placeholder.com/200x200';
   image = 'https://via.placeholder.com/200x200';
 
   users: PaginationResponse;
@@ -129,6 +137,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   showCardEvents: boolean = false;
   exitcalendar: boolean = false;
   eventDetail: EventDetail;
+  inputHoursDedicationvalue: number;
 
 
   minDateEvent = { 
@@ -158,7 +167,7 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
       console.log(this.data)
     });
 
-    console.log("MARIANO DATOS DEL PROYECTO");
+    console.log("DATOS DEL PROYECTO");
     console.log(this.project);
 
     if (!this.project.id) {//BIFURCACION CUANDO SE TRATA DE UN PROY NUEVO
@@ -167,10 +176,29 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
       this.projectStatus = true; // ESTA LINEA NO SE PARA QUE ES, projectStatus NO SE UTILIZA EN EL HTML
     } else { //BIFURCACION CUANDO SE TRATA DE UN PROY NUEVO
      
+      //this.selectedCityId = this.cities[0].id;
+      //this.selectedLabel = this.cities[0].label;
+      ///this.selectedCityId = 1;
+
       //this.projectStatus = this.project.status.value == '1' ? true : false;  //<-- LA LINEA NO SE PARA QUE ES, projectStatus NO SE UTILIZA EN EL HTML Y DE PASO ESTABA GENERANDO UN ERROR EN COSOLA, ERROR QUE IMPIDE QUE EL RESTO DE COMPONENTE NO SE RENDERICE CORRECTAMENTE.
       this.selectedUsers = this.project.assignedResources.map((item: User)=>{
         return new SelectOption(item.id, item.firstName+' '+item.lastName)
       })
+
+      console.log(this.project.projectManagementOffice);
+      this.assignPmo = parseInt(this.project.projectManagementOffice.id);
+      this.selectedUserId = parseInt(this.project.projectManagementOffice.id);
+      this.selectedUserLabel = this.project.projectManagementOffice.fullName;
+      
+      this.assignedResources = this.project.assignedResources.map((u: User, index: number) => {
+        const user = new User();
+        user.id = u.id;
+        user.firstName = u.firstName+' '+u.lastName;
+        user.nameInputHours = 'inputHoursDedication-' + index;
+        user.hoursDedication = u.hoursDedication;
+        return user;
+      });
+
     }
 
     this.events2 = [];
@@ -329,6 +357,22 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
  * Load dates from database
  */
    async Loaddatesfromdatabase() {
+
+    if (!this.project.id) {//BIFURCACION CUANDO SE TRATA DE UN PROY NUEVO
+    }else{
+      const verdata1  = await this.projectService.getProjectCalendarById(parseInt(this.project.id));
+      if (verdata1.length > 0) { 
+        this.validcalendar(true);
+       }
+      for (var j = 0; j < verdata1.length; j++){
+        console.log(verdata1[j].title);  
+        this.events2.push({"title": verdata1[j].title, "start":verdata1[j].start, color: '#c23d23', base: verdata1[j].base});
+        //this.events2.push({"title": verdata[j].title, "start":verdata[j].start + ' 00:00:00', color: '#00bbff', base: verdata[j].base});
+        this.events2.push({"title": "No Laborable", "start":this.startDateCalendarf, color: '#c23d23'});
+        this.events2 = this.events2.filter((item) => item.start != this.startDateCalendarf);
+      }
+    }
+
       const verdata  = await this.projectService.storeProjectCalendar('');
       for (var j = 0; j < verdata.length; j++){
         console.log(verdata[j].title);  
@@ -337,6 +381,13 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
         this.events2.push({"title": "No Laborable", "start":this.startDateCalendarf, color: '#00bbff'});
         this.events2 = this.events2.filter((item) => item.start != this.startDateCalendarf);
       }
+
+       //Llamar calendario proyecto para ver todos los dias definido a ese proyecto buscar (idproyecot)
+       
+       
+
+
+
         this.showCardEvents = true;
         this.ViewsByDay();
    }
@@ -503,30 +554,47 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
   async onChangeStatus(event: any) {
     this.statusList = await this.commonsService.getAllStatus();
   }
-
+  
+  async onChangeUserPMO(event: any) {
+    this.assignPmo = event;
+    console.log(event);
+    console.log(this.assignPmo["value"]);
+    this.project.projectManagementOffice = this.assignPmo["value"];
+  }
 
   //Change User Resources Method
   async onChangeUserResorces(event: any) {
+  
+    this.mapSelectUsers =false;
+
+    console.log("EPALE ESTE ES EL PMO "+this.assignPmo);
+
     console.log(this.selectedUsers);
 
     if (event.length == 0) {
       this.assignedResources.pop();
     }
     for (var j = 0; j < event.length; j++){
-        if (this.project.projectManagementOffice === event[j].value) {
+        if (parseInt(this.assignPmo["value"]) === parseInt(event[j].value)) {
           //this.assignedResources = this.assignedResources.filter((item) => item.id != event[j].value);
+          this.mapSelectUsers =true;
           this.selectedUsers = this.selectedUsers.filter((item) => item.name != event[j].label);
           this.toastrService.error('EL usuario que usted a seleccionado esta como usuario PMO verifique.'); 
         }else{
-          this.assignedResources = this.selectedUsers.map((u: SelectOption, index: number) => {
-            const user = new User();
-            user.id = u.value;
-            user.firstName = u.label;
-            user.nameInputHours = 'inputHoursDedication-' + index;
-            return user;
-          });
+          this.mapSelectUsers =false;
+          console.log(event[j].value);
         }
         //console.log(this.assignedResources);
+      }
+
+      if (this.mapSelectUsers == false) {
+        this.assignedResources = this.selectedUsers.map((u: SelectOption, index: number) => {
+          const user = new User();
+          user.id = u.value;
+          user.firstName = u.label;
+          user.nameInputHours = 'inputHoursDedication-' + index;
+          return user;
+        });
       }
       //console.log(this.assignedResources);
       
@@ -558,13 +626,16 @@ export class ProjectStoreComponent extends BaseComponent implements OnInit {
  
    
     this.project.assignedResources = this.assignedResources;
+
+    console.log(this.project.projectManagementOffice);
+
     if (form.valid) {
       if (this.assignedResources && this.assignedResources.length > 0 && this.selectedUsers && this.selectedUsers.length > 0 ) {
         await this.projectService.storeProject(Project.mapForPost(this.project));
         await this.projectService.storeResources(Project.map2ForPost(this.project));
         
         if (this.events2.length > 0) {
-          await this.projectService.storeNonworkingDays(Project.map3ForPost(this.events2));
+          await this.projectService.storeNonworkingDays(Project.map3ForPost(this.events2,this.project));
         }
 
         this.back();

@@ -20,10 +20,9 @@ import { BoardDndComponent } from "./components/board-dnd/board-dnd.component";
 import { SimpleDivComponent } from "./components/simple-div/simple-div.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { BoardDndListComponent } from './components/board-dnd-list/board-dnd-list.component';
-import { IssueCardComponent } from './components/issue-card/issue-card.component';
-
 
 import { AppComponent } from "../../../../app/app.component";
+import { NewspringComponent } from './components/modal/newspring/newspring.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -39,7 +38,7 @@ FullCalendarModule.registerPlugins([
     BoardDndComponent,
     SimpleDivComponent,
     BoardDndListComponent,
-    IssueCardComponent
+    NewspringComponent
   ],bootstrap: [AppComponent],
   imports: [
     CommonModule,
