@@ -48,6 +48,7 @@ export class BoardDndListComponent implements OnInit {
   peso: string; 
   comp: string;
   companies: Array<SelectOption>;
+  nompanel: string; 
   
    status = [
     { id:2 , value: 'QUE HACER', label: 'SELECCIONADO' },
@@ -159,7 +160,13 @@ export class BoardDndListComponent implements OnInit {
       //console.log(this.assignPmo["value"]);
       //this.project.projectManagementOffice = this.assignPmo["value"];
     }
+
+    configPanel(datos){
+      const myArray = datos.split(".");
+      console.log(myArray[1]);
+      this.nompanel=  myArray[1];
+    }
  
-  
+    
 
 }
