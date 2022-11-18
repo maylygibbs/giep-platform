@@ -112,6 +112,18 @@ export class CommonsListUsersEmailsResolver implements Resolve<any> {
   }
 }
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListInstrumentsResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllInstruments();
+  }
+}
+
+
+
 
 
 

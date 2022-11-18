@@ -6,7 +6,7 @@
   </ol>
 </nav>
 
-<div *ngIf="step==1 && users && users.data.length>0" class="row">
+<div *ngIf="step==1 && users && users.data" class="row">
   <div class="col-lg-12 col-md-12 stretch-card">
     <div class="card">
       <div class="card-header">
@@ -24,11 +24,15 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex justify-content-end">
             <app-box-util-views (onChangeView)="changeView($event)"></app-box-util-views>
-            <button type="button" class="btn btn-primary btn-create-dt">
-              <i class="feather icon-user-plus" (click)="create()" placement="start" ngbTooltip="Crear Usuario"></i>
+            <button type="button" class="btn btn-primary btn-create-dt" (click)="create()" placement="start" ngbTooltip="Crear Usuario">
+              <i class="feather icon-user-plus"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-create-dt ms-2" (click)="preUploadFile()" placement="start" ngbTooltip="Cargar Usuarios">
+              <i class="feather icon-users"></i>
             </button>
           </div>
-
+          <input #inputFile type="file" name="avatar" accept=".xlsx, .xls" style="visibility: hidden;"
+          (change)="uploadUsers($event)">
         </div>
       </div>
       <div class="card-body card-dt">

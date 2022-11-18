@@ -3,10 +3,10 @@
         <div class="card">
             <div class="card-header">
                 <div class="mt-3">
-                    <h6>Lea con detenimiento.</h6>
+                    <h5>Lea con detenimiento.</h5>
                   </div>
                   <div class="mt-3">
-                    <label class="tx-11 fw-bolder mb-0 text-uppercase">Encuesta</label>
+                    <label class="tx-11 fw-bolder mb-0 text-uppercase">Instrumento de captura de información</label>
                     <p class="text-muted">{{instrument.name}}</p>
                   </div>
                   <div class="mt-3">
@@ -14,7 +14,8 @@
                     <p class="text-muted" [innerHtml]="instrument.description ? instrument.description : 'Breve leyenda'"></p>
                   </div>
                   <div class="mt-3">
-                    <button class="btn btn-primary" (click)="initAnswerInstrument()">Iniciar</button>
+                    <button class="btn btn-secondary" (click)="back()">Regresar</button>
+                    <button class="btn btn-primary ms-2" (click)="initAnswerInstrument()">Iniciar</button>
                   </div>                  
 
             </div>

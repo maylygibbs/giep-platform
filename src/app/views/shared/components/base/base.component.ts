@@ -16,7 +16,10 @@ export class BaseComponent {
     searching: false,
     ordering: true,
     autoWidth: true,
-    responsive: true
+    responsive: true,
+    language: {
+      emptyTable: "No hay datos disponibles"
+    }
   };
 
 

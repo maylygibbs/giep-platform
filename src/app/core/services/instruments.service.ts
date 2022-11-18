@@ -989,7 +989,34 @@ export class InstrumentsService extends HttpService {
       }
 
     }
-
   }
+
+
+  /**
+   * Check all users, supports pagination and filter
+   * @param filter 
+   * @returns 
+   */
+   async getUsersByInstrumentPaginated(filter:any):Promise<PaginationResponse>{
+    const resp = await firstValueFrom(this.post(environment.apiUrl,'/encuesta/instrumentocaptura/users',filter));
+    const paginator = new PaginationResponse(filter.page,filter.rowByPage);
+    paginator.count = resp.count;
+    paginator.data = resp.data.map((item:any)=>{
+      const user = new User();
+      user.instrument = new Instrument();
+      user.instrument.id = item.id;
+      user.instrument.name = item.nombre;
+      user.instrument.answered = item.respondida;
+      user.instrument.answeredDate = item.fecha;
+      user.username = item.username;
+      user.firstName = item.primerNombre;
+      user.lastName = item.primerApellido;
+      user.email = item.email;
+
+      return user;
+    })
+    return paginator;
+  }
+
 
 }

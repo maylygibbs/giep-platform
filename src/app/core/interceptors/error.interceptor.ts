@@ -29,9 +29,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 } else if (err.status === 500) {
                     Swal.fire('Error 500', `${ err.error.msg }`, 'error');
                 }
-
-                const error = err.error.message || err.statusText;
-                return throwError(error);
+                return throwError(err);
             })
         );
     }

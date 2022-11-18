@@ -9,6 +9,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { SelectOption } from '../models/select-option';
 import { ToastrService } from 'ngx-toastr';
 import { MenuItem } from '../models/menu.model';
+import * as saveAs from 'file-saver';
 
 
 @Injectable({
@@ -331,6 +332,55 @@ export class UserService extends HttpService {
         return false;
       }
       
+    }
+
+    /** 
+     * Mass user upload from an excel file
+     * 
+    */
+    async uploadUsers(formData: FormData){
+      try{
+        const resp = await firstValueFrom(this.post(environment.apiUrl,'/user/upload/user',formData));
+        if(resp && resp.UsuariosNoProcesados && resp.UsuariosNoProcesados.length == 0) {
+          this.toastrService.success('',`Han sido registrados ${resp.CantidadRegistrosProcesados} usuario(s) con éxito.`)
+        }else{
+          this.toastrService.warning('',`Han sido registrados ${resp.CantidadRegistrosProcesados} usuario(s) con éxito. Usuarios sin procesar ${resp.UsuariosNoProcesados.length}`);          
+          const blobTxt = new Blob([this.buildContentTxt(resp)], { type: 'text/plain' });
+          saveAs(blobTxt, 'usuarios_no_procesados.txt');
+        }
+      }catch(error:any){
+        if(error.status == 409)
+          this.toastrService.error('',error.error.error);
+      }
+
+    }
+
+    /**
+     * Build content errors of users
+     * @param resp 
+     */
+    buildContentTxt(resp: any):string{
+      let content = 'Aviso: El archivo excel debe cumplir con lo siguiente:\n\n\r';
+      content = content + '1) No debe contener filas vacias.\n\r';
+      content = content + '2) primernombre, primerapellido, cedula, cargo, correoelectronico y sexo son obligatorios.\n\r';
+      content = content + '3) primernombre, primerapellido, cedula, cargo y sexo no debe contener caracteres especiales.\n\r';
+      content = content + '4) cedula debe contener solo números.\n\r';
+      content = content + '5) cedula no debe estar registrada en el sistema.\n\r';
+      content = content + '6) correoelectronico debe contener un correo válido.\n\r';
+      content = content + '6) correoelectronico no debe estar registrado en el sistema.\n\r';
+      content = content + '7) sexo solo debe indicar dos valores (f o m).\n\n\n\r';
+      content= content +'Usuarios no procesados:\n\n\n\n\r';
+      resp.UsuariosNoProcesados.forEach((item:any) => {
+        content = content + item.Nombre +'\n\r';
+        content = content + item.email +'\n\r';
+        content = content +'Error(s):\n\r';
+        let err = '';
+        item.errores.forEach((error:any) => {
+          err = err + error.message +'\n\r';
+        });
+        content = content +err+'\n\n\r';
+      });
+      return content;
     }
 
 }

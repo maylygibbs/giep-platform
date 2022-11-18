@@ -192,24 +192,38 @@ export class CommonsService extends HttpService {
   async getAllColorSticker(): Promise<Array<SelectOption>> {
 
     let colors: Array<SelectOption> = new Array<SelectOption>();
-    colors.push(new SelectOption('bgcolor-orange','Naranja',false,'rgb(253, 126, 20)'));
-    colors.push(new SelectOption('bgcolor-pink','Rosado',false,'rgb(241, 0, 117)'));
-    colors.push(new SelectOption('bgcolor-emerald','Esmeralda',false,'rgb(0, 204, 204)'));
-    colors.push(new SelectOption('bgcolor-green','Verde',false,'rgb(16, 183, 89)'));
-    colors.push(new SelectOption('bgcolor-lilac','Lila',false,'rgb(91, 71, 251)'));
-    return this.resolveWith(colors) ;
+    colors.push(new SelectOption('bgcolor-orange', 'Naranja', false, 'rgb(253, 126, 20)'));
+    colors.push(new SelectOption('bgcolor-pink', 'Rosado', false, 'rgb(241, 0, 117)'));
+    colors.push(new SelectOption('bgcolor-emerald', 'Esmeralda', false, 'rgb(0, 204, 204)'));
+    colors.push(new SelectOption('bgcolor-green', 'Verde', false, 'rgb(16, 183, 89)'));
+    colors.push(new SelectOption('bgcolor-lilac', 'Lila', false, 'rgb(91, 71, 251)'));
+    return this.resolveWith(colors);
   }
 
   /**
    * get all users emails
    */
-  async getAllUsersEmails(){
+  async getAllUsersEmails() {
     let usersEmails: Array<SelectOption> = new Array<SelectOption>();
     const resp = await firstValueFrom(this.get(environment.apiUrl, '/calendario/event/usuarios'));
     usersEmails = resp.data.map((item: any) => {
-      return new SelectOption(item.email, item.nombre+' | '+item.email);
+      return new SelectOption(item.email, item.nombre + ' | ' + item.email);
     });
     return usersEmails;
+  }
+
+  /**
+  * Get all instruments
+  * @returns 
+  */
+  async getAllInstruments(): Promise<Array<SelectOption>> {
+
+    let inputsType: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/list/all'));
+    inputsType = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return inputsType;
   }
 
 }

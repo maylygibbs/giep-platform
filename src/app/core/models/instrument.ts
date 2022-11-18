@@ -22,7 +22,9 @@ export class Instrument {
     questions: Array<Question>;
     isPublished:boolean
     isExpired:boolean;
-    isEditable:boolean
+    isEditable:boolean;
+    answered:string;
+    answeredDate:any;
     path:string;
     order:number;
     createAt:Date;

@@ -1,10 +1,11 @@
-import { CommonsListCategoyTypeResolver, CommonsListRolesResolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
+import { CommonsListCategoyTypeResolver, CommonsListInstrumentsResolver, CommonsListRolesResolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { InstrumentsComponent } from './components/instruments/instruments.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { InputsComponent } from './components/inputs/inputs.component';
 import { UnitsComponent } from './components/units/units.component';
+import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
   {
@@ -40,6 +41,16 @@ const routes: Routes = [
       categories: CommonsListCategoyTypeResolver
     }
   },  
+  {
+    path:'users',
+    component: UsersComponent,
+    data: {
+      title: 'Usuarios participantes - GIEp',
+    },
+    resolve:{
+      instruments: CommonsListInstrumentsResolver
+    }
+  }
 ];
 
 @NgModule({

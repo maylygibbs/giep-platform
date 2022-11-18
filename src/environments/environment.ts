@@ -35,7 +35,8 @@ export const environment = {
     file_extension:['doc', 'docx', 'pdf','xls', 'xlsx', 'png', 'jpg', 'jpge'],
     file_imagen_extension:['png', 'jpg', 'jpge'],
     file_acordo_extension:['pdf'],
-    file_extension_pdf: ['pdf']
+    file_extension_pdf: ['pdf'],
+    file_extension_excel:['xls', 'xlsx']
   },
   paginator: {
     default_page: 1,

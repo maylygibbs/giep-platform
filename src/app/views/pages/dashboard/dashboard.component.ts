@@ -17,7 +17,7 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class DashboardComponent extends BaseComponent implements OnInit {
 
-  
+  step: number = 1;
 
   /**
    * Apex chart
@@ -52,6 +52,7 @@ export class DashboardComponent extends BaseComponent implements OnInit {
   currentDate: NgbDateStruct;
 
   user:User;
+  selectedInstrument:Instrument;
   $instruments:Observable<any>;
   results:any;
 
@@ -63,10 +64,11 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private instrumentsService: InstrumentsService) {
     super();
+    this.dtOptions.ordering = false;
   }
 
    ngOnInit(): void {
-     
+    
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
       this.user = user ? user : this.authService.currentUser;
     });
@@ -110,11 +112,30 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     }
   }
 
+
+  goToInstrument(instrument: Instrument){
+    this.selectedInstrument = instrument;
+    this.step++;
+  }
+
+
+
+  /**
+   * Return to back page
+   * @param instrument 
+   */
+  back(instrument:any){
+    this.selectedInstrument = instrument;
+    this.step--;
+  }
+
   ngOnDestroy(){
     if(this.user$){
       this.user$.unsubscribe();
     }
   }
+
+
 }
 
 

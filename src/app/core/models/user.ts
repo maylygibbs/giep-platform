@@ -1,6 +1,7 @@
 import { SelectOption } from './select-option';
 import * as moment from 'moment';
 import { MenuItem } from './menu.model';
+import { Instrument } from './instrument';
 export class User {
 
     id: string;
@@ -35,6 +36,7 @@ export class User {
     answered:boolean;
     hoursDedication: string; 
     nameInputHours:  string; 
+    instrument:Instrument;
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');

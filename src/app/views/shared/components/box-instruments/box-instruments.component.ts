@@ -15,7 +15,7 @@ import { CountdownComponent, CountdownConfig } from 'ngx-countdown';
 export class BoxInstrumentsComponent implements OnInit {
 
   @Input()
-  instruments: Array<any>;
+  instrumentInput: any;
 
   @Output()
   onFinish: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -35,7 +35,7 @@ export class BoxInstrumentsComponent implements OnInit {
   constructor(private instrumentsService: InstrumentsService, private el: ElementRef) { }
 
   async ngOnInit() {
-    this.instrument = await this.instrumentsService.getInstrumentsById(this.instruments[0].id);
+    this.instrument = await this.instrumentsService.getInstrumentsById(this.instrumentInput.id);
 
     this.config = { stopTime: new Date().getTime() + this.getDurationCountDown(this.instrument), demand:true };
     console.log('instrument', this.instrument);
@@ -155,7 +155,7 @@ export class BoxInstrumentsComponent implements OnInit {
       await this.instrumentsService.storeInstrumetsResponse(Instrument.mapForPostResponse(this.instrument));
       this.countdown.pause();
       setTimeout(() => {
-        this.onFinish.emit(true);
+        this.back();
         this.submitted = false;
       }, 1000);
 
@@ -165,9 +165,20 @@ export class BoxInstrumentsComponent implements OnInit {
   }
 
 
+  /**
+   * Reset form
+   * @param form 
+   */
   reset(form: NgForm) {
     form.onReset();
     this.show = false;
+  }
+
+  /**
+   * Return to instruments list
+   */
+  back(){
+    this.onFinish.emit(null);
   }
 
 }

@@ -66,6 +66,10 @@ const routes: Routes = [
         path: 'results',
         loadChildren: () => import('../results/results.module').then(m => m.ResultsModule),
       },
+      {
+        path: 'giep-repository',
+        loadChildren: () => import('../giep-repository/giep-repository.module').then(m => m.GiepRepositoryModule),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
