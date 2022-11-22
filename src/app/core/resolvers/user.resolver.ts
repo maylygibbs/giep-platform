@@ -32,3 +32,14 @@ export class GetAllUserResolver implements Resolve<any> {
     return users;
   }
 }
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GetMenuOptions implements Resolve<any> {
+  constructor(private userService: UserService) { }
+  async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return await this.userService.getAllMenuOptions();
+  }
+}

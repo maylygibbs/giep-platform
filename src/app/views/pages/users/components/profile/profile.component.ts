@@ -128,7 +128,14 @@ export class ProfileComponent extends BaseComponent implements OnInit {
    */
   async onChangeCountry(event: any) {
     console.log('country', this.user.country);
-    this.states = await this.commonsService.getAllStates(this.user.country.id);
+    this.states = undefined;
+    this.cities = undefined;
+    this.user.state = undefined;
+    this.user.city = undefined;
+    if(this.user.country){
+      this.states = await this.commonsService.getAllStates(this.user.country.id);
+    }
+    
 
   }
 
@@ -138,7 +145,11 @@ export class ProfileComponent extends BaseComponent implements OnInit {
    */
   async onChangeStates(event: any) {
     console.log('state', this.user.state);
-    this.cities = await this.commonsService.getAllCities(this.user.state.id);
+    this.cities = undefined;
+    this.user.city = undefined;
+    if(this.user.state){
+      this.cities = await this.commonsService.getAllCities(this.user.state.id);
+    }  
 
   }
 

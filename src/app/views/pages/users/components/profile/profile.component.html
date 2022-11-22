@@ -258,7 +258,7 @@
                     <label for="inputCity" class="form-label required">Ciudad</label>
                     <ng-select id="inputCity" [items]="cities" name="city" #city="ngModel"
                       [ngClass]="{'ng-dirty ng-invalid' : city.errors && ( city.dirty || city.touched || userForm.submitted) }"
-                      [searchable]="false" (change)="onChangeStates($event)" [(ngModel)]="user.city" required>
+                      [searchable]="false" [(ngModel)]="user.city" required>
                     </ng-select>
                     <div *ngIf="city.invalid && userForm.submitted" class="invalid-feedback">
                       <div *ngIf="city.errors?.required">Campo es requerido

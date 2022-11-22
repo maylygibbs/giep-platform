@@ -154,9 +154,9 @@ export class User {
         Object.assign(userMap, { telefono: this.getPhonesUser(user.phones) });
 
         Object.assign(userMap, { direccion: user.address ? user.address : null });
-        Object.assign(userMap, { pais: user.country.id });
-        Object.assign(userMap, { estado: user.state.id });
-        Object.assign(userMap, { ciudad: user.city.id });
+        Object.assign(userMap, { pais: parseInt(user.country.value) });
+        Object.assign(userMap, { estado: parseInt(user.state.value) });
+        Object.assign(userMap, { ciudad: parseInt(user.city.value) });
         Object.assign(userMap, { redes: this.getNetworkUser(user.socialNetwork) });
 
         return userMap;

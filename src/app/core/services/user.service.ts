@@ -57,43 +57,6 @@ export class UserService extends HttpService {
     })
     user.instrumentsPending = resp[0].instrumentosPendientes && resp[0].instrumentosPendientes.length > 0 ? resp[0].instrumentosPendientes : null  ;
     this.instruments.next(user.instrumentsPending);
-    const arrayMenu: Array<MenuItem> = new Array<MenuItem>();
-
-    resp[0].opcionesMenu.forEach((item:any) => {
-      const menuItem = new MenuItem();
-      menuItem.label = item.nombre;
-      menuItem.isTitle = item.isTitle == 'true' ? true : false;
-      menuItem.link = item.path;
-      menuItem.icon = item.icon;
-      menuItem.order = item.orden;
-      arrayMenu.push(menuItem);
-      if(item.hijos && item.hijos.MenuChild){
-        item.hijos.MenuChild.forEach((itemChild:any) => {
-          const menuItemChild = new MenuItem();
-          menuItemChild.label = itemChild.menu;
-          menuItemChild.isTitle = itemChild.isTitle == 'true' ? true : false;
-          menuItemChild.link = itemChild.path;
-          menuItemChild.icon = itemChild.icon;
-          menuItemChild.order = itemChild.orden;
-          if(itemChild.hijos && itemChild.hijos.MenuChild){
-            menuItemChild.subItems = itemChild.hijos.MenuChild.map((itemSubChild:any)=>{
-              const menuSubItemChild = new MenuItem();
-              menuSubItemChild.label = itemSubChild.menu;
-              menuSubItemChild.isTitle = itemSubChild.isTitle == 'true' ? true : false;
-              menuSubItemChild.link = itemSubChild.path;
-              //menuSubItemChild.icon = itemSubChild.icon;
-              menuSubItemChild.order = itemSubChild.orden;
-              return menuSubItemChild;
-            })
-          }
-          arrayMenu.push(menuItemChild);
-        });
-      }
-
-    })
-    
-    user.optionsMenu = arrayMenu;
-    console.log('arrayMenu', arrayMenu)
     user.sex = resp[0].sexo
     user.address = resp[0].direccion;
     user.country = new SelectOption(resp[0].pais?.id, resp[0].pais.Nombre);
@@ -381,6 +344,55 @@ export class UserService extends HttpService {
         content = content +err+'\n\n\r';
       });
       return content;
+    }
+
+
+    /**
+     * 
+     */
+    async getAllMenuOptions(): Promise<Array<any>>{ //MenuItem
+      try{
+        const resp = await firstValueFrom(this.get(environment.apiUrl, '/user/menu/opciones'));
+        const arrayMenu: Array<MenuItem> = new Array<MenuItem>()
+        resp[0].opcionesMenu.forEach((item:any) => {
+          const menuItem = new MenuItem();
+          menuItem.label = item.nombre;
+          menuItem.isTitle = item.isTitle == 'true' ? true : false;
+          menuItem.link = item.path;
+          menuItem.icon = item.icon;
+          menuItem.order = item.orden;
+          arrayMenu.push(menuItem);
+          if(item.hijos && item.hijos.MenuChild){
+            item.hijos.MenuChild.forEach((itemChild:any) => {
+              const menuItemChild = new MenuItem();
+              menuItemChild.label = itemChild.menu;
+              menuItemChild.isTitle = itemChild.isTitle == 'true' ? true : false;
+              menuItemChild.link = itemChild.path;
+              menuItemChild.icon = itemChild.icon;
+              menuItemChild.order = itemChild.orden;
+              if(itemChild.hijos && itemChild.hijos.MenuChild){
+                menuItemChild.subItems = itemChild.hijos.MenuChild.map((itemSubChild:any)=>{
+                  const menuSubItemChild = new MenuItem();
+                  menuSubItemChild.label = itemSubChild.menu;
+                  menuSubItemChild.isTitle = itemSubChild.isTitle == 'true' ? true : false;
+                  menuSubItemChild.link = itemSubChild.path;
+                  //menuSubItemChild.icon = itemSubChild.icon;
+                  menuSubItemChild.order = itemSubChild.orden;
+                  return menuSubItemChild;
+                })
+              }
+              arrayMenu.push(menuItemChild);
+            });
+          }
+    
+        });
+        const user = this.authService.currentUser;
+        user.optionsMenu = arrayMenu;
+        this.authService.saveUserInLocalstorage(user);
+        return arrayMenu;
+      }catch(error){
+        return null;
+      }
     }
 
 }

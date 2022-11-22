@@ -7,6 +7,7 @@ import MetisMenu from 'metismenujs';
 import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { Router, NavigationEnd } from '@angular/router';
+import { UserService } from './../../../core/services/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,6 +24,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   constructor(@Inject(DOCUMENT) private document: Document, 
   private renderer: Renderer2, 
   router: Router,
+  private userService: UserService,
   private authService: AuthService) { 
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
@@ -43,7 +45,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit():void{
     this.menuItems = this.authService.currentUser.optionsMenu;
 
     /**
@@ -58,6 +60,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // activate menu item
+    
     new MetisMenu(this.sidebarMenu.nativeElement);
     
     this._activateMenuDropdown();
@@ -151,7 +154,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
    * Resets the menus
    */
   resetMenuItems() {
-
+ 
     const links = document.getElementsByClassName('nav-link-ref');
     
     for (let i = 0; i < links.length; i++) {
@@ -250,6 +253,17 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
     }
   };
+
+
+  /**
+   * Get menu options of user logged
+   */
+  getAllMenuOptions(){
+    this.userService.getAllMenuOptions().then((items)=>{
+        this.menuItems = items;
+        console.log('menu', this.menuItems);
+    });  
+  }
 
 
 }

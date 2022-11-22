@@ -13,9 +13,9 @@ const routes: Routes = [
     data: {
       title: 'Dashboard - GIEP',
     },
-    resolve:{
+    /*resolve:{
       infoDetalle: GetInfoUserResolver
-    },
+    },*/
     children: [      
       {
         path: 'apps',

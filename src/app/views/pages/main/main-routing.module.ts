@@ -1,14 +1,16 @@
-import { GetInfoUserResolver } from './../../../core/resolvers/user.resolver';
+import { GetMenuOptions } from './../../../core/resolvers/user.resolver';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './../../../core/guard/auth.guard';
 import { BaseComponent } from '../../layout/base/base.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '',
     component: BaseComponent,
     canActivate: [AuthGuard],
+    resolve:{
+      options: GetMenuOptions
+    },
     children: [
       {
         path: 'dashboard',
