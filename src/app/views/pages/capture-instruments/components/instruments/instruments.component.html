@@ -81,8 +81,8 @@
                     </th>  
                     <td>{{instrument.publicationDate | date:'yyyy-MM-dd'}}</td>            
                     <td class="text-center">
-                      <i *ngIf="instrument.isEditable && !instrument.isExpired" class="feather icon-edit-2" (click)="select(instrument.id)" placement="start" ngbTooltip="Editar Intrumento"></i>
-                      <i *ngIf="!instrument.isEditable" class="feather icon-eye ms-1" (click)="select(instrument.id)" placement="start" ngbTooltip="Ver Intrumento" placement="start" ngbTooltip="Ver Intrumento"></i>
+                      <i *ngIf="!instrument.isExpired" class="feather icon-edit-2" (click)="select(instrument.id)" placement="start" ngbTooltip="Editar Intrumento"></i>
+                      <i *ngIf="instrument.isExpired" class="feather icon-eye ms-1" (click)="select(instrument.id)" placement="start" ngbTooltip="Ver Intrumento" placement="start" ngbTooltip="Ver Intrumento"></i>
                       <i class="feather icon-copy ms-1" (click)="clone(instrument.id)" placement="start" ngbTooltip="Copiar Intrumento"></i>
                       <i *ngIf="instrument.isEditable"  class="feather icon-trash ms-1" (click)="confirm(instrument, 'delete', confirmModal)" placement="start" ngbTooltip="Eliminar Intrumento"></i>
                       <i class="feather icon-user-plus ms-1" (click)="openModalUsers(addUsersModal,instrument.id)" placement="start" ngbTooltip="Vincular Usuarios"></i>

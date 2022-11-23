@@ -120,7 +120,6 @@ export class InstrumentsService extends HttpService {
       instrument.createAt = item.createAt;
       instrument.expirationDate = item.fechaVigencia;
       instrument.publicationDate = item.fechaPublicacion;
-      instrument.isEditable = item.editable == 1 ? true : false;
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
       instrument.order = item.orden;
@@ -139,16 +138,17 @@ export class InstrumentsService extends HttpService {
   async getInstrumentsById(id: number): Promise<any> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
     const instrument = new Instrument();
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
     instrument.id = resp.data[0].id;
     instrument.name = resp.data[0].nombre;
     instrument.description = resp.data[0].descripcion;
     instrument.dutation = resp.data[0].duracion;
     instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id, resp.data[0].idTipoUnidad.Descripcion);
     instrument.path = resp.data[0].path;
-
     const d = new Date(resp.data[0].fechaVigencia);
     instrument.expirationDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
     instrument.isEditable = resp.data[0].editable == 1 ? true : false;
+    instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
     if (resp.data[0].users) {
@@ -209,17 +209,17 @@ export class InstrumentsService extends HttpService {
   async getInstrumentsByIdForUpdate(id: number): Promise<any> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
     const instrument = new Instrument();
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
     instrument.id = resp.data[0].id;
     instrument.name = resp.data[0].nombre;
     instrument.description = resp.data[0].descripcion;
     instrument.dutation = resp.data[0].duracion;
     instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id, resp.data[0].idTipoUnidad.Descripcion);
-    instrument.path = resp.data[0].path;
-    console.log(resp.data[0].fechaVigencia)
+    instrument.path = resp.data[0].path;    
     const d = moment(resp.data[0].fechaVigencia).toDate();
-    console.log(d)
     instrument.expirationDate = { year: d.getFullYear(), month: (d.getMonth() + 1), day: d.getDate() };
     instrument.isEditable = resp.data[0].editable == 1 ? true : false;
+    instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
     if (resp.data[0].users) {
@@ -973,8 +973,8 @@ export class InstrumentsService extends HttpService {
       const users = resp.data.map((item: any) => {
         return {
           id: item.id,
-          fullName: item.nombre + ' ' + item.apellido,
-          role: item.role
+          fullName: `${item.nombre} ${item.apellido} ( ${item.email} )`,
+          role: item.role 
         };
       })
       return users;

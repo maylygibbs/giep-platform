@@ -84,6 +84,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   async select(id: number) {
     this.selectedItem = await this.instrumentsService.getInstrumentsByIdForUpdate(id);
+    console.log(this.selectedItem)
     this.next();
   }
 

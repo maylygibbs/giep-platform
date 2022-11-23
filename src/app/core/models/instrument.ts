@@ -85,7 +85,7 @@ export class Instrument {
      * @param instrumentInput 
      * @returns 
      */
-    public static mapForPost(instrumentInput: Instrument, users:number[]){
+    public static mapForPost(instrumentInput: Instrument, roles: string[], users:number[]){
         const instrumentOutput = {};
 
         if (instrumentInput.id) {
@@ -96,12 +96,15 @@ export class Instrument {
         Object.assign(instrumentOutput,{dutation: parseInt(instrumentInput.dutation)});
         Object.assign(instrumentOutput,{unitType: {id: parseInt(instrumentInput.unitType.value), label:instrumentInput.unitType.label} });
         Object.assign(instrumentOutput,{expirationDate: moment().year(instrumentInput.expirationDate.year).month(instrumentInput.expirationDate.month - 1).date(instrumentInput.expirationDate.day).format('YYYY-MM-DD') });
-        Object.assign(instrumentOutput,{roles: instrumentInput.roles});
+        Object.assign(instrumentOutput,{roles: roles});
         Object.assign(instrumentOutput,{users: this.getUsers(users)});
         Object.assign(instrumentOutput,{questionsByCategory: instrumentInput.questionsByCategory ? 1 : 0});
         Object.assign(instrumentOutput,{description: instrumentInput.description});
         Object.assign(instrumentOutput,{path: instrumentInput.path? instrumentInput.path:null});
-        Object.assign(instrumentOutput,{sections: this.getSections(instrumentInput.sections)});
+        if(!instrumentInput.id || (instrumentInput.id && instrumentInput.isEditable)){
+            Object.assign(instrumentOutput,{sections: this.getSections(instrumentInput.sections)});
+        }
+        
 
         return instrumentOutput;
     }
@@ -116,11 +119,16 @@ export class Instrument {
         let sectionsOutput = [];
 
         sectionsOutput = sections.map((section:Section)=>{
-            return {
+            const sectionOutput = {
                 numberSection: section.numberSection,
                 name: section.name? section.name : null,
                 questions: this.getQuestions(section.questions)
+            };
+            if(section.id){
+                Object.assign(sectionOutput, {id: section.id})
             }
+            return sectionOutput
+
         })
 
         return sectionsOutput;
@@ -141,6 +149,9 @@ export class Instrument {
             if(question.options && question.options.length > 0){
                 Object.assign(questionOutput , {options: this.getOptions(question.options)})
             }
+            if(question.id){
+                Object.assign(questionOutput, {id: question.id});
+            }
             return questionOutput;
         });
         return questionsOutput;
@@ -149,11 +160,16 @@ export class Instrument {
     private static getOptions(options: Array<QuestionOption>){
         let optionsOutput;
         optionsOutput = options.map((opt:QuestionOption)=>{
-            return {
+            const optionOutput = {
                 value: opt.value,
                 label: opt.label,
                 score: parseInt(opt.score)
             }
+            if(opt.id){
+                Object.assign(optionOutput, {id: opt.id});
+            }
+            return optionOutput;
+
         });
         return optionsOutput;
     }
