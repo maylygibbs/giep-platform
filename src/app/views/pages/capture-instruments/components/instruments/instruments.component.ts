@@ -45,6 +45,8 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   selectedUsers = [];
   data: any;
 
+  showLoading:boolean= false;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
@@ -171,9 +173,10 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     /**
    * Load users by rol
    */
-     async loadUsersByRoles() {      
+     async loadUsersByRoles() {
+      this.showLoading = true;
       this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.roles, '|'));
-      console.log('resp', this.users)
+      this.showLoading = false;
     }
 
   /**
@@ -182,6 +185,9 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
    */
   openModalUsers(modalRef:TemplateRef<any>, id:number) {
     this.idInstrument = id;
+    this.roles = null;
+    this.selectedUsers = null;
+    this.users = null;
     this.modalService.open(modalRef, {}).result.then((result) => {
       console.log("Modal closed" + result);
     }).catch((res) => {});

@@ -223,11 +223,12 @@ export class InstrumentsService extends HttpService {
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
     if (resp.data[0].users) {
-      instrument.users = resp.data[0].users.map((u) => {
+      instrument.users = resp.data[0].users.map((u:any) => {
         const user = new User();
         user.id = u.id;
         user.firstName = u.nombre;
-        user.answered = u.respondida == 1 ? true : false;
+        user.answered = true;//u.respondida == 1 ? true : false;
+        user.roles = u.roles;
         return user;
       })
     }

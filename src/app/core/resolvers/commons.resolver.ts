@@ -69,6 +69,16 @@ export class CommonsListSocialNetworkResolver implements Resolve<any> {
   }
 }
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListInputTypeResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllInputsType();
+  }
+}
+
 
 @Injectable({
   providedIn: 'root'

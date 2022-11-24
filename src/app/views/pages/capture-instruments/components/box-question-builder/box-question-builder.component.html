@@ -56,7 +56,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="mb-3">
                         <label for="inputType" class="form-label required">Tipo de pregunta</label>
-                        <ng-select id="inputUnitType" [items]="inputsType" name="inputType" #inputType="ngModel"
+                        <ng-select id="inputUnitType" [items]="data.inputTypes" name="inputType" #inputType="ngModel"
                             [(ngModel)]="question.inputType" [searchable]="false" (change)="onChangeInputType($event)" required>
                         </ng-select>
                         <div *ngIf="inputType.invalid && questionForm.submitted" class="invalid-feedback">

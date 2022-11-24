@@ -10,9 +10,12 @@ import { firstValueFrom } from 'rxjs';
 })
 export class CommonsService extends HttpService {
 
+
+
   constructor(protected http: HttpClient) {
     super(http);
   }
+
 
 
   /**
@@ -167,8 +170,10 @@ export class CommonsService extends HttpService {
     inputsType = resp.data.map((item: any) => {
       return new SelectOption(item.id, item.nombre);
     });
+
     return inputsType;
   }
+
 
   /**
 * Get all categories

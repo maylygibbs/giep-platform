@@ -24,7 +24,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
   @Output()
   onDeleteQuestion: EventEmitter<Question> = new EventEmitter<Question>();
 
-  inputsType: Array<SelectOption>;
+  //inputsType: Array<SelectOption>;
 
 
 
@@ -39,7 +39,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
    }
 
   async ngOnInit() {
-    this.inputsType = await this.commonsService.getAllInputsType();
+    //this.inputsType = await this.commonsService.getAllInputsType();
       this.route.data.subscribe((data) => {
         this.data = data;
       });

@@ -140,10 +140,10 @@
                                                 <div class="mb-3">
                                                     <label for="inputRoles" class="form-label required">Roles</label>
                                                     <ng-select id="inputRoles" [items]="data.roles" [multiple]="true"
-                                                        [searchable]="false" [closeOnSelect]="true"
+                                                        [searchable]="true" [closeOnSelect]="true"
                                                         name="instrumentRole" #instrumentRole="ngModel"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentRole.errors && ( instrumentRole.dirty || instrumentRole.touched || instrumentForm.submitted) }"
-                                                        bindLabel="label" bindValue="value" [searchable]="false"
+                                                        bindLabel="label" bindValue="value"
                                                         [(ngModel)]="selectedRoles" (add)="onAddRole()" (remove)="onRemoveRole($event)" (clear)="onRemoveAllRole()"
                                                         
                                                         required>
@@ -159,13 +159,13 @@
                                                 <div class="mb-3">
                                                     <label for="inputUsers" class="form-label required">Usuarios</label>
                                                     <ng-select id="inputUsers" [items]="users" [multiple]="true"
-                                                        [searchable]="false" groupBy="role" [selectableGroup]="true"
+                                                        [searchable]="true" groupBy="role" [selectableGroup]="true"
                                                         [selectableGroupAsModel]="false" [closeOnSelect]="true"
                                                         name="instrumentUsers" #instrumentUsers="ngModel"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentUsers.errors && ( instrumentUsers.dirty || instrumentUsers.touched || instrumentForm.submitted) }"
-                                                        bindLabel="fullName" bindValue="id" [searchable]="false"
+                                                        bindLabel="fullName" bindValue="id"
                                                         (remove)="onRemoveUsuario($event)" (clear)="onRemoveAllUsuario()"
-                                                        [(ngModel)]="selectedUsers" required>
+                                                        [(ngModel)]="selectedUsers" [loading]="showLoading" required>
                                                         <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
                                                             let-index="index">
                                                             <input id="item-{{index}}" type="checkbox"

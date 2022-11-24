@@ -23,6 +23,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
+import { OnlineStatusModule } from 'ngx-online-status';
 
 
 
@@ -53,7 +54,8 @@ FullCalendarModule.registerPlugins([
       titleClass: 'toast-title',
       progressBar: false,
       enableHtml: true,
-    })
+    }),
+    OnlineStatusModule
   ],
   providers: [
     AuthGuard,
