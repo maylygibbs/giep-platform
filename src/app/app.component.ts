@@ -21,9 +21,9 @@ export class AppComponent implements OnInit {
 
     this.onlineStatusService.status.subscribe((status: OnlineStatusType) => {
       if(status == OnlineStatusType.OFFLINE){
-        this.toastrService.info('<span>Sin conexión a internet.</span><i class="feather icon-wifi-off ms-2"></i>','',{enableHtml:true});
+        this.toastrService.warning('<span>Sin conexión a internet.</span><i class="feather icon-wifi-off ms-2"></i>','',{enableHtml:true});
       }else{
-        this.toastrService.info('<span>Reestablecida conexión a internet.</span><i class="feather icon-wifi ms-2"></i>','',{enableHtml:true});
+        this.toastrService.success('<span>Reestablecida conexión a internet.</span><i class="feather icon-wifi ms-2"></i>','',{enableHtml:true});
       };
     });
 
