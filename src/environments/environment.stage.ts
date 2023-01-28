@@ -29,6 +29,11 @@ export const environment = {
         pattern: '^[a-zA-Z0-9]*$',
       }
     },
+    role_pattern:{
+      validations: {
+        pattern: '(ROLE)[A-Z\_]+',
+      }
+    },
     file_extension:['doc', 'docx', 'pdf','xls', 'xlsx', 'png', 'jpg', 'jpge'],
     file_imagen_extension:['png', 'jpg', 'jpge'],
     file_acordo_extension:['pdf'],

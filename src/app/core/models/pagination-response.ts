@@ -4,7 +4,7 @@
 export class PaginationResponse {
 
   public count: number;
-
+  public sample: number;
   public nextPage: number;
   public previousPage: number;
   public totalPage: number;

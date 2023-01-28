@@ -40,7 +40,7 @@ export class InputsComponent extends BaseComponent  implements OnInit {
 
   constructor(private instrumentsService: InstrumentsService,
     private router: Router) { 
-    super()
+    super();
   }
 
   async ngOnInit() {
@@ -52,7 +52,10 @@ export class InputsComponent extends BaseComponent  implements OnInit {
     });
   }
 
-
+  /**
+   * Load items page by page
+   * @param pageInfo 
+   */
   async loadPage(pageInfo: any) {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
@@ -60,31 +63,52 @@ export class InputsComponent extends BaseComponent  implements OnInit {
     this.inputs = await this.instrumentsService.getInputTypesPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
   }
 
+  /**
+   * Create item
+   */
   create(){
     this.selectedItem = new InputType();
     this.next();
   }
 
+  /**
+   * Select item
+   * @param id 
+   */
   async select(id: number) {
     this.selectedItem = await this.instrumentsService.getInputTypeById(id);
     this.next();
   }
 
+  /**
+   * Delete item
+   * @param id 
+   */
   async delete(id: number) {
-    //await this.userService.deleteUser(id);
+    await this.instrumentsService.deleteInputType(id);
     this.loadPage(this.page);
   }
 
+  /**
+   * Next step
+   */
   next(){
     this.step++;
   }
 
+  /**
+   * Back step
+   * @param item 
+   */
   back(item:any){
     this.selectedItem = item;
     this.step--;
     this.loadPage(this.page);
   }
 
+  /**
+   * Search item
+   */
   search(){
     if (this.word && this.word.length > 0) {
       this.loadPage(environment.paginator.default_page);

@@ -1,0 +1,239 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form name="widgetForm" #widgetForm="ngForm" (ngSubmit)="onSubmit(widgetForm)" class="forms-sample">
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputName" class="form-label">Widget o Menú</label><i
+                                    class="feather icon-info ms-1" placement="right"
+                                    ngbTooltip="Indique el nombre del widget o de la opción de menú"></i>
+                                <input type="text" name="inputName" #inputName="ngModel" [(ngModel)]="app.label"
+                                    [ngClass]="{'ng-dirty ng-invalid' : inputName.errors && ( inputName.dirty || inputName.touched || widgetForm.submitted) }"
+                                    class="form-control" id="inputName" autocomplete="off" minlength="1" maxlength="500"
+                                    required>
+                                <div *ngIf="inputName.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="inputName.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="inputName.errors?.minlength || inputName.errors?.maxlength">
+                                        Campo permite entre 1 y 500 caracteres</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputPathName" class="form-label">Ruta</label><i
+                                    class="feather icon-info ms-1" placement="right"
+                                    ngbTooltip="Indique la ruta donde se visualizará el widget"></i>
+                                <input type="text" name="path" #path="ngModel" [(ngModel)]="app.path"
+                                    [ngClass]="{'ng-dirty ng-invalid' : path.errors && ( path.dirty || path.touched || widgetForm.submitted) }"
+                                    class="form-control" id="inputPathName" autocomplete="off" minlength="1"
+                                    maxlength="500" required>
+                                <div *ngIf="path.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="path.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="path.errors?.minlength || path.errors?.maxlength">
+                                        Campo permite entre 1 y 500 caracteres</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputPosition" class="form-label">Posición</label>
+                                <input type="text" name="position" #position="ngModel" [(ngModel)]="app.position"
+                                    [ngClass]="{'ng-dirty ng-invalid' : position.errors && ( position.dirty || position.touched || widgetForm.submitted) }"
+                                    class="form-control" id="inputPosition" autocomplete="off" required>
+                                <div *ngIf="position.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="position.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputIcon" class="form-label">Ícono</label>
+                                <div class="input-group mr-sm-2 d-flex align-items-center" style="flex-wrap: nowrap;">
+                                    <div class="input-icon-selected" [innerHtml]="selectedIcon"
+                                        (click)="openModalGaleryIcon(modalGalery)">
+
+                                    </div>
+                                    <input name="icon" #icon="ngModel" [(ngModel)]="app.icon" type="hidden"
+                                        class="form-control" id="inputIcon"
+                                        [ngClass]="{'ng-dirty ng-invalid' : icon.errors && ( icon.dirty || icon.touched || widgetForm.submitted) }"
+                                        required required>
+                                    <div class="input-group-text button-search" placement="left"
+                                    ngbTooltip="Pulse aca para abrir galería de íconos"
+                                        (click)="openModalGaleryIcon(modalGalery)">
+                                        <i class="feather icon-plus"></i>
+                                    </div>
+
+                                </div>
+                                <div *ngIf="icon.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="icon.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="icon.errors?.minlength || icon.errors?.maxlength">
+                                        Campo permite entre 1 y 500 caracteres</div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputRoles" class="form-label required">Roles</label>
+                                <ng-select id="inputRoles" [items]="data.roles" [multiple]=true [closeOnSelect]="false"
+                                    name="rolesapp" #rolesapp="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : rolesapp.errors && ( rolesapp.dirty || rolesapp.touched || widgetForm.submitted) }"
+                                    bindLabel="label" bindValue="value" [searchable]="true" [(ngModel)]="app.roles"
+                                    required>
+                                </ng-select>
+                                <div *ngIf="rolesapp.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="rolesapp.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputAuth" class="form-label required">Nivel de autorización</label>
+                                <ng-select id="inputAuth" [items]="data.authoritations" [multiple]=true
+                                    [searchable]="false" [closeOnSelect]="false" name="authoritations"
+                                    #authoritations="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : authoritations.errors && ( authoritations.dirty || authoritations.touched || widgetForm.submitted) }"
+                                    bindLabel="label" bindValue="value" [(ngModel)]="app.authoritations" required>
+                                </ng-select>
+                                <div *ngIf="authoritations.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="authoritations.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputWidgetType" class="form-label required">Tipo</label>
+                                <ng-select id="inputWidgetType" [items]="data.componentTypes" name="type"
+                                    #type="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : type.errors && ( type.dirty || type.touched || widgetForm.submitted) }"
+                                    [searchable]="false" bindLabel="label" bindValue="value" [(ngModel)]="app.type"
+                                    required>
+                                </ng-select>
+                                <div *ngIf="type.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="type.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="mb-3">
+                            <label for="inputDescription" class="form-label required">Descripción</label>
+                            <textarea id="inputDescription" minlength="3" class="form-control" maxlength="1000"
+                                name="description"
+                                [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || widgetForm.submitted) }"
+                                #description="ngModel" [(ngModel)]="app.description" required></textarea>
+                            <div *ngIf="description.invalid && widgetForm.submitted" class="invalid-feedback">
+                                <div *ngIf="description.errors?.required">Campo es
+                                    requerido
+                                </div>
+                                <div *ngIf="description.errors?.minlength || description.errors?.maxlength">
+                                    Campo permite entre 3 y 1000 caracteres</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12 p-1">
+                            <div class="mb-3 ms-3">
+                                <div class="form-check form-switch mb-2">
+                                    <input type="checkbox" name=status #status="ngModel" [(ngModel)]="appStatus"
+                                        (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">
+                                    <label class="form-check-label" for="formSwitch1">Activo</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-right">
+                            <button class="btn btn-secondary" (click)="back()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #modalGalery let-modal>
+    <div class="modal-header">
+        <h3 class="modal-title" translate>Galería de icons</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closeGaleryModal()"></button>
+    </div>
+    <div class="modal-body m-3">
+        <div class="tab">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab"
+                        [ngClass]="{'active selected-tab selected-tab-text' : selectedTab === 't1'}"
+                        (click)="selectTab('t1')">Íconos Feather</a></li>
+                <li class="nav-item"><a class="nav-link selected-tab" data-bs-toggle="tab" role="tab"
+                        [ngClass]="{'active selected-tab selected-tab-text' : selectedTab === 't2'}"
+                        (click)="selectTab('t2')" translate>Icons GIEp</a></li>
+
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane" id="tab-1" role="tabpanel" [ngClass]="{'active' : selectedTab === 't1'}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row" *ngIf="galeryIcons">
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 d-flex flex-column text-center p-3 icon"
+                                [ngClass]="{'icon-selected':icon.label == app.icon}"
+                                *ngFor="let icon of galeryIcons.fontfeather" (click)="selectIcon(icon)">
+                                <i [class]="icon.label"></i><span class="mt-1">{{icon.label}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="tab-pane" id="tab-2" role="tabpanel" [ngClass]="{'active' : selectedTab === 't2'}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row" *ngIf="galeryIcons">
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 d-flex flex-column text-center p-3 icon"
+                                [ngClass]="{'icon-selected':icon.label == app.icon}"
+                                *ngFor="let icon of galeryIcons.fontgiep" (click)="selectIcon(icon)">
+                                <i [class]="icon.label"></i><span class="mt-1">{{icon.label}}</span>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="!galeryIcons.fontgiep">
+                            <div class="col-lg-12 col-md-12 col-sm-13 col-xs-13 d-flex justify-content-center p-3">
+                                <span class="mt-1">No hay icon personalizados de GIEp</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" translate>Cerrar</button>
+    </div>
+
+</ng-template>

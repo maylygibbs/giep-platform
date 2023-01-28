@@ -1,1 +1,402 @@
-<p>documents works!</p>
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Documentos</a></li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-lg-12 col-md-12 stretch-card">
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+            <div class="search-form">
+              <div class="input-group">
+                <div class="input-group-text">
+                  <i class="feather icon-search" (click)="search()"></i>
+                </div>
+                <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (keyup.enter)="search()"
+                  placeholder="Buscar aqui...">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex justify-content-end">
+            <app-box-util-views (onChangeView)="changeView($event)"></app-box-util-views>
+            <button type="button" class="btn btn-primary btn-create-dt" placement="start" ngbTooltip="Cargar Documento"
+              (click)="openZoneDragDropFiles($event, addFilesModal)">
+              <i class="feather icon-file-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="documents" class="card-body card-dt" appDnd
+        (onDragOver)="openZoneDragDropFiles($event, addFilesModal)">
+        <h6 class="card-title"></h6>
+        <div *ngIf="defaultView" class="row">
+          <div class="col-lg-12">
+            <table datatable [dtOptions]="dtOptions" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Título</th>
+                  <th>Nombre original</th>
+                  <th>Extensión</th>
+                  <th>Tamaño</th>
+                  <th>Estado</th>
+                  <th>Fecha creación</th>
+                  <th data-priority="1" class="text-center">Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let doc of documents.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: documents.count }">
+                  <td>{{doc.id}}</td>
+                  <td>{{doc.title}}</td>
+                  <td>{{doc.originalName}}</td>
+                  <td>{{doc.ext}}</td>
+                  <td>{{doc.sizeStr}}</td>
+                  <td>{{doc.state.label}}</td>
+                  <td>{{doc.creationDate | date:'yyyy-MM-dd'}}</td>
+                  <td class="text-center">
+                    <i class="feather icon-eye" (click)="select(doc.id, fileDetailModal)" placement="start" 
+                      ngbTooltip="Ver Documento"></i>
+                    <i class="feather icon-download-cloud ms-1" (click)="download(doc.id)" placement="start"
+                      ngbTooltip="Descargar Documento"></i>
+
+                    <i hidden class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
+                      ngbTooltip="Eliminar Documento"></i>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="8" class="text-right">
+                    <app-pager (onChangePage)="loadPage($event)"></app-pager>
+                  </th>
+                </tr>
+
+              </tfoot>
+
+            </table>
+          </div>
+
+        </div>
+        <div class="row" *ngIf="!defaultView">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3"
+                *ngFor="let doc of documents.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: documents.count }">
+                <div class="card">
+                  <div hidden class="card-header text-center">
+                    <img [src]="doc.avatar" class="wd-80 ht-80 rounded-circle card-img-top mt-2">
+                    <h5 class="card-title mt-4">{{doc.fullName}}</h5>
+                  </div>
+
+                  <div class="card-body card-dt">
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Id:</label>
+                      <p class="text-muted">{{doc.id}}</p>
+                    </div>
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Título:</label>
+                      <p class="text-muted">{{doc.title}}</p>
+                    </div>
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Nombre original:</label>
+                      <p class="text-muted">{{doc.originalName}}</p>
+                    </div>
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción:</label>
+                      <p class="text-muted">{{doc.description}}</p>
+                    </div>
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Extensión:</label>
+                      <p class="text-muted">{{doc.ext}}</p>
+                    </div>
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Tamaño:</label>
+                      <p class="text-muted">{{doc.sizeStr}}</p>
+                    </div>
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado:</label>
+                      <p class="text-muted">{{doc.state.label}}</p>
+                    </div>
+                    <div class="mt-2" *ngIf="doc.hashtag && doc.hashtag.length > 0">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Etiquetas:</label>
+                      <p class="text-muted" *ngFor="let tag of  doc.hashtag">{{tag}}</p>
+                    </div>
+                    <div class="mt-2 w-100 text-right">
+                      <i hidden class="feather icon-edit-2" (click)="select(doc.id, fileDetailModal)" placement="start"
+                        ngbTooltip="Editar Documento"></i>
+                      <i class="feather icon-download-cloud ms-1" (click)="download(doc.id)" placement="start"
+                        ngbTooltip="Descargar Documento"></i>
+                      <i hidden class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
+                        ngbTooltip="Eliminar Documento"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                <app-pager (onChangePage)="loadPage($event)"></app-pager>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--ZONE DRAG AND DROP FILES -->
+<ng-template #addFilesModal let-modal>
+  <div class="modal-header">
+    <h6 class="card-title">Cargar Documento</h6>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+  </div>
+  <form name="fileForm" #fileForm="ngForm" (ngSubmit)="onFilesUpload(fileForm)">
+    <div class="modal-file modal-body">
+      <div class="row">
+        <div class="grid-margin stretch-card" [ngClass]="{'col-lg-12': !dataFile , 'col-lg-8':dataFile}">
+          <div class="card">
+            <div class="card-body">
+
+              <div #dropzone class="dropzone" [dropzone]="config" (error)="onUploadError($event)"
+                (success)="onUploadSuccess($event)" (addedFile)="addFile($event)"></div>
+
+            </div>
+          </div>
+        </div>
+        <div *ngIf="dataFile" class="col-lg-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="mt-3">
+                    <label class="tx-11 fw-bolder mb-0 text-uppercase">Nombre Original</label>
+                    <p class="text-muted">{{dataFile.fileName}}</p>
+                  </div>
+                  <div class="mt-3">
+                    <label class="tx-11 fw-bolder mb-0 text-uppercase">Tamaño</label>
+                    <p class="text-muted">{{dataFile.fileSize}} bytes</p>
+                  </div>
+                  <div class="mt-3">
+                    <label class="tx-11 fw-bolder mb-0 text-uppercase">Tipo</label>
+                    <p class="text-muted">{{dataFile.fileType}}</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="dataFile" class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label required">Título</label>
+            <input type="text" name="titulo" #titulo="ngModel" [(ngModel)]="doc.title"
+              [ngClass]="{'ng-dirty ng-invalid' : titulo.errors && ( titulo.dirty || titulo.touched || fileForm.submitted) }"
+              class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="50" required>
+            <div *ngIf="titulo.invalid && fileForm.submitted" class="invalid-feedback">
+              <div *ngIf="titulo.errors?.required">Campo es requerido
+              </div>
+              <div *ngIf="titulo.errors?.minlength || titulo.errors?.maxlength">
+                Campo permite entre 3 y 100 caracteres</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+            <label for="inputDescription" class="form-label required">Descripción</label>
+            <textarea name="description" #description="ngModel" [(ngModel)]="doc.description" row="3"
+              class="form-control"
+              [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || fileForm.submitted) }"
+              id="inputDescription" required></textarea>
+            <div *ngIf="description.invalid && fileForm.submitted" class="invalid-feedback">
+              <div *ngIf="description.errors?.required">Campo es requerido
+              </div>
+              <div *ngIf="description.errors?.minlength || description.errors?.maxlength">
+                Campo permite entre 3 y 1000 caracteres</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+            <label for="inputPhone" class="form-label required">Etiquetas</label><i class="feather icon-info ms-1" placement="top" ngbTooltip="Las etiquetas son palabras claves que te ayudan a clasificar o categorizar los documentos y su contenido. Por favor, indique la(s) etiequeta(s) y pulse enter por cada una de ellas."></i>
+            <tag-input [(ngModel)]="doc.hashtag" name="hashtag" #hashtag="ngModel" theme="bootstrap" theme="bootstrap"
+              [displayBy]="'etiqueta'" placeholder="+nueva etiqueta" secondaryPlaceholder="Pulse enter para confirmar"
+              [ngClass]="{'ng-invalid' : hashtag.errors && ( hashtag.dirty || hashtag.touched || fileForm.submitted) }"
+              required>
+            </tag-input>
+            <div *ngIf="hashtag.invalid && fileForm.submitted" class="invalid-feedback">
+              <div *ngIf="hashtag.errors?.required">Campo es requerido. Pulse enter para confirmar las etiquetas.
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+            <div class="form-check form-switch mb-2">
+              <label class="form-check-label" for="formSwitch1">{{ documentStatus ? 'Público': 'Privado'}}</label>
+              <input type="checkbox" name=status #status="ngModel" [(ngModel)]="documentStatus" (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">              
+            </div>
+          </div>
+        </div>
+        <div *ngIf="documentStatus" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+            <label for="inputUsers" class="form-label required">Usuarios</label>
+            <ng-select id="inputUsers" [items]="users" [multiple]="true"
+                [searchable]="true" groupBy="role" [selectableGroup]="true"
+                [selectableGroupAsModel]="false" [closeOnSelect]="true"
+                name="collaborators" #collaborators="ngModel"
+                [ngClass]="{'ng-dirty ng-invalid' : collaborators.errors && ( collaborators.dirty || collaborators.touched || fileForm.submitted) }"
+                bindLabel="fullName" bindValue="id"
+                [(ngModel)]="selectedUsers" [loading]="showLoading" required>
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                    let-index="index">
+                    <input id="item-{{index}}" type="checkbox"
+                        name="itemgroup1-{{index}}"
+                        [ngModel]="item$.selected" /> {{item.role}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                    let-index="index">
+                    <input id="item-{{index}}" type="checkbox"
+                        name="item-{{index}}" [ngModel]="item$.selected" />
+                    {{item.fullName}}
+                </ng-template>
+            </ng-select>
+            <div *ngIf="collaborators.invalid && fileForm.submitted"
+                class="invalid-feedback">
+                <div *ngIf="collaborators.errors?.required">Campo es requerido
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary mt-2 d-block ms-auto"
+        (click)="resetDropzoneUploads()">Reiniciar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Subir</button>
+    </div>
+  </form>
+</ng-template>
+
+<!--ZONE DOCUMENT DETAILS -->
+<ng-template #fileDetailModal let-modal>
+  <div class="modal-header">
+    <h6 class="card-title">Detalle del Documento</h6>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-file modal-body">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                <i class="feather icon-download-cloud ms-1" (click)="download(selectedItem.id)" placement="start"
+                ngbTooltip="Descargar Documento - Versión actual"></i>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Id</label>
+                  <p class="text-muted">{{selectedItem.id}}</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Título</label>
+                  <p class="text-muted">{{selectedItem.title}}</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Nombre Original</label>
+                  <p class="text-muted">{{selectedItem.originalName}}</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Tamaño</label>
+                  <p class="text-muted">{{selectedItem.sizeStr}}</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Tipo</label>
+                  <p class="text-muted">{{selectedItem.ext}}</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado</label>
+                  <p class="text-muted">{{selectedItem.state.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción</label>
+                  <p class="text-muted">{{selectedItem.description}}</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Etiquetas</label>
+                  <p class="text-muted">{{selectedItem.hashtag}}</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 grid-margin stretch-card">
+        <div *ngIf="selectedItem.history" class="card workflow">
+          <div class="card-header">
+            Flujo de trabajo
+          </div>
+          <div class="card-body">
+            <div *ngFor="let his of selectedItem.history" class="row workflow-row">
+              <div class="col-lg-2 col-md-2 col-sm-12">
+                <i class="feather icon-calendar"></i><span class="ms-3">{{his.creationDate | date:'yyyy-MM-dd HH:mm'}}</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-12">
+                <span>{{his.uuid}}</span>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12">
+                <span>{{his.action}}</span> <span class="ms-3">{{his.fullName + '('+his.email+')'}}</span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-12">
+                <span>{{his.commentary ? his.commentary : 'Sin Comentarios'}}</span>
+              </div>
+              <div class="col-lg-1 col-md-1 col-sm-2">
+                <i class="feather icon-download-cloud" (click)="downloadFileHistorico(his.id)" placement="start"
+                [ngbTooltip]="'Descargar documento version '+his.uuid"></i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+     </div> 
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="closeModal()">Cerrar</button>
+  </div>
+
+</ng-template>

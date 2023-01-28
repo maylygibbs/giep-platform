@@ -3,7 +3,7 @@ export class UnitType {
 
     id: string;
     label: string;
-    factor:string;  
-
+    factor:string; 
+    status: SelectOption;
 
 }

@@ -6,7 +6,7 @@
     </ol>
   </nav>
   
-  <div *ngIf="step==1 && units && units.data" class="row">
+  <div *ngIf="step==1" class="row">
     <div class="col-lg-12 col-md-12 stretch-card">
       <div class="card">
         <div class="card-header">
@@ -22,28 +22,23 @@
               </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-              <button type="button" class="btn btn-display-dt">
-                <i class="feather icon-list"></i>
-              </button>
-              <button type="button" class="btn btn-display-dt">
-                <i class="feather icon-grid"></i>
-              </button>
-              <button type="button" class="btn btn-primary btn-create-dt">
-                <i class="mdi mdi-plus" (click)="create()"></i>
+              <button type="button" (click)="create()" class="btn btn-primary btn-create-dt" placement="start" ngbTooltip="Crear Unidad de Medida">
+                <i class="mdi mdi-plus" ></i>
               </button>
             </div>
           </div>
         </div>
-        <div class="card-body">
+        <div class="card-body card-dt">
           <h6 class="card-title"></h6>
           <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" *ngIf="units && units.data">
               <table datatable [dtOptions]="dtOptions" class="table table-striped">
                 <thead>
                   <tr>
                     <th>Id</th>
                     <th>Tipo de unidad</th>
                     <th>Factor</th>
+                    <th>Estado</th>
                     <th data-priority="1" class="text-center">Accion</th>
                   </tr>
                 </thead>
@@ -52,16 +47,17 @@
                     *ngFor="let unit of units.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: units.count }">
                     <td>{{unit.id}}</td>
                     <td>{{unit.label}}</td> 
-                    <td>{{unit.factor}}</td>                   
+                    <td>{{unit.factor}}</td>  
+                    <td>{{unit.status?.label}}</td>              
                     <td class="text-center">
-                      <i class="feather icon-edit-2" (click)="select(unit.id)"></i>
-                      <!--<i class="feather icon-trash" (click)="delete(input.id)"></i>-->
+                      <i class="feather icon-edit-2" (click)="select(unit.id)" placement="start" ngbTooltip="Editar Unidad de Medida"></i>
+                      <i *ngIf="unit.status?.value=='1'" class="feather icon-trash ms-1" (click)="delete(unit.id)"></i>
                     </td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="4" class="text-right">
+                    <th colspan="5" class="text-right">
                       <app-pager (onChangePage)="loadPage($event)"></app-pager>
                     </th>
                   </tr>    

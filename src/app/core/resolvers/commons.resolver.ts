@@ -132,7 +132,25 @@ export class CommonsListInstrumentsResolver implements Resolve<any> {
   }
 }
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListComponentTypesResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllComponentTypes();
+  }
+}
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListAuthtoritationsResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllAuthorizations();
+  }
+}
 
 
 

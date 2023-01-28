@@ -51,7 +51,11 @@ const routes: Routes = [
     resolve:{
       instruments: CommonsListInstrumentsResolver
     }
-  }
+  },
+  {
+    path: 'results',
+    loadChildren: () => import('../results/results.module').then(m => m.ResultsModule),
+  },
 ];
 
 @NgModule({

@@ -22,7 +22,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
   @ViewChild('inputFile')
   inputFile: ElementRef;
 
-  defaultView: boolean = true
+  defaultView: boolean = true;
   step: number = 1;
   users: PaginationResponse;
 
@@ -102,32 +102,54 @@ export class UsersComponent extends BaseComponent implements OnInit {
     }
   }
 
+  /**
+   * Select user
+   * @param id 
+   */
   async select(id: number) {
     this.selectedItem = await this.userService.getUserById(id);
     this.next();
   }
 
+  /**
+   * Delete user by id
+   * @param id 
+   */
   async delete(id: number) {
     await this.userService.deleteUser(id);
     this.loadPage(this.page);
   }
 
+  /**
+   * Handle next step
+   */
   next() {
     this.step++;
   }
 
+  /**
+   * Handle step to back
+   * @param item 
+   */
   back(item: any) {
     this.selectedItem = item;
     this.step--;
     this.loadPage(this.page);
   }
 
+  /**
+   * search by word
+   */
   search() {
     if (this.word && this.word.length > 0) {
       this.loadPage(environment.paginator.default_page);
     }
   }
 
+  /**
+   * Change view
+   * @param change 
+   */
   changeView(change: boolean) {
     this.defaultView = change;
   }

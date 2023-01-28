@@ -15,29 +15,29 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class UnitsComponent extends BaseComponent implements OnInit {
 
-  step:number = 1;
+  step: number = 1;
   units: PaginationResponse;
 
   loadingIndicator = true;
   reorderable = true;
   ColumnMode = ColumnMode;
-  
+
 
   totalItems: number;
   page: number = 1;
   previousPage: number;
   showPagination: boolean;
 
-  
+
   selectedItem: UnitType;
-  word:string;
+  word: string;
 
   environment = environment;
 
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
-    private router: Router) { 
+    private router: Router) {
     super()
   }
 
@@ -50,45 +50,72 @@ export class UnitsComponent extends BaseComponent implements OnInit {
     });
   }
 
+  /**
+   * Load items page by page
+   * @param pageInfo 
+   */
   async loadPage(pageInfo: any) {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.units = null;
-    this.units = await this.instrumentsService.getUnitTypesPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
+    this.units = await this.instrumentsService.getUnitTypesPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null });
   }
 
-  create(){
+  /**
+   * Create item
+   */
+  create() {
     this.selectedItem = new UnitType();
     this.next();
   }
 
+  /**
+ * Select item
+ * @param id 
+ */
   async select(id: number) {
     this.selectedItem = await this.instrumentsService.getUnitTypeById(id);
     this.next();
   }
 
+
+  /**
+   * Delete item
+   * @param id 
+   */
   async delete(id: number) {
-    //await this.userService.deleteUnitType(id);
+    await this.instrumentsService.deleteUnitType(id);
     this.loadPage(this.page);
   }
 
-  next(){
+  /**
+ * Next step
+ */
+  next() {
     this.step++;
   }
 
-  back(item:any){
+  /**
+ * Back step
+ * @param item 
+ */
+  back(item: any) {
     this.selectedItem = item;
     this.step--;
     this.loadPage(this.page);
   }
 
-  search(){
+
+  /**
+ * Search item
+ */
+  search() {
     if (this.word && this.word.length > 0) {
       this.loadPage(environment.paginator.default_page);
     }
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     if (this.$eventNavigationEnd) {
       this.$eventNavigationEnd.unsubscribe()
     }

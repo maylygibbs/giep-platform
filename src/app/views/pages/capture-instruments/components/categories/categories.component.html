@@ -6,7 +6,7 @@
     </ol>
   </nav>
   
-  <div *ngIf="step==1 && categories && categories.data" class="row">
+  <div *ngIf="step==1" class="row">
     <div class="col-lg-12 col-md-12 stretch-card">
       <div class="card">
         <div class="card-header">
@@ -22,27 +22,22 @@
               </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-              <button type="button" class="btn btn-display-dt">
-                <i class="feather icon-list"></i>
-              </button>
-              <button type="button" class="btn btn-display-dt">
-                <i class="feather icon-grid"></i>
-              </button>
-              <button type="button" class="btn btn-primary btn-create-dt">
-                <i class="mdi mdi-plus" (click)="create()"></i>
+              <button type="button" (click)="create()" class="btn btn-primary btn-create-dt"  placement="start" ngbTooltip="Crear Categoría">
+                <i class="mdi mdi-plus"></i>
               </button>
             </div>
           </div>
         </div>
-        <div class="card-body">
+        <div class="card-body card-dt">
           <h6 class="card-title"></h6>
           <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" *ngIf="categories && categories.data">
               <table datatable [dtOptions]="dtOptions" class="table table-striped">
                 <thead>
                   <tr>
                     <th>Id</th>
                     <th>Categoría</th>
+                    <th>Estado</th>
                     <th data-priority="1">Accion</th>
                   </tr>
                 </thead>
@@ -51,15 +46,16 @@
                     *ngFor="let category of categories.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: categories.count }">
                     <td>{{category.id}}</td>
                     <td>{{category.label}}</td>
+                    <td>{{category.status?.label}}</td>
                     <td class="text-center">
-                      <i class="feather icon-edit-2" (click)="select(category.id)"></i>
-                      <!--<i class="feather icon-trash" (click)="delete(category.id)"></i>-->
+                      <i class="feather icon-edit-2" (click)="select(category.id)" placement="start" ngbTooltip="Editar Categoría"></i>
+                      <i *ngIf="category.status?.value=='1'" class="feather icon-trash ms-1" (click)="delete(category.id)"></i>
                     </td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="3" class="text-right">
+                    <th colspan="4" class="text-right">
                       <app-pager (onChangePage)="loadPage($event)"></app-pager>
                     </th>
                   </tr>    

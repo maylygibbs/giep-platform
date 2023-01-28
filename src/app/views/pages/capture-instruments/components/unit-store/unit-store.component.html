@@ -32,6 +32,16 @@
                             </div>
                         </div>                        
                     </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12 p-1">
+                            <div class="mb-3 ms-3">
+                                <div class="form-check form-switch mb-2">
+                                  <input type="checkbox" name=status #status="ngModel" [(ngModel)]="unitStatus" (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">
+                                  <label class="form-check-label" for="formSwitch1">Activo</label>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
 
                     <div class="row">
                         <div class="col-lg-12 col-md-12 text-right">

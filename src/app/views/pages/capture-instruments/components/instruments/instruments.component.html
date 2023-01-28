@@ -23,12 +23,6 @@
               </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-              <!--<button type="button" class="btn btn-display-dt">
-                <i class="feather icon-list"></i>
-              </button>
-              <button type="button" class="btn btn-display-dt">
-                <i class="feather icon-grid"></i>
-              </button>-->
               <button type="button" class="btn btn-primary btn-create-dt" (click)="create()" placement="start" ngbTooltip="Crear Intrumento">
                 <i class="mdi mdi-plus" ></i>
               </button>
@@ -65,7 +59,7 @@
                     </div>                    
                     </td>
                     <td>
-                      <a *ngIf="instrument.path" [routerLink]="instrument.path" [queryParams]="{id: instrument.id, name: instrument.name}" >Ver</a>
+                      <a *ngIf="instrument.path" [routerLink]="instrument.path" [queryParams]="{id: instrument.id}" >Ver</a>
                       <span *ngIf="!instrument.path">No hay resultados</span>
                     </td> 
                     <td>{{instrument.createAt | date:'yyyy-MM-dd'}}</td>                    
@@ -111,7 +105,7 @@
   <ng-template #confirmModal let-modal>
     <app-modal-confirm [message]="messageModal" (onFinish)="processEvent($event)"></app-modal-confirm>
   </ng-template>
-  <ng-template #addUsersModal let-modal>
+<ng-template #addUsersModal let-modal>
     <div class="modal-header">
       <button type="button" class="btn-close" (click)="closeAddUsersModal()" aria-label="Close"></button>
   </div>
@@ -122,7 +116,7 @@
           <div class="mb-3">
               <label for="inputRoles" class="form-label required">Roles</label>
               <ng-select id="inputRoles" [items]="data.roles" [multiple]="true"
-                  [searchable]="true" [closeOnSelect]="true"
+                  [searchable]="true" [closeOnSelect]="false"
                   name="instrumentRole" #instrumentRole="ngModel"
                   [ngClass]="{'ng-dirty ng-invalid' : instrumentRole.errors && ( instrumentRole.dirty || instrumentRole.touched || addUserForm.submitted) }"
                   bindLabel="label" bindValue="value" 
@@ -141,7 +135,8 @@
               <label for="inputUsers" class="form-label required">Usuarios</label>
               <ng-select id="inputUsers" [items]="users" [multiple]="true"
                   [searchable]="true" groupBy="role" [selectableGroup]="true"
-                  [selectableGroupAsModel]="false" [closeOnSelect]="true"
+                  [virtualScroll]="true"
+                  [selectableGroupAsModel]="false" [closeOnSelect]="false"
                   name="instrumentUsers" #instrumentUsers="ngModel"
                   [ngClass]="{'ng-dirty ng-invalid' : instrumentUsers.errors && ( instrumentUsers.dirty || instrumentUsers.touched || addUserForm.submitted) }"
                   bindLabel="fullName" bindValue="id" 

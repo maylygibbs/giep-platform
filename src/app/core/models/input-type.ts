@@ -3,7 +3,8 @@ export class InputType {
 
     id: string;
     label: string;
-    multipleSelection:number;  
+    multipleSelection:number;
+    status: SelectOption;  
 
 
 }

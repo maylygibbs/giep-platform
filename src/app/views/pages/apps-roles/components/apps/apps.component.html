@@ -1,0 +1,90 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink=".">Tipos de Input</a></li>
+        <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Nueva widget o menú</li>
+        <li *ngIf="selectedItem && selectedItem.id" class="breadcrumb-item active" aria-current="page">Actualizar widget / menú</li>
+    </ol>
+</nav>
+
+<div *ngIf="step==1" class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                        <div class="search-form">
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="feather icon-search" (click)="search()"></i>
+                                </div>
+                                <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word"
+                                    (keyup.enter)="search()" placeholder="Buscar aqui...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                        <button type="button" class="btn btn-display-dt">
+                            <i class="feather icon-list"></i>
+                        </button>
+                        <button type="button" class="btn btn-display-dt">
+                            <i class="feather icon-grid"></i>
+                        </button>
+                        <button type="button" (click)="create()" class="btn btn-primary btn-create-dt" placement="start"
+                            ngbTooltip="Crear Widget o Menú">
+                            <i class="mdi mdi-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body card-dt">
+                <h6 class="card-title"></h6>
+                <div class="row">
+                    <div class="col-lg-12" *ngIf="apps && apps.data">
+                        <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Widget / Menú</th>
+                                    <th>Ícono</th>
+                                    <th>Roles</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th data-priority="1" class="text-center">Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="let app of apps.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: apps.count }">
+                                    <td>{{app.id}}</td>
+                                    <td>{{app.label}}</td>
+                                    <td><i [class]="app.icon"></i></td>
+                                    <td>{{app.roles}}</td>
+                                    <td>{{app.type}}</td>
+                                    <td>{{app.status?.label}}</td>
+                                    <td class="text-center">
+                                        <i class="feather icon-edit-2" (click)="select(app.id)" placement="start"
+                                            ngbTooltip="Editar Widget o Menú"></i>
+                                        <i *ngIf="app.status.value == '1'" class="feather icon-trash ms-1" (click)="delete(app.id)" placement="start"
+                                            ngbTooltip="Eliminar Widget o Menú"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="7" class="text-right">
+                                        <app-pager (onChangePage)="loadPage($event)"></app-pager>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="step==2">
+    <app-app-store [app]="selectedItem" (onBack)="back($event)"></app-app-store>
+</div>

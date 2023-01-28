@@ -50,6 +50,10 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
     });
   }
 
+  /**
+   * Load page by page
+   * @param pageInfo 
+   */
   async loadPage(pageInfo: any) {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
@@ -57,31 +61,50 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
     this.categories = await this.instrumentsService.getCategoriesPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null});
   }
 
+  /**
+   * Create an Category
+   */
   create(){
     this.selectedItem = new SelectOption();
     this.next();
   }
 
+  /**
+   * Select item
+   * @param id 
+   */
   async select(id: number) {
     this.selectedItem = await this.instrumentsService.getCategoryById(id);
     this.next();
   }
 
+  /**
+   * Delete item by id
+   * @param id 
+   */
   async delete(id: number) {
-    //await this.instrumentsService.deleteCategory(id);
+    await this.instrumentsService.deleteCategory(id);
     this.loadPage(this.page);
   }
 
+  /** Go to next page */
   next(){
     this.step++;
   }
 
+  /**
+   * Go to back page
+   * @param item 
+   */
   back(item:any){
     this.selectedItem = item;
     this.step--;
     this.loadPage(this.page);
   }
 
+  /**
+   * Search by word
+   */
   search(){
     if (this.word && this.word.length > 0) {
       this.loadPage(environment.paginator.default_page);

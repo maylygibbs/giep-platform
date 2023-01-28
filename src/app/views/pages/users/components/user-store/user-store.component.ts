@@ -49,8 +49,6 @@ export class UserStoreComponent extends BaseComponent implements OnInit {
     this.route.data.subscribe((data)=>{      
       this.data = data;
     });
-    console.log("EPALE DATOS DEL USUARIO");
-    console.log(this.user);
     if(!this.user.id){
       this.user.status = new SelectOption('1');
       this.userStatus = true;

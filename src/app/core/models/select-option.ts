@@ -13,6 +13,7 @@ export class SelectOption{
   public morada:string;
   public icon:string;
   public color:string
+  public status: SelectOption;
 
   /**
    * Used to display data in forms.

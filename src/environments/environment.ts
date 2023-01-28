@@ -8,6 +8,8 @@ export const environment = {
   ttl: 18000000,
   apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
   apiAuth: 'https://bofficegiepstage.pafar.com.ve/public', 
+  //apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
+  //apiAuth: 'https://giepboffice.pafar.com.ve/public',
   localstorage:{
     userKey : 'cusr'
   },
@@ -30,6 +32,11 @@ export const environment = {
     alphanumeric: {
       validations: {
         pattern: '^[a-zA-Z0-9]*$',
+      }
+    },
+    role_pattern:{
+      validations: {
+        pattern: '(ROLE)[A-Z\_]+',
       }
     },
     file_extension:['doc', 'docx', 'pdf','xls', 'xlsx', 'png', 'jpg', 'jpge'],

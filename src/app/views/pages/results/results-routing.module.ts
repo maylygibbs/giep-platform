@@ -3,27 +3,19 @@ import { ByCategoryComponent } from './components/by-category/by-category.compon
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ByCounterComponent } from './components/by-counter/by-counter.component';
+import { ResultsComponent } from './components/results/results.component';
+import { CommonsListCountriesResolver, CommonsListInstrumentsResolver } from '../../../core/resolvers/commons.resolver';
 
 const routes: Routes = [
   {
-    path: 'bycategory',
-    component: ByCategoryComponent,
+    path: '',
+    component: ResultsComponent,
     data: {
-      title: 'Resultados de evaluacion por usuario y categorias - GIEp',
-    }
-  },
-  {
-    path: 'byquestion',
-    component: ByQuestionsComponent,
-    data: {
-      title: 'Resultados de evaluacion por preguntas - GIEp',
-    }
-  },
-  {
-    path: 'bycounter',
-    component: ByCounterComponent,
-    data: {
-      title: 'Resultados de evaluacion por usuario y contador de tipo de respuestas - GIEp',
+      title: 'Resultados de evaluación - GIEp',
+    },
+    resolve:{
+      instruments: CommonsListInstrumentsResolver,
+      countries: CommonsListCountriesResolver
     }
   }
 ];

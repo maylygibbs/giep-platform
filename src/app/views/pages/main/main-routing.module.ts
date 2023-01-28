@@ -65,12 +65,16 @@ const routes: Routes = [
         loadChildren: () => import('../capture-instruments/capture-instruments.module').then(m => m.CaptureInstrumentsModule),
       },
       {
-        path: 'results',
-        loadChildren: () => import('../results/results.module').then(m => m.ResultsModule),
-      },
-      {
         path: 'giep-repository',
         loadChildren: () => import('../giep-repository/giep-repository.module').then(m => m.GiepRepositoryModule),
+      },
+      {
+        path: 'roles-permissions',
+        loadChildren: () => import('../roles-permissions/roles-permissions.module').then(m => m.RolesPermissionsModule),
+      },
+      {
+        path: 'apps-permissions',
+        loadChildren: () => import('../apps-roles/apps-roles.module').then(m => m.AppsRolesModule),
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

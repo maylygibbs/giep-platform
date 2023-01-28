@@ -1,0 +1,33 @@
+.selected-tab{
+    //background-color: #F7F9FC !important;
+    background: #FFFFFF;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 3px 3px 0px 0px;  
+
+}
+
+.input-icon-selected{
+    width: 100%;
+    height: 35px;
+    background-color: #e2e8ee;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;  
+    padding: 0.469rem 0.8rem  
+}
+
+.button-search{
+    font-size: 17.9px;
+}
+
+.icon:hover{
+    color: #6571ff;
+    cursor: pointer;
+
+}
+
+.icon-selected{
+    color: #6571ff;
+}

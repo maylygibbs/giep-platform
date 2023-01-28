@@ -6,18 +6,22 @@ import { ByCategoryComponent } from './components/by-category/by-category.compon
 import { ByQuestionsComponent } from './components/by-questions/by-questions.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ByCounterComponent } from './components/by-counter/by-counter.component';
+import { ResultsComponent } from './components/results/results.component';
+import { SharedModule } from '../../shared/shared.module';
 
 
 @NgModule({
   declarations: [
     ByCategoryComponent,
     ByQuestionsComponent,
-    ByCounterComponent
+    ByCounterComponent,
+    ResultsComponent
   ],
   imports: [
     CommonModule,
     ResultsRoutingModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    SharedModule
   ]
 })
 export class ResultsModule { }

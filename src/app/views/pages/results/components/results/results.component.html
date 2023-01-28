@@ -1,0 +1,207 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Resultados</a></li>
+  </ol>
+</nav>
+<div class="row">
+  <div class="col-lg-12 col-md-12 stretch-card">
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center flex-row-reverse py-2"><i (click)="clearFilters()" class="mdi mdi-broom btn-clear my-2" placement="top" ngbTooltip="Limpiar filtros"></i></div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
+            <label for="inputInstrument" class="form-label required">Instrumento </label><i class="feather icon-info ms-1" placement="right" ngbTooltip="El instrumento es requerido para visualizar los resultados respectivos. Por favor, indique el instrumento."></i>
+            <ng-select id="inputInstrument" name="instrument" [items]="data.instruments" [(ngModel)]="instrumentId"
+              bindValue="id" [searchable]="true" (ngModelChange)="changeSelectFilter()" required>
+            </ng-select>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
+            <label for="inputStartDate" class="form-label">Fecha inicio</label>
+            <div class="input-group">
+              <input id="inputStartDate" name="startDate" #startDateI="ngModel"
+                [minDate]="{year: 1930 , month: 9, day: 1}" class="form-control" placeholder="yyyy-mm-dd"
+                [(ngModel)]="startDate" ngbDatepicker #dp1="ngbDatepicker"
+                (ngModelChange)="changeDateFilter(startDateI,endDateI)">
+              <button class="input-group-text" type="button" (click)="dp1.toggle()">
+                <i class="feather icon-calendar icon-md text-muted"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
+            <label for="inputEndDate" class="form-label">Fecha fin</label>
+            <div class="input-group">
+              <input id="inputEndDate" name="endDate" #endDateI="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}"
+                class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="endDate" ngbDatepicker #dp2="ngbDatepicker"
+                (ngModelChange)="changeDateFilter(startDateI,endDateI)">
+              <button class="input-group-text" type="button" (click)="dp2.toggle()">
+                <i class="feather icon-calendar icon-md text-muted"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="mb-3">
+              <label for="inputCountry" class="form-label">País</label>
+              <ng-select id="inputCountry" [items]="data.countries" name="country" #country="ngModel"
+                [searchable]="true" (change)="onChangeCountry($event)"   [(ngModel)]="selectedCountry">
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="mb-3">
+              <label for="inputState" class="form-label">Estado</label>
+              <ng-select id="inputState" [items]="states" name="state" #state="ngModel"
+                (change)="onChangeStates($event)"  [searchable]="true" [(ngModel)]="selectedState">
+              </ng-select>
+
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="mb-3">
+              <label for="inputCity" class="form-label">Ciudad</label>
+              <ng-select id="inputCity" [items]="cities" name="city" #city="ngModel" [searchable]="true"
+                (change)="changeSelectFilter()" [(ngModel)]="selectedCity">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="mb-3">
+              <label for="inputSex" class="form-label">Sexo</label>
+              <ng-select id="inputSex" name="sex" #sex="ngModel" (change)="changeSelectFilter()" [searchable]="true"
+                [(ngModel)]="selectedSex">
+                <ng-option value="F">F</ng-option>
+                <ng-option value="M">M</ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="mb-3">
+              <label for="inputSex" class="form-label required">Resultado</label>
+              <ng-select id="inputSex" name="resultType" #resultType="ngModel" (change)="changeSelectFilter()" [searchable]="true"
+                [(ngModel)]="selectedResult" required>
+                <ng-option value="1">Por usuario</ng-option>
+                <ng-option value="0">Global</ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="mb-3">
+              <label for="inputSex" class="form-label required">Tipo de gráfica</label>
+              <ng-select id="inputSex" name="resultType" #resultType="ngModel" (change)="changeSelectFilter()" [searchable]="true"
+                [(ngModel)]="selectedGraphic" required>
+                <ng-option value="1">Barras horizontales</ng-option>
+                <ng-option value="2">Barras verticales</ng-option>
+                <ng-option value="3">Pie</ng-option>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+            <div class="search-form">
+              <div class="input-group">
+                <div class="input-group-text">
+                  <i class="feather icon-search" (click)="search()"></i>
+                </div>
+                <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (keyup.enter)="search()"
+                  placeholder="Buscar aqui...">
+              </div>
+            </div>
+          </div>        
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="results && results.data" class="row mt-5">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="text-muted">{{ 'Muestra: '+results.sample+ ' usuarios'}}  </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div *ngFor="let result of results.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: results.count }" class="col-lg-6 col-md-6 col-xs-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline mb-2">
+                  <h6 class="card-title mb-0">{{result.name}}</h6>
+                  <div ngbDropdown class="mb-2" style="visibility: hidden;">
+                    <button ngbDropdownToggle class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton4">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal" appFeatherIcon></i>
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton4">
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="eye" appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="edit-2" appFeatherIcon class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="trash" appFeatherIcon class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="printer" appFeatherIcon class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="download" appFeatherIcon class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div>
+                </div>
+                <p *ngIf="selectedResult==='1' && result.dateResponse" class="text-muted">{{result.dateResponse | date:'yyyy-MM-dd hh:mm a'}}</p>
+                <p *ngIf="selectedResult==='1' && !result.dateResponse" class="text-muted">No participó</p>
+                <p *ngIf="result.country" class="text-muted">País: {{result.country}}</p>
+                <p *ngIf="result.state" class="text-muted">Estado: {{result.state}}</p>
+                <p *ngIf="result.city" class="text-muted">Ciudad: {{result.city}}</p>
+                <p *ngIf="result.sex" class="text-muted">Sexo: {{result.sex}}</p><br>
+                <p class="text-muted">{{result.warning}}</p>
+                <apx-chart *ngIf="selectedGraphic=='1' || selectedGraphic=='2'"
+                  [series]="result.optionsChart.series"
+                  [chart]="result.optionsChart.chart"
+                  [colors]="result.optionsChart.colors"
+                  [fill]="result.optionsChart.fill"
+                  [grid]="result.optionsChart.grid"
+                  [xaxis]="result.optionsChart.xaxis"
+                  [yaxis]="result.optionsChart.yaxis"
+                  [legend]="result.optionsChart.legend"
+                  [stroke]="result.optionsChart.stroke"
+                  [dataLabels]="result.optionsChart.dataLabels"
+                  [plotOptions]="result.optionsChart.plotOptions"
+                ></apx-chart>
+                <apx-chart *ngIf="selectedGraphic=='3' || selectedGraphic=='4'"
+                [series]="result.optionsChart.series"
+                [chart]="result.optionsChart.chart"
+                [colors]="result.optionsChart.colors"
+                [labels]="result.optionsChart.labels"
+                [responsive]="result.optionsChart.responsive"
+                [plotOptions]="result.optionsChart.plotOptions"
+                [legend]="result.optionsChart.legend"
+              ></apx-chart>
+              </div> 
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+            <app-pager (onChangePage)="loadPage($event)"></app-pager>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!submited && (!results || !results.data)" class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="card-body text-center">
+        <p>No hay datos disponibles</p>
+      </div>
+    </div>
+  </div> 
+</div>
+<div *ngIf="submited && (!results || !results.data)" class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="card-body text-center">
+        <p>Buscando ...</p>
+      </div>
+    </div>
+  </div> 
+</div>

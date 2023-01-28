@@ -25,8 +25,14 @@ import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
   url: 'https://httpbin.org/post',
-  maxFilesize: 50,
-  acceptedFiles: 'image/*'
+  maxFilesize: 2,
+  paramName: "file",
+  accept: function(file, done) {
+    if (file.name == "justinbieber.jpg") {
+      done("Naha, you don't.");
+    }
+    else { done(); }
+  }
 };
 
 import { AdvancedFormElementsComponent } from './advanced-form-elements.component';

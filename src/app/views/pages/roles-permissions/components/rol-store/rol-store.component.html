@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form name="rolForm" #rolForm="ngForm" (ngSubmit)="onSubmit(rolForm)" class="forms-sample">
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputTypeName" class="form-label">Rol</label><i class="feather icon-info ms-1" placement="right" ngbTooltip="El formato requerido para indicar el nombre del rol debe iniciar con la palabra 'ROLE' seguido del caracter '_' y el respectivo nombre de rol en mayúscula. Ejemp.: ROLE_CONTADOR"></i>
+                                <input type="text" name="inputRol" #inputRol="ngModel" [(ngModel)]="rol.label"
+                                [ngClass]="{'ng-dirty ng-invalid' : inputRol.errors && ( inputRol.dirty || inputRol.touched || rolForm.submitted) }"
+                                    class="form-control" id="inputTypeName" autocomplete="off" minlength="1" maxlength="100"
+                                [pattern]="environment.form.role_pattern.validations.pattern" required>
+                                <div *ngIf="inputRol.invalid && rolForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="inputRol.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="inputRol.errors?.pattern">El nombre del role no cumple con el formato requerido. Debe iniciar con la palabra 'ROLE' seguido del caracter '_' y el respectivo nombre de rolen mayúscula. Ejemp.: ROLE_CONTADOR
+                                    </div>
+                                    <div *ngIf="inputRol.errors?.minlength || inputRol.errors?.maxlength">
+                                        Campo permite entre 1 y 100 caracteres</div>
+                                </div>                                    
+                            </div>
+                        </div> 
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12 p-1">
+                            <div class="mb-3 ms-3">
+                                <div class="form-check form-switch mb-2">
+                                  <input type="checkbox" name=status #status="ngModel" [(ngModel)]="rolStatus" (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">
+                                  <label class="form-check-label" for="formSwitch1">Activo</label>
+                                </div>
+                            </div>
+                        </div>                     
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-right">
+                            <button class="btn btn-secondary" (click)="back()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+

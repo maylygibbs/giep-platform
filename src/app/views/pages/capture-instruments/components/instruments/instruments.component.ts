@@ -188,7 +188,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     this.roles = null;
     this.selectedUsers = null;
     this.users = null;
-    this.modalService.open(modalRef, {}).result.then((result) => {
+    this.modalService.open(modalRef, {size:'lg'}).result.then((result) => {
       console.log("Modal closed" + result);
     }).catch((res) => {});
   }
@@ -241,6 +241,11 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
         divError.style.display = 'none';
       }, 1500);
     }
+  }
+
+
+  prueba(event:any){
+    console.log('event',event)
   }
 
   ngOnDestroy() {

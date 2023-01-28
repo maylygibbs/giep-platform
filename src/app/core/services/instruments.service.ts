@@ -123,7 +123,7 @@ export class InstrumentsService extends HttpService {
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
       instrument.order = item.orden;
-      instrument.path = item.path;
+      instrument.path = '/capture-instruments/results';
       return instrument;
     });
 
@@ -215,7 +215,7 @@ export class InstrumentsService extends HttpService {
     instrument.description = resp.data[0].descripcion;
     instrument.dutation = resp.data[0].duracion;
     instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id, resp.data[0].idTipoUnidad.Descripcion);
-    instrument.path = resp.data[0].path;    
+    instrument.path = resp.data[0].path;
     const d = moment(resp.data[0].fechaVigencia).toDate();
     instrument.expirationDate = { year: d.getFullYear(), month: (d.getMonth() + 1), day: d.getDate() };
     instrument.isEditable = resp.data[0].editable == 1 ? true : false;
@@ -223,7 +223,7 @@ export class InstrumentsService extends HttpService {
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
     if (resp.data[0].users) {
-      instrument.users = resp.data[0].users.map((u:any) => {
+      instrument.users = resp.data[0].users.map((u: any) => {
         const user = new User();
         user.id = u.id;
         user.firstName = u.nombre;
@@ -249,8 +249,8 @@ export class InstrumentsService extends HttpService {
         question.className = item.class;
         question.required = item.obligatorio == 1 ? true : false;
         question.score = item.puntos;
-        
-        if(item.IdCategoria ){
+
+        if (item.IdCategoria) {
           question.categoryBy = String(item.IdCategoria.id);
         }
         question.isReady = true;
@@ -307,10 +307,10 @@ export class InstrumentsService extends HttpService {
   /**
    * Register hour of init answer
    */
-   async registerInitAnswarInstrument(id: string){
+  async registerInitAnswarInstrument(id: string) {
     try {
       const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/iniciar`));
-      
+
     } catch (error: any) {
       if (error.status != 500)
         this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
@@ -321,11 +321,11 @@ export class InstrumentsService extends HttpService {
   /**
    * Register hour of init answer
    */
-  registerTimeoutInstrument(){
+  registerTimeoutInstrument() {
     console.log('TODO: timeout instrument');
     this.toastrService.warning('El tiempo establecido para responder esta encuesta ha terminado. Por favor, complete la encuesta a la brevedad posible y presione "Guardar".')
 
-  } 
+  }
 
 
 
@@ -370,7 +370,7 @@ export class InstrumentsService extends HttpService {
         const categories = item.resultado.map((itemData: any) => {
           return itemData.categoria;
         });
-        result.optionsChart = this.getOptionsChartBarByCategory(this.obj, data2, categories, true);
+        result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, true);
         return result;
       })
 
@@ -415,7 +415,7 @@ export class InstrumentsService extends HttpService {
     return results;
   }
 
-  async getIntrumentResultByCounter(id: number):Promise<any>{
+  async getIntrumentResultByCounter(id: number): Promise<any> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/${id}/resultados/contador`));
 
     let results: any[] = [];
@@ -424,7 +424,7 @@ export class InstrumentsService extends HttpService {
       results = resp.usuarios.map((item: any) => {
         const result: any = {};
         result.name = item.nombre;
-        result.warning = !item.resultado || item.resultado.length==0 ? ': Falta por participar en la encuesta':null;
+        result.warning = !item.resultado || item.resultado.length == 0 ? ': Falta por participar en la encuesta' : null;
         const data1 = item.resultado.map((itemData: any) => {
           return {
             x: itemData.valor,
@@ -447,16 +447,103 @@ export class InstrumentsService extends HttpService {
   }
 
 
-  getOptionsChartBarByCategory(obj: any, data: any, categories: any, horizontal: boolean) {
+  /**
+ * Check all instruments, supports pagination and filter
+ * @param filter 
+ * @returns 
+ */
+  async getInstrumentResultsPagined(filter: any, instrumentId: number, selectedGraphic: string, isHorizontal: boolean=true): Promise<PaginationResponse> {
+    const resp = await firstValueFrom(this.post(environment.apiUrl, `/encuesta/resultados/instrumento/${instrumentId}`, filter));
+    const paginator = new PaginationResponse(filter.page, filter.rowByPage);
+    paginator.count = resp.count;
+    if (resp && resp.entidades?.length > 0) {
+      paginator.sample = resp.muestra ? resp.muestra: 0;
+      paginator.data = resp.entidades.map((item: any) => {
+        const result: any = {};
+        result.name = item.entidad;
+        result.dateResponse = item.fecha_inicio;
+        result.country = item.pais;
+        result.state = item.estado;
+        result.city = item.ciudad;
+        result.sex = item.sexo;
+        if(item.fecha_inicio){
+          if(!item.resultado || item.resultado.length == 0 ){
+            result.warning = 'Inició el instrumento, sin embargo no culminó.';
+          }else{
+            if(item.resultado && item.resultado.length > 0 ){
+              result.warning = 'Resultados';
+            }            
+          }
+        }else{
+          if(!item.resultado || item.resultado.length == 0 ){
+            result.warning = 'Sin resultados';
+          }else{
+            if(item.resultado && item.resultado.length > 0 ){
+              result.warning = 'Resultados';
+            }            
+          }
+        }
+        
+        const data1 = item.resultado.map((itemData: any) => {
+          return {
+            x: itemData.label,
+            y: itemData.value
+          }
+        });
+        const data2 = item.resultado?.map((itemData: any) => {
+          return itemData.value;
+        });
+        const data3 = item.resultado?.map((itemData: any) => {
+          return parseInt(itemData.value);
+        });
+        const categories = item.resultado.map((itemData: any) => {
+          return itemData.label;
+        });
+        
+        switch (selectedGraphic) {
+          
+          case '1':
+            result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, true);
+           
+            break;
+          case '2':
+            result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, false);
+            break;
+          case '3':
+            result.optionsChart = this.getOptionsChartPie(this.obj, data3, categories);
+            break;               
+
+          default:
+            break;
+        }
+
+        return result;
+      })
+
+    }else{
+      paginator.data=null;
+    }
+    return paginator;
+  }
+
+  /**
+   * Generate chart type: Bar
+   * @param obj 
+   * @param data1 
+   * @param data2 
+   * @param categories 
+   * @param horizontal 
+   * @param textLabelyAxis 
+   * @returns 
+   */
+  getOptionsChartBar(obj: any, data1:any, data2: any, categories: any, horizontal: boolean, textLabelyAxis:string = 'Categorias') {
     return {
       series: [{
-        data: data,
+        data: data2,
       }],
       chart: {
-        type: 'bar',
-        height: '380',
-        //parentHeightOffset: 0,
-        //foreColor: obj.bodyColor,
+        type:  'bar',
+        height: horizontal ?'480':'380',
         background: obj.cardBg,
         toolbar: {
           show: false
@@ -481,6 +568,10 @@ export class InstrumentsService extends HttpService {
       },
       xaxis: {
         type: 'category',
+        labels:{
+          show: horizontal ? true : false,
+        },
+        
         categories: categories,
         axisBorder: {
           color: obj.gridBorder,
@@ -491,25 +582,30 @@ export class InstrumentsService extends HttpService {
       },
       yaxis: {
         title: {
-          text: 'Categorias',
+          text: textLabelyAxis,
           style: {
             size: 9,
             color: obj.muted
           }
         },
         labels: {
-          //offsetX: 0,
-          show: false
+          offsetX: 0,
+          show: horizontal ? false : true,
+          style: {
+            fontSize: '8px',
+
+
+        },
         },
       },
       legend: {
-        show: false,
+        show: true,
         position: "bottom",
-        horizontalAlign: 'center',
+        horizontalAlign: 'left',
         fontFamily: obj.fontFamily,
         itemMargin: {
           horizontal: 8,
-          vertical: 0
+          vertical: 5
         },
       },
       stroke: {
@@ -524,7 +620,8 @@ export class InstrumentsService extends HttpService {
           fontFamily: obj.fontFamily,
         },
         formatter: function (val, opt) {
-          return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+          //return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+          return val
         }
       },
       plotOptions: {
@@ -536,11 +633,64 @@ export class InstrumentsService extends HttpService {
           borderRadius: 4,
           dataLabels: {
             position: 'bottom',
-            orientation: 'horizontal',
+            orientation: horizontal ? 'horizontal' : 'vertical',
           }
         },
       }
     }
+  }
+
+  /**
+   * Generate chart type: Pie
+   * @param obj 
+   * @param data2 
+   * @param categories 
+   * @param horizontal 
+   * @param textLabelyAxis 
+   * @returns 
+   */
+  getOptionsChartPie(obj: any, data3: any, categories: any, chartType: string='pie') {
+    console.log(data3)
+    console.log(categories)
+    return {
+      series: data3,
+      labels: categories,
+      chart: {
+        width: 590,
+        type: chartType
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '65%'
+          }
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ],
+      legend: {
+        show: true,
+        position: "bottom",
+        horizontalAlign: 'left',
+        fontFamily: obj.fontFamily,
+        itemMargin: {
+          horizontal: 8,
+          vertical: 5
+        },
+      }
+
+    };
   }
 
   getOptionsChartBarByQuestions(obj: any, data: any, categories: any, horizontal: boolean) {
@@ -757,6 +907,7 @@ export class InstrumentsService extends HttpService {
       inputType.id = item.id;
       inputType.label = item.nombre;
       inputType.multipleSelection = item.multiple_seleccion;
+      inputType.status = new SelectOption(item.status?.statusId, item.status?.labelStatus);
       return inputType;
     });
 
@@ -776,6 +927,7 @@ export class InstrumentsService extends HttpService {
     input.id = resp[0].id;
     input.label = resp[0].nombre;
     input.multipleSelection = resp[0].multiple_seleccion;
+    input.status = new SelectOption(resp[0].status?.statusId, resp[0].status?.labelStatus);
     return input;
   }
 
@@ -784,7 +936,10 @@ export class InstrumentsService extends HttpService {
    * @param id 
    */
   async deleteInputType(id: number) {
-    //const resp = await firstValueFrom(this.delete(environment.apiUrl,`/user/${id}`));
+    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/encuesta/tipoinput/${id}`));
+    if(resp && resp.msg){
+      this.toastrService.success('Tipo de input elimando con éxito.');
+    }
   }
 
 
@@ -796,7 +951,7 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipoinput/actualizar/${id}`, { nombre: data.label.toLowerCase(), seleccionMultiple: data.multipleSelection }));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipoinput/actualizar/${id}`, { nombre: data.label.toLowerCase(), seleccionMultiple: data.multipleSelection, statusId:  parseInt(data.status.value)}));
         this.toastrService.success('Tipo de input actualizado con exito.');
       } else {
         await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipoinput', { nombre: data.label.toLowerCase(), seleccionMultiple: data.multipleSelection }));
@@ -830,6 +985,7 @@ export class InstrumentsService extends HttpService {
     paginator.count = resp.count;
     paginator.data = resp.data.map((item: any) => {
       const category = new SelectOption(item.id, item.nombre);
+      category.status = new SelectOption(item.status?.statusId, item.status?.labelStatus);
       return category;
     });
 
@@ -846,6 +1002,7 @@ export class InstrumentsService extends HttpService {
   async getCategoryById(id: number): Promise<SelectOption> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/tipocategoria/${id}`));
     const category = new SelectOption(resp[0].id, resp[0].nombre);
+    category.status = new SelectOption(resp[0].status?.statusId, resp[0].status?.labelStatus);
     return category;
   }
 
@@ -854,7 +1011,10 @@ export class InstrumentsService extends HttpService {
    * @param id 
    */
   async deleteCategory(id: number) {
-    //const resp = await firstValueFrom(this.delete(environment.apiUrl,`/user/${id}`));
+    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/encuesta/tipocategoria/${id}`));
+    if(resp){
+      this.toastrService.success('Tipo de categoría elimando con éxito.');
+    }
   }
 
 
@@ -866,7 +1026,7 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, { nombre: data.label.toUpperCase() }));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, { nombre: data.label.toUpperCase(), statusId:  parseInt(data.status.value) }));
         this.toastrService.success('Tipo de categoría actualizada con exito.');
       } else {
         await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipocategoria', { nombre: data.label.toUpperCase() }));
@@ -903,6 +1063,7 @@ export class InstrumentsService extends HttpService {
       unitType.id = item.id;
       unitType.label = item.nombre;
       unitType.factor = item.factor;
+      unitType.status = new SelectOption(item.status?.statusId, item.status?.labelStatus);
       return unitType;
     });
 
@@ -922,6 +1083,7 @@ export class InstrumentsService extends HttpService {
     unitType.id = resp[0].id;
     unitType.label = resp[0].nombre;
     unitType.factor = resp[0].factor;
+    unitType.status = new SelectOption(resp[0].status?.statusId, resp[0].status?.labelStatus);
     return unitType;
   }
 
@@ -930,7 +1092,10 @@ export class InstrumentsService extends HttpService {
    * @param id 
    */
   async deleteUnitType(id: number) {
-    //const resp = await firstValueFrom(this.delete(environment.apiUrl,`/user/${id}`));
+    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/encuesta/tipounidad/${id}`));
+    if(resp){
+      this.toastrService.success('Tipo de unidad elimando con éxito.');
+    }
   }
 
 
@@ -942,7 +1107,7 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipounidad/actualizar/${id}`, { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase() }));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipounidad/actualizar/${id}`, { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase(), statusId:  parseInt(data.status.value) }));
         this.toastrService.success('Tipo de unidad actualizada con exito.');
       } else {
         await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipounidad', { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase() }));
@@ -975,7 +1140,7 @@ export class InstrumentsService extends HttpService {
         return {
           id: item.id,
           fullName: `${item.nombre} ${item.apellido} ( ${item.email} )`,
-          role: item.role 
+          role: item.role
         };
       })
       return users;
@@ -998,11 +1163,11 @@ export class InstrumentsService extends HttpService {
    * @param filter 
    * @returns 
    */
-   async getUsersByInstrumentPaginated(filter:any):Promise<PaginationResponse>{
-    const resp = await firstValueFrom(this.post(environment.apiUrl,'/encuesta/instrumentocaptura/users',filter));
-    const paginator = new PaginationResponse(filter.page,filter.rowByPage);
+  async getUsersByInstrumentPaginated(filter: any): Promise<PaginationResponse> {
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/users', filter));
+    const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
-    paginator.data = resp.data.map((item:any)=>{
+    paginator.data = resp.data.map((item: any) => {
       const user = new User();
       user.instrument = new Instrument();
       user.instrument.id = item.id;
