@@ -8,6 +8,7 @@ import { NgForm } from '@angular/forms';
 import { CommonsService } from './../../../../../core/services/commons.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MenuItem } from './../../../../../core/models/menu.model';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class AppStoreComponent implements OnInit {
 
   data: any;
 
+  menuItems?:Array<MenuItem>;
+
   galeryIcons: any;
   selectedTab: string;
   selectedIcon: string;
@@ -37,16 +40,18 @@ export class AppStoreComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     protected modalService: NgbModal,
     private commonsService: CommonsService,
-    private appsService: AppsService
+    private appsService: AppsService,
+    private toastrService: ToastrService
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getGaleryIcons();
     this.selectedTab = 't1';
     this.route.data.subscribe((data) => {
       this.data = data;
-      console.log(data.menuItems)
     });
+    this.menuItems = await this.commonsService.getAllMenuOptions();
+    
     if (!this.app.id) {
       this.app.status = new SelectOption('1');
       this.appStatus = true;
@@ -139,10 +144,26 @@ export class AppStoreComponent implements OnInit {
     if(item.id != this.app.parent?.id){
       this.app.parent = new SelectOption(String(item.id), item.label);
       this.selectedFather = item.label;
-    }
-    
+      this.closeModal();
+    } 
+  }
+  
+  
+   /**
+   * Clear parent
+   */
+    clearInputParent(){
+      this.selectedFather = null;
+      this.app.parent = new SelectOption();
+      this.app.icon = null;
+    } 
 
-  } 
+    /**
+     * Show warning message
+     */
+    selectParentWarning(){
+      this.toastrService.warning('No es posible seleccionar esta opción como padre. El menú de opciones soporta sólo tres (3) niveles');
+    }
 
 
   /**

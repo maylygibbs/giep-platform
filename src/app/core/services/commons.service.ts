@@ -575,7 +575,7 @@ export class CommonsService extends HttpService {
    * Return list authorizations
    * @returns 
    */
-     async getAllMenuOptions():Promise<Array<any>>{
+     async getAllMenuOptions():Promise<Array<MenuItem>>{
 
       try{
         const resp = await firstValueFrom(this.get(environment.apiUrl, '/modulo/menu/opciones'));

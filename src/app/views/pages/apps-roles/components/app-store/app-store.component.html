@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputName" class="form-label">Widget o Menú</label><i
+                                <label for="inputName" class="form-label required">Widget o Menú</label><i
                                     class="feather icon-info ms-1" placement="right"
                                     ngbTooltip="Indique el nombre del widget o de la opción de menú"></i>
                                 <input type="text" name="inputName" #inputName="ngModel" [(ngModel)]="app.label"
@@ -26,7 +26,7 @@
                             <div class="mb-3">
                                 <label for="inputPathName" class="form-label">Ruta</label><i
                                     class="feather icon-info ms-1" placement="right"
-                                    ngbTooltip="Indique la ruta donde se visualizará el widget"></i>
+                                    ngbTooltip="En caso de que aplique, indique la ruta donde se visualizará el widget"></i>
                                 <input type="text" name="path" #path="ngModel" [(ngModel)]="app.path"
                                     [ngClass]="{'ng-dirty ng-invalid' : path.errors && ( path.dirty || path.touched || widgetForm.submitted) }"
                                     class="form-control" id="inputPathName" autocomplete="off" minlength="1"
@@ -43,7 +43,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputPosition" class="form-label">Posición</label>
+                                <label for="inputPosition" class="form-label required">Posición</label>
                                 <input type="text" name="position" #position="ngModel" [(ngModel)]="app.position"
                                     [ngClass]="{'ng-dirty ng-invalid' : position.errors && ( position.dirty || position.touched || widgetForm.submitted) }"
                                     class="form-control" id="inputPosition" autocomplete="off" required>
@@ -55,7 +55,9 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputIcon" class="form-label">Ícono</label>
+                                <label for="inputIcon" class="form-label">Ícono</label><i
+                                class="feather icon-info ms-1" placement="right"
+                                ngbTooltip="En caso de que aplique, indique el ícono relativo al widget / menú"></i>
                                 <div class="input-group mr-sm-2 d-flex align-items-center" style="flex-wrap: nowrap;">
                                     <div class="input-icon-selected" [innerHtml]="selectedIcon"
                                         (click)="openModal(modalGalery)">
@@ -64,7 +66,7 @@
                                     <input name="icon" #icon="ngModel" [(ngModel)]="app.icon" type="hidden"
                                         class="form-control" id="inputIcon">
                                     <div class="input-group-text button-search" placement="left"
-                                    ngbTooltip="Pulse aca para abrir galería de íconos"
+                                    ngbTooltip="Pulse aca para limpiar el campo"
                                         (click)="clearInputIcon()">
                                         <i class="feather icon-x"></i>
                                     </div>    
@@ -135,7 +137,9 @@
                         </div>
                         <div *ngIf="app.type == 'Menu'" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputIcon" class="form-label">Opción de menú padre</label>
+                                <label for="inputIcon" class="form-label">Opción de menú padre</label><i
+                                class="feather icon-info ms-1" placement="right"
+                                ngbTooltip="En caso de que aplique, indique la opción de menú padre de la nueva opción de menú"></i>
                                 <div class="input-group mr-sm-2 d-flex align-items-center" style="flex-wrap: nowrap;">
                                     <div class="input-icon-selected" [innerHtml]="selectedFather"
                                         (click)="openModal(modalMenuOptions)">
@@ -145,6 +149,11 @@
                                         class="form-control" id="inputIcon"
                                         [ngClass]="{'ng-dirty ng-invalid' : parent.errors && ( parent.dirty || parent.touched || widgetForm.submitted) }"
                                         required required>
+                                    <div class="input-group-text button-search" placement="left"
+                                    ngbTooltip="Pulse aca para limpiar el campo"
+                                        (click)="clearInputParent()">
+                                        <i class="feather icon-x"></i>
+                                    </div>       
                                     <div class="input-group-text button-search" placement="left"
                                     ngbTooltip="Pulse aca para abrir opciones de menu."
                                         (click)="openModal(modalMenuOptions)">
@@ -263,7 +272,7 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" translate>Cerrar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="closeModal()">Cerrar</button>
     </div>
 
 </ng-template>
@@ -281,7 +290,7 @@
             <!--- Sidemenu start -->
         
             <ul class="sidebar-nav metismenu" id="sidebar-menu" #sidebarMenu>
-              <ng-container *ngFor="let item of data.menuItems">
+              <ng-container *ngFor="let item of menuItems">
                 <li class="nav-item nav-category" *ngIf="item.isTitle" (click)="selectParent(item)">{{ item.label }}  <i *ngIf="app.parent.id === item.id" class="feather icon-check"></i></li>
             
                 <li class="nav-item" *ngIf="!item.isTitle" >
@@ -289,7 +298,7 @@
                   <a class="nav-link" *ngIf="hasItems(item)" (click)="selectParent(item)">
                     <i [class]="item.icon" *ngIf="item.icon"></i>
                     <span class="link-title"> {{ item.label }}</span>
-                    <span class="link-arrow" data-feather="chevron-down"></span>  jjj
+                    <span class="link-arrow" data-feather="chevron-down"></span>
                     <i *ngIf="app.parent.id === item.id" class="feather icon-check"></i>
                   </a>
             
@@ -311,10 +320,10 @@
                         <i *ngIf="app.parent.id === subitem.id" class="feather icon-check"></i>
                       </a>
             
-                      <a class="nav-link nav-link-ref" (click)="selectParent(subitem)" *ngIf="!hasItems(subitem)"
+                      <a class="nav-link nav-link-ref" (click)="selectParentWarning()" *ngIf="!hasItems(subitem)"
                         [attr.data-parent]="subitem.parentId">
                         <i [class]="subitem.icon" *ngIf="subitem.icon"></i>
-                        {{ subitem.label }}
+                        {{ subitem.label }} 
                       </a>
             
                       <ul class="sidebar-nav sub-menu nav-third-level" *ngIf="hasItems(subitem)" aria-expanded="false">
@@ -338,7 +347,7 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" translate>Cerrar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="closeModal()">Cerrar</button>
     </div>
 
 </ng-template>
