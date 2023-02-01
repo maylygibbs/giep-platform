@@ -348,9 +348,9 @@ export class UserService extends HttpService {
 
 
     /**
-     * 
+     * Get all Menu options by user
      */
-    async getAllMenuOptions(): Promise<Array<any>>{ //MenuItem
+    async getAllMenuOptions(): Promise<Array<any>>{ 
       try{
         const resp = await firstValueFrom(this.get(environment.apiUrl, '/user/menu/opciones'));
         const arrayMenu: Array<MenuItem> = new Array<MenuItem>()

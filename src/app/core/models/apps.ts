@@ -8,7 +8,7 @@ export class Apps {
     description:string;
     status:SelectOption;
     icon:string;
-    parent: Apps;
+    parent: SelectOption;
     children: Array<Apps>;
     roles: Array<string>;
     type:string;
@@ -29,7 +29,7 @@ export class Apps {
         Object.assign(appMap, { tipoComponente: app.type });
         Object.assign(appMap, { path: app.path });
         Object.assign(appMap, { orden: parseInt(app.position) });
-        Object.assign(appMap, { padre: app.type =='Menu' ? 3 : null });//
+        Object.assign(appMap, { padre: app.type =='Menu' && app.parent.value ? parseInt(app.parent.value) : null });
         Object.assign(appMap, { roles: this.getRolesApp(app.roles) });
         Object.assign(appMap, { autorizacion: this.getAuthorizationsApp(app.authoritations)});
 

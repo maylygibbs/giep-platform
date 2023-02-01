@@ -83,7 +83,7 @@ export class AppsComponent extends BaseComponent implements OnInit {
    * @param id 
    */
   async delete(id: number) {
-    //await this.appsService.deleteRole(id);
+    await this.appsService.deleteApp(id);
     this.loadPage(this.page);
   }
 

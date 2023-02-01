@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CommonsListAuthtoritationsResolver, CommonsListComponentTypesResolver, CommonsListRolesResolver } from '../../../core/resolvers/commons.resolver';
+import { CommonsListAuthtoritationsResolver, CommonsListComponentTypesResolver, CommonsListOptionsMenuResolver, CommonsListRolesResolver } from '../../../core/resolvers/commons.resolver';
 import { AppsComponent } from './components/apps/apps.component';
 
 const routes: Routes = [
@@ -10,7 +10,8 @@ const routes: Routes = [
     resolve:{
       componentTypes: CommonsListComponentTypesResolver,
       authoritations: CommonsListAuthtoritationsResolver,
-      roles: CommonsListRolesResolver
+      roles: CommonsListRolesResolver,
+      menuItems: CommonsListOptionsMenuResolver
     },
     data: {
       title: 'Apps y Permissions - GIEp',

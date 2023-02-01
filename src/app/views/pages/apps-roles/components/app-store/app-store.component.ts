@@ -7,6 +7,7 @@ import { SelectOption } from './../../../../../core/models/select-option';
 import { NgForm } from '@angular/forms';
 import { CommonsService } from './../../../../../core/services/commons.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MenuItem } from './../../../../../core/models/menu.model';
 
 
 @Component({
@@ -25,10 +26,11 @@ export class AppStoreComponent implements OnInit {
   appStatus: boolean;
 
   data: any;
-  
+
   galeryIcons: any;
   selectedTab: string;
   selectedIcon: string;
+  selectedFather: string;
 
   environment = environment;
 
@@ -43,13 +45,16 @@ export class AppStoreComponent implements OnInit {
     this.selectedTab = 't1';
     this.route.data.subscribe((data) => {
       this.data = data;
+      console.log(data.menuItems)
     });
     if (!this.app.id) {
       this.app.status = new SelectOption('1');
       this.appStatus = true;
+      this.app.parent = new SelectOption();
     } else {
       this.appStatus = this.app.status.value == '1' ? true : false;
-      this.selectedIcon = `<i class="${this.app.icon}"></i><span class="ms-2">${this.app.icon}</span>`
+      this.selectedIcon = this.app.icon ? `<i class="${this.app.icon}"></i><span class="ms-2">${this.app.icon}</span>` : null;
+      this.selectedFather = this.app.parent ? this.app.parent.label : null;
     }
   }
 
@@ -77,6 +82,15 @@ export class AppStoreComponent implements OnInit {
   selectIcon(icon: SelectOption) {
     this.selectedIcon = `<i class="${icon}"></i><span class="ms-2">${icon}</span>`
     this.app.icon = icon.value;
+    this.closeModal();
+  }
+
+  /**
+   * Clear icon
+   */
+  clearInputIcon(){
+    this.selectedIcon = null
+    this.app.icon = null;
   }
 
   /**
@@ -84,27 +98,51 @@ export class AppStoreComponent implements OnInit {
  */
   getGaleryIcons() {
     this.commonsService.getAllGaleryIcon().then((resp) => {
-      this.galeryIcons = resp;
+      this.galeryIcons = resp;     
     })
   }
 
-  /**
-   * Open modal galery icon
-   * @param modalRef 
-   * @param id 
-   */
-  openModalGaleryIcon(modalRef:TemplateRef<any>) {
-    this.modalService.open(modalRef, {size:'xl'}).result.then((result) => {
-      console.log("Modal closed" + result);
-    }).catch((res) => {});
-  }  
 
   /**
-   * Close galery modal
+   * Open modal generic
+   * @param modalRef 
    */
-    closeGaleryModal(){
+  openModal(modalRef: TemplateRef<any>) {
+    this.modalService.open(modalRef, { size: 'xl' }).result.then((result) => {
+      console.log("Modal closed" + result);
+    }).catch((res) => { });
+  }
+
+
+
+  /**
+   * Close modal
+   */
+  closeModal() {
     this.modalService.dismissAll();
   }
+
+  /**
+   * Returns true or false if given menu item has child or not
+   * @param item menuItem
+   */
+  hasItems(item: MenuItem) {
+    return item.subItems !== undefined ? item.subItems.length > 0 : false;
+  }
+
+
+  /**
+   * Select parent item
+   * @param item 
+   */
+  selectParent(item : MenuItem){
+    if(item.id != this.app.parent?.id){
+      this.app.parent = new SelectOption(String(item.id), item.label);
+      this.selectedFather = item.label;
+    }
+    
+
+  } 
 
 
   /**
@@ -116,14 +154,10 @@ export class AppStoreComponent implements OnInit {
       console.log('app', this.app);
       console.log('app post', Apps.mapForPost(this.app));
       await this.appsService.storeApp(Apps.mapForPost(this.app));
-
       this.back();
     }
 
   }
-
-
-
 
   /**
  * Return to back page

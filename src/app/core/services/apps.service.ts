@@ -36,7 +36,7 @@ export class AppsService extends HttpService {
       app.label = item.nombre;
       app.description = item.descripcion;
       app.status = new SelectOption(item.status.id, item.status.Descripcion);
-      app.parent = item.padre;
+      app.parent =  resp.padre ? new SelectOption(resp.padre.id, resp.padre.Descripcion) : new SelectOption();
       app.type = item.tipoComponente;
       app.icon = item.icono;
       app.children = item.hijos?.map((item: any) => {
@@ -66,7 +66,7 @@ export class AppsService extends HttpService {
     app.label = resp.nombre;
     app.description = resp.descripcion;
     app.status = new SelectOption(resp.status.id, resp.status.Descripcion);
-    app.parent = resp.padre;
+    app.parent =  resp.padre ? new SelectOption(resp.padre.id, resp.padre.Nombre) : new SelectOption();
     app.type = resp.tipoComponente;
     app.icon = resp.icono;
     app.position = resp.orden;
@@ -78,6 +78,10 @@ export class AppsService extends HttpService {
     });
     app.roles = resp.roles?.map((item: any) => {
       return item.rol.nombre;
+    });
+
+    app.authoritations = resp.autorizaciones?.map((item:any)=>{
+      return item.permiso;
     });
 
     console.log(app)
@@ -114,6 +118,17 @@ export class AppsService extends HttpService {
     }
   }
 
+  /**
+   * Delete app by id
+   * @param id 
+   */
+   async deleteApp(id: number) {
+    
+    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/modulo/${id}`));
+    if(resp && resp.msg){
+      this.toastrService.success('Widget o menu elimando con éxito.');
+    }
+  }
 
   
 

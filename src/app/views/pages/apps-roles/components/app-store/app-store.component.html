@@ -30,7 +30,7 @@
                                 <input type="text" name="path" #path="ngModel" [(ngModel)]="app.path"
                                     [ngClass]="{'ng-dirty ng-invalid' : path.errors && ( path.dirty || path.touched || widgetForm.submitted) }"
                                     class="form-control" id="inputPathName" autocomplete="off" minlength="1"
-                                    maxlength="500" required>
+                                    maxlength="500">
                                 <div *ngIf="path.invalid && widgetForm.submitted" class="invalid-feedback">
                                     <div *ngIf="path.errors?.required">Campo es requerido
                                     </div>
@@ -58,16 +58,19 @@
                                 <label for="inputIcon" class="form-label">Ícono</label>
                                 <div class="input-group mr-sm-2 d-flex align-items-center" style="flex-wrap: nowrap;">
                                     <div class="input-icon-selected" [innerHtml]="selectedIcon"
-                                        (click)="openModalGaleryIcon(modalGalery)">
+                                        (click)="openModal(modalGalery)">
 
                                     </div>
                                     <input name="icon" #icon="ngModel" [(ngModel)]="app.icon" type="hidden"
-                                        class="form-control" id="inputIcon"
-                                        [ngClass]="{'ng-dirty ng-invalid' : icon.errors && ( icon.dirty || icon.touched || widgetForm.submitted) }"
-                                        required required>
+                                        class="form-control" id="inputIcon">
                                     <div class="input-group-text button-search" placement="left"
                                     ngbTooltip="Pulse aca para abrir galería de íconos"
-                                        (click)="openModalGaleryIcon(modalGalery)">
+                                        (click)="clearInputIcon()">
+                                        <i class="feather icon-x"></i>
+                                    </div>    
+                                    <div class="input-group-text button-search" placement="left"
+                                    ngbTooltip="Pulse aca para abrir galería de íconos"
+                                        (click)="openModal(modalGalery)">
                                         <i class="feather icon-plus"></i>
                                     </div>
 
@@ -75,8 +78,6 @@
                                 <div *ngIf="icon.invalid && widgetForm.submitted" class="invalid-feedback">
                                     <div *ngIf="icon.errors?.required">Campo es requerido
                                     </div>
-                                    <div *ngIf="icon.errors?.minlength || icon.errors?.maxlength">
-                                        Campo permite entre 1 y 500 caracteres</div>
                                 </div>
                             </div>
 
@@ -132,6 +133,35 @@
                                 </div>
                             </div>
                         </div>
+                        <div *ngIf="app.type == 'Menu'" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputIcon" class="form-label">Opción de menú padre</label>
+                                <div class="input-group mr-sm-2 d-flex align-items-center" style="flex-wrap: nowrap;">
+                                    <div class="input-icon-selected" [innerHtml]="selectedFather"
+                                        (click)="openModal(modalMenuOptions)">
+
+                                    </div>
+                                    <input name="parent" #parent="ngModel" [(ngModel)]="app.parent.value" type="hidden"
+                                        class="form-control" id="inputIcon"
+                                        [ngClass]="{'ng-dirty ng-invalid' : parent.errors && ( parent.dirty || parent.touched || widgetForm.submitted) }"
+                                        required required>
+                                    <div class="input-group-text button-search" placement="left"
+                                    ngbTooltip="Pulse aca para abrir opciones de menu."
+                                        (click)="openModal(modalMenuOptions)">
+                                        <i class="feather icon-plus"></i>
+                                    </div>
+
+                                </div>
+                                <div *ngIf="parent.invalid && widgetForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="parent.errors?.required">Campo es requerido
+                                    </div>
+                                    <div *ngIf="parent.errors?.minlength || parent.errors?.maxlength">
+                                        Campo permite entre 1 y 500 caracteres</div>
+                                </div>
+                            </div>
+
+
+                        </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="mb-3">
@@ -180,7 +210,7 @@
     <div class="modal-header">
         <h3 class="modal-title" translate>Galería de icons</h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-            (click)="closeGaleryModal()"></button>
+            (click)="closeModal()"></button>
     </div>
     <div class="modal-body m-3">
         <div class="tab">
@@ -230,6 +260,81 @@
 
             </div>
         </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" translate>Cerrar</button>
+    </div>
+
+</ng-template>
+
+<ng-template #modalMenuOptions let-modal>
+    <div class="modal-header">
+        <h3 class="modal-title" translate>Menu de Opciones</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closeModal()"></button>
+    </div>
+    <div class="modal-body m-3">
+
+        <div class="sidebar-body">
+
+            <!--- Sidemenu start -->
+        
+            <ul class="sidebar-nav metismenu" id="sidebar-menu" #sidebarMenu>
+              <ng-container *ngFor="let item of data.menuItems">
+                <li class="nav-item nav-category" *ngIf="item.isTitle" (click)="selectParent(item)">{{ item.label }}  <i *ngIf="app.parent.id === item.id" class="feather icon-check"></i></li>
+            
+                <li class="nav-item" *ngIf="!item.isTitle" >
+            
+                  <a class="nav-link" *ngIf="hasItems(item)" (click)="selectParent(item)">
+                    <i [class]="item.icon" *ngIf="item.icon"></i>
+                    <span class="link-title"> {{ item.label }}</span>
+                    <span class="link-arrow" data-feather="chevron-down"></span>  jjj
+                    <i *ngIf="app.parent.id === item.id" class="feather icon-check"></i>
+                  </a>
+            
+                  <a class="nav-link nav-link-ref" (click)="selectParent(item)" *ngIf="!hasItems(item)"
+                    [attr.data-parent]="item.parentId">
+                    <i [class]="item.icon" *ngIf="item.icon"></i>
+                    <span class="link-title"> {{ item.label }}</span>
+                    <span class="badge bg-{{item.badge.variant}}" *ngIf="item.badge">{{item.badge.text}}</span>
+                    <i *ngIf="app.parent.id === item.id" class="feather icon-check"></i>
+                  </a>
+            
+                  <ul class="sidebar-nav sub-menu nav-second-level" *ngIf="hasItems(item)" aria-expanded="false">
+            
+                    <li class="nav-item" *ngFor="let subitem of item.subItems" [ngClass]="{'side-nav-item': hasItems(subitem)}">
+                      <a class="nav-link side-nav-link-a-ref" *ngIf="hasItems(subitem)" (click)="selectParent(subitem)">
+                        <i [class]="subitem.icon" *ngIf="subitem.icon"></i>
+                        <span class="link-title"> {{ subitem.label }}</span>
+                        <span class="link-arrow" data-feather="chevron-down" appFeatherIcon></span>
+                        <i *ngIf="app.parent.id === subitem.id" class="feather icon-check"></i>
+                      </a>
+            
+                      <a class="nav-link nav-link-ref" (click)="selectParent(subitem)" *ngIf="!hasItems(subitem)"
+                        [attr.data-parent]="subitem.parentId">
+                        <i [class]="subitem.icon" *ngIf="subitem.icon"></i>
+                        {{ subitem.label }}
+                      </a>
+            
+                      <ul class="sidebar-nav sub-menu nav-third-level" *ngIf="hasItems(subitem)" aria-expanded="false">
+                        <li class="nav-item" *ngFor="let subSubitem of subitem.subItems">
+                          <a class="nav-link nav-link-ref" (click)="selectParent(subitem)" [routerLinkActive]="['active']"
+                            [attr.data-parent]="subSubitem.parentId">
+                            <i class="link-icon" [attr.data-feather]="subitem.icon" appFeatherIcon *ngIf="subitem.icon"></i>
+                            {{ subSubitem.label }}
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ng-container>
+            </ul>
+        
+            <!--- Sidemenu end -->
+        
+          </div>
 
     </div>
     <div class="modal-footer">

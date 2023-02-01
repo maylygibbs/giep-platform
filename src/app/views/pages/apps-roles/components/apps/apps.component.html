@@ -57,7 +57,8 @@
                                     *ngFor="let app of apps.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: apps.count }">
                                     <td>{{app.id}}</td>
                                     <td>{{app.label}}</td>
-                                    <td><i [class]="app.icon"></i></td>
+                                    <td *ngIf="app.icon"><i [class]="app.icon"></i></td>
+                                    <td *ngIf="!app.icon">NA</td>
                                     <td>{{app.roles}}</td>
                                     <td>{{app.type}}</td>
                                     <td>{{app.status?.label}}</td>

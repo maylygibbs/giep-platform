@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { SelectOption } from '../models/select-option';
 import { HttpService } from './http.service';
 import { firstValueFrom } from 'rxjs';
+import { MenuItem } from '../models/menu.model';
 
 @Injectable({
   providedIn: 'root'
@@ -267,7 +268,7 @@ export class CommonsService extends HttpService {
 
 
     /**
-   * Retorn list authorizations
+   * Return list authorizations
    * @returns 
    */
      async getAllAuthorizations():Promise<Array<SelectOption>>{
@@ -570,7 +571,57 @@ export class CommonsService extends HttpService {
 
 
 
+    /**
+   * Return list authorizations
+   * @returns 
+   */
+     async getAllMenuOptions():Promise<Array<any>>{
 
+      try{
+        const resp = await firstValueFrom(this.get(environment.apiUrl, '/modulo/menu/opciones'));
+        const arrayMenu: Array<MenuItem> = new Array<MenuItem>()
+        resp[0].opcionesMenu.forEach((item:any) => {
+          const menuItem = new MenuItem();
+          menuItem.id = item.id;
+          menuItem.label = item.nombre;
+          menuItem.isTitle = item.isTitle == 'true' ? true : false;
+          menuItem.link = item.path;
+          menuItem.icon = item.icon;
+          menuItem.order = item.orden;
+          arrayMenu.push(menuItem);
+          if(item.hijos && item.hijos.MenuChild){
+            item.hijos.MenuChild.forEach((itemChild:any) => {
+              const menuItemChild = new MenuItem();
+              menuItemChild.id = itemChild.id;
+              menuItemChild.label = itemChild.menu;
+              menuItemChild.isTitle = itemChild.isTitle == 'true' ? true : false;
+              menuItemChild.link = itemChild.path;
+              menuItemChild.icon = itemChild.icon;
+              menuItemChild.order = itemChild.orden;
+              if(itemChild.hijos && itemChild.hijos.MenuChild){
+                menuItemChild.subItems = itemChild.hijos.MenuChild.map((itemSubChild:any)=>{
+                  const menuSubItemChild = new MenuItem();
+                  menuSubItemChild.id = itemSubChild.id;
+                  menuSubItemChild.label = itemSubChild.menu;
+                  menuSubItemChild.isTitle = itemSubChild.isTitle == 'true' ? true : false;
+                  menuSubItemChild.link = itemSubChild.path;
+                  menuSubItemChild.order = itemSubChild.orden;
+                  return menuSubItemChild;
+                })
+              }
+              arrayMenu.push(menuItemChild);
+            });
+          }
+    
+        });
+        return arrayMenu;
+
+      }catch(error){
+
+        return null;
+      }
+  
+    }
 
 
 
