@@ -12,7 +12,7 @@ import { DndDirective } from './directives/dnd.directive';
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
   url: 'https://httpbin.org/post',
-  maxFilesize: 2,
+  maxFilesize: 10,
   paramName: "file",
   ignoreHiddenFiles:false,  
   accept: function(file, done) {

@@ -222,9 +222,9 @@ export class UserService extends HttpService {
       
       console.log(error);
       if (error.status == 409) {
-        this.toastrService.error('',error.msg);
+        this.toastrService.error('',error.error.msg);
       }
-      if (error.status != 500) {
+      if (error.status != 500 && error.status != 409) {
         this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
       }
       

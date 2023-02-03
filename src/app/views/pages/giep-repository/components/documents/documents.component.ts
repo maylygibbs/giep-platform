@@ -12,6 +12,7 @@ import { NgForm } from '@angular/forms';
 import * as saveAs from 'file-saver';
 import { SelectOption } from '../../../../../core/models/select-option';
 import { InstrumentsService } from '../../../../../core/services/instruments.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-documents',
@@ -43,22 +44,27 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
   config: DropzoneConfigInterface = {
     clickable: true,
     maxFiles: 2,
+    maxFilesize: 10,
     ignoreHiddenFiles: false,
     autoProcessQueue: false,
     uploadMultiple: true,
     parallelUploads: 2,
-    dictDefaultMessage: 'Arrastra los documentos o haz click aquí para subirlos.',
-    autoReset: null,
-    errorReset: null,
+    addRemoveLinks:true,
+    dictDefaultMessage: 'Arrastra el documento o haz click aquí para subirlo.',
+    dictRemoveFile: 'Eliminar',
+    autoReset: 1000,
+    errorReset: 2500,
     cancelReset: null,
+    acceptedFiles:'.docx, .doc, .pdf, .xls, .xlsx, .odt, .odp, .ods, .ppt, .pptx, .png, .jpg, .jpeg, .gif y .mp4',
     init: () => {
       this.drop = this;
     }
+    
   };
 
 
   private $eventNavigationEnd: Subscription;
-
+  @ViewChild('fileForm') fileForm: NgForm;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
   @ViewChild('dropzone') dropzone?: any;
 
@@ -68,10 +74,13 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
   showLoading: boolean = false;
   users: Array<any>;
   selectedUsers = [];
-  
+  disableBtnSubmit:boolean=false;
+
+  documentRequest:NodeJS.Timeout;
 
   constructor(private documentService: DocumentService,
     private instrumentsService: InstrumentsService,
+    private toastrService: ToastrService,
     protected modalService: NgbModal,
     private router: Router) {
     super();
@@ -93,6 +102,15 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    */
   onUploadError(event: any): void {
     console.log('onUploadError:', event);
+    this.disableBtnSubmit = true;
+    if(event[1]=="You can't upload files of this type."){
+      this.toastrService.error('Documento con extensión no permitida. Sólo se permiten documentos con las siguientes extensiones: docx, doc, pdf, xls, xlsx, odt, ods, odp, ppt, pptx, png, jpg, jpeg, gif y mp4.')
+    }
+    if(event[1]=="File is too big (2.87MiB). Max filesize: 2MiB."){
+      this.toastrService.error('El documento es demasiado grande. Tamaño máximo de docuemento: 10MB.')
+    }
+    
+
   }
 
   /**
@@ -119,6 +137,7 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
       }
       console.log('onUploadSuccess:', dataFile);
     }
+    this.disableBtnSubmit = false;
   }
 
   /**
@@ -157,11 +176,11 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
       Object.assign(this.dataFile, { orig_head: this.fileContent })
     }
     console.log('dataFile:', this.dataFile);
+    this.disableBtnSubmit = false;
   }
 
 
   onChangeStatus(event: any) {
-    debugger
     this.doc.state = this.documentStatus == true ? new SelectOption('1') : new SelectOption('0');
   }
 
@@ -169,9 +188,8 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    * Reset zone drag and drop
    */
   resetDropzoneUploads() {
-    if (this.directiveRef) {
-      this.directiveRef.reset();
-    }
+      this.dataFile = null;
+      this.fileForm.resetForm();
   }
 
   /**
@@ -203,9 +221,16 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    * Sear by word the documents
    */
   search() {
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+
+    if(this.documentRequest){
+      clearTimeout(this.documentRequest);
+      this.documentRequest = null;      
     }
+
+    this.documentRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
+
   }
 
   /**
@@ -235,6 +260,7 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    */
   openZoneDragDropFiles(event: any, modalRef?: TemplateRef<any>) {
     this.doc = new DocumentGiep();
+   this.disableBtnSubmit = true;
     this.modalService.open(modalRef, { size: 'lg', windowClass: 'modal-file' }).result.then((result) => {
       console.log("Modal closed" + result);
     }).catch((res) => { });
@@ -325,6 +351,10 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     this.showLoading = true;
     this.users = await this.instrumentsService.getUsersByRoles(null);
     this.showLoading = false;
+  }
+
+  prueba(){
+    console.log('eliminado')
   }
 
 

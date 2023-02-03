@@ -30,8 +30,8 @@ export class Apps {
         Object.assign(appMap, { path: app.path });
         Object.assign(appMap, { orden: parseInt(app.position) });
         Object.assign(appMap, { padre: app.type =='Menu' && app.parent.value ? parseInt(app.parent.value) : null });
-        Object.assign(appMap, { roles: this.getRolesApp(app.roles) });
-        Object.assign(appMap, { autorizacion: this.getAuthorizationsApp(app.authoritations)});
+        //Object.assign(appMap, { roles: this.getRolesApp(app.roles) });
+        //Object.assign(appMap, { autorizacion: this.getAuthorizationsApp(app.authoritations)});
 
 
         return appMap;

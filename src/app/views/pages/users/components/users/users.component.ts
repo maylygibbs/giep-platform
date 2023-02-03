@@ -43,6 +43,8 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
   private $eventNavigationEnd: Subscription;
 
+  usersRequest: NodeJS.Timeout
+
 
   constructor(private userService: UserService,
     private router: Router,
@@ -141,9 +143,15 @@ export class UsersComponent extends BaseComponent implements OnInit {
    * search by word
    */
   search() {
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+    if(this.usersRequest){
+      clearTimeout(this.usersRequest);
+      this.usersRequest = null;
     }
+    this.usersRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
+     
+
   }
 
   /**

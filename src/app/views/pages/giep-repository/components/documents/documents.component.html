@@ -150,10 +150,12 @@
     </div>
   </div>
 </div>
-<!--ZONE DRAG AND DROP FILES -->
+<!--ZONE DRAG AND DROP FILES - ngx-dropzone-wrapper  -->
 <ng-template #addFilesModal let-modal>
   <div class="modal-header">
-    <h6 class="card-title">Cargar Documento</h6>
+    <h6 class="card-title">Cargar Documento <i
+      class="feather icon-info ms-1" placement="bottom"
+      ngbTooltip="Sólo se permiten documentos con las siguientes extensiones: docx, doc, pdf, xls, xlsx, odt, ods, odp, ppt, pptx, png, jpg, jpeg, gif y mp4."></i></h6>
     <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
   </div>
   <form name="fileForm" #fileForm="ngForm" (ngSubmit)="onFilesUpload(fileForm)">
@@ -162,9 +164,9 @@
         <div class="grid-margin stretch-card" [ngClass]="{'col-lg-12': !dataFile , 'col-lg-8':dataFile}">
           <div class="card">
             <div class="card-body">
-
+            <!-- ngx-dropzone-wrapper lib  -->
               <div #dropzone class="dropzone" [dropzone]="config" (error)="onUploadError($event)"
-                (success)="onUploadSuccess($event)" (addedFile)="addFile($event)"></div>
+                (success)="onUploadSuccess($event)" (addedFile)="addFile($event)" (removedFile)="resetDropzoneUploads()"></div>
 
             </div>
           </div>
@@ -283,10 +285,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary mt-2 d-block ms-auto"
-        (click)="resetDropzoneUploads()">Reiniciar</button>
+      <!--<button type="button" class="btn btn-secondary mt-2 d-block ms-auto"
+        (click)="resetDropzoneUploads()">Reiniciar</button>-->
       <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-      <button type="submit" class="btn btn-primary">Subir</button>
+      <button type="submit" [disabled]="disableBtnSubmit" class="btn btn-primary">Subir</button>
     </div>
   </form>
 </ng-template>
