@@ -76,6 +76,10 @@ const routes: Routes = [
         path: 'apps-permissions',
         loadChildren: () => import('../apps-roles/apps-roles.module').then(m => m.AppsRolesModule),
       },
+      {
+        path: 'authorizations',
+        loadChildren: () => import('../authorizations/authorizations.module').then(m => m.AuthorizationsModule),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

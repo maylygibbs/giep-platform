@@ -9,8 +9,6 @@ const routes: Routes = [
     component: AppsComponent,
     resolve:{
       componentTypes: CommonsListComponentTypesResolver,
-      authoritations: CommonsListAuthtoritationsResolver,
-      roles: CommonsListRolesResolver,
       menuItems: CommonsListOptionsMenuResolver
     },
     data: {

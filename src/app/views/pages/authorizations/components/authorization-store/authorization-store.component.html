@@ -1,0 +1,86 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form name="authorizationForm" #authorizationForm="ngForm" (ngSubmit)="onSubmit(authorizationForm)" class="forms-sample">
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputName" class="form-label required">Widget o Menú</label><i
+                                    class="feather icon-info ms-1" placement="right"
+                                    ngbTooltip="Indique el nombre del widget o de la opción de menú"></i>
+                                <ng-select id="inputApps" [items]="data.modulesItems" [multiple]="false" [closeOnSelect]="false"
+                                    name="inputApps" #inputApps="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : inputApps.errors && ( inputApps.dirty || inputApps.touched || authorizationForm.submitted) }"
+                                    bindLabel="label" bindValue="value" [searchable]="true" [(ngModel)]="authorization.app.id"
+                                    required>
+                                </ng-select>    
+                                <div *ngIf="inputApps.invalid && authorizationForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="inputApps.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputRoles" class="form-label required">Roles</label>
+                                <ng-select id="inputRoles" [items]="data.roles" [multiple]="false" [closeOnSelect]="false"
+                                    name="rolesapp" #rolesapp="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : rolesapp.errors && ( rolesapp.dirty || rolesapp.touched || authorizationForm.submitted) }"
+                                    bindLabel="label" bindValue="value" [searchable]="true" [(ngModel)]="authorization.role"
+                                    required>
+                                </ng-select>
+                                <div *ngIf="rolesapp.invalid && authorizationForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="rolesapp.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputAuth" class="form-label required">Nivel de autorización</label>
+                                <ng-select id="inputAuth" [items]="data.authoritations" [multiple]=true
+                                    [searchable]="false" [closeOnSelect]="false" name="authoritations"
+                                    #authoritations="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : authoritations.errors && ( authoritations.dirty || authoritations.touched || authorizationForm.submitted) }"
+                                    bindLabel="label" bindValue="value" [(ngModel)]="authorization.auths" required>
+                                </ng-select>
+                                <div *ngIf="authoritations.invalid && authorizationForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="authoritations.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12 p-1">
+                            <div class="mb-3 ms-3">
+                                <div class="form-check form-switch mb-2">
+                                    <input type="checkbox" name=status #status="ngModel" [(ngModel)]="authorizationStatus"
+                                        (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">
+                                    <label class="form-check-label" for="formSwitch1">Activo</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-right">
+                            <button class="btn btn-secondary" (click)="back()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

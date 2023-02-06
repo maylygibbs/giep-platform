@@ -35,6 +35,7 @@ export class AppsComponent extends BaseComponent implements OnInit {
   environment = environment;
 
   private $eventNavigationEnd: Subscription;
+  
   constructor(private appsService: AppsService,
     private router: Router) {
       super();

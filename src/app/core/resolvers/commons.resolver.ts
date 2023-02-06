@@ -165,6 +165,18 @@ export class CommonsListOptionsMenuResolver implements Resolve<any> {
 }
 
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListModulesResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllModules();
+  }
+}
+
+
+
 
 
 
