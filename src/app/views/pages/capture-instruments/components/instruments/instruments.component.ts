@@ -43,9 +43,12 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   roles?:any[];
   users: Array<any>;
   selectedUsers = [];
+  assignedUsers = [];
   data: any;
 
   showLoading:boolean= false;
+
+  instrumentsRequest: NodeJS.Timeout;
 
   private $eventNavigationEnd: Subscription;
 
@@ -119,9 +122,13 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   }
 
   search() {
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+    if (this.instrumentsRequest) {
+      clearTimeout(this.instrumentsRequest);
+      this.instrumentsRequest = null;
     }
+    this.instrumentsRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
   }
 
   async publishIntrument(instrument: Instrument) {
@@ -183,11 +190,12 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
    * Open modal for add users to instruments
    * @param modalRef 
    */
-  openModalUsers(modalRef:TemplateRef<any>, id:number) {
+   async openModalUsers(modalRef:TemplateRef<any>, id:number) {
     this.idInstrument = id;
     this.roles = null;
     this.selectedUsers = null;
     this.users = null;
+    this.assignedUsers = await this.instrumentsService.getAssignedUsers(id);
     this.modalService.open(modalRef, {size:'lg'}).result.then((result) => {
       console.log("Modal closed" + result);
     }).catch((res) => {});

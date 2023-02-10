@@ -1,13 +1,12 @@
 import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-
 import MetisMenu from 'metismenujs';
-
 import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { Router, NavigationEnd } from '@angular/router';
 import { UserService } from './../../../core/services/user.service';
+import { NotificationService } from '../../../core/notification.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -25,7 +24,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   private renderer: Renderer2, 
   router: Router,
   private userService: UserService,
-  private authService: AuthService) { 
+  private authService: AuthService,
+  private notificationService: NotificationService) { 
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
 
@@ -46,8 +46,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit():void{
-    this.menuItems = this.authService.currentUser.optionsMenu;
-
+    const user = this.authService.currentUser;
+    this.menuItems = user.optionsMenu;
+    this.notificationService.joinRoom(user.email);
     /**
      * Sidebar-folded on desktop (min-width:992px and max-width: 1199px)
      */

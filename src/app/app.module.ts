@@ -24,6 +24,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import { OnlineStatusModule } from 'ngx-online-status';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 
 
 
@@ -34,6 +35,10 @@ FullCalendarModule.registerPlugins([
   interactionPlugin
 ])
 
+const config: SocketIoConfig = { url: 'http://localhost:81', options: {} };
+
+
+//ws://bofficegiepstage.pafar.com.ve:8090/public/chat/php-socket.php
 
 @NgModule({
   declarations: [
@@ -55,6 +60,7 @@ FullCalendarModule.registerPlugins([
       progressBar: false,
       enableHtml: true,
     }),
+    SocketIoModule.forRoot(config),
     OnlineStatusModule
   ],
   providers: [

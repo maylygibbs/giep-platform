@@ -86,7 +86,7 @@ export class AuthorizationsComponent extends BaseComponent implements OnInit {
      * @param id 
      */
     async delete(id: number) {
-      //await this.authorizationService.deleteAuthorization(id);
+      await this.authorizationService.deleteAuthorization(id);
       this.loadPage(this.page);
     }
   

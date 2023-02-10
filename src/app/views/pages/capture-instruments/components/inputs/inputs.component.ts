@@ -36,6 +36,8 @@ export class InputsComponent extends BaseComponent  implements OnInit {
 
   environment = environment;
 
+  inputsTypeRequest: NodeJS.Timeout;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
@@ -110,9 +112,14 @@ export class InputsComponent extends BaseComponent  implements OnInit {
    * Search item
    */
   search(){
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+    if (this.inputsTypeRequest) {
+      clearTimeout(this.inputsTypeRequest);
+      this.inputsTypeRequest = null;
     }
+    this.inputsTypeRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
+
   }
 
   ngOnDestroy(){

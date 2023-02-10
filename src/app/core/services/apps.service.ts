@@ -108,10 +108,10 @@ export class AppsService extends HttpService {
     } catch (error: any) {
 
       console.log(error);
-      if (error.status == 409) {
+      if (error.error.status == 409) {
         this.toastrService.error('', error.msg);
       }
-      if (error.status != 500) {
+      if (error.error.status != 500) {
         this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
       }
 

@@ -120,6 +120,7 @@ export class InstrumentsService extends HttpService {
       instrument.createAt = item.createAt;
       instrument.expirationDate = item.fechaVigencia;
       instrument.publicationDate = item.fechaPublicacion;
+      instrument.isEditable = item.editable == 1 ? true : false;
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
       instrument.order = item.orden;
@@ -227,7 +228,7 @@ export class InstrumentsService extends HttpService {
         const user = new User();
         user.id = u.id;
         user.firstName = u.nombre;
-        user.answered = true;//u.respondida == 1 ? true : false;
+        user.answered = u.respondida == 1 ? true : false;
         user.roles = u.roles;
         return user;
       })
@@ -272,6 +273,24 @@ export class InstrumentsService extends HttpService {
 
     });
     return instrument;
+  }
+
+
+  async getAssignedUsers(id: number):Promise<Array<User>>{
+    let users: Array<User>=[];
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
+    if (resp.data[0].users) {
+      users = resp.data[0].users.map((u: any) => {
+        const user = new User();
+        user.id = u.id;
+        user.firstName = u.nombre;
+        user.email = u.email;
+        user.answered = u.respondida == 1 ? true : false;
+        user.roles = u.roles;
+        return user;
+      })
+    }
+    return users;
   }
 
   /**

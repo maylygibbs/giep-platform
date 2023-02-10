@@ -20,7 +20,7 @@ export class Authorization {
         Object.assign(authMap, { modulo: auth.app.id });
         Object.assign(authMap, { rol: auth.role});
         Object.assign(authMap, { autorizaciones: this.getAuthorizationsApp(auth.auths)});
-
+        Object.assign(authMap, { statusId: parseInt(auth.status.value)})
         return authMap;
     }
 

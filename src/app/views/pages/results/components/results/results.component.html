@@ -108,7 +108,7 @@
                 <div class="input-group-text">
                   <i class="feather icon-search" (click)="search()"></i>
                 </div>
-                <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (keyup.enter)="search()"
+                <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (ngModelChange)="search()"
                   placeholder="Buscar aqui...">
               </div>
             </div>

@@ -33,6 +33,8 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
   word:string;
 
   environment = environment;
+
+  categoriesRequest: NodeJS.Timeout;
   
   private $eventNavigationEnd: Subscription;
 
@@ -106,9 +108,15 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
    * Search by word
    */
   search(){
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+
+    if (this.categoriesRequest) {
+      clearTimeout(this.categoriesRequest);
+      this.categoriesRequest = null;
     }
+    this.categoriesRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);   
+
   }
 
   ngOnDestroy(){

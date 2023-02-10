@@ -97,7 +97,7 @@ export class Instrument {
         Object.assign(instrumentOutput,{unitType: {id: parseInt(instrumentInput.unitType.value), label:instrumentInput.unitType.label} });
         Object.assign(instrumentOutput,{expirationDate: moment().year(instrumentInput.expirationDate.year).month(instrumentInput.expirationDate.month - 1).date(instrumentInput.expirationDate.day).format('YYYY-MM-DD') });
         Object.assign(instrumentOutput,{roles: roles});
-        Object.assign(instrumentOutput,{users: this.getUsers(users)});
+        //Object.assign(instrumentOutput,{users: this.getUsers(users)});
         Object.assign(instrumentOutput,{questionsByCategory: instrumentInput.questionsByCategory ? 1 : 0});
         Object.assign(instrumentOutput,{description: instrumentInput.description});
         Object.assign(instrumentOutput,{path: instrumentInput.path? instrumentInput.path:null});

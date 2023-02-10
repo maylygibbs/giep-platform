@@ -37,14 +37,14 @@ export class AuthorizationService extends HttpService {
       auth.app.label = item.nombreModulo;
       auth.app.type = item.tipoComponente;
       auth.role = item.rol;
-      auth.status = new SelectOption('1', 'Activo');
+      auth.status = new SelectOption(item.status.id, item.status.Descripcion);
       auth.auths = item.autorizaciones?.map((item: any) => {
         return item.permiso;
       });
 
       return auth;
     });
-
+    console.log(paginator.data)
     return paginator;
   }
 
@@ -62,7 +62,7 @@ export class AuthorizationService extends HttpService {
     auth.app.label = resp[0].nombreModulo;
     auth.app.type = resp[0].tipoComponente;
     auth.role = resp[0].rol;
-    auth.status = new SelectOption('1', 'Activo');
+    auth.status = new SelectOption(resp[0].status.id, resp[0].status.Descripcion);
     auth.auths = resp[0].autorizaciones?.map((item: any) => {
       return item.permiso;
     });
@@ -104,9 +104,9 @@ export class AuthorizationService extends HttpService {
  */
   async deleteAuthorization(id: number) {
 
-    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/modulo/${id}`));
+    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/modulo/rol/${id}`));
     if (resp && resp.msg) {
-      this.toastrService.success('Widget o menu elimando con éxito.');
+      this.toastrService.success('Autorización elimanda con éxito.');
     }
   }
 

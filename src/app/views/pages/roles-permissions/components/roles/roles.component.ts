@@ -34,6 +34,8 @@ export class RolesComponent extends BaseComponent implements OnInit {
 
   environment = environment;
 
+  rolesRequest: NodeJS.Timeout;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(
@@ -109,9 +111,14 @@ export class RolesComponent extends BaseComponent implements OnInit {
   * Search item
   */
   search() {
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+    if (this.rolesRequest) {
+      clearTimeout(this.rolesRequest);
+      this.rolesRequest= null;      
     }
+    this.rolesRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
+
   }
 
 

@@ -1,6 +1,6 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a routerLink=".">Tipos de Input</a></li>
+        <li class="breadcrumb-item"><a routerLink=".">Roles</a></li>
         <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Nuevo rol
             input</li>
         <li *ngIf="selectedItem && selectedItem.id" class="breadcrumb-item active" aria-current="page">Actualizar rol
@@ -20,7 +20,7 @@
                                     <i class="feather icon-search" (click)="search()"></i>
                                 </div>
                                 <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word"
-                                    (keyup.enter)="search()" placeholder="Buscar aqui...">
+                                (ngModelChange)="search()" placeholder="Buscar aqui...">
                             </div>
                         </div>
                     </div>

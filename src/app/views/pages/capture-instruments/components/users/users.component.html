@@ -4,7 +4,7 @@
   </ol>
 </nav>
 
-<div *ngIf="step==1 && users && users.data" class="row">
+<div *ngIf="step==1" class="row">
   <div class="col-lg-12 col-md-12 stretch-card">
     <div class="card">
       <div class="card-header">
@@ -45,7 +45,7 @@
                 <div class="input-group-text">
                   <i class="feather icon-search" (click)="search()"></i>
                 </div>
-                <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (keyup.enter)="search()"
+                <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (ngModelChange)="search()"
                   placeholder="Buscar aqui...">
               </div>
             </div>
@@ -55,7 +55,7 @@
       <div class="card-body card-dt">
         <h6 class="card-title"></h6>
         <div *ngIf="defaultView" class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-12" *ngIf="users && users.data">
             <table datatable [dtOptions]="dtOptions" class="table table-striped">
               <thead>
                 <tr>

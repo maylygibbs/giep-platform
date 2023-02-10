@@ -39,6 +39,8 @@ export class UsersComponent extends BaseComponent implements OnInit {
   instrumentId: string;
 
   environment = environment;
+ 
+  usersRequest:NodeJS.Timeout;
 
   timeoutRef:any;
 
@@ -125,9 +127,13 @@ export class UsersComponent extends BaseComponent implements OnInit {
    * Filter by word
    */
   search() {
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+    if (this.usersRequest) {;
+      clearTimeout(this.usersRequest);
+      this.usersRequest = null;      
     }
+    this.usersRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
   }
 
 

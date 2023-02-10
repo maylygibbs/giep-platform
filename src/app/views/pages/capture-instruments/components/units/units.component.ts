@@ -34,6 +34,8 @@ export class UnitsComponent extends BaseComponent implements OnInit {
 
   environment = environment;
 
+  unitsRequest: NodeJS.Timeout;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
@@ -110,9 +112,13 @@ export class UnitsComponent extends BaseComponent implements OnInit {
  * Search item
  */
   search() {
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+    if (this.unitsRequest) {
+      clearTimeout(this.unitsRequest);
+      this.unitsRequest = null;      
     }
+    this.unitsRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
   }
 
   ngOnDestroy() {

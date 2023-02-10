@@ -9,6 +9,7 @@ import { environment } from '../../../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { filter, Subscription } from 'rxjs';
+import { throws } from 'assert';
 
 @Component({
   selector: 'app-results',
@@ -46,6 +47,8 @@ export class ResultsComponent extends BaseComponent implements OnInit {
   endDateFilter: any;
 
   environment = environment;
+
+  resultsRequest: NodeJS.Timeout;
 
   private $eventNavigationEnd: Subscription;
 
@@ -204,9 +207,15 @@ export class ResultsComponent extends BaseComponent implements OnInit {
  * search by word
  */
   search() {
-    if (this.word && this.word.length > 0) {
-      //this.loadPage(environment.paginator.default_page);
+    if (this.resultsRequest) {
+      clearTimeout(this.resultsRequest);
+      this.resultsRequest = null;
+     
     }
+    this.resultsRequest = setTimeout(() => {
+       this.loadPage(environment.paginator.default_page);
+    }, 300);
+
   }
 
   /**

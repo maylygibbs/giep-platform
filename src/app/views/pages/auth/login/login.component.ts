@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BaseComponent } from '../../../shared/components/base/base.component';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -23,7 +24,9 @@ export class LoginComponent extends BaseComponent  implements OnInit {
     private router: Router, 
     private route: ActivatedRoute,
     private authService: AuthService,
-    private userService: UserService) { 
+    private userService: UserService,
+    
+    ) { 
       super();
     }
 
@@ -39,7 +42,7 @@ export class LoginComponent extends BaseComponent  implements OnInit {
   async onLoggedin(form:NgForm) {        
     if (form.valid) {
       const resp = await this.authService.login(this.email, this.password);
-      if(resp instanceof User){
+      if(resp instanceof User){        
         await this.userService.getInfoUser();
         this.router.navigate([this.returnUrl]);
       }else{

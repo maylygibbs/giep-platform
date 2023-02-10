@@ -34,6 +34,8 @@ export class AppsComponent extends BaseComponent implements OnInit {
 
   environment = environment;
 
+  appsRequest: NodeJS.Timeout;
+
   private $eventNavigationEnd: Subscription;
   
   constructor(private appsService: AppsService,
@@ -109,9 +111,15 @@ export class AppsComponent extends BaseComponent implements OnInit {
   * Search item
   */
   search() {
-    if (this.word && this.word.length > 0) {
-      this.loadPage(environment.paginator.default_page);
+    if (this.appsRequest) {
+      clearTimeout(this.appsRequest)
+      this.appsRequest = null;
     }
+    this.appsRequest = setTimeout(() => {
+      this.loadPage(environment.paginator.default_page);
+    }, 300);
+
+
   }
 
 
