@@ -71,6 +71,7 @@ export class ResultsComponent extends BaseComponent implements OnInit {
     await this.loadPage(environment.paginator.default_page);
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
+      console.log('Ruta resultados',this.router.getCurrentNavigation())
       this.loadPage(environment.paginator.default_page);
     });
   }
@@ -233,6 +234,13 @@ export class ResultsComponent extends BaseComponent implements OnInit {
     this.startDateFilter = null;
     this.endDateFilter = null;
     this.loadPage(environment.paginator.default_page);
+  }
+
+
+  ngOnDestroy() {
+    if (this.$eventNavigationEnd) {
+      this.$eventNavigationEnd.unsubscribe()
+    }
   }
 
 

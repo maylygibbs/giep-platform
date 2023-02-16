@@ -10,6 +10,8 @@ import { filter, Subscription } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
+import { SelectOption } from '../../../../../core/models/select-option';
+import { CommonsService } from '../../../../../core/services/commons.service';
 
 @Component({
   selector: 'app-instruments',
@@ -20,6 +22,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   step: number = 1;
   instruments: PaginationResponse;
+  assignedUsers : PaginationResponse;
 
   loadingIndicator = true;
   reorderable = true;
@@ -28,38 +31,51 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   totalItems: number;
   page: number = 1;
+  pageUser: number = 1;
   previousPage: number;
   showPagination: boolean;
 
 
   selectedItem: Instrument;
   word: string;
-
-  action:string;
+  wordForSearchUSers:string;
+  action: string;
 
   environment = environment;
 
-  idInstrument:number;
-  roles?:any[];
+  idInstrument: number;
+  roles?: any[];
   users: Array<any>;
   selectedUsers = [];
-  assignedUsers = [];
+
   data: any;
 
-  showLoading:boolean= false;
+  countryId: any;
+  stataId: any;
+  states: Array<SelectOption>;
+  statesForSearchUsers: Array<SelectOption>;
+  showLoadingUsers: boolean = false;
+  showLoadingCountries: boolean = false;
+  showLoadingCountriesForSearchUsers: boolean = false;
 
   instrumentsRequest: NodeJS.Timeout;
+  usersRequest: NodeJS.Timeout;
+
+  countryIdForSearchUsers:any;
+  stataIdForSearchUsers:any;
+  
 
   private $eventNavigationEnd: Subscription;
 
   constructor(private instrumentsService: InstrumentsService,
+    private commonsService: CommonsService,
     private route: ActivatedRoute,
     protected modalService: NgbModal,
     private router: Router) {
-      super();
-      this.route.data.subscribe((data) => {
-        this.data = data;
-      });
+    super();
+    this.route.data.subscribe((data) => {
+      this.data = data;
+    });
   }
 
   async ngOnInit() {
@@ -76,6 +92,20 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     this.page = pageInfo;
     this.instruments = null;
     this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null });
+  }
+
+  async loadPageUsers(pageInfo: any) {
+    console.log('pageInfo', pageInfo);
+    this.pageUser = pageInfo;
+    this.assignedUsers = null;
+    this.assignedUsers = await this.instrumentsService.getAssignedUsers({ 
+      page: this.pageUser, 
+      rowByPage: environment.paginator.row_per_page, 
+      word: this.wordForSearchUSers ? this.wordForSearchUSers : null,
+      paisId : this.countryIdForSearchUsers ?  this.countryIdForSearchUsers: null,
+      estadoId: this.stataIdForSearchUsers ? this.stataIdForSearchUsers : null,
+      idInstrumento:this.idInstrument  
+    });
   }
 
   create() {
@@ -115,9 +145,9 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   back(item: any) {
     this.selectedItem = item;
-    if(this.step > 1){
+    if (this.step > 1) {
       this.step--;
-    }    
+    }
     this.loadPage(this.page);
   }
 
@@ -131,30 +161,42 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     }, 300);
   }
 
+  searchForSearchUsers(){
+    if (this.usersRequest) {
+      clearTimeout(this.usersRequest);
+      this.usersRequest = null;
+    }
+    this.usersRequest = setTimeout(() => {
+      this.loadPageUsers(environment.paginator.default_page);
+    }, 300);
+  }
+
   async publishIntrument(instrument: Instrument) {
     await this.instrumentsService.publishInstrument(instrument.id, { publicar: instrument.isPublished ? 1 : 0 });
     this.loadPage(this.page);
   }
 
+
+
   /**
  * Confirm delete / publish instrument
  * @param documento 
  */
-  confirm(instrument: Instrument, action:string, modalRef?:TemplateRef<any>) {
+  confirm(instrument: Instrument, action: string, modalRef?: TemplateRef<any>) {
     this.selectedItem = instrument;
     this.action = action;
     switch (action) {
       case 'publish':
-        this.messageModal =instrument.isPublished ? 'Esta seguro que desea publicar el instrumento?' : 'Esta seguro que desea despublicar el instrumento?';         
+        this.messageModal = instrument.isPublished ? 'Esta seguro que desea publicar el instrumento?' : 'Esta seguro que desea despublicar el instrumento?';
         break;
       case 'delete':
         this.messageModal = 'Esta seguro que desea eliminar el instrumento?';
-        break;        
+        break;
     }
     this.modalService.open(modalRef, {}).result.then((result) => {
       console.log("Modal closed" + result);
-    }).catch((res) => {});
-  
+    }).catch((res) => { });
+
   }
 
   /**
@@ -169,7 +211,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
           break;
         case 'delete':
           this.delete(parseInt(this.selectedItem.id));
-          break;        
+          break;
       }
     }
     this.selectedItem = null;
@@ -177,73 +219,108 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-    /**
-   * Load users by rol
+  /**
+ * Load users by rol
+ */
+  async loadUsersByRoles() {
+    this.showLoadingUsers = true;
+    this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.roles, '|'));
+    this.showLoadingUsers = false;
+  }
+
+
+  /**
+   * HANDLE MODAL ADD USER REGULAR TO INSTRUMENTS
+   * 
    */
-     async loadUsersByRoles() {
-      this.showLoading = true;
-      this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.roles, '|'));
-      this.showLoading = false;
-    }
+
 
   /**
    * Open modal for add users to instruments
    * @param modalRef 
    */
-   async openModalUsers(modalRef:TemplateRef<any>, id:number) {
+  async openModalUsers(modalRef: TemplateRef<any>, id: number) {
     this.idInstrument = id;
     this.roles = null;
     this.selectedUsers = null;
     this.users = null;
-    this.assignedUsers = await this.instrumentsService.getAssignedUsers(id);
-    this.modalService.open(modalRef, {size:'lg'}).result.then((result) => {
+    this.countryId = null;
+    this.stataId = null;
+    this.loadPageUsers(this.pageUser);
+    this.modalService.open(modalRef, { size: 'xl' }).result.then((result) => {
       console.log("Modal closed" + result);
-    }).catch((res) => {});
+    }).catch((res) => { });
   }
 
 
   /**
    * Close users modal
    */
-  closeAddUsersModal(){
+  closeAddUsersModal() {
     this.modalService.dismissAll();
     this.selectedUsers = null;
   }
+
+
+  async onChangeCountry(event: any) {
+    this.showLoadingCountries = true;
+    this.stataId = null;
+    this.states = null;
+    this.states = this.countryId ? await this.commonsService.getAllStates(this.countryId) : null;
+    this.showLoadingCountries = false;
+  }
+
+  async onChangeCountryForSearch(event: any) {
+    this.showLoadingCountriesForSearchUsers = true;
+    this.stataIdForSearchUsers = null;
+    this.statesForSearchUsers = null;
+    this.statesForSearchUsers = this.countryIdForSearchUsers ?  await this.commonsService.getAllStates(this.countryIdForSearchUsers) : null
+    this.loadPageUsers(this.pageUser);
+    this.showLoadingCountriesForSearchUsers = false;
+  }
+
+  async onChangeStateForSearch(event: any) {
+    this.loadPageUsers(this.pageUser);
+  }
+
 
   /**
    * Add users to instrument
    * @param form 
    */
-  async addUsers(form:NgForm){
-    if(form.valid){
-      this.selectedUsers
-      console.log(this.selectedUsers);
-      console.log(Instrument.getUsers(this.selectedUsers));
-      await this.instrumentsService.addUsersToInstrument(this.idInstrument, {users: Instrument.getUsers(this.selectedUsers)} );
-      this.closeAddUsersModal();
+  async addUsers(form: NgForm) {
+    if (form.valid) {
+
+      await this.instrumentsService.addUsersToInstrument(this.idInstrument, {
+        users: Instrument.getUsers(this.selectedUsers),
+        estadoId: this.stataId,
+        paisId: this.countryId 
+      });
+
+      this.loadPageUsers(environment.paginator.default_page);
 
     }
   }
- 
+
   /**
    * Change order of instrument
    * @param order 
    * @param id 
    */
-  async onChangeInputOrder(order: string, id:number){
-    const divError:HTMLElement = document.getElementById('order-'+id);
+  async onChangeInputOrder(order: string, id: number) {
+    const divError: HTMLElement = document.getElementById('order-' + id);
     if (!isNaN(Number(order))) {
       if (Number(order) > 0) {
-       await this.instrumentsService.changeOrderOfInstrument(id, order);
-      }else{      
+        await this.instrumentsService.changeOrderOfInstrument(id, order);
+      } else {
         divError.style.display = 'inline-block';
         setTimeout(() => {
           divError.style.display = 'none';
         }, 1500);
       }
 
-    }else{
-      console.log('order', order);        
+    } else {
+      console.log('order', order);
       divError.style.display = 'inline-block';
       setTimeout(() => {
         divError.style.display = 'none';
@@ -252,8 +329,8 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   }
 
 
-  prueba(event:any){
-    console.log('event',event)
+  prueba(event: any) {
+    console.log('event', event)
   }
 
   ngOnDestroy() {

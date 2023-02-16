@@ -6,7 +6,7 @@ import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { Router, NavigationEnd } from '@angular/router';
 import { UserService } from './../../../core/services/user.service';
-import { NotificationService } from '../../../core/notification.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-sidebar',

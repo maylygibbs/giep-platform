@@ -203,7 +203,7 @@ export class InstrumentsService extends HttpService {
   }
 
   /**
-   * get pending instruments to answer
+   * get instruments for update
    * @param id 
    * @returns 
    */
@@ -258,6 +258,7 @@ export class InstrumentsService extends HttpService {
         if (item.opciones && item.opciones.length) {
           question.options = item.opciones.map((itemOption: any, index: number) => {
             let option = new QuestionOption(itemOption.Valor, itemOption.Name);
+            option.idOption = itemOption.id;
             option.score = itemOption.Puntos;
             option.nameInputLabel = "optionLabel" + question.order + '' + index;
             option.nameInputValue = "optionValue" + question.order + '' + index;
@@ -276,22 +277,6 @@ export class InstrumentsService extends HttpService {
   }
 
 
-  async getAssignedUsers(id: number):Promise<Array<User>>{
-    let users: Array<User>=[];
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
-    if (resp.data[0].users) {
-      users = resp.data[0].users.map((u: any) => {
-        const user = new User();
-        user.id = u.id;
-        user.firstName = u.nombre;
-        user.email = u.email;
-        user.answered = u.respondida == 1 ? true : false;
-        user.roles = u.roles;
-        return user;
-      })
-    }
-    return users;
-  }
 
   /**
    * Add user to Instrument
@@ -306,6 +291,34 @@ export class InstrumentsService extends HttpService {
       if (error.status != 500)
         this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
     }
+  }
+
+
+
+
+  /**
+ * Check all users from instrument, supports pagination and filter
+ * @param filter 
+ * @returns 
+ */
+  async getAssignedUsers(filter: any): Promise<PaginationResponse> {
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/pagined', filter));
+    const paginator = new PaginationResponse(filter.page, filter.rowByPage);
+    paginator.count = resp.count;
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+    paginator.data = resp.data.map((item: any) => {
+
+      const user = new User();
+      user.id = item.id;
+      user.firstName = item.nombre;
+      user.email = item.email;
+      user.country = new SelectOption(null, item.pais);
+      user.state = new SelectOption(null, item.estado);
+      user.answered = item.respondida == 1 ? true : false;
+      return user;
+    });
+
+    return paginator;
   }
 
   /**
@@ -362,6 +375,52 @@ export class InstrumentsService extends HttpService {
         this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
     }
   }
+
+  /**
+   * Delete question
+   * @param id 
+   */
+  async deleteQuestion(id: string): Promise<boolean> {
+    try {
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/pregunta/${id}`));
+      this.toastrService.success('La Pregunta fue eliminada exitosamente.');
+      return true;
+    } catch (error) {
+      this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      return false;
+    }
+  }
+
+  /**
+ * Delete option
+ * @param id 
+ */
+  async deleteOption(id: number): Promise<boolean> {
+    try {
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/opciones/${id}`));
+      this.toastrService.success('La Opción fue eliminada exitosamente.');
+      return true;
+    } catch (error) {
+      this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      return false;
+    }
+  }
+
+  /**
+* Delete option
+* @param id 
+*/
+  async deleteSection(id: string): Promise<boolean> {
+    try {
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/seccion/${id}`));
+      this.toastrService.success('La Sección fue eliminada exitosamente.');
+      return true;
+    } catch (error) {
+      this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      return false;
+    }
+  }
+
 
   /**
    * Get results by category
@@ -471,12 +530,12 @@ export class InstrumentsService extends HttpService {
  * @param filter 
  * @returns 
  */
-  async getInstrumentResultsPagined(filter: any, instrumentId: number, selectedGraphic: string, isHorizontal: boolean=true): Promise<PaginationResponse> {
+  async getInstrumentResultsPagined(filter: any, instrumentId: number, selectedGraphic: string, isHorizontal: boolean = true): Promise<PaginationResponse> {
     const resp = await firstValueFrom(this.post(environment.apiUrl, `/encuesta/resultados/instrumento/${instrumentId}`, filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
     if (resp && resp.entidades?.length > 0) {
-      paginator.sample = resp.muestra ? resp.muestra: 0;
+      paginator.sample = resp.muestra ? resp.muestra : 0;
       paginator.data = resp.entidades.map((item: any) => {
         const result: any = {};
         result.name = item.entidad;
@@ -485,24 +544,24 @@ export class InstrumentsService extends HttpService {
         result.state = item.estado;
         result.city = item.ciudad;
         result.sex = item.sexo;
-        if(item.fecha_inicio){
-          if(!item.resultado || item.resultado.length == 0 ){
+        if (item.fecha_inicio) {
+          if (!item.resultado || item.resultado.length == 0) {
             result.warning = 'Inició el instrumento, sin embargo no culminó.';
-          }else{
-            if(item.resultado && item.resultado.length > 0 ){
+          } else {
+            if (item.resultado && item.resultado.length > 0) {
               result.warning = 'Resultados';
-            }            
+            }
           }
-        }else{
-          if(!item.resultado || item.resultado.length == 0 ){
+        } else {
+          if (!item.resultado || item.resultado.length == 0) {
             result.warning = 'Sin resultados';
-          }else{
-            if(item.resultado && item.resultado.length > 0 ){
+          } else {
+            if (item.resultado && item.resultado.length > 0) {
               result.warning = 'Resultados';
-            }            
+            }
           }
         }
-        
+
         const data1 = item.resultado.map((itemData: any) => {
           return {
             x: itemData.label,
@@ -518,19 +577,19 @@ export class InstrumentsService extends HttpService {
         const categories = item.resultado.map((itemData: any) => {
           return itemData.label;
         });
-        
+
         switch (selectedGraphic) {
-          
+
           case '1':
             result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, true);
-           
+
             break;
           case '2':
             result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, false);
             break;
           case '3':
             result.optionsChart = this.getOptionsChartPie(this.obj, data3, categories);
-            break;               
+            break;
 
           default:
             break;
@@ -539,8 +598,8 @@ export class InstrumentsService extends HttpService {
         return result;
       })
 
-    }else{
-      paginator.data=null;
+    } else {
+      paginator.data = null;
     }
     return paginator;
   }
@@ -555,14 +614,14 @@ export class InstrumentsService extends HttpService {
    * @param textLabelyAxis 
    * @returns 
    */
-  getOptionsChartBar(obj: any, data1:any, data2: any, categories: any, horizontal: boolean, textLabelyAxis:string = 'Categorias') {
+  getOptionsChartBar(obj: any, data1: any, data2: any, categories: any, horizontal: boolean, textLabelyAxis: string = 'Categorias') {
     return {
       series: [{
         data: data2,
       }],
       chart: {
-        type:  'bar',
-        height: horizontal ?'480':'380',
+        type: 'bar',
+        height: horizontal ? '480' : '380',
         background: obj.cardBg,
         toolbar: {
           show: false
@@ -587,10 +646,10 @@ export class InstrumentsService extends HttpService {
       },
       xaxis: {
         type: 'category',
-        labels:{
+        labels: {
           show: horizontal ? true : false,
         },
-        
+
         categories: categories,
         axisBorder: {
           color: obj.gridBorder,
@@ -614,7 +673,7 @@ export class InstrumentsService extends HttpService {
             fontSize: '8px',
 
 
-        },
+          },
         },
       },
       legend: {
@@ -668,7 +727,7 @@ export class InstrumentsService extends HttpService {
    * @param textLabelyAxis 
    * @returns 
    */
-  getOptionsChartPie(obj: any, data3: any, categories: any, chartType: string='pie') {
+  getOptionsChartPie(obj: any, data3: any, categories: any, chartType: string = 'pie') {
     console.log(data3)
     console.log(categories)
     return {
@@ -955,8 +1014,8 @@ export class InstrumentsService extends HttpService {
    * @param id 
    */
   async deleteInputType(id: number) {
-    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/encuesta/tipoinput/${id}`));
-    if(resp && resp.msg){
+    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/tipoinput/${id}`));
+    if (resp && resp.msg) {
       this.toastrService.success('Tipo de input elimando con éxito.');
     }
   }
@@ -970,7 +1029,7 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipoinput/actualizar/${id}`, { nombre: data.label.toLowerCase(), seleccionMultiple: data.multipleSelection, statusId:  parseInt(data.status.value)}));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipoinput/actualizar/${id}`, { nombre: data.label.toLowerCase(), seleccionMultiple: data.multipleSelection, statusId: parseInt(data.status.value) }));
         this.toastrService.success('Tipo de input actualizado con exito.');
       } else {
         await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipoinput', { nombre: data.label.toLowerCase(), seleccionMultiple: data.multipleSelection }));
@@ -1030,8 +1089,8 @@ export class InstrumentsService extends HttpService {
    * @param id 
    */
   async deleteCategory(id: number) {
-    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/encuesta/tipocategoria/${id}`));
-    if(resp){
+    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/tipocategoria/${id}`));
+    if (resp) {
       this.toastrService.success('Tipo de categoría elimando con éxito.');
     }
   }
@@ -1045,7 +1104,7 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, { nombre: data.label.toUpperCase(), statusId:  parseInt(data.status.value) }));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, { nombre: data.label.toUpperCase(), statusId: parseInt(data.status.value) }));
         this.toastrService.success('Tipo de categoría actualizada con exito.');
       } else {
         await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipocategoria', { nombre: data.label.toUpperCase() }));
@@ -1111,8 +1170,8 @@ export class InstrumentsService extends HttpService {
    * @param id 
    */
   async deleteUnitType(id: number) {
-    const resp = await firstValueFrom(this.delete(environment.apiUrl,`/encuesta/tipounidad/${id}`));
-    if(resp){
+    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/tipounidad/${id}`));
+    if (resp) {
       this.toastrService.success('Tipo de unidad elimando con éxito.');
     }
   }
@@ -1126,7 +1185,7 @@ export class InstrumentsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipounidad/actualizar/${id}`, { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase(), statusId:  parseInt(data.status.value) }));
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipounidad/actualizar/${id}`, { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase(), statusId: parseInt(data.status.value) }));
         this.toastrService.success('Tipo de unidad actualizada con exito.');
       } else {
         await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipounidad', { nombre: data.label.toLowerCase(), factor: data.factor.toLowerCase() }));

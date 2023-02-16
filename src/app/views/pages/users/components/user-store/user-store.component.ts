@@ -57,22 +57,49 @@ export class UserStoreComponent extends BaseComponent implements OnInit {
     }
   }
 
+  /**
+   * Handle status change
+   * @param event 
+   */
   onChangeStatus(event:any){
     this.user.status = this.userStatus == true ? new SelectOption('1') : new SelectOption('2');
   }
 
+  /**
+   * Handle change country
+   * @param event 
+   */
   async onChangeCountry(event:any){
     console.log('country', this.user.country);
-    this.states = await this.commonsService.getAllStates(this.user.country.id);
-    
+    this.user.state = null;
+    this.states = null;
+    this.user.city = null;
+    this.cities = null;
+    if(this.user.country){
+      this.states = await this.commonsService.getAllStates(this.user.country.id);
+    }
+        
   }
 
+  /**
+   * Handle change state
+   * @param event 
+   */
   async onChangeStates(event:any){
     console.log('state', this.user.state);
-    this.cities = await this.commonsService.getAllCities(this.user.state.id);
+    this.user.city = null;
+    this.cities = null;
+    if(this.user.state){
+      this.cities = await this.commonsService.getAllCities(this.user.state.id);
+    }
+    
     
   }
 
+    /**
+   * Handle submit form
+   * @param event 
+   */
   async onSubmit(form:NgForm){
     if(form.valid){
       console.log('user', this.user)

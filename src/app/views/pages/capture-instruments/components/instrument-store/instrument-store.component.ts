@@ -87,13 +87,20 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
    * Delete section of intrument
    * @param section 
    */
-  deleteSection(section: Section) {
-    this.instrument.sections = this.instrument.sections.filter((item) => item.numberSection != section.numberSection);
-    if (this.instrument.sections && this.instrument.sections.length > 0) {
-      this.instrument.sections.forEach((sectionItem: Section, index: number) => {
-        sectionItem.numberSection = index + 1;
-      });
+  async deleteSection(section: Section) {
+    let result: boolean = true;
+    if(section.id){
+      result = await this.instrumentsService.deleteSection(section.id)
     }
+    if(result){
+      this.instrument.sections = this.instrument.sections.filter((item) => item.numberSection != section.numberSection);
+      if (this.instrument.sections && this.instrument.sections.length > 0) {
+        this.instrument.sections.forEach((sectionItem: Section, index: number) => {
+          sectionItem.numberSection = index + 1;
+        });
+      }
+    }
+
   }
 
 

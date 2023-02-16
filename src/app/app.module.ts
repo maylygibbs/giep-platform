@@ -34,11 +34,11 @@ FullCalendarModule.registerPlugins([
   listPlugin,
   interactionPlugin
 ])
+const config: SocketIoConfig = { url: 'http://wsplatformstage.pafar.com.ve:8090', options: {} };
+//const config: SocketIoConfig = { url: 'ws://bofficegiepstage.pafar.com.ve:8090/public/chat/php-socket.php', options: {} };
 
-const config: SocketIoConfig = { url: 'http://localhost:81', options: {} };
 
 
-//ws://bofficegiepstage.pafar.com.ve:8090/public/chat/php-socket.php
 
 @NgModule({
   declarations: [

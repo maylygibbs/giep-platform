@@ -3,11 +3,12 @@ import { Instrument } from './../../../core/models/instrument';
 import { UserService } from './../../../core/services/user.service';
 import { User } from './../../../core/models/user';
 import { AuthService } from './../../../core/services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { BaseComponent } from '../../shared/components/base/base.component';
-import { Observable, Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -59,15 +60,20 @@ export class DashboardComponent extends BaseComponent implements OnInit {
   //Subcription
   user$: Subscription;
 
+  private $eventNavigationEnd: Subscription;
+
   constructor(private calendar: NgbCalendar,
     private authService: AuthService,
     private userService: UserService,
+    private router: Router,
     private instrumentsService: InstrumentsService) {
     super();
     this.dtOptions.ordering = false;
   }
 
    ngOnInit(): void {
+
+    this.userService.getInfoUser();
     
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
       this.user = user ? user : this.authService.currentUser;
@@ -86,8 +92,8 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     if (document.querySelector('html')?.getAttribute('dir') === 'rtl') {
       this.addRtlOptions();
     }
-
   }
+
 
 
   /**
@@ -133,7 +139,13 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     if(this.user$){
       this.user$.unsubscribe();
     }
+
+    if (this.$eventNavigationEnd) {
+      this.$eventNavigationEnd.unsubscribe()
+    }
   }
+
+
 
 
 }

@@ -117,7 +117,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 d-flex align-items-center">
-                                    <i class="feather icon-trash" (click)="deleteOption(option)"></i>
+                                    <i class="feather icon-trash" (click)="deleteOption(option)" placement="start" ngbTooltip="Eliminar Opción"></i>
                                 </div>
 
                             </div>
@@ -234,8 +234,8 @@
                 <span>Pregunta Nro. {{question.order}} </span>
             </div>
             <div class="col-lg-6 text-right">
-                <i class="feather icon-edit-2" (click)="questionEdit()"></i>
-                <i class="feather icon-trash" (click)="deleteQuestion(question)"></i>
+                <i class="feather icon-edit-2" (click)="questionEdit()" placement="start"  ngbTooltip="Editar Intrumento"></i>
+                <i class="feather icon-trash ms-1" (click)="deleteQuestion(question)" placement="start" ngbTooltip="Eliminar Pregunta"></i>
             </div>
         </div>
         <div class="row">

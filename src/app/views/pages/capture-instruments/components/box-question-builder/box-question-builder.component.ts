@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import { environment } from './../../../../../../environments/environment';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { ActivatedRoute } from '@angular/router';
+import { InstrumentsService } from '../../../../../core/services/instruments.service';
 
 @Component({
   selector: 'app-box-question-builder',
@@ -33,6 +34,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
   data: any;
 
   constructor(private commonsService: CommonsService,
+    private instrumentsService: InstrumentsService,
     private route: ActivatedRoute,) {
     super();
 
@@ -81,8 +83,15 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
    * Delete option of question
    * @param option 
    */
-  deleteOption(option: QuestionOption){
-    this.question.options = this.question.options.filter((item)=>item.nameInputLabel != option.nameInputLabel);
+  async deleteOption(option: QuestionOption){
+    let result:boolean=true;
+    if(option.idOption){
+      result = await this.instrumentsService.deleteOption(option.idOption);
+    }
+    if(result){
+      this.question.options = this.question.options.filter((item)=>item.nameInputLabel != option.nameInputLabel);
+    }
+    
   }
 
   /**

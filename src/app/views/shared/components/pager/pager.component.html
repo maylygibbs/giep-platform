@@ -1,4 +1,4 @@
-<pagination-controls  id="server"
+<pagination-controls  [id]="idPaginator? idPaginator : 'server'"
                       (pageChange)="pageChanged($event)"                      
                       [maxSize]="5"
                       [responsive]="true"

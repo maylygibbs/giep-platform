@@ -57,6 +57,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
+      console.log('NavigationEnd Users')
       this.loadPage(environment.paginator.default_page);
     });
   }

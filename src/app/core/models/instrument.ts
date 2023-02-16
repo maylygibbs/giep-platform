@@ -142,7 +142,7 @@ export class Instrument {
                 order: question.order,
                 label: question.label,
                 score: parseInt(question.score),
-                required: question.required,
+                required: question.required ? question.required : false,
                 categoryId: question.categoryBy ? parseInt(question.categoryBy) : null,
                 inputType: {id: parseInt(question.inputType.value) , label: question.inputType.label}
             };
@@ -165,8 +165,8 @@ export class Instrument {
                 label: opt.label,
                 score: parseInt(opt.score)
             }
-            if(opt.id){
-                Object.assign(optionOutput, {id: opt.id});
+            if(opt.idOption){
+                Object.assign(optionOutput, {id: opt.idOption});
             }
             return optionOutput;
 

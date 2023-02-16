@@ -118,50 +118,27 @@
 <div *ngIf="step==2">
   <app-instrument-store [instrument]="selectedItem" (onBack)="back($event)"></app-instrument-store>
 </div>
+
 <ng-template #confirmModal let-modal>
   <app-modal-confirm [message]="messageModal" (onFinish)="processEvent($event)"></app-modal-confirm>
 </ng-template>
+
 
 <ng-template #addUsersModal let-modal>
   <div class="modal-header">
     <button type="button" class="btn-close" (click)="closeAddUsersModal()" aria-label="Close"></button>
   </div>
   <form name="addUserForm" #addUserForm="ngForm" (ngSubmit)="addUsers(addUserForm)">
-  <div class="row">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="row px-5">
+            <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+              <h5 class="my-5">Vincule Usuarios</h5>
+            </div>
+            <!-- VINCULAR USUARIOS  -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
 
-    <div class="col-lg-12 col-md-12 col-sm-12">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 text-center" >
-          <h5 class="my-5">Usuarios vinculados</h5>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <table datatable [dtOptions]="dtOptions" class="table">
-            <thead>
-              <tr>
-                <th>Usuario</th>
-                <th>Email</th>
-                <th>Respondió</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let user of assignedUsers">
-                <td>{{user.firstName}}</td>
-                <td>{{user.email}}</td>
-                <td>{{user.answered ? 'Sí':'No'}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-12 col-md-12 col-sm-12">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 text-center">
-          <h5 class="my-5">Vincule usuarios</h5>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          
-            <div class="modal-body">
               <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <div class="mb-3">
@@ -184,9 +161,11 @@
                       [selectableGroup]="true" [virtualScroll]="true" [selectableGroupAsModel]="false"
                       [closeOnSelect]="false" name="instrumentUsers" #instrumentUsers="ngModel"
                       [ngClass]="{'ng-dirty ng-invalid' : instrumentUsers.errors && ( instrumentUsers.dirty || instrumentUsers.touched || addUserForm.submitted) }"
-                      bindLabel="fullName" bindValue="id" [(ngModel)]="selectedUsers" [loading]="showLoading" required>
+                      bindLabel="fullName" bindValue="id" [(ngModel)]="selectedUsers" [loading]="showLoadingUsers"
+                      required>
                       <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
-                        <input id="item-{{index}}" type="checkbox" name="itemgroup1-{{index}}" [ngModel]="item$.selected" />
+                        <input id="item-{{index}}" type="checkbox" name="itemgroup1-{{index}}"
+                          [ngModel]="item$.selected" />
                         {{item.role}}
                       </ng-template>
                       <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
@@ -200,19 +179,119 @@
                     </div>
                   </div>
                 </div>
+
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputCountry" class="form-label required">País</label>
+                    <ng-select id="inputCountry" [items]="data.countries" name="country" #country="ngModel"
+                      bindValue="value" bindLabel="label"
+                      [ngClass]="{'ng-dirty ng-invalid' : country.errors && ( country.dirty || country.touched || addUserForm.submitted) }"
+                      [searchable]="true" (change)="onChangeCountry($event)" [(ngModel)]="countryId" required>
+                    </ng-select>
+                    <div *ngIf="country.invalid && addUserForm.submitted" class="invalid-feedback">
+                      <div *ngIf="country.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputState" class="form-label required">Estado</label>
+                    <ng-select id="inputState" [items]="states" name="state" #state="ngModel" bindValue="value"
+                      bindLabel="label"
+                      [ngClass]="{'ng-dirty ng-invalid' : state.errors && ( state.dirty || state.touched || addUserForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="stataId" [loading]="showLoadingCountries" required>
+                    </ng-select>
+                    <div *ngIf="state.invalid && addUserForm.submitted" class="invalid-feedback">
+                      <div *ngIf="state.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right mb-2">
+                  <button type="submit" class="btn btn-primary">Vincular</button>
+                </div>
+
               </div>
             </div>
-         
+            <!-- USUARIOS VINCULADOS -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                  <h5 class="my-5">Usuarios vinculados</h5>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputCountry" class="form-label required">País</label>
+                    <ng-select id="inputCountry" [items]="data.countries" name="countryForSearch"
+                      #countryForSearch="ngModel" bindValue="value" bindLabel="label" [searchable]="true"
+                      (change)="onChangeCountryForSearch($event)" [(ngModel)]="countryIdForSearchUsers">
+                    </ng-select>
+                    <div *ngIf="country.invalid && addUserForm.submitted" class="invalid-feedback">
+                      <div *ngIf="country.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputState" class="form-label required">Estado</label>
+                    <ng-select id="inputState" [items]="statesForSearchUsers" name="stateForSearch"
+                      #stateForSearch="ngModel" bindValue="value" bindLabel="label" [searchable]="true"
+                      (change)="onChangeStateForSearch($event)" [(ngModel)]="stataIdForSearchUsers"
+                      [loading]="showLoadingCountriesForSearchUsers">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-right">
+                  <div class="search-form">
+                    <label for="inputInstrumentForSearchUsers" class="form-label">&nbsp;</label>
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <i class="feather icon-search" (click)="searchForSearchUsers()"></i>
+                      </div>
+                      <input type="text" class="form-control" id="inputInstrumentForSearchUsers" name="searcForUsers" #searcForUsers="ngModel"
+                        [(ngModel)]="wordForSearchUSers" (ngModelChange)="searchForSearchUsers()"
+                        placeholder="Buscar aqui...">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-4" *ngIf="assignedUsers && assignedUsers.data">
+                  <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Respondió</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="let user of assignedUsers.data | paginate: { id: 'server1', itemsPerPage: environment.paginator.row_per_page, currentPage: pageUser, totalItems: assignedUsers.count }">
+                        <td>{{user.firstName}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.answered ? 'Sí':'No'}}</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="3" class="text-right">
+                          <app-pager [idPaginator]="'server1'" (onChangePage)="loadPageUsers($event)"></app-pager>
+                        </th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
-
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="closeAddUsersModal()">Cancelar</button>
-    <button type="submit" class="btn btn-primary">Vincular</button>
-  </div>
-</form>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeAddUsersModal()">Cancelar</button>
+    </div>
+  </form>
 </ng-template>
