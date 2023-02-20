@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
 //import { io } from 'socket.io-client';
@@ -9,13 +10,13 @@ import { AuthService } from './auth.service';
 })
 export class NotificationService {
 
-  /*socket = io('ws://bofficegiepstage.pafar.com.ve:8090/public/chat/php-socket.php', {
-    upgrade:true,
-    protocols:'http'
-  });*/
+  showNotification$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private socket: Socket,
     private authService: AuthService) { 
+
+
+
 
     socket.fromEvent('connected_user').subscribe((message: any) => {
         console.log('handle conected event')
@@ -25,7 +26,8 @@ export class NotificationService {
 
     socket.fromEvent('new_message').subscribe((message: any) => {
       console.log('handle new_message event')
-        console.log('notificacion', message)
+        console.log('notificacion', message);
+        this.changeStatusNotification(true);
     });
 
     socket.fromEvent('disconnect').subscribe(() => {
@@ -34,7 +36,13 @@ export class NotificationService {
     });
   }
 
+  get showNotification():Observable<boolean>{
+    return this.showNotification$.asObservable();
+  }
 
+  changeStatusNotification(value: boolean){
+    this.showNotification$.next(value)
+  }
 
   joinRoom(email: string): void {
     this.socket.emit('add_user', email);

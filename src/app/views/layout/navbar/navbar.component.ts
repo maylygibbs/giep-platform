@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild, ElementRef, Inject, Renderer2 } from '@an
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -21,7 +22,8 @@ export class NavbarComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document, 
     private renderer: Renderer2,
     private authService:AuthService,
-    private router: Router
+    private router: Router,
+    public notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {

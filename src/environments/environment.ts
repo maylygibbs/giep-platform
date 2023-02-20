@@ -10,6 +10,7 @@ export const environment = {
   apiAuth: 'https://bofficegiepstage.pafar.com.ve/public', 
   //apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
   //apiAuth: 'https://giepboffice.pafar.com.ve/public',
+  wsserver:"http://localhost:81",
   localstorage:{
     userKey : 'cusr'
   },

@@ -52,7 +52,7 @@
             </div>
           </div>
           <div class="px-3 py-2 d-flex align-items-center justify-content-center border-top" >
-            <a style="display: none;" href="" (click)="false">Ver todassssssssssssss</a>
+            <a style="display: none;" href="" (click)="false">Ver todas</a>
           </div>
         </div>
       </li>
@@ -135,7 +135,7 @@
       <li class="nav-item nav-notifications" ngbDropdown>
         <a class="nav-link" ngbDropdownToggle id="notificationDropdown">
           <i class="link-icon feather icon-bell"></i>
-          <div class="indicator">
+          <div *ngIf="notificationService.showNotification | async" class="indicator">
             <div class="circle"></div>
           </div>
         </a>

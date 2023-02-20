@@ -25,6 +25,7 @@ import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import { OnlineStatusModule } from 'ngx-online-status';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -34,10 +35,7 @@ FullCalendarModule.registerPlugins([
   listPlugin,
   interactionPlugin
 ])
-const config: SocketIoConfig = { url: 'http://wsplatformstage.pafar.com.ve:8090', options: {} };
-//const config: SocketIoConfig = { url: 'ws://bofficegiepstage.pafar.com.ve:8090/public/chat/php-socket.php', options: {} };
-
-
+const config: SocketIoConfig = { url: environment.wsserver, options: {} };
 
 
 @NgModule({
