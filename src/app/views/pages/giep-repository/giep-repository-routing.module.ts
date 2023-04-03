@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonsListUsersResolver } from '../../../core/resolvers/commons.resolver';
 import { DocumentsComponent } from './components/documents/documents.component';
 
 const routes: Routes = [
@@ -8,6 +9,9 @@ const routes: Routes = [
     component: DocumentsComponent,
     data: {
       title: 'Documentos - GIEp',
+    },
+    resolve:{
+      users: CommonsListUsersResolver
     }
   },
 ];

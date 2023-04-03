@@ -1,10 +1,11 @@
 import { ProfileComponent } from './components/profile/profile.component';
 
-import { CommonsListCountriesResolver, CommonsListPositionsResolver, CommonsListRolesResolver, CommonsListSocialNetworkResolver } from './../../../core/resolvers/commons.resolver';
+import { CommonsListCountriesResolver, CommonsListEmailAccountsTypeResolver, CommonsListPositionsResolver, CommonsListRolesResolver, CommonsListSocialNetworkResolver } from './../../../core/resolvers/commons.resolver';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonsListDependencesResolver } from '../../../core/resolvers/commons.resolver';
 import { UsersComponent } from './components/users/users.component';
+import { EmailAccountsComponent } from './components/email-accounts/email-accounts.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,16 @@ const routes: Routes = [
     resolve:{
       countries: CommonsListCountriesResolver,
       networks: CommonsListSocialNetworkResolver
+    }
+  },
+  {
+    path:'email-accounts',
+    component:EmailAccountsComponent,
+    data:{
+      title: 'Cuentas de email - GIEp',
+    },
+    resolve:{
+      accountsType: CommonsListEmailAccountsTypeResolver
     }
   }
 ];

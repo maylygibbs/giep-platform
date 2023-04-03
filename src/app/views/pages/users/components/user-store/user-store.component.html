@@ -140,7 +140,7 @@
                                 <label for="inputCountry" class="form-label required">País</label>
                                 <ng-select id="inputCountry" [items]="data.countries" name="country" #country="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : country.errors && ( country.dirty || country.touched || userForm.submitted) }"
-                                    [searchable]="false"
+                                    [searchable]="true"
                                     (change)="onChangeCountry($event)"
                                     [(ngModel)]="user.country" required>
                                 </ng-select>
@@ -156,7 +156,7 @@
                                 <ng-select id="inputState" [items]="states" name="state" #state="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : state.errors && ( state.dirty || state.touched || userForm.submitted) }"
                                     (change)="onChangeStates($event)"
-                                    [searchable]="false" [(ngModel)]="user.state" required>
+                                    [searchable]="true" [(ngModel)]="user.state" required>
                                 </ng-select>
                                 <div *ngIf="state.invalid && userForm.submitted" class="invalid-feedback">
                                     <div *ngIf="state.errors?.required">Campo es requerido
@@ -171,8 +171,7 @@
                                 <label for="inputCity" class="form-label required">Ciudad</label>
                                 <ng-select id="inputCity" [items]="cities" name="city" #city="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : city.errors && ( city.dirty || city.touched || userForm.submitted) }"
-                                    [searchable]="false"
-                                    (change)="onChangeStates($event)"
+                                    [searchable]="true"
                                     [(ngModel)]="user.city" required>
                                 </ng-select>
                                 <div *ngIf="city.invalid && userForm.submitted" class="invalid-feedback">

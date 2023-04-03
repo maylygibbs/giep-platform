@@ -6,13 +6,14 @@ import { environment } from '../../../../../../environments/environment';
 import { PaginationResponse } from '../../../../../core/models/pagination-response';
 import { DocumentGiep } from '../../../../../core/models/document';
 import { DocumentService } from '../../../../../core/services/document.service';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
 import * as saveAs from 'file-saver';
 import { SelectOption } from '../../../../../core/models/select-option';
 import { InstrumentsService } from '../../../../../core/services/instruments.service';
 import { ToastrService } from 'ngx-toastr';
+import { User } from '../../../../../core/models/user';
 
 @Component({
   selector: 'app-documents',
@@ -55,7 +56,7 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     autoReset: 1000,
     errorReset: 2500,
     cancelReset: null,
-    acceptedFiles:'.docx, .doc, .pdf, .xls, .xlsx, .odt, .odp, .ods, .ppt, .pptx, .png, .jpg, .jpeg, .gif y .mp4',
+    acceptedFiles:'.docx, .txt, .doc, .pdf, .xls, .xlsx, .odt, .odp, .ods, .ppt, .pptx, .png, .jpg, .jpeg, .gif, .mp4',
     init: () => {
       this.drop = this;
     }
@@ -78,12 +79,18 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
 
   documentRequest:NodeJS.Timeout;
 
+  data: any;
+
   constructor(private documentService: DocumentService,
     private instrumentsService: InstrumentsService,
     private toastrService: ToastrService,
     protected modalService: NgbModal,
-    private router: Router) {
+    private router: Router,
+    private route: ActivatedRoute) {
     super();
+    this.route.data.subscribe((data) => {
+      this.data = data;
+    });
   }
 
   async ngOnInit() {
@@ -104,12 +111,16 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     console.log('onUploadError:', event);
     this.disableBtnSubmit = true;
     if(event[1]=="You can't upload files of this type."){
-      this.toastrService.error('Documento con extensión no permitida. Sólo se permiten documentos con las siguientes extensiones: docx, doc, pdf, xls, xlsx, odt, ods, odp, ppt, pptx, png, jpg, jpeg, gif y mp4.')
+      this.toastrService.error('Documento con extensión no permitida. Sólo se permiten documentos con las siguientes extensiones: docx,.txt, doc, pdf, xls, xlsx, odt, ods, odp, ppt, pptx, png, jpg, jpeg, gif y mp4.')
     }
     if(event[1]=="File is too big (2.87MiB). Max filesize: 2MiB."){
       this.toastrService.error('El documento es demasiado grande. Tamaño máximo de docuemento: 10MB.')
     }
-    
+    this.doc = new DocumentGiep();
+    this.selectedUsers = null;
+    this.documentStatus = false;
+    this.dataFile = null;
+    this.fileContent = null;
 
   }
 
@@ -151,7 +162,8 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     console.log('event:', event);
     console.log('file name:', file.name);
     console.log('file type:', file.type);
-    if (file.name === '.ORIG_HEAD' && !file.type) {
+    
+    if (file.name === '.ORIG_HEAD.txt' && file.type && file.type.includes('text')) {
       let fileReader: FileReader = new FileReader();
       let self = this;
       fileReader.onloadend = function (x) {
@@ -159,7 +171,8 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
         if (!self.dataFile) {
           self.dataFile = {};
         }
-        Object.assign(self.dataFile, { orig_head: self.fileContent })
+        
+        Object.assign(self.dataFile, { orig_head:  self.fileContent.toString() })
       }
       fileReader.readAsText(file);
     } else {
@@ -181,7 +194,7 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
 
 
   onChangeStatus(event: any) {
-    this.doc.state = this.documentStatus == true ? new SelectOption('1') : new SelectOption('0');
+    this.doc.isPublic = this.documentStatus == true ? true : false;
   }
 
   /**
@@ -189,7 +202,12 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    */
   resetDropzoneUploads() {
       this.dataFile = null;
-      this.fileForm.resetForm();
+      this.fileForm?.resetForm();
+      this.doc = new DocumentGiep();
+      this.selectedUsers = null;
+      this.documentStatus = false;
+      this.dataFile = null;
+      this.fileContent = null;
   }
 
   /**
@@ -283,6 +301,11 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     this.modalService.dismissAll();
     this.resetDropzoneUploads();
     this.doc = new DocumentGiep();
+    this.selectedUsers = null;
+    this.documentStatus = false;
+    this.dataFile = null;
+    this.fileContent = null;
+
   }
 
   /**
@@ -290,23 +313,36 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    * @param form 
    */
   async onFilesUpload(form: NgForm) {
+
+    debugger
     if (form.valid) {
       console.log('dataFile onFilesUpload: ', this.dataFile);
 
       if (this.fileToUpload) {
+        
         const formData = new FormData();
-        const hashtag: Array<string> = this.doc.hashtag.map((item: any) => {
-          return item.value.trim().toLowerCase();
-        })
+        let hashtag: Array<string> = null
+        if(!this.fileContent){
+          hashtag = this.doc.hashtag.map((item: any) => {
+            return item.value.trim().toLowerCase();
+          })
+        }
+
         formData.append("archivo", this.fileToUpload);
-        formData.append("titulo", this.doc.title);
-        formData.append("nombre_original", this.dataFile.fileName);
-        formData.append("descripcion_archivo", this.doc.description);
+       
+        formData.append("titulo", !this.fileContent ? this.doc.title : null);
+        formData.append("descripcion_archivo", !this.fileContent ? this.doc.description : null);
+        formData.append("hashtag", !this.fileContent ? JSON.stringify(hashtag) : null);
+        formData.append("publico", !this.fileContent ? (this.doc.isPublic ?  '1' : '0') : null);
+        formData.append("users", !this.fileContent ? (this.doc.isPublic ? JSON.stringify(this.selectedUsers) : null) : null);
+      
+        formData.append("comentarios", !this.fileContent ? null : this.doc.comments);
+        formData.append("nemotecnico", !this.fileContent ? null : this.dataFile.orig_head);
+        formData.append("nombre_original", this.dataFile.fileName);        
         formData.append("tamano", this.dataFile.fileSize);
-        formData.append("hashtag", JSON.stringify(hashtag));
-        formData.append("publico", this.doc.state ?  this.doc.state.value : '0');
-        formData.append("idestado", '3');
-        formData.append("users", null);
+
+        
+        
         const upload = await this.documentService.uploadFile(formData);
         if (upload) {
           this.loadPage(environment.paginator.default_page);
@@ -319,14 +355,15 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
   }
 
   /**
-   * Download document for only reading
+   * pull document for only versionar
    * @param id 
    */
-  async download(id: string) {
-    const resp = await this.documentService.download(id);
+  async pull(id: string) {
+    const resp = await this.documentService.pull(id);
     if (resp) {
       let file = this.convertBase64ToFile(resp.file, resp.title);
       saveAs(file, resp.title + '.' + resp.extension);
+      this.loadPage(this.page);
     }
   }
 

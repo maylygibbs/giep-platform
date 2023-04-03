@@ -7,12 +7,16 @@ import { SharedModule } from '../../shared/shared.module';
 import { UserStoreComponent } from './components/user-store/user-store.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { EmailAccountsComponent } from './components/email-accounts/email-accounts.component';
+import { EmailAccountStoreComponent } from './components/email-account-store/email-account-store.component';
 
 @NgModule({
   declarations: [
     UsersComponent,
     UserStoreComponent,
-    ProfileComponent
+    ProfileComponent,
+    EmailAccountsComponent,
+    EmailAccountStoreComponent
   ],
   imports: [
     CommonModule,

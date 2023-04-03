@@ -8,8 +8,6 @@ import { User } from '../models/user';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { SelectOption } from '../models/select-option';
 import { ToastrService } from 'ngx-toastr';
-import { MenuItem } from '../models/menu.model';
-import * as saveAs from 'file-saver';
 import { DocumentGiep } from '../models/document';
 import { CommonsService } from './commons.service';
 
@@ -50,6 +48,12 @@ export class DocumentService extends HttpService {
       document.state = new SelectOption(item.idestado, item.nombre_status);
       document.creationDate = item.fecha_actividad_registro;
       document.ext = item.tipo_extensiones;
+      document.isBloqued = item.id_limited_bloqueo == 3 ? false : true;
+      if(item.bloquedo_por && item.bloquedo_por.length>0){
+        document.bloquedBy = new User();
+        document.bloquedBy.firstName = item.bloquedo_por[0].nombre_apellido
+      }
+      document.bloquedBy 
       return document;
     })
 
@@ -70,8 +74,8 @@ export class DocumentService extends HttpService {
       response = true;
     } catch (error:any) {
       console.log(error)
-      if(error.status){
-        this.toastrService.error(error.error.error);
+      if(error.status==409){
+        this.toastrService.error(error.error.msg);
       }else{
         this.toastrService.error('Ha ocurrido un error cargando el archivo.');
       }     
@@ -84,9 +88,10 @@ export class DocumentService extends HttpService {
    * Upload document
    * @param formData 
    */
-  async download(id:string):Promise<any>{
+  async pull(id:string):Promise<any>{
     let response:any = null;
     try {
+      debugger
       const resp = await firstValueFrom(this.get(environment.apiUrl,`/archivo/download/file/${id}`));
       console.log(resp);
       this.toastrService.success('Descarga realizada con éxito.');
@@ -177,6 +182,14 @@ export class DocumentService extends HttpService {
               }
             });
           }
+
+
+          docOutput.isBloqued = item.id_limited_bloqueo == 3 ? false : true;
+          if(item.bloquedo_por && item.bloquedo_por.length>0){
+            docOutput.bloquedBy = new User();
+            docOutput.bloquedBy.firstName = item.bloquedo_por[0].nombre_apellido
+          }
+
           return docOutput;
          });
         doc = listDoc[0];

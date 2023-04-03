@@ -9,6 +9,7 @@ export class DocumentGiep {
     title: string; //front
     originalName: string;  //front
     description: string;  //front
+    comments:string;
     ext: string;
     fileType: SelectOption;
     size: number;  //front
@@ -22,5 +23,7 @@ export class DocumentGiep {
     hashtag: Array<string>;
     users: Array<User>;
     history: Array<any>;
+    isBloqued: boolean;
+    bloquedBy: User;
  
 }

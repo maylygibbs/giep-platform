@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form name="userForm" #accountForm="ngForm" (ngSubmit)="onSubmit(accountForm)" class="forms-sample">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label for="inputDescription" class="form-label required">Nombre de Cuenta</label>
+                            <input type="text" id="inputDescription" name="accountName" #accountName="ngModel"
+                              [ngClass]="{'ng-dirty ng-invalid' : accountName.errors && ( accountName.dirty || accountName.touched || accountForm.submitted) }"
+                              [(ngModel)]="account.accountName" class="form-control" minlength="3" maxlength="400" required />
+                            <div *ngIf="accountName.invalid && accountForm.submitted" class="invalid-feedback">
+                              <div *ngIf="accountName.errors?.required">Campo es requerido
+                              </div>
+                              <div *ngIf="accountName.errors?.minlength || accountName.errors?.maxlength">
+                                Campo permite entre 3 y 400 caracteres</div>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputAccountType" class="form-label required">Tipo de Cuenta</label>
+                                <ng-select id="inputAccountType" name="accountType" [items]="data.accountsType" #accountType="ngModel" [(ngModel)]="account.type"
+                                [ngClass]="{'ng-dirty ng-invalid' : accountType.errors && ( accountType.dirty || accountType.touched || accountForm.submitted) }"    
+                                [searchable]="false" required>
+                                </ng-select>
+                                <div *ngIf="accountType.invalid && accountForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="accountType.errors?.required">Campo es requerido
+                                    </div>
+                                </div>                                 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label for="inputEmail" class="form-label required">Email</label>
+                            <input type="text" email id="inputEmail" name="email" #email="ngModel"
+                              [ngClass]="{'ng-dirty ng-invalid' : email.errors && ( email.dirty || email.touched || accountForm.submitted) }"
+                              [(ngModel)]="account.email" class="form-control" minlength="3" maxlength="400" required />
+                            
+                              <div *ngIf="email.invalid && accountForm.submitted" class="invalid-feedback">
+                              <div *ngIf="email.errors?.required">Campo es requerido
+                              </div>
+                              <div *ngIf="email.errors?.email">Campo requiere un email válido
+                            </div>  
+                            </div>
+                          </div>
+                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputPassword" class="form-label required">Contraseña</label>
+                                <div class="input-group">
+                                    <input id="inputPassword" name="password" #password="ngModel" [(ngModel)]="account.password" [type]="showPassword ? 'text' : 'password'"
+                                    [ngClass]="{'ng-dirty ng-invalid' : password.errors && ( password.dirty || password.touched || accountForm.submitted) }"
+                                      class="form-control" placeholder="Password" required>
+
+                                    <button class="input-group-text" type="button" (click)="showPassword = !showPassword">
+                                      <i class="feather" [ngClass]="{'icon-eye-off':showPassword, 'icon-eye':!showPassword}"></i>
+                                    </button>
+                                  </div> 
+                                  <div *ngIf="password.invalid && accountForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="password.errors?.required">Campo requerido
+                                    </div>
+                                  </div>                              
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-lg-6 col-mg-6 col-sm-12 col-xs-12 p-1">
+                            <div class="mb-3 ms-3">
+                                <div class="form-check form-switch mb-2">
+                                    <input type="checkbox" name=status #status="ngModel" [(ngModel)]="accountStatus"
+                                        (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">
+                                    <label class="form-check-label" for="formSwitch1">Activo</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-right">
+                            <button class="btn btn-secondary" (click)="back()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary ms-2 me-2">Guardar</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

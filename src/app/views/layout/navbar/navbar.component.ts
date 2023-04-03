@@ -5,6 +5,9 @@ import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification.service';
+import { EmailAccountService } from '../../../core/services/email-account.service';
+import { PaginationResponse } from '../../../core/models/pagination-response';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -18,18 +21,27 @@ export class NavbarComponent implements OnInit {
   //Subcription
   user$: Subscription;
 
+  mailboxes: PaginationResponse;
+
+  environment = environment;
+
   constructor(
     @Inject(DOCUMENT) private document: Document, 
     private renderer: Renderer2,
     private authService:AuthService,
     private router: Router,
-    public notificationService: NotificationService
+    public notificationService: NotificationService,
+    private emailAccountService:EmailAccountService
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.user = this.authService.currentUser;
+    this.notificationService.joinRoom(this.user.email);
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
-      this.user = user ? user : this.authService.currentUser;
+      this.user = user ? user : this.authService.currentUser;      
     });
+
+    //this.mailboxes = await this.emailAccountService.getMailboxesPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
   }
   
 
@@ -51,6 +63,20 @@ export class NavbarComponent implements OnInit {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
     }
+  }
+
+  /**
+   * load mailbox header by id
+   * @param id 
+   */
+  loadMailboxHeaderById(id:number){
+
+    this.router.navigate(['/apps/email/inbox'],{ queryParams: { mailboxId: id } })
+   /* this.emailAccountService.getMailboxeHeaderByIdPagined({ 
+      page: environment.paginator.default_page, 
+      rowByPage: environment.paginator.row_per_page, 
+      buzonId: id,
+      sort: null })*/
   }
 
   ngOnDestroy(){

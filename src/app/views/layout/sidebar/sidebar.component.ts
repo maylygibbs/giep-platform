@@ -24,8 +24,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   private renderer: Renderer2, 
   router: Router,
   private userService: UserService,
-  private authService: AuthService,
-  private notificationService: NotificationService) { 
+  private authService: AuthService) { 
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
 
@@ -46,9 +45,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit():void{
+    
     const user = this.authService.currentUser;
     this.menuItems = user.optionsMenu;
-    this.notificationService.joinRoom(user.email);
+    //this.getAllMenuOptions();
     /**
      * Sidebar-folded on desktop (min-width:992px and max-width: 1199px)
      */

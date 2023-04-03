@@ -43,7 +43,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
   private $eventNavigationEnd: Subscription;
 
-  usersRequest: NodeJS.Timeout
+  usersRequest: NodeJS.Timeout;
 
 
   constructor(private userService: UserService,

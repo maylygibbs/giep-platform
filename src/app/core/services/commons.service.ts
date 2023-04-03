@@ -640,6 +640,23 @@ export class CommonsService extends HttpService {
 
 
 
+  /**
+ * Return list email accounts type
+ * @returns 
+ */
+  async getAllEmailAccountsType(): Promise<Array<SelectOption>> {
+
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/encuesta/tipocuenta/list'));
+
+    return resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    })
+
+  }
+
+
+
+
 
 
 

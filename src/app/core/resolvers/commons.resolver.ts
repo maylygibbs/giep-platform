@@ -6,6 +6,7 @@ import {
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { CommonsService } from '../services/commons.service';
+import { UserService } from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -172,6 +173,28 @@ export class CommonsListModulesResolver implements Resolve<any> {
   constructor(private commonsService: CommonsService){}
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
     return this.commonsService.getAllModules();
+  }
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListEmailAccountsTypeResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllEmailAccountsType();
+  }
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListUsersResolver implements Resolve<any> {
+  constructor(private userService: UserService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.userService.getAllUsers();
   }
 }
 

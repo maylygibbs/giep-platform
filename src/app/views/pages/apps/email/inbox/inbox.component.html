@@ -54,10 +54,12 @@
     </div>
   </div>
 </div>
-<div class="email-list">
+
+
+<div *ngIf="mailboxeHeader && mailboxeHeader.data" class="email-list">
 
   <!-- email list item -->
-  <div class="email-list-item email-list-item--unread">
+  <div *ngFor="let mailheader of mailboxeHeader.data" class="email-list-item email-list-item--unread">
     <div class="email-list-actions">
       <div class="form-check">
         <input type="checkbox" class="form-check-input">
@@ -66,11 +68,11 @@
     </div>
     <a routerLink="/apps/email/read" class="email-list-detail">
       <div class="content">
-        <span class="from">Cedric Kelly</span>
-        <p class="msg">Urgent - You forgot your keys in the class room, please come imediatly! Urgent - You forgot your keys in the class room, please come imediatly! Urgent - You forgot your keys in the class room, please come imediatly! Urgent - You forgot your keys in the class room, please come imediatly! Urgent - You forgot your keys in the class room, please come imediatly!</p>
+        <span class="from">{{mailheader.from}}</span>
+        <p class="msg" [innerHtml]="mailheader.subject"></p>
       </div>
       <span class="date">
-        08 Jan
+        {{mailheader.date | date:'short'}}
       </span>
     </a>
   </div>

@@ -107,9 +107,12 @@ export class UserStoreComponent extends BaseComponent implements OnInit {
       await this.userService.storeUser(User.mapForPost(this.user));
       this.back();
     }
-
   }
 
+
+  /**
+   * Return to back page
+   */
   back(){
     this.onBack.emit(null);
   }

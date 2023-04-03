@@ -13,17 +13,15 @@ export class NotificationService {
   showNotification$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private socket: Socket,
-    private authService: AuthService) { 
+    private authService: AuthService) {
 
 
-
-
+    /** Subscribe to connected_user event sent from server */
     socket.fromEvent('connected_user').subscribe((message: any) => {
-        console.log('handle conected event')
         console.log('notificacion', message)
     });
     
-
+    /** Subscribe to new_message event sent from server */
     socket.fromEvent('new_message').subscribe((message: any) => {
       console.log('handle new_message event')
         console.log('notificacion', message);
@@ -31,9 +29,9 @@ export class NotificationService {
     });
 
     socket.fromEvent('disconnect').subscribe(() => {
-      const user = this.authService.currentUser;
-      this.joinRoom(user.email);
+      const user = this.authService.currentUser;      
     });
+
   }
 
   get showNotification():Observable<boolean>{
@@ -45,8 +43,7 @@ export class NotificationService {
   }
 
   joinRoom(email: string): void {
-    this.socket.emit('add_user', email);
-    
+    this.socket.emit('join_user', email);    
   }
 
 }

@@ -43,6 +43,7 @@
                   <th>Extensión</th>
                   <th>Tamaño</th>
                   <th>Estado</th>
+                  <th>Bloqueado</th>
                   <th>Fecha creación</th>
                   <th data-priority="1" class="text-center">Accion</th>
                 </tr>
@@ -56,12 +57,16 @@
                   <td>{{doc.ext}}</td>
                   <td>{{doc.sizeStr}}</td>
                   <td>{{doc.state.label}}</td>
+                  <td>
+                    <span *ngIf="doc.isBloqued" placement="start"
+                      [ngbTooltip]="'Por: '+doc.bloquedBy.firstName">Sí</span>
+                    <span *ngIf="!doc.isBloqued">No</span>
                   <td>{{doc.creationDate | date:'yyyy-MM-dd'}}</td>
                   <td class="text-center">
-                    <i class="feather icon-eye" (click)="select(doc.id, fileDetailModal)" placement="start" 
+                    <i class="feather icon-eye" (click)="select(doc.id, fileDetailModal)" placement="start"
                       ngbTooltip="Ver Documento"></i>
-                    <i class="feather icon-download-cloud ms-1" (click)="download(doc.id)" placement="start"
-                      ngbTooltip="Descargar Documento"></i>
+                    <i *ngIf="!doc.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(doc.id)"
+                      placement="start" ngbTooltip="Pull Documento"></i>
 
                     <i hidden class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
                       ngbTooltip="Eliminar Documento"></i>
@@ -70,7 +75,7 @@
               </tbody>
               <tfoot>
                 <tr>
-                  <th colspan="8" class="text-right">
+                  <th colspan="9" class="text-right">
                     <app-pager (onChangePage)="loadPage($event)"></app-pager>
                   </th>
                 </tr>
@@ -121,6 +126,12 @@
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado:</label>
                       <p class="text-muted">{{doc.state.label}}</p>
                     </div>
+                    <div class="mt-2">
+                      <label class="tx-11 fw-bolder mb-0 text-uppercase">Bloqueado:</label>
+
+                      <p *ngIf="doc.isBloqued" placement="start" [ngbTooltip]="'Por: '+doc.bloquedBy.firstName">Sí</p>
+                      <p *ngIf="!doc.isBloqued">No</p>
+                    </div>
                     <div class="mt-2" *ngIf="doc.hashtag && doc.hashtag.length > 0">
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Etiquetas:</label>
                       <p class="text-muted" *ngFor="let tag of  doc.hashtag">{{tag}}</p>
@@ -128,8 +139,10 @@
                     <div class="mt-2 w-100 text-right">
                       <i hidden class="feather icon-edit-2" (click)="select(doc.id, fileDetailModal)" placement="start"
                         ngbTooltip="Editar Documento"></i>
-                      <i class="feather icon-download-cloud ms-1" (click)="download(doc.id)" placement="start"
-                        ngbTooltip="Descargar Documento"></i>
+                      <i class="feather icon-eye" (click)="select(doc.id, fileDetailModal)" placement="start"
+                        ngbTooltip="Ver Documento"></i>
+                      <i *ngIf="!doc.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(doc.id)" placement="start"
+                        ngbTooltip="Pull Documento"></i>
                       <i hidden class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
                         ngbTooltip="Eliminar Documento"></i>
                     </div>
@@ -153,9 +166,9 @@
 <!--ZONE DRAG AND DROP FILES - ngx-dropzone-wrapper  -->
 <ng-template #addFilesModal let-modal>
   <div class="modal-header">
-    <h6 class="card-title">Cargar Documento <i
-      class="feather icon-info ms-1" placement="bottom"
-      ngbTooltip="Sólo se permiten documentos con las siguientes extensiones: docx, doc, pdf, xls, xlsx, odt, ods, odp, ppt, pptx, png, jpg, jpeg, gif y mp4."></i></h6>
+    <h6 class="card-title">Cargar Documento <i class="feather icon-info ms-1" placement="bottom"
+        ngbTooltip="Sólo se permiten documentos con las siguientes extensiones: docx, doc, pdf, xls, xlsx, odt, ods, odp, ppt, pptx, png, jpg, jpeg, gif y mp4."></i>
+    </h6>
     <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
   </div>
   <form name="fileForm" #fileForm="ngForm" (ngSubmit)="onFilesUpload(fileForm)">
@@ -164,9 +177,10 @@
         <div class="grid-margin stretch-card" [ngClass]="{'col-lg-12': !dataFile , 'col-lg-8':dataFile}">
           <div class="card">
             <div class="card-body">
-            <!-- ngx-dropzone-wrapper lib  -->
+              <!-- ngx-dropzone-wrapper lib  -->
               <div #dropzone class="dropzone" [dropzone]="config" (error)="onUploadError($event)"
-                (success)="onUploadSuccess($event)" (addedFile)="addFile($event)" (removedFile)="resetDropzoneUploads()"></div>
+                (success)="onUploadSuccess($event)" (addedFile)="addFile($event)"
+                (removedFile)="resetDropzoneUploads()"></div>
 
             </div>
           </div>
@@ -196,7 +210,7 @@
         </div>
       </div>
       <div *ngIf="dataFile" class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="!fileContent" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="mb-3">
             <label for="inputTitle" class="form-label required">Título</label>
             <input type="text" name="titulo" #titulo="ngModel" [(ngModel)]="doc.title"
@@ -210,13 +224,13 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="!fileContent" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="mb-3">
             <label for="inputDescription" class="form-label required">Descripción</label>
             <textarea name="description" #description="ngModel" [(ngModel)]="doc.description" row="3"
               class="form-control"
               [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || fileForm.submitted) }"
-              id="inputDescription" required></textarea>
+              id="inputDescription" required minlength="3" maxlength="1000"></textarea>
             <div *ngIf="description.invalid && fileForm.submitted" class="invalid-feedback">
               <div *ngIf="description.errors?.required">Campo es requerido
               </div>
@@ -225,9 +239,11 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="!fileContent" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="mb-3">
-            <label for="inputPhone" class="form-label required">Etiquetas</label><i class="feather icon-info ms-1" placement="top" ngbTooltip="Las etiquetas son palabras claves que te ayudan a clasificar o categorizar los documentos y su contenido. Por favor, indique la(s) etiequeta(s) y pulse enter por cada una de ellas."></i>
+            <label for="inputPhone" class="form-label required">Etiquetas</label><i class="feather icon-info ms-1"
+              placement="top"
+              ngbTooltip="Las etiquetas son palabras claves que te ayudan a clasificar o categorizar los documentos y su contenido. Por favor, indique la(s) etiequeta(s) y pulse enter por cada una de ellas."></i>
             <tag-input [(ngModel)]="doc.hashtag" name="hashtag" #hashtag="ngModel" theme="bootstrap" theme="bootstrap"
               [displayBy]="'etiqueta'" placeholder="+nueva etiqueta" secondaryPlaceholder="Pulse enter para confirmar"
               [ngClass]="{'ng-invalid' : hashtag.errors && ( hashtag.dirty || hashtag.touched || fileForm.submitted) }"
@@ -240,55 +256,52 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="!fileContent" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="mb-3">
             <div class="form-check form-switch mb-2">
               <label class="form-check-label" for="formSwitch1">{{ documentStatus ? 'Público': 'Privado'}}</label>
-              <input type="checkbox" name=status #status="ngModel" [(ngModel)]="documentStatus" (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">              
+              <input type="checkbox" name=status #status="ngModel" [(ngModel)]="documentStatus"
+                (change)="onChangeStatus($event)" class="form-check-input" id="formSwitch1">
             </div>
           </div>
         </div>
-        <div *ngIf="documentStatus" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="documentStatus && !fileContent" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="mb-3">
             <label for="inputUsers" class="form-label required">Usuarios</label>
-            <ng-select id="inputUsers" [items]="users" [multiple]="true"
-                [searchable]="true" groupBy="role" [selectableGroup]="true"
-                [selectableGroupAsModel]="false" [closeOnSelect]="true"
-                name="collaborators" #collaborators="ngModel"
-                [ngClass]="{'ng-dirty ng-invalid' : collaborators.errors && ( collaborators.dirty || collaborators.touched || fileForm.submitted) }"
-                bindLabel="fullName" bindValue="id"
-                [(ngModel)]="selectedUsers" [loading]="showLoading" required>
-                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
-                    let-index="index">
-                    <input id="item-{{index}}" type="checkbox"
-                        name="itemgroup1-{{index}}"
-                        [ngModel]="item$.selected" /> {{item.role}}
-                </ng-template>
-                <ng-template ng-option-tmp let-item="item" let-item$="item$"
-                    let-index="index">
-                    <input id="item-{{index}}" type="checkbox"
-                        name="item-{{index}}" [ngModel]="item$.selected" />
-                    {{item.fullName}}
-                </ng-template>
+            <ng-select id="inputUsers" [items]="data.users" [multiple]="true" [searchable]="true"
+              [closeOnSelect]="false" name="collaborators" #collaborators="ngModel"
+              [ngClass]="{'ng-dirty ng-invalid' : collaborators.errors && ( collaborators.dirty || collaborators.touched || fileForm.submitted) }"
+              bindLabel="fullName" bindValue="id" [(ngModel)]="selectedUsers" [loading]="showLoading" required>
+
             </ng-select>
-            <div *ngIf="collaborators.invalid && fileForm.submitted"
-                class="invalid-feedback">
-                <div *ngIf="collaborators.errors?.required">Campo es requerido
-                </div>
+            <div *ngIf="collaborators.invalid && fileForm.submitted" class="invalid-feedback">
+              <div *ngIf="collaborators.errors?.required">Campo es requerido
+              </div>
             </div>
+          </div>
         </div>
+        <div *ngIf="fileContent" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mb-3">
+            <label for="inputComment" class="form-label required">Comentarios</label>
+            <textarea name="comment" #comment="ngModel" [(ngModel)]="doc.comments" row="3"
+              class="form-control"
+              [ngClass]="{'ng-dirty ng-invalid' : comment.errors && ( comment.dirty || comment.touched || fileForm.submitted) }"
+              id="inputComment" required minlength="3" maxlength="1000"></textarea>
+            <div *ngIf="comment.invalid && fileForm.submitted" class="invalid-feedback">
+              <div *ngIf="comment.errors?.required">Campo es requerido
+              </div>
+              <div *ngIf="comment.errors?.minlength || comment.errors?.maxlength">
+                Campo permite entre 3 y 1000 caracteres</div>
+            </div>
+          </div>
         </div>
-
-
-
-
       </div>
     </div>
     <div class="modal-footer">
       <!--<button type="button" class="btn btn-secondary mt-2 d-block ms-auto"
         (click)="resetDropzoneUploads()">Reiniciar</button>-->
       <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-      <button type="submit" [disabled]="disableBtnSubmit" class="btn btn-primary">Subir</button>
+      <button type="submit" [disabled]="disableBtnSubmit" class="btn btn-primary" [disabled]="!dataFile">Subir</button>
     </div>
   </form>
 </ng-template>
@@ -306,8 +319,8 @@
           <div class="card-body">
             <div class="row">
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
-                <i class="feather icon-download-cloud ms-1" (click)="download(selectedItem.id)" placement="start"
-                ngbTooltip="Descargar Documento - Versión actual"></i>
+                <i *ngIf="!selectedItem.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(selectedItem.id)" placement="start"
+                  ngbTooltip="Pull Documento"></i>
               </div>
             </div>
             <div class="row">
@@ -349,8 +362,10 @@
               </div>
               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="mt-3">
-                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción</label>
-                  <p class="text-muted">{{selectedItem.description}}</p>
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Bloqueado</label>
+                  <p *ngIf="selectedItem.isBloqued" placement="start"
+                    [ngbTooltip]="'Por: '+selectedItem.bloquedBy.firstName">Sí</p>
+                  <p *ngIf="!selectedItem.isBloqued">No</p>
                 </div>
               </div>
               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -359,6 +374,13 @@
                   <p class="text-muted">{{selectedItem.hashtag}}</p>
                 </div>
               </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción</label>
+                  <p class="text-muted">{{selectedItem.description}}</p>
+                </div>
+              </div>
+
 
             </div>
           </div>
@@ -375,7 +397,8 @@
           <div class="card-body">
             <div *ngFor="let his of selectedItem.history" class="row workflow-row">
               <div class="col-lg-2 col-md-2 col-sm-12">
-                <i class="feather icon-calendar"></i><span class="ms-3">{{his.creationDate | date:'yyyy-MM-dd HH:mm'}}</span>
+                <i class="feather icon-calendar"></i><span class="ms-3">{{his.creationDate | date:'yyyy-MM-dd
+                  HH:mm'}}</span>
               </div>
               <div class="col-lg-2 col-md-2 col-sm-12">
                 <span>{{his.uuid}}</span>
@@ -388,14 +411,14 @@
               </div>
               <div class="col-lg-1 col-md-1 col-sm-2">
                 <i class="feather icon-download-cloud" (click)="downloadFileHistorico(his.id)" placement="start"
-                [ngbTooltip]="'Descargar documento version '+his.uuid"></i>
+                  [ngbTooltip]="'Descargar documento version '+his.uuid"></i>
               </div>
             </div>
 
           </div>
         </div>
       </div>
-     </div> 
+    </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="closeModal()">Cerrar</button>
