@@ -18,6 +18,7 @@ export class Instrument {
     expirationDate:any;
     publicationDate:Date;
     questionsByCategory:boolean;
+    globalsPoints:boolean;
     sections: Array<Section>;
     questions: Array<Question>;
     isPublished:boolean
@@ -99,6 +100,7 @@ export class Instrument {
         Object.assign(instrumentOutput,{roles: roles});
         //Object.assign(instrumentOutput,{users: this.getUsers(users)});
         Object.assign(instrumentOutput,{questionsByCategory: instrumentInput.questionsByCategory ? 1 : 0});
+        Object.assign(instrumentOutput,{puntosGlobales: instrumentInput.globalsPoints ? 1 : 0});
         Object.assign(instrumentOutput,{description: instrumentInput.description});
         Object.assign(instrumentOutput,{path: instrumentInput.path? instrumentInput.path:null});
         if(!instrumentInput.id || (instrumentInput.id && instrumentInput.isEditable)){
@@ -162,8 +164,19 @@ export class Instrument {
         optionsOutput = options.map((opt:QuestionOption)=>{
             const optionOutput = {
                 value: opt.value,
-                label: opt.label,
-                score: parseInt(opt.score)
+                label: opt.label
+            }
+
+            if(opt.scoreByCharges.length>0){
+              const scoreBycharges =  opt.scoreByCharges.map((item:any)=>{
+                return {
+                    idCargo: parseInt(item.id),
+                    score: parseFloat(item.score)
+                }
+              })
+              Object.assign(optionOutput, {scoreBycharges: scoreBycharges});
+            }else{
+                Object.assign(optionOutput, {score: parseInt(opt.score)});
             }
             if(opt.idOption){
                 Object.assign(optionOutput, {id: opt.idOption});

@@ -185,7 +185,6 @@
                                 <label for="inputSex" class="form-label required">Sexo</label>
                                 <ng-select id="inputSex" name="sex" #sex="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : sex.errors && ( sex.dirty || sex.touched || userForm.submitted) }"
-                                    (change)="onChangeStates($event)"
                                     [searchable]="false" [(ngModel)]="user.sex" required>
                                     <ng-option value="F">F</ng-option>
                                     <ng-option value="M">M</ng-option>
@@ -239,13 +238,42 @@
                                 <label for="inputDependence" class="form-label required">Dependencia</label>
                                 <ng-select id="inputDependence" [items]="data.dependences" name="dependence" #dependence="ngModel"
                                 [ngClass]="{'ng-dirty ng-invalid' : dependence.errors && ( dependence.dirty || dependence.touched || userForm.submitted) }"
-                                    [searchable]="false"
+                                    [searchable]="true"
                                     [(ngModel)]="user.dependence" required>
                                 </ng-select>
                                 <div *ngIf="dependence.invalid && userForm.submitted" class="invalid-feedback">
                                     <div *ngIf="dependence.errors?.required">Campo es requerido
                                     </div>                          
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputManagment" class="form-label required">Gerencia</label>
+                                <ng-select id="inputManagment" [items]="data.managments" name="managment" #managment="ngModel"
+                                [ngClass]="{'ng-dirty ng-invalid' : managment.errors && ( managment.dirty || managment.touched || userForm.submitted) }"
+                                    [searchable]="true"
+                                    [(ngModel)]="user.managment">
+                                </ng-select>
+                                <div *ngIf="managment.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="managment.errors?.required">Campo es requerido
+                                    </div>                          
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputCoordination" class="form-label required">Coordinación</label>
+                                <ng-select id="inputCoordination" [items]="data.coordinations" name="coordination" #coordination="ngModel"
+                                [ngClass]="{'ng-dirty ng-invalid' : coordination.errors && ( coordination.dirty || coordination.touched || userForm.submitted) }"
+                                    [searchable]="true" [(ngModel)]="user.coordination">
+                                </ng-select>
+                                <div *ngIf="coordination.invalid && userForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="coordination.errors?.required">Campo es requerido
+                                    </div>                          
+                                </div>                                
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

@@ -8,6 +8,7 @@ export class QuestionOption{
   public value: string;
   public label: string;
   public score: string;
+  public scoreByCharges: Array<any>;
   public disabled:boolean;
   public isSelected:boolean;
   public nameInputLabel:string;

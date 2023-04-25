@@ -1,6 +1,6 @@
 import { ProfileComponent } from './components/profile/profile.component';
 
-import { CommonsListCountriesResolver, CommonsListEmailAccountsTypeResolver, CommonsListPositionsResolver, CommonsListRolesResolver, CommonsListSocialNetworkResolver } from './../../../core/resolvers/commons.resolver';
+import { CommonsListCoordinatiosResolver, CommonsListCountriesResolver, CommonsListEmailAccountsTypeResolver, CommonsListManagmentsResolver, CommonsListPositionsResolver, CommonsListRolesResolver, CommonsListSocialNetworkResolver } from './../../../core/resolvers/commons.resolver';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonsListDependencesResolver } from '../../../core/resolvers/commons.resolver';
@@ -16,6 +16,8 @@ const routes: Routes = [
     },
     resolve:{
       dependences: CommonsListDependencesResolver,
+      coordinations: CommonsListCoordinatiosResolver,
+      managments: CommonsListManagmentsResolver,
       positions: CommonsListPositionsResolver,
       roles: CommonsListRolesResolver,
       countries: CommonsListCountriesResolver

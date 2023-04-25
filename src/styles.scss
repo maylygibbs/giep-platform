@@ -210,3 +210,42 @@ table.dataTable{
     font-size: 15px;
   }
 }
+
+/** badge **/
+
+.badge{
+  color: #fff !important;
+}
+
+p.badge{
+  margin-top: 1px !important;
+  margin-bottom: 1px !important;
+}
+
+.bg-info {
+  background-color: #f3b325 !important;
+  color: #363535 !important;
+}
+
+.bg-danger {
+  background-color: #af0000 !important;
+}
+
+.bg-success {
+  background-color: #00b041 !important;
+}
+
+.bg-green {
+  background-color: #00541F !important;
+}
+
+.bg-gray {
+  background-color: #464545 !important;
+}
+
+.bg-black {
+  background-color: #000000 !important;
+}
+.bg-green-1 {
+  background-color: #086e2e !important;
+}

@@ -41,6 +41,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
   submitted: boolean = false;
 
   categories: Array<SelectOption>;
+  charges: Array<SelectOption>;
 
   linkedUsers: Array<User>;
 
@@ -182,6 +183,15 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
   changeQuestionAgrupation() {
     if (this.instrument.questionsByCategory) {
       this.categories = this.data.categories;
+    } else {
+      this.categories = null;
+    }
+  }
+
+
+  changeInGlobalsPoints() {
+    if (this.instrument.globalsPoints) {
+      this.charges = this.data.charges;
     } else {
       this.categories = null;
     }
@@ -408,7 +418,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
             console.log('users', this.selectedUsers)
             console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedRoles, this.selectedUsers));
             this.submitted = true;
-            await this.instrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, this.selectedUsers));
+            //await this.instrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, this.selectedUsers));
             this.onBack.emit(null);
             this.submitted = false;
           } else {

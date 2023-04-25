@@ -1,4 +1,4 @@
-import { CommonsListCategoyTypeResolver, CommonsListCountriesResolver, CommonsListInputTypeResolver, CommonsListInstrumentsResolver, CommonsListRolesResolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
+import { CommonsListCategoyTypeResolver, CommonsListChargesResolver, CommonsListCountriesResolver, CommonsListInputTypeResolver, CommonsListInstrumentsResolver, CommonsListLevelsResolver, CommonsListRolesResolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { InstrumentsComponent } from './components/instruments/instruments.component';
 import { NgModule } from '@angular/core';
@@ -20,6 +20,10 @@ const routes: Routes = [
     component: CategoriesComponent,
     data: {
       title: 'Categorizacion de preguntas - GIEp',
+    },
+    resolve:{
+      charges: CommonsListChargesResolver,
+      levels: CommonsListLevelsResolver
     }
   },
   {
@@ -40,7 +44,8 @@ const routes: Routes = [
       units: CommonsListUnitsTypeResolver,
       categories: CommonsListCategoyTypeResolver,
       inputTypes: CommonsListInputTypeResolver,
-      countries: CommonsListCountriesResolver
+      countries: CommonsListCountriesResolver,
+      charges: CommonsListChargesResolver      
     }
   },  
   {

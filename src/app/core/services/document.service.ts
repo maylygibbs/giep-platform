@@ -16,28 +16,28 @@ import { CommonsService } from './commons.service';
   providedIn: 'root'
 })
 export class DocumentService extends HttpService {
-  
-  private documents: BehaviorSubject< Array<any>> = new BehaviorSubject< Array<any>>(null);
+
+  private documents: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>(null);
 
   constructor(protected http: HttpClient,
     private authService: AuthService,
     private commonsService: CommonsService,
-    private toastrService: ToastrService) { 
+    private toastrService: ToastrService) {
     super(http);
   }
 
 
 
-/**
- * Check all users, supports pagination and filter
- * @param filter 
- * @returns 
- */
-  async getDocumentPaginated(filter:any):Promise<PaginationResponse>{
-    const resp = await firstValueFrom(this.post(environment.apiUrl,'/archivo/pagined',filter));
-    const paginator = new PaginationResponse(filter.page,filter.rowByPage);
+  /**
+   * Check all users, supports pagination and filter
+   * @param filter 
+   * @returns 
+   */
+  async getDocumentPaginated(filter: any): Promise<PaginationResponse> {
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/archivo/pagined', filter));
+    const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
-    paginator.data = resp.data.map((item:any)=>{
+    paginator.data = resp.data.map((item: any) => {
       const document = new DocumentGiep();
       document.id = item.id;
       document.title = item.titulo;
@@ -49,15 +49,15 @@ export class DocumentService extends HttpService {
       document.creationDate = item.fecha_actividad_registro;
       document.ext = item.tipo_extensiones;
       document.isBloqued = item.id_limited_bloqueo == 3 ? false : true;
-      if(item.bloquedo_por && item.bloquedo_por.length>0){
+      if (item.bloquedo_por && item.bloquedo_por.length > 0) {
         document.bloquedBy = new User();
         document.bloquedBy.firstName = item.bloquedo_por[0].nombre_apellido
       }
-      document.bloquedBy 
+      document.bloquedBy
       return document;
     })
 
-    return paginator ;
+    return paginator;
   }
 
 
@@ -65,86 +65,86 @@ export class DocumentService extends HttpService {
    * Upload document
    * @param formData 
    */
-  async uploadFile(formData:FormData):Promise<boolean>{
-    let response:boolean = false;
+  async uploadFile(formData: FormData): Promise<boolean> {
+    let response: boolean = false;
     try {
-      const resp = await firstValueFrom(this.post(environment.apiUrl,'/archivo/upload/archivo',formData));
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/archivo/upload/archivo', formData));
       console.log(resp);
       this.toastrService.success(resp.msg);
       response = true;
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error)
-      if(error.status==409){
+      if (error.status == 409) {
         this.toastrService.error(error.error.msg);
-      }else{
+      } else {
         this.toastrService.error('Ha ocurrido un error cargando el archivo.');
-      }     
-    }finally{
+      }
+    } finally {
       return response;
-    }    
+    }
   }
 
   /**
    * Upload document
    * @param formData 
    */
-  async pull(id:string):Promise<any>{
-    let response:any = null;
+  async pull(id: string): Promise<any> {
+    let response: any = null;
     try {
-      debugger
-      const resp = await firstValueFrom(this.get(environment.apiUrl,`/archivo/download/file/${id}`));
+
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivo/download/file/${id}`));
       console.log(resp);
       this.toastrService.success('Descarga realizada con éxito.');
       response = resp;
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error)
-      if(error.status){
+      if (error.status) {
         this.toastrService.error(error.error.error);
-      }else{
+      } else {
         this.toastrService.error('Ha ocurrido un error descargando el archivo.');
-      }     
-    }finally{
+      }
+    } finally {
       return response;
-    }    
+    }
   }
 
 
-    /**
-   * Upload document
-   * @param formData 
-   */
-     async downloadFileHistorico(id:string):Promise<any>{
-      let response:any = null;
-      try {
-        const resp = await firstValueFrom(this.get(environment.apiUrl,`/archivo/downloadhistorico/file/${id}`));
-        console.log(resp);
-        this.toastrService.success('Descarga realizada con éxito.');
-        response = resp;
-      } catch (error:any) {
-        console.log(error)
-        if(error.status){
-          this.toastrService.error(error.error.error);
-        }else{
-          this.toastrService.error('Ha ocurrido un error descargando el archivo.');
-        }     
-      }finally{
-        return response;
-      }    
+  /**
+ * Upload document
+ * @param formData 
+ */
+  async downloadFileHistorico(id: string): Promise<any> {
+    let response: any = null;
+    try {
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivo/downloadhistorico/file/${id}`));
+      console.log(resp);
+      this.toastrService.success('Descarga realizada con éxito.');
+      response = resp;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status) {
+        this.toastrService.error(error.error.error);
+      } else {
+        this.toastrService.error('Ha ocurrido un error descargando el archivo.');
+      }
+    } finally {
+      return response;
     }
+  }
 
   /**
    * Query document info by id
    * @param id 
    * @returns 
    */
-  async getDocumentById(id:string):Promise<DocumentGiep>{
-    let listDoc:Array<DocumentGiep>;
-    let doc:DocumentGiep = null;
-    try{
-      const resp = await firstValueFrom(this.get(environment.apiUrl,`/archivo/${id}`));
-      if(resp.count == 1){
+  async getDocumentById(id: string): Promise<DocumentGiep> {
+    let listDoc: Array<DocumentGiep>;
+    let doc: DocumentGiep = null;
+    try {
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivo/${id}`));
+      if (resp.count == 1) {
         const user = this.authService.currentUser;
-        listDoc = resp.data.map((item:any)=>{
+        listDoc = resp.data.map((item: any) => {
           const docOutput = new DocumentGiep();
           docOutput.id = item.id;
           docOutput.title = item.titulo;
@@ -155,22 +155,22 @@ export class DocumentService extends HttpService {
           docOutput.state = new SelectOption(item.idestado, item.nombre_status);
           docOutput.creationDate = item.fecha_actividad_registro;
           docOutput.ext = item.tipo_extensiones;
-          if(item.hashtag){
+          if (item.hashtag) {
             docOutput.hashtag = JSON.parse(item.hashtag);
           }
 
-          if(item.iduserarchivos){
-           docOutput.users = new Array<User>(); 
-           const temp = item.iduserarchivos.filter((userItem:any)=> userItem.email!=user.email);
-           if(temp.length > 0){
-            docOutput.users  = temp.map((userData)=>{
-              return parseInt(userData.id);
-            })
-           }           
+          if (item.iduserarchivos) {
+            docOutput.users = new Array<User>();
+            const temp = item.iduserarchivos.filter((userItem: any) => userItem.email != user.email);
+            if (temp.length > 0) {
+              docOutput.users = temp.map((userData) => {
+                return parseInt(userData.id);
+              })
+            }
           }
 
-          if(item.historico && item.historico.length > 0){
-            docOutput.history = item.historico.map((itemHist:any)=>{
+          if (item.historico && item.historico.length > 0) {
+            docOutput.history = item.historico.map((itemHist: any) => {
               return {
                 id: itemHist.id,
                 commentary: itemHist.comentario,
@@ -185,25 +185,112 @@ export class DocumentService extends HttpService {
 
 
           docOutput.isBloqued = item.id_limited_bloqueo == 3 ? false : true;
-          if(item.bloquedo_por && item.bloquedo_por.length>0){
+          if (item.bloquedo_por && item.bloquedo_por.length > 0) {
             docOutput.bloquedBy = new User();
             docOutput.bloquedBy.firstName = item.bloquedo_por[0].nombre_apellido
           }
 
           return docOutput;
-         });
+        });
         doc = listDoc[0];
-      }      
-    } catch (error:any) {
+      }
+    } catch (error: any) {
       console.log(error)
-      if(error.status){
+      if (error.status) {
         this.toastrService.error(error.error.error);
-      }else{
+      } else {
         this.toastrService.error('Ha ocurrido un error consultando el detalle del documento.');
-      }     
-    }finally{
+      }
+    } finally {
       return doc;
-    }   
+    }
+  }
+
+  /**
+   * File unlock process
+   * @param id 
+   * @returns 
+   */
+  async documentUnlock(id: string): Promise<any> {
+    let response: any = null;
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/archivo/admindesbloqueoarchivos/${id}`));
+      console.log(resp);
+      this.toastrService.success('Desbloqueo de archivo realizado con éxito.');
+      response = resp;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status) {
+        this.toastrService.error(error.error.error);
+      } else {
+        this.toastrService.error('Ha ocurrido un error desbloqueando el archivo.');
+      }
+    } finally {
+      return response;
+    }
+  }
+
+
+  /**
+ * File change status process
+ * @param id 
+ * @returns 
+ */
+  async documentChangeState(id_archivo: number, id_estado: number, comentarios: string = 'Sin Comentarios'): Promise<any> {
+    let response: any = null;
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/archivo/cambiostatusarchivo`, { id_archivo, id_estado, comentarios }));
+      console.log(resp);
+      this.toastrService.success('Camnio de estado del archivo realizado con éxito.');
+      switch (id_estado) {
+        case 2:
+          this.toastrService.success('El documento a pasado a revisión con éxito.');
+          break;
+        case 3:
+          this.toastrService.success('El documento ha sido aprobado con éxito.');
+          break; 
+        case 5:
+          this.toastrService.success('El documento ha sido rechazado con éxito.');
+          break;                   
+      
+        default:
+          break;
+      }
+      response = resp;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status) {
+        this.toastrService.error(error.error.error);
+      } else {
+        this.toastrService.error('Ha ocurrido un error cambiando de estado el archivo.');
+      }
+    } finally {
+      return response;
+    }
+  }
+
+  /**
+ * File delete process
+ * @param id 
+ * @returns 
+ */
+  async deleteDocument(id_archivo: number, id_estado: number = 4, comentarios: string = 'Sin Comentarios'): Promise<any> {
+    let response: any = null;
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/archivo/cambiostatusarchivo`, { id_archivo, id_estado, comentarios }));
+      console.log(resp);
+      this.toastrService.success('Camnio de estado del archivo realizado con éxito.');
+      response = resp;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status) {
+        this.toastrService.error(error.error.error);
+      } else {
+        this.toastrService.error('Ha ocurrido un error cambiando de estado el archivo.');
+      }
+    } finally {
+      return response;
+    }
   }
 
 

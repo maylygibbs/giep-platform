@@ -16,6 +16,9 @@ export class BoxSectionBuilderComponent implements OnInit {
   @Input()
   byCategory: boolean;
 
+  @Input()
+  globalsPoints: boolean;
+
   @Output()
   onDeleteSection: EventEmitter<Section> = new EventEmitter<Section>();
 

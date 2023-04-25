@@ -14,6 +14,10 @@ export class SelectOption{
   public icon:string;
   public color:string
   public status: SelectOption;
+  public flag:boolean;
+  public scales:Array<any>; //escalas por cargos
+  public weights: Array<any>; // escalas por niveles
+
 
   /**
    * Used to display data in forms.

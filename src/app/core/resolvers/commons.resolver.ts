@@ -14,9 +14,30 @@ import { UserService } from '../services/user.service';
 export class CommonsListDependencesResolver implements Resolve<any> {
   constructor(private commonsService: CommonsService){}
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
-    return this.commonsService.getAlldependences();
+    return this.commonsService.getAllDependences();
   }
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListCoordinatiosResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllCoordination();
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListManagmentsResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService){}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllManagements();
+  }
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -195,6 +216,28 @@ export class CommonsListUsersResolver implements Resolve<any> {
   constructor(private userService: UserService){}
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
     return this.userService.getAllUsers();
+  }
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListChargesResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllChargesType();
+  }
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListLevelsResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllLevelsType();
   }
 }
 

@@ -14,8 +14,11 @@ export class User {
     secondLastName: string
     email: string;
     dependence: SelectOption;
+    coordination: SelectOption;
+    managment: SelectOption;
     dependenceId: string
     position: SelectOption;
+    
     positionId: string;
     phones: any[];
     birthDate: any;
@@ -94,6 +97,8 @@ export class User {
         Object.assign(userMap, { fechaNacimiento: moment().year(user.birthDate.year).month(user.birthDate.month - 1).date(user.birthDate.day).format('YYYY-MM-DD') });
         Object.assign(userMap, { email: user.email });
         Object.assign(userMap, { idDependencia: parseInt(user.dependence.value) });
+        Object.assign(userMap, { coordinacionId: user.coordination ? parseInt(user.coordination.value) : null });
+        Object.assign(userMap, { gerenciaId: user.managment ? parseInt(user.managment.value) : null });
         Object.assign(userMap, { idCargo: parseInt(user.position.value) });
         Object.assign(userMap, { telefono: this.getPhonesUser(user.phones) });
         Object.assign(userMap, { roles: this.getRolesUser(user.roles) });

@@ -26,9 +26,92 @@
                                   <label class="form-check-label" for="formSwitch1">Activo</label>
                                 </div>
                             </div>
-                        </div>                      
+                        </div>   
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12 p-1">
+                            <div class="mb-3 ms-3">
+                                <div class="form-check form-switch mb-2">
+                                  <input type="checkbox" name=status #status="ngModel" [(ngModel)]="category.flag" (change)="onChangeStatusFlag($event)" class="form-check-input" id="formSwitch1">
+                                  <label class="form-check-label" for="formSwitch1">Tiene Escala y Ponderación</label>
+                                </div>
+                            </div>
+                        </div>                    
                     </div>
+                    <div *ngIf="category.flag" class="row">
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="card-header">Escala por cargo</div>
+                                <div class="card-body">
+                                    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>Cargo</th>
+                                            <th>Escala</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr
+                                            *ngFor="let scale of category.scales">
 
+                                            <td>{{scale.label}}
+                                                <input hidden [value]="scale.id">
+                                            </td>
+                                            <td>
+                                                <div class="mb-3">
+                                                    <input type="text" [name]="scale.nameControlScale" [(ngModel)]="scale.scaleNumber"
+                                                    [ngClass]="{'ng-dirty ng-invalid' : categoryForm.form.controls[scale.nameControlScale]?.errors && ( categoryForm.form.controls[scale.nameControlScale]?.dirty || categoryForm.form.controls[scale.nameControlScale]?.touched || categoryForm.submitted) }"
+                                                        class="form-control" id="inputTypeName" autocomplete="off" minlength="1" maxlength="100" required>
+                                                    <div *ngIf="categoryForm.form.controls[scale.nameControlScale]?.invalid && categoryForm.submitted" class="invalid-feedback">
+                                                        <div *ngIf="categoryForm.form.controls[scale.nameControlScale]?.errors?.required">Campo es requerido
+                                                        </div>
+                                                    </div>                                    
+                                                </div>  
+                                            </td>
+
+                                          </tr>
+                                        </tbody>
+                      
+                                      </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="card-header">Ponderación por nivel</div>
+                                <div class="card-body">
+                                    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>Nivel</th>
+                                            <th>Ponderación</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr
+                                            *ngFor="let weighing of category.weights">
+
+                                            <td>{{weighing.label}}
+                                                <input hidden [value]="weighing.id">
+                                            </td>
+                                            <td>
+                                                <div class="mb-3">
+                                                    <input type="text" [name]="weighing.nameControlWeighing" [(ngModel)]="weighing.weighingNumber"
+                                                    [ngClass]="{'ng-dirty ng-invalid' : categoryForm.form.controls[weighing.nameControlWeighing]?.errors && ( categoryForm.form.controls[weighing.nameControlWeighing]?.dirty || categoryForm.form.controls[weighing.nameControlWeighing]?.touched || categoryForm.submitted) }"
+                                                        class="form-control" id="inputTypeName" autocomplete="off" minlength="1" maxlength="100" required>
+                                                    <div *ngIf="categoryForm.form.controls[weighing.nameControlWeighing]?.invalid && categoryForm.submitted" class="invalid-feedback">
+                                                        <div *ngIf="categoryForm.form.controls[weighing.nameControlWeighing]?.errors?.required">Campo es requerido
+                                                        </div>
+                                                    </div>                                    
+                                                </div>  
+                                            </td>
+
+                                          </tr>
+                                        </tbody>
+                      
+                                      </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-lg-12 col-md-12 text-right">

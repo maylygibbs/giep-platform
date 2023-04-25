@@ -27,12 +27,10 @@
                 <div *ngIf="byCategory && data" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="mb-3">
                         <label for="inputTipoCategory" class="form-label required">Categoría</label>
-                        <ng-select id="inputTipoCategory" [items]="data.categories" name="category"
-                            #category="ngModel" bindValue="value"                          
-                            [searchable]="true" [(ngModel)]="question.categoryBy" required>
+                        <ng-select id="inputTipoCategory" [items]="data.categories" name="category" #category="ngModel"
+                            bindValue="value" [searchable]="true" [(ngModel)]="question.categoryBy" required>
                         </ng-select>
-                        <div *ngIf="category.invalid && questionForm.submitted"
-                            class="invalid-feedback">
+                        <div *ngIf="category.invalid && questionForm.submitted" class="invalid-feedback">
                             <div *ngIf="category.errors?.required">Campo es requerido
                             </div>
                         </div>
@@ -42,8 +40,8 @@
                     <div class="mb-3">
                         <label for="inputScore" class="form-label required">Puntos</label>
                         <input type="text" name="inputScore" #inputScore="ngModel" [(ngModel)]="question.score"
-                        [pattern]="environment.form.number.validations.pattern"
-                            class="form-control" maxlength="11" required>
+                            [pattern]="environment.form.number.validations.pattern" class="form-control" maxlength="11"
+                            required>
                         <div *ngIf="inputScore.invalid && questionForm.submitted" class="invalid-feedback">
                             <div *ngIf="inputScore.errors?.required">Campo es requerido
                             </div>
@@ -52,12 +50,13 @@
                         </div>
 
                     </div>
-                </div>                
+                </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="mb-3">
                         <label for="inputType" class="form-label required">Tipo de pregunta</label>
                         <ng-select id="inputUnitType" [items]="data.inputTypes" name="inputType" #inputType="ngModel"
-                            [(ngModel)]="question.inputType" [searchable]="false" (change)="onChangeInputType($event)" required>
+                            [(ngModel)]="question.inputType" [searchable]="false" (change)="onChangeInputType($event)"
+                            required>
                         </ng-select>
                         <div *ngIf="inputType.invalid && questionForm.submitted" class="invalid-feedback">
                             <div *ngIf="inputType.errors?.required">Campo es requerido
@@ -101,45 +100,56 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <div *ngIf="globalsPoints" class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                                     <div class="mb-3">
                                         <label for="inputOptionScore" class="form-label required">Puntos</label>
                                         <input type="text" [name]="option.nameInputScore" [(ngModel)]="option.score"
-                                        [pattern]="environment.form.number.validations.pattern" maxlength="11"
+                                            [pattern]="environment.form.number.validations.pattern" maxlength="11"
                                             class="form-control" required>
-                                        <div *ngIf="questionForm.form.controls[option.nameInputScore]?.invalid && questionForm.submitted" class="invalid-feedback">
-                                            <div *ngIf="questionForm.form.controls[option.nameInputScore]?.errors?.required">Campo es requerido
+                                        <div *ngIf="questionForm.form.controls[option.nameInputScore]?.invalid && questionForm.submitted"
+                                            class="invalid-feedback">
+                                            <div
+                                                *ngIf="questionForm.form.controls[option.nameInputScore]?.errors?.required">
+                                                Campo es requerido
                                             </div>
-                                            <div *ngIf="questionForm.form.controls[option.nameInputScore]?.errors?.pattern">
+                                            <div
+                                                *ngIf="questionForm.form.controls[option.nameInputScore]?.errors?.pattern">
                                                 Campo permite solo números</div>
                                         </div>
-                
+
                                     </div>
                                 </div>
+                                <div *ngIf="!globalsPoints" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 d-flex align-items-center">
+                                    <i class="feather icon-settings" placement="start"
+                                        (click)="openModalSetPoints(configPointsByCharges, option)"
+                                        ngbTooltip="Establecer puntaje por cargo"></i>
+                                </div>
                                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 d-flex align-items-center">
-                                    <i class="feather icon-trash" (click)="deleteOption(option)" placement="start" ngbTooltip="Eliminar Opción"></i>
+                                    <i class="feather icon-trash" placement="start"
+                                    (click)="deleteOption(option)"
+                                    ngbTooltip="Establecer puntaje por cargo"></i>
                                 </div>
 
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div *ngIf="inputError"
-                                    class="invalid-feedback d-flex pt-2 invalid-content-error">
-                                    <div [innerHtml]="inputError"></div>
-                                    </div> 
+                                    <div *ngIf="inputError" class="invalid-feedback d-flex pt-2 invalid-content-error">
+                                        <div [innerHtml]="inputError"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" value="Click para agregar nueva opción" readonly
-                                        (click)="addOption()">
+                                    <input type="text" class="form-control" value="Click para agregar nueva opción"
+                                        readonly (click)="addOption()">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="question.inputType && question.inputType.label=='text'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div *ngIf="question.inputType && question.inputType.label=='text'"
+                    class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="row">
@@ -152,7 +162,8 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="question.inputType && question.inputType.label=='number'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div *ngIf="question.inputType && question.inputType.label=='number'"
+                    class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="row">
@@ -200,8 +211,8 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <textarea row="3" class="form-control" placeholder="Campo tipo descripción/observación"
-                                            disabled></textarea>
+                                        <textarea row="3" class="form-control"
+                                            placeholder="Campo tipo descripción/observación" disabled></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -234,8 +245,10 @@
                 <span>Pregunta Nro. {{question.order}} </span>
             </div>
             <div class="col-lg-6 text-right">
-                <i class="feather icon-edit-2" (click)="questionEdit()" placement="start"  ngbTooltip="Editar Intrumento"></i>
-                <i class="feather icon-trash ms-1" (click)="deleteQuestion(question)" placement="start" ngbTooltip="Eliminar Pregunta"></i>
+                <i class="feather icon-edit-2" (click)="questionEdit()" placement="start"
+                    ngbTooltip="Editar Intrumento"></i>
+                <i class="feather icon-trash ms-1" (click)="deleteQuestion(question)" placement="start"
+                    ngbTooltip="Eliminar Pregunta"></i>
             </div>
         </div>
         <div class="row">
@@ -251,8 +264,8 @@
                         placeholder="Campo tipo email" disabled>
                     <input *ngIf="question.inputType.label == 'date'" type="text" class="form-control"
                         placeholder="Campo tipo fecha" disabled>
-                    <textarea *ngIf="question.inputType.label == 'textarea'" row="3" class="form-control" placeholder="Campo tipo descripción/observación"
-                        disabled></textarea>
+                    <textarea *ngIf="question.inputType.label == 'textarea'" row="3" class="form-control"
+                        placeholder="Campo tipo descripción/observación" disabled></textarea>
                 </div>
                 <div class="mb-3"
                     *ngIf="question.inputType.label == 'select' || question.inputType.label == 'select-multiple'">
@@ -261,27 +274,89 @@
                         <option>Selección</option>
                     </select>
                 </div>
-                <div class="mb-3"
-                    *ngIf="question.inputType.label == 'radio'">
+                <div class="mb-3" *ngIf="question.inputType.label == 'radio'">
                     <label class="form-label" [ngClass]="{'required': question.required}">{{question.label}}</label>
                     <div *ngFor="let option of question.options" class="form-check mb-2">
                         <input type="radio" class="form-check-input" name="radioDisabled" id="radioDisabled" disabled>
                         <label class="form-check-label" for="radioDisabled">
                             {{option.label}}
                         </label>
-                      </div>
-                </div> 
-                <div class="mb-3"
-                    *ngIf="question.inputType.label == 'checkbox'">
+                    </div>
+                </div>
+                <div class="mb-3" *ngIf="question.inputType.label == 'checkbox'">
                     <label class="form-label" [ngClass]="{'required': question.required}">{{question.label}}</label>
                     <div *ngFor="let option of question.options" class="form-check mb-2">
                         <input type="checkbox" class="form-check-input" id="checkDisabled" disabled>
                         <label class="form-check-label" for="checkDisabled">
                             {{option.label}}
                         </label>
-                      </div>
-                </div>                                             
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #configPointsByCharges let-modal>
+    <div class="modal-header">
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+    </div>
+    <form name="scoreBychargesForm" #scoreBychargesForm="ngForm" (ngSubmit)="setScoreByCharges(scoreBychargesForm)">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="row">
+    
+                        <div class="card">
+                            <div class="card-header">Puntos por cargo</div>
+                            <div class="card-body">
+                                <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Cargo</th>
+                                            <th>Puntos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let scoreByCharge of selectedOption.scoreByCharges">
+    
+                                            <td>{{scoreByCharge.label}}
+                                                <input hidden [value]="scoreByCharge.id">
+                                            </td>
+                                            <td>
+                                                <div class="mb-3">
+                                                    <input type="text" [name]="scoreByCharge.nameControlScore"
+                                                        [(ngModel)]="scoreByCharge.score"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : scoreBychargesForm.form.controls[scoreByCharge.nameControlScore]?.errors && ( scoreBychargesForm.form.controls[scoreByCharge.nameControlScore]?.dirty || scoreBychargesForm.form.controls[scoreByCharge.nameControlScore]?.touched || scoreBychargesForm.submitted) }"
+                                                        class="form-control" id="inputTypeName" autocomplete="off"
+                                                        minlength="1" maxlength="100" required>
+                                                    <div *ngIf="scoreBychargesForm.form.controls[scoreByCharge.nameControlScore]?.invalid && scoreBychargesForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div
+                                                            *ngIf="scoreBychargesForm.form.controls[scoreByCharge.nameControlScore]?.errors?.required">
+                                                            Campo es requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+    
+                                        </tr>
+                                    </tbody>
+    
+                                </table>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+            <button type="button" class="btn btn-secondary" (click)="closeModal();resetOptionPointsByCharge(selectedOption)">Cancelar</button>
+            <button type="submit" class="btn btn-secondary">Aceptar</button>
+        </div>
+    </form>
+
+
+</ng-template>

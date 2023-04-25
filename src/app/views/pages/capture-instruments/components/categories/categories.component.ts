@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { filter, Subscription } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-categories',
@@ -38,9 +38,15 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
   
   private $eventNavigationEnd: Subscription;
 
+  data: any;
+
   constructor(private instrumentsService: InstrumentsService,
-    private router: Router) {
+    private router: Router,
+    private route: ActivatedRoute) {
     super();
+    this.route.data.subscribe((data) => {
+      this.data = data;
+    });
    }
 
   async ngOnInit() {
@@ -76,7 +82,7 @@ export class CategoriesComponent extends BaseComponent implements OnInit {
    * @param id 
    */
   async select(id: number) {
-    this.selectedItem = await this.instrumentsService.getCategoryById(id);
+    this.selectedItem = await this.instrumentsService.getCategoryById(id, this.data.charges, this.data.levels);
     this.next();
   }
 

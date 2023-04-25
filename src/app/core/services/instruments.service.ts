@@ -124,6 +124,7 @@ export class InstrumentsService extends HttpService {
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
       instrument.order = item.orden;
+      instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true:false) : false;
       instrument.path = '/capture-instruments/results';
       return instrument;
     });
@@ -223,6 +224,8 @@ export class InstrumentsService extends HttpService {
     instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
+
+    instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales = 1 ? true:false) : false;
     if (resp.data[0].users) {
       instrument.users = resp.data[0].users.map((u: any) => {
         const user = new User();
@@ -1064,6 +1067,7 @@ export class InstrumentsService extends HttpService {
     paginator.data = resp.data.map((item: any) => {
       const category = new SelectOption(item.id, item.nombre);
       category.status = new SelectOption(item.status?.statusId, item.status?.labelStatus);
+      category.flag = item.escalaPonderacion == 1 ? true : false;
       return category;
     });
 
@@ -1077,10 +1081,55 @@ export class InstrumentsService extends HttpService {
    * @param id 
    * @returns 
    */
-  async getCategoryById(id: number): Promise<SelectOption> {
+  async getCategoryById(id: number, charges: Array<SelectOption>, levels:Array<SelectOption>): Promise<SelectOption> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/tipocategoria/${id}`));
     const category = new SelectOption(resp[0].id, resp[0].nombre);
     category.status = new SelectOption(resp[0].status?.statusId, resp[0].status?.labelStatus);
+    category.flag = resp[0].escalaPonderacion == 1 ? true : false;
+    if(category.flag){
+      if(resp[0].escalas){
+        category.scales = charges.map((item:SelectOption,index:number)=>{
+          const configScale = resp[0].escalas.filter((scale:any)=>{ return scale.idCargo == parseInt(item.value)});
+          if(configScale.length > 0){
+            return {
+              id: item.value,
+              label: item.label,
+              scaleNumber: configScale[0].escala,
+              nameControlScale: 'controlScaleCharge-'+index
+            }
+          }else{
+            return {
+              id: item.value,
+              label: item.label,
+              scaleNumber: 0,
+              nameControlScale: 'controlScaleCharge-'+index
+            }
+          }
+
+        });
+      }
+      if(resp[0].ponderaciones){
+        category.weights = levels.map((item:SelectOption,index:number)=>{
+          const configWeighing = resp[0].ponderaciones.filter((weighing:any)=>{ return weighing.idNivel == parseInt(item.value)});
+          if(configWeighing.length > 0){
+            return {
+              id: item.value,
+              label: item.label,
+              weighingNumber: configWeighing[0].ponderacion,
+              nameControlWeighing: 'controlWeighingLevel-'+index
+            }
+          }else{
+            return {
+              id: item.value,
+              label: item.label,
+              weighingNumber: 0,
+              nameControlWeighing: 'controlWeighingLevel-'+index
+            }
+          }
+
+        });
+      }
+    }
     return category;
   }
 
@@ -1102,12 +1151,22 @@ export class InstrumentsService extends HttpService {
 */
   async storeCategory(data: SelectOption) {
     try {
+      let body = { 
+        nombre: data.label.toUpperCase(), 
+        statusId: parseInt(data.status.value),
+        escalaPonderacion: data.flag ? 1 : 0,
+        escalas:  data.flag ? data.scales.map((item)=> {return {idCargo:parseFloat(item.id), escala:parseFloat(item.scaleNumber)}}) : null,
+        ponderaciones: data.flag ? data.weights.map((item)=> {return {idNivel:parseFloat(item.id), ponderacion:parseFloat(item.weighingNumber)}}) : null
+      }
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, { nombre: data.label.toUpperCase(), statusId: parseInt(data.status.value) }));
+        console.log('category', body);
+        await firstValueFrom(this.put(environment.apiUrl, `/encuesta/tipocategoria/actualizar/${id}`, body));
         this.toastrService.success('Tipo de categoría actualizada con exito.');
       } else {
-        await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipocategoria', { nombre: data.label.toUpperCase() }));
+        delete body.statusId;
+        console.log('category', body);
+        await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipocategoria', body));
         this.toastrService.success('Tipo de categoría registrada con exito.');
       }
     } catch (error: any) {

@@ -56,7 +56,7 @@
                   <td>{{doc.originalName}}</td>
                   <td>{{doc.ext}}</td>
                   <td>{{doc.sizeStr}}</td>
-                  <td>{{doc.state.label}}</td>
+                  <td><p class="badge" [ngClass]="{'bg-gray':doc.state.value == '1', 'bg-info':doc.state.value == '2', 'bg-success':doc.state.value == '3', 'bg-black':doc.state.value == '4', 'bg-danger':doc.state.value == '5'}">{{doc.state.label}}</p></td>
                   <td>
                     <span *ngIf="doc.isBloqued" placement="start"
                       [ngbTooltip]="'Por: '+doc.bloquedBy.firstName">Sí</span>
@@ -67,8 +67,9 @@
                       ngbTooltip="Ver Documento"></i>
                     <i *ngIf="!doc.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(doc.id)"
                       placement="start" ngbTooltip="Pull Documento"></i>
-
-                    <i hidden class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
+                    <i *ngIf="doc.isBloqued && doc.state.value == '1'" class="feather icon-unlock ms-1" (click)="documentUnlock(doc.id)"
+                      placement="start" ngbTooltip="Desbloquear Documento"></i>
+                    <i *ngIf="doc.state.value != '4'" class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
                       ngbTooltip="Eliminar Documento"></i>
                   </td>
                 </tr>
@@ -124,7 +125,7 @@
                     </div>
                     <div class="mt-2">
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado:</label>
-                      <p class="text-muted">{{doc.state.label}}</p>
+                      <p class="badge ms-1" [ngClass]="{'bg-gray':doc.state.value == '1', 'bg-info':doc.state.value == '2', 'bg-success':doc.state.value == '3', 'bg-black':doc.state.value == '4', 'bg-danger':doc.state.value == '5'}">{{doc.state.label}}</p>
                     </div>
                     <div class="mt-2">
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Bloqueado:</label>
@@ -143,7 +144,9 @@
                         ngbTooltip="Ver Documento"></i>
                       <i *ngIf="!doc.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(doc.id)" placement="start"
                         ngbTooltip="Pull Documento"></i>
-                      <i hidden class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
+                      <i *ngIf="doc.isBloqued && doc.state.value == '1'" class="feather icon-unlock ms-1" (click)="documentUnlock(doc.id)"
+                        placement="start" ngbTooltip="Desbloquear Documento"></i>  
+                      <i *ngIf="doc.state.value != '4'" class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
                         ngbTooltip="Eliminar Documento"></i>
                     </div>
                   </div>
@@ -318,9 +321,11 @@
         <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
-                <i *ngIf="!selectedItem.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(selectedItem.id)" placement="start"
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right modal-detail-icon">
+                <i *ngIf="!selectedItem.isBloqued" class="feather icon-download-cloud ms-1" (click)="pullFromModal(selectedItem)" placement="start"
                   ngbTooltip="Pull Documento"></i>
+                <i *ngIf="selectedItem.isBloqued && selectedItem.state.value == '1'" class="feather icon-unlock ms-1" (click)="documentUnlockFromModal(selectedItem)"
+                  placement="start" ngbTooltip="Desbloquear Documento"></i>  
               </div>
             </div>
             <div class="row">
@@ -357,7 +362,7 @@
               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="mt-3">
                   <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado</label>
-                  <p class="text-muted">{{selectedItem.state.label}}</p>
+                  <p class="badge ms-1" [ngClass]="{'bg-gray':selectedItem.state.value == '1', 'bg-info':selectedItem.state.value == '2', 'bg-success':selectedItem.state.value == '3', 'bg-black':selectedItem.state.value == '4', 'bg-danger':selectedItem.state.value == '5'}">{{selectedItem.state.label}}</p>
                 </div>
               </div>
               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -374,15 +379,38 @@
                   <p class="text-muted">{{selectedItem.hashtag}}</p>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="mt-3">
-                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción</label>
-                  <p class="text-muted">{{selectedItem.description}}</p>
-                </div>
-              </div>
-
-
             </div>
+            <form *ngIf="!selectedItem.isBloqued" name="processStatesDocumentForm" #processStatesDocumentForm="ngForm" (ngSubmit)="onProcessStageSubmit(processStatesDocumentForm, selectedItem)" class="forms-sample">
+              <div class="row mt-5">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputDescription" class="form-label required">Observaciones</label>
+                    <textarea name="observations" #observations="ngModel" [(ngModel)]="selectedItem.comments" row="4"
+                      class="form-control"
+                      [ngClass]="{'ng-dirty ng-invalid' : observations.errors && ( observations.dirty || observations.touched || processStatesDocumentForm.submitted) }"
+                      id="inputDescription" required minlength="3" maxlength="1000"></textarea>
+                    <div *ngIf="observations.invalid && processStatesDocumentForm.submitted" class="invalid-feedback">
+                      <div *ngIf="observations.errors?.required">Campo es requerido
+                      </div>
+                      <div *ngIf="observations.errors?.minlength || observations.errors?.maxlength">
+                        Campo permite entre 3 y 1000 caracteres</div>
+                    </div>
+                  </div>
+                   
+                </div>
+  
+              </div>
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                  <button type="submit" class="btn btn-secondary me-1" (click)="stateId=5">Rechazar</button>
+                    <button type="submit" class="btn btn-primary" (click)="stateId=2">Revisar</button>
+                    <button type="submit" class="btn btn-primary" (click)="stateId=3">Aprobar</button>
+                   
+                </div>
+  
+              </div>
+            </form>
+
           </div>
         </div>
 
@@ -395,7 +423,24 @@
             Flujo de trabajo
           </div>
           <div class="card-body">
-            <div *ngFor="let his of selectedItem.history" class="row workflow-row">
+            <div class="row workflow-row mb-2">
+              <div class="col-lg-2 col-md-2 col-sm-12 title">
+                Fecha
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-12 title">
+                Versión
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 title">
+                Acción (Actor)
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-12 title">
+                Comentarios
+              </div>
+              <div class="col-lg-1 col-md-1 col-sm-2 title">
+                &nbsp;
+              </div>
+            </div>
+            <div *ngFor="let his of selectedItem.history" class="row workflow-row mb-2">
               <div class="col-lg-2 col-md-2 col-sm-12">
                 <i class="feather icon-calendar"></i><span class="ms-3">{{his.creationDate | date:'yyyy-MM-dd
                   HH:mm'}}</span>
@@ -404,7 +449,7 @@
                 <span>{{his.uuid}}</span>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-12">
-                <span>{{his.action}}</span> <span class="ms-3">{{his.fullName + '('+his.email+')'}}</span>
+                <span>{{his.action}}</span> <span class="ms-3">{{his.fullName + ' ('+his.email+')'}}</span>
               </div>
               <div class="col-lg-3 col-md-3 col-sm-12">
                 <span>{{his.commentary ? his.commentary : 'Sin Comentarios'}}</span>

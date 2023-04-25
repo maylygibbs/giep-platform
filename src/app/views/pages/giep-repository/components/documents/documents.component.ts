@@ -50,17 +50,17 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     autoProcessQueue: false,
     uploadMultiple: true,
     parallelUploads: 2,
-    addRemoveLinks:true,
+    addRemoveLinks: true,
     dictDefaultMessage: 'Arrastra el documento o haz click aquí para subirlo.',
     dictRemoveFile: 'Eliminar',
     autoReset: 1000,
     errorReset: 2500,
     cancelReset: null,
-    acceptedFiles:'.docx, .txt, .doc, .pdf, .xls, .xlsx, .odt, .odp, .ods, .ppt, .pptx, .png, .jpg, .jpeg, .gif, .mp4',
+    acceptedFiles: '.docx, .txt, .doc, .pdf, .xls, .xlsx, .odt, .odp, .ods, .ppt, .pptx, .png, .jpg, .jpeg, .gif, .mp4',
     init: () => {
       this.drop = this;
     }
-    
+
   };
 
 
@@ -75,11 +75,13 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
   showLoading: boolean = false;
   users: Array<any>;
   selectedUsers = [];
-  disableBtnSubmit:boolean=false;
+  disableBtnSubmit: boolean = false;
 
-  documentRequest:NodeJS.Timeout;
+  documentRequest: NodeJS.Timeout;
 
   data: any;
+
+  stateId:number;
 
   constructor(private documentService: DocumentService,
     private instrumentsService: InstrumentsService,
@@ -110,10 +112,10 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
   onUploadError(event: any): void {
     console.log('onUploadError:', event);
     this.disableBtnSubmit = true;
-    if(event[1]=="You can't upload files of this type."){
+    if (event[1] == "You can't upload files of this type.") {
       this.toastrService.error('Documento con extensión no permitida. Sólo se permiten documentos con las siguientes extensiones: docx,.txt, doc, pdf, xls, xlsx, odt, ods, odp, ppt, pptx, png, jpg, jpeg, gif y mp4.')
     }
-    if(event[1]=="File is too big (2.87MiB). Max filesize: 2MiB."){
+    if (event[1] == "File is too big (2.87MiB). Max filesize: 2MiB.") {
       this.toastrService.error('El documento es demasiado grande. Tamaño máximo de docuemento: 10MB.')
     }
     this.doc = new DocumentGiep();
@@ -162,7 +164,7 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     console.log('event:', event);
     console.log('file name:', file.name);
     console.log('file type:', file.type);
-    
+
     if (file.name === '.ORIG_HEAD.txt' && file.type && file.type.includes('text')) {
       let fileReader: FileReader = new FileReader();
       let self = this;
@@ -171,8 +173,8 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
         if (!self.dataFile) {
           self.dataFile = {};
         }
-        
-        Object.assign(self.dataFile, { orig_head:  self.fileContent.toString() })
+
+        Object.assign(self.dataFile, { orig_head: self.fileContent.toString() })
       }
       fileReader.readAsText(file);
     } else {
@@ -201,13 +203,13 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    * Reset zone drag and drop
    */
   resetDropzoneUploads() {
-      this.dataFile = null;
-      this.fileForm?.resetForm();
-      this.doc = new DocumentGiep();
-      this.selectedUsers = null;
-      this.documentStatus = false;
-      this.dataFile = null;
-      this.fileContent = null;
+    this.dataFile = null;
+    this.fileForm?.resetForm();
+    this.doc = new DocumentGiep();
+    this.selectedUsers = null;
+    this.documentStatus = false;
+    this.dataFile = null;
+    this.fileContent = null;
   }
 
   /**
@@ -221,8 +223,8 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
   }
 
   async delete(id: number) {
-    //await this.userService.deleteUser(id);
-    //this.loadPage(this.page);
+    await this.documentService.deleteDocument(id);
+    this.loadPage(this.page);
   }
 
   next() {
@@ -240,9 +242,9 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    */
   search() {
 
-    if(this.documentRequest){
+    if (this.documentRequest) {
       clearTimeout(this.documentRequest);
-      this.documentRequest = null;      
+      this.documentRequest = null;
     }
 
     this.documentRequest = setTimeout(() => {
@@ -278,7 +280,7 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
    */
   openZoneDragDropFiles(event: any, modalRef?: TemplateRef<any>) {
     this.doc = new DocumentGiep();
-   this.disableBtnSubmit = true;
+    this.disableBtnSubmit = true;
     this.modalService.open(modalRef, { size: 'lg', windowClass: 'modal-file' }).result.then((result) => {
       console.log("Modal closed" + result);
     }).catch((res) => { });
@@ -319,30 +321,30 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
       console.log('dataFile onFilesUpload: ', this.dataFile);
 
       if (this.fileToUpload) {
-        
+
         const formData = new FormData();
         let hashtag: Array<string> = null
-        if(!this.fileContent){
+        if (!this.fileContent) {
           hashtag = this.doc.hashtag.map((item: any) => {
             return item.value.trim().toLowerCase();
           })
         }
 
         formData.append("archivo", this.fileToUpload);
-       
+
         formData.append("titulo", !this.fileContent ? this.doc.title : null);
         formData.append("descripcion_archivo", !this.fileContent ? this.doc.description : null);
         formData.append("hashtag", !this.fileContent ? JSON.stringify(hashtag) : null);
-        formData.append("publico", !this.fileContent ? (this.doc.isPublic ?  '1' : '0') : null);
+        formData.append("publico", !this.fileContent ? (this.doc.isPublic ? '1' : '0') : null);
         formData.append("users", !this.fileContent ? (this.doc.isPublic ? JSON.stringify(this.selectedUsers) : null) : null);
-      
+
         formData.append("comentarios", !this.fileContent ? null : this.doc.comments);
         formData.append("nemotecnico", !this.fileContent ? null : this.dataFile.orig_head);
-        formData.append("nombre_original", this.dataFile.fileName);        
+        formData.append("nombre_original", this.dataFile.fileName);
         formData.append("tamano", this.dataFile.fileSize);
 
-        
-        
+
+
         const upload = await this.documentService.uploadFile(formData);
         if (upload) {
           this.loadPage(environment.paginator.default_page);
@@ -367,18 +369,32 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     }
   }
 
-
-    /**
-   * Download document of history
-   * @param id 
-   */
-     async downloadFileHistorico(id: string) {
-      const resp = await this.documentService.downloadFileHistorico(id);
-      if (resp) {
-        let file = this.convertBase64ToFile(resp.file, resp.title);
-        saveAs(file, resp.title + '.' + resp.extension);
-      }
+  /**
+ * pull document for only versionar
+ * @param id 
+ */
+  async pullFromModal(doc: DocumentGiep) {
+    const resp = await this.documentService.pull(doc.id);
+    if (resp) {
+      doc.isBloqued = true;
+      let file = this.convertBase64ToFile(resp.file, resp.title);
+      saveAs(file, resp.title + '.' + resp.extension);
+      this.loadPage(this.page);
     }
+  }
+
+
+  /**
+ * Download document of history
+ * @param id 
+ */
+  async downloadFileHistorico(id: string) {
+    const resp = await this.documentService.downloadFileHistorico(id);
+    if (resp) {
+      let file = this.convertBase64ToFile(resp.file, resp.title);
+      saveAs(file, resp.title + '.' + resp.extension);
+    }
+  }
 
 
   /**
@@ -390,8 +406,33 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
     this.showLoading = false;
   }
 
-  prueba(){
-    console.log('eliminado')
+  /**
+   * File unlock process
+   * @param id 
+   */
+  async documentUnlock(id: string) {
+    const resp = await this.documentService.documentUnlock(id);
+    this.loadPage(this.page);
+  }
+
+  /**
+ * File unlock process
+ * @param id 
+ */
+  async documentUnlockFromModal(doc: DocumentGiep) {
+    const resp = await this.documentService.documentUnlock(doc.id);
+    if (resp) {
+      doc.isBloqued = false;
+    }
+    this.loadPage(this.page);
+  }
+
+  /** Process change state document **/
+  async onProcessStageSubmit(form: NgForm, doc: DocumentGiep) {
+        if(form.valid){
+       await this.documentService.documentChangeState(parseInt(doc.id), this.stateId, doc.comments);
+       this.loadPage(this.page);
+    }
   }
 
 

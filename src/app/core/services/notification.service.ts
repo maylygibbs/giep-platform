@@ -23,7 +23,7 @@ export class NotificationService {
     
     /** Subscribe to new_message event sent from server */
     socket.fromEvent('new_message').subscribe((message: any) => {
-      console.log('handle new_message event')
+        console.log('handle new_message event')
         console.log('notificacion', message);
         this.changeStatusNotification(true);
     });
@@ -34,16 +34,34 @@ export class NotificationService {
 
   }
 
+  /**
+   * handle icon display notification
+   */
   get showNotification():Observable<boolean>{
     return this.showNotification$.asObservable();
   }
 
+    /**
+   * change icon display notification
+   */
   changeStatusNotification(value: boolean){
     this.showNotification$.next(value)
   }
 
+  /**
+   * Send event join at user
+   * @param email 
+   */
   joinRoom(email: string): void {
     this.socket.emit('join_user', email);    
+  }
+
+  /**
+   * Send to server change status notification
+   * @param email 
+   */
+  sendChangeStatusNotification(email: string): void {
+    this.socket.emit('change_status_notifications', { email: email, message: null });    
   }
 
 }

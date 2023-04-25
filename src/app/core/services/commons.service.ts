@@ -41,12 +41,44 @@ export class CommonsService extends HttpService {
    * Get all dependences
    * @returns 
    */
-  async getAlldependences(): Promise<Array<SelectOption>> {
+  async getAllDependences(): Promise<Array<SelectOption>> {
 
     let dependences: Array<SelectOption> = new Array<SelectOption>();
     const resp = await firstValueFrom(this.get(environment.apiUrl, '/dependencia/list'))
     dependences = resp.data.map((item: any) => {
       return new SelectOption(item.id, item.descripcion);
+    });
+    return dependences;
+
+  }
+
+
+  /**
+ * Get all coordinations
+ * @returns 
+ */
+  async getAllCoordination(): Promise<Array<SelectOption>> {
+
+    let dependences: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/coordinacion/list'))
+    dependences = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    });
+    return dependences;
+
+  }
+
+
+  /**
+* Get all dependences
+* @returns 
+*/
+  async getAllManagements(): Promise<Array<SelectOption>> {
+
+    let dependences: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/gerencia/list'))
+    dependences = resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
     });
     return dependences;
 
@@ -633,7 +665,7 @@ export class CommonsService extends HttpService {
     const resp = await firstValueFrom(this.get(environment.apiUrl, '/widgets/menu'));
 
     return resp.map((item: any) => {
-      return new SelectOption(item.idModulo, item.nombreModulo+' - '+item.tipoComponente);
+      return new SelectOption(item.idModulo, item.nombreModulo + ' - ' + item.tipoComponente);
     })
 
   }
@@ -653,6 +685,37 @@ export class CommonsService extends HttpService {
     })
 
   }
+
+
+  /**
+  * Return list charges type
+  * @returns 
+  */
+  async getAllChargesType(): Promise<Array<SelectOption>> {
+
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/cargo/all'));
+
+    return resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.descripcion);
+    })
+
+  }
+
+
+  /**
+* Return list charges type
+* @returns 
+*/
+  async getAllLevelsType(): Promise<Array<SelectOption>> {
+
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/nivel/list'));
+
+    return resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.nombre);
+    })
+
+  }
+
 
 
 

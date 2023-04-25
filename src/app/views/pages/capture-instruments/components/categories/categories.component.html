@@ -37,6 +37,7 @@
                   <tr>
                     <th>Id</th>
                     <th>Categoría</th>
+                    <th>Tiene Escala y Ponderación</th>
                     <th>Estado</th>
                     <th data-priority="1">Accion</th>
                   </tr>
@@ -46,6 +47,7 @@
                     *ngFor="let category of categories.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: categories.count }">
                     <td>{{category.id}}</td>
                     <td>{{category.label}}</td>
+                    <td>{{category.flag ? 'Si' : 'No'}}</td>
                     <td>{{category.status?.label}}</td>
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(category.id)" placement="start" ngbTooltip="Editar Categoría"></i>
@@ -55,7 +57,7 @@
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="4" class="text-right">
+                    <th colspan="5" class="text-right">
                       <app-pager (onChangePage)="loadPage($event)"></app-pager>
                     </th>
                   </tr>    

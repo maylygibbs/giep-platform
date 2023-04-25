@@ -4,7 +4,7 @@ export const environment = {
   name_system: 'GIEP',
   apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
   apiAuth: 'https://bofficegiepstage.pafar.com.ve/public', 
-  wsserver:"https://wsplatformstage.pafar.com.ve:8090",
+  wsserver:"https://wsplatformstage.pafar.com.ve",
   localstorage:{
     userKey : 'cusr'
   },
