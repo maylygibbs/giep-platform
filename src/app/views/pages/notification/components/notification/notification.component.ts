@@ -59,6 +59,7 @@ export class NotificationComponent extends BaseComponent implements OnInit {
  async ngOnInit() {
   this.email = this.authService.currentUser.email;
     this.notifications = await this.notificationService.getNotificationsPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null, email:this.email});
+    console.log('NotificationComponent se llama notification')
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
@@ -93,7 +94,12 @@ export class NotificationComponent extends BaseComponent implements OnInit {
   async delete(id:number){
    await this.notificationService.deleteNotificationById(id);
     this.loadPage(this.page);
+  }
 
+  ngOnDestroy() {
+    if (this.$eventNavigationEnd) {
+      this.$eventNavigationEnd.unsubscribe()
+    }
   }
 
 }
