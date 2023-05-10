@@ -4,7 +4,7 @@ export const environment = {
   name_system: 'GIEP',
   apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
   apiAuth: 'https://giepboffice.pafar.com.ve/public',
-  wsserver:"https://wsplatformstage.pafar.com.ve",
+  wsserver:"https://wsplatformprod.pafar.com.ve",
   localstorage:{
     userKey : 'cusr'
   },
@@ -42,7 +42,7 @@ export const environment = {
   },
   paginator: {
     default_page: 1,
-    row_per_page: 5
+    row_per_page: 10
   },
   endpoints:{
     handle_error_blackList:[

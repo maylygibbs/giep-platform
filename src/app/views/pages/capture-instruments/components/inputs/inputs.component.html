@@ -49,7 +49,7 @@
                     <td>{{input.status?.label}}</td>                    
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(input.id)" placement="start" ngbTooltip="Editar Input"></i>
-                      <i *ngIf="input.status?.value=='1'" class="feather icon-trash ms-1" (click)="delete(input.id)"></i>
+                      <i *ngIf="input.status?.value=='1'" class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar Input" (click)="delete(input.id)"></i>
                     </td>
                   </tr>
                 </tbody>

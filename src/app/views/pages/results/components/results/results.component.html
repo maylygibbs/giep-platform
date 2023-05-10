@@ -8,11 +8,15 @@
     <div class="card">
       <div class="card-header">
         <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center flex-row-reverse py-2"><i (click)="clearFilters()" class="mdi mdi-broom btn-clear my-2" placement="top" ngbTooltip="Limpiar filtros"></i></div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center flex-row-reverse py-2"><i
+              (click)="clearFilters()" class="mdi mdi-broom btn-clear my-2" placement="top"
+              ngbTooltip="Limpiar filtros"></i></div>
         </div>
         <div class="row">
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
-            <label for="inputInstrument" class="form-label required">Instrumento </label><i class="feather icon-info ms-1" placement="right" ngbTooltip="El instrumento es requerido para visualizar los resultados respectivos. Por favor, indique el instrumento."></i>
+            <label for="inputInstrument" class="form-label required">Instrumento </label><i
+              class="feather icon-info ms-1" placement="right"
+              ngbTooltip="El instrumento es requerido para visualizar los resultados respectivos. Por favor, indique el instrumento."></i>
             <ng-select id="inputInstrument" name="instrument" [items]="data.instruments" [(ngModel)]="instrumentId"
               bindValue="id" [searchable]="true" (ngModelChange)="changeSelectFilter()" required>
             </ng-select>
@@ -46,7 +50,7 @@
             <div class="mb-3">
               <label for="inputCountry" class="form-label">País</label>
               <ng-select id="inputCountry" [items]="data.countries" name="country" #country="ngModel"
-                [searchable]="true" (change)="onChangeCountry($event)"   [(ngModel)]="selectedCountry">
+                [searchable]="true" (change)="onChangeCountry($event)" [(ngModel)]="selectedCountry">
               </ng-select>
             </div>
           </div>
@@ -54,7 +58,7 @@
             <div class="mb-3">
               <label for="inputState" class="form-label">Estado</label>
               <ng-select id="inputState" [items]="states" name="state" #state="ngModel"
-                (change)="onChangeStates($event)"  [searchable]="true" [(ngModel)]="selectedState">
+                (change)="onChangeStates($event)" [searchable]="true" [(ngModel)]="selectedState">
               </ng-select>
 
             </div>
@@ -82,21 +86,22 @@
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <div class="mb-3">
               <label for="inputSex" class="form-label required">Resultado</label>
-              <ng-select id="inputSex" name="resultType" #resultType="ngModel" (change)="changeSelectFilter()" [searchable]="true"
-                [(ngModel)]="selectedResult" required>
+              <ng-select id="inputSex" name="resultType" #resultType="ngModel" (change)="changeSelectFilter()"
+                [searchable]="true" [(ngModel)]="selectedResult" required>
                 <ng-option value="1">Por usuario</ng-option>
-                <ng-option value="0">Global</ng-option>
+                <ng-option *ngIf="instrument && instrument.globalsPoints" value="0">Global</ng-option>
               </ng-select>
             </div>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <div class="mb-3">
               <label for="inputSex" class="form-label required">Tipo de gráfica</label>
-              <ng-select id="inputSex" name="resultType" #resultType="ngModel" (change)="changeSelectFilter()" [searchable]="true"
-                [(ngModel)]="selectedGraphic" required>
+              <ng-select id="inputSex" name="resultType" #resultType="ngModel" (change)="changeSelectFilter()"
+                [searchable]="true" [(ngModel)]="selectedGraphic" required>
                 <ng-option value="1">Barras horizontales</ng-option>
                 <ng-option value="2">Barras verticales</ng-option>
                 <ng-option value="3">Pie</ng-option>
+                <ng-option value="4">Linea</ng-option>
               </ng-select>
             </div>
           </div>
@@ -112,7 +117,7 @@
                   placeholder="Buscar aqui...">
               </div>
             </div>
-          </div>        
+          </div>
 
         </div>
       </div>
@@ -123,59 +128,116 @@
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="card">
       <div class="card-header">
-        <div class="text-muted">{{ 'Muestra: '+results.sample+ ' usuarios'}}  </div>
+        <div class="text-muted">{{ 'Muestra: '+results.sample+ ' usuarios'}} </div>
       </div>
       <div class="card-body">
         <div class="row">
-          <div *ngFor="let result of results.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: results.count }" class="col-lg-6 col-md-6 col-xs-12 grid-margin stretch-card">
+          <div
+            *ngFor="let result of results.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: results.count }"
+            class="col-lg-6 col-md-6 col-xs-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-baseline mb-2">
                   <h6 class="card-title mb-0">{{result.name}}</h6>
                   <div ngbDropdown class="mb-2" style="visibility: hidden;">
-                    <button ngbDropdownToggle class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton4">
+                    <button ngbDropdownToggle class="btn p-0 no-dropdown-toggle-icon" type="button"
+                      id="dropdownMenuButton4">
                       <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal" appFeatherIcon></i>
                     </button>
                     <div ngbDropdownMenu aria-labelledby="dropdownMenuButton4">
-                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="eye" appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
-                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="edit-2" appFeatherIcon class="icon-sm me-2"></i> <span class="">Edit</span></a>
-                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="trash" appFeatherIcon class="icon-sm me-2"></i> <span class="">Delete</span></a>
-                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="printer" appFeatherIcon class="icon-sm me-2"></i> <span class="">Print</span></a>
-                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="download" appFeatherIcon class="icon-sm me-2"></i> <span class="">Download</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="eye"
+                          appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                          data-feather="edit-2" appFeatherIcon class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                          data-feather="trash" appFeatherIcon class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                          data-feather="printer" appFeatherIcon class="icon-sm me-2"></i> <span
+                          class="">Print</span></a>
+                      <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                          data-feather="download" appFeatherIcon class="icon-sm me-2"></i> <span
+                          class="">Download</span></a>
                     </div>
                   </div>
                 </div>
-                <p *ngIf="selectedResult==='1' && result.dateResponse" class="text-muted">{{result.dateResponse | date:'yyyy-MM-dd hh:mm a'}}</p>
+                <p *ngIf="selectedResult==='1' && result.dateResponse" class="text-muted">{{result.dateResponse |
+                  date:'yyyy-MM-dd hh:mm a'}}</p>
                 <p *ngIf="selectedResult==='1' && !result.dateResponse" class="text-muted">No participó</p>
                 <p *ngIf="result.country" class="text-muted">País: {{result.country}}</p>
                 <p *ngIf="result.state" class="text-muted">Estado: {{result.state}}</p>
                 <p *ngIf="result.city" class="text-muted">Ciudad: {{result.city}}</p>
                 <p *ngIf="result.sex" class="text-muted">Sexo: {{result.sex}}</p><br>
-                <p class="text-muted">{{result.warning}}</p>
-                <apx-chart *ngIf="selectedGraphic=='1' || selectedGraphic=='2'"
-                  [series]="result.optionsChart.series"
-                  [chart]="result.optionsChart.chart"
-                  [colors]="result.optionsChart.colors"
-                  [fill]="result.optionsChart.fill"
-                  [grid]="result.optionsChart.grid"
-                  [xaxis]="result.optionsChart.xaxis"
-                  [yaxis]="result.optionsChart.yaxis"
-                  [legend]="result.optionsChart.legend"
-                  [stroke]="result.optionsChart.stroke"
+                <p *ngIf="result.charge" class="text-muted">Cargo: {{result.charge}}</p>
+                <p *ngIf="result.dependence" class="text-muted">Dependencia: {{result.dependence}}</p>
+                <p *ngIf="result.management" class="text-muted">Gerencia: {{result.management}}</p>
+                <p *ngIf="result.coordination" class="text-muted">Coordinación: {{result.coordination}}</p><br>
+                <p *ngIf="result.adecuacyLevel" class="text-muted">Nivel de Adecuación:
+                  {{result.adecuacyLevel | percent: '2.2'}}</p><br>
+                <p class="text-muted mt-2">{{result.warning}}</p>
+                <!--GRAFICO DE BARRAS PARA INSTRUMENTOS CON PUNTUACION GLOBAL-->
+                <apx-chart *ngIf="(selectedGraphic=='1' || selectedGraphic=='2') && this.instrument.globalsPoints"
+                  [series]="result.optionsChart.series" [chart]="result.optionsChart.chart"
+                  [colors]="result.optionsChart.colors" [fill]="result.optionsChart.fill"
+                  [grid]="result.optionsChart.grid" [xaxis]="result.optionsChart.xaxis"
+                  [yaxis]="result.optionsChart.yaxis" [legend]="result.optionsChart.legend"
+                  [stroke]="result.optionsChart.stroke" [dataLabels]="result.optionsChart.dataLabels"
+                  [plotOptions]="result.optionsChart.plotOptions"></apx-chart>
+                  <!--GRAFICO DE BARRAS PARA INSTRUMENTOS CON PUNTUACION POR CARGO-->
+                <apx-chart *ngIf="(selectedGraphic=='1' || selectedGraphic=='2') && !this.instrument.globalsPoints"
+                  [series]="result.optionsChart.series" [chart]="result.optionsChart.chart"
+                  [xaxis]="result.optionsChart.xaxis" [stroke]="result.optionsChart.stroke"
+                  [legend]="result.optionsChart.legend" [tooltip]="result.optionsChart.tooltip"
                   [dataLabels]="result.optionsChart.dataLabels"
-                  [plotOptions]="result.optionsChart.plotOptions"
-                ></apx-chart>
-                <apx-chart *ngIf="selectedGraphic=='3' || selectedGraphic=='4'"
-                [series]="result.optionsChart.series"
-                [chart]="result.optionsChart.chart"
-                [colors]="result.optionsChart.colors"
-                [labels]="result.optionsChart.labels"
-                [responsive]="result.optionsChart.responsive"
-                [plotOptions]="result.optionsChart.plotOptions"
-                [legend]="result.optionsChart.legend"
-              ></apx-chart>
-              </div> 
+                  [plotOptions]="result.optionsChart.plotOptions"></apx-chart>
+                  <!--GRAFICO DE PIE PARA INSTRUMENTOS CON PUNTUACION GLOBA Y POR CARGO-->
+                <apx-chart *ngIf="selectedGraphic=='3'" [series]="result.optionsChart.series"
+                  [chart]="result.optionsChart.chart" [colors]="result.optionsChart.colors"
+                  [labels]="result.optionsChart.labels" [responsive]="result.optionsChart.responsive"
+                  [plotOptions]="result.optionsChart.plotOptions" [legend]="result.optionsChart.legend"></apx-chart>
+                <!--GRAFICO DE LINEA PARA INSTRUMENTOS CON POR CARGO-->
+                <apx-chart *ngIf="selectedGraphic=='4'" [series]="result.optionsChart.series" 
+                [chart]="result.optionsChart.chart" [dataLabels]="result.optionsChart.dataLabels" [stroke]="result.optionsChart.stroke"
+                [xaxis]="result.optionsChart.xaxis"
+                [yaxis]="result.optionsChart.yaxis"                 
+                [legend]="result.optionsChart.legend"></apx-chart>  
+              </div>
+
+              <div *ngIf="selectedResult==='1' && result.tableResult" class="card mt-2">
+                <div class="card-body">
+                  <table datatable [dtOptions]="dtOptions" class="sampletable">
+                    <thead>
+                      <tr>
+                        <th>Competencia</th>
+                        <th>Nivel requerido</th> 
+                        <th>Nivel demostrado</th>
+                        <th>Pond.%</th>
+                        <th>Brecha</th>
+                        <th>Requerim. ponderado</th>
+                        <th>Nivel ponderado</th>
+                        <th>Peso por brecha</th>
+                        <th>Dif. %</th>
+                      </tr>
+
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let obj of result.tableResult">
+                        <td>{{obj.competence}}</td>
+                        <td>{{obj.levelRequired}}</td>
+                        <td>{{obj.value}}</td>
+                        <td>{{obj.porcenageWeighing}}</td>
+                        <td>{{obj.gap}}</td>
+                        <td>{{obj.weightedRequirement | number : '1.2-2'}}</td>
+                        <td>{{obj.weightedLevel | number : '1.2-2'}}</td>
+                        <td>{{obj.weightPerGap | number : '1.2-2'}}</td>
+                        <td>{{obj.dif | percent: '2.2'}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
         <div class="row">
@@ -194,7 +256,7 @@
         <p>No hay datos disponibles</p>
       </div>
     </div>
-  </div> 
+  </div>
 </div>
 <div *ngIf="submited && (!results || !results.data)" class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -203,5 +265,5 @@
         <p>Buscando ...</p>
       </div>
     </div>
-  </div> 
+  </div>
 </div>

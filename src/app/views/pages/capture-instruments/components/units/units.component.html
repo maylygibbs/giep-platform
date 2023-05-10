@@ -51,7 +51,7 @@
                     <td>{{unit.status?.label}}</td>              
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(unit.id)" placement="start" ngbTooltip="Editar Unidad de Medida"></i>
-                      <i *ngIf="unit.status?.value=='1'" class="feather icon-trash ms-1" (click)="delete(unit.id)"></i>
+                      <i *ngIf="unit.status?.value=='1'" class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar Unidad de Medida" (click)="delete(unit.id)"></i>
                     </td>
                   </tr>
                 </tbody>

@@ -51,7 +51,7 @@
                     <td>{{category.status?.label}}</td>
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(category.id)" placement="start" ngbTooltip="Editar Categoría"></i>
-                      <i *ngIf="category.status?.value=='1'" class="feather icon-trash ms-1" (click)="delete(category.id)"></i>
+                      <i *ngIf="category.status?.value=='1'" class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar Categoría" (click)="delete(category.id)"></i>
                     </td>
                   </tr>
                 </tbody>

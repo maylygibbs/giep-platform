@@ -42,7 +42,9 @@ export class UserService extends HttpService {
     user.secondName = resp[0].segundoNombre;
     user.secondLastName = resp[0].segundoApellido;
     user.email = resp[0].email;
-    user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion);
+    if(resp[0].Dependencia){
+      user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion);
+    }    
     user.position = new SelectOption(resp[0].cargo.id, resp[0].cargo.Descripcion);
     user.phones = resp[0].telefonos;
     user.birthDate = resp[0].fechaNacimiento;
@@ -173,7 +175,9 @@ export class UserService extends HttpService {
     user.secondName = resp[0].segundoNombre;
     user.secondLastName = resp[0].segundoApellido;
     user.email = resp[0].email;
-    user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion);
+    if(resp[0].Dependencia){
+      user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion);
+    }    
     if(resp[0].Gerencia){
       user.managment = new SelectOption(resp[0].Gerencia.gerenciaId, resp[0].Gerencia.nombreGerencia);
     }

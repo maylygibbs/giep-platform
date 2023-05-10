@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { filter, Subscription } from 'rxjs';
 import { throws } from 'assert';
+import { Instrument } from '../../../../../core/models/instrument';
 
 @Component({
   selector: 'app-results',
@@ -41,6 +42,7 @@ export class ResultsComponent extends BaseComponent implements OnInit {
   word: string;
 
   data: any;
+  instrument: Instrument
   instrumentId: number;
 
   startDateFilter: any;
@@ -98,7 +100,8 @@ export class ResultsComponent extends BaseComponent implements OnInit {
           ciudad: this.selectedCity?.value ? parseInt(this.selectedCity?.value) : null
         },
         this.instrumentId,
-        this.selectedGraphic
+        this.selectedGraphic,
+        this.instrument.globalsPoints
       );
       this.submited = false;
       console.log('results', this.results)
@@ -177,6 +180,8 @@ export class ResultsComponent extends BaseComponent implements OnInit {
  *  
  */
   changeSelectFilter() {
+    
+    this.instrument = this.data.instruments.filter((item:SelectOption)=>parseInt(item.value) == this.instrumentId)[0];
     this.loadPage(environment.paginator.default_page);
   }
 

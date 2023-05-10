@@ -8,6 +8,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { EmailAccountService } from '../../../core/services/email-account.service';
 import { PaginationResponse } from '../../../core/models/pagination-response';
 import { environment } from '../../../../environments/environment';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-navbar',
@@ -15,6 +16,7 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+
 
   user:User;
 
@@ -24,6 +26,8 @@ export class NavbarComponent implements OnInit {
   mailboxes: PaginationResponse;
 
   environment = environment;
+
+  notifications: PaginationResponse;
 
   constructor(
     @Inject(DOCUMENT) private document: Document, 
@@ -36,6 +40,7 @@ export class NavbarComponent implements OnInit {
 
   async ngOnInit() {
     this.user = this.authService.currentUser;
+    this.notifications = await this.notificationService.getNotificationsWithoutreadingPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null, email:this.user.email});
     this.notificationService.joinRoom(this.user.email);
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
       this.user = user ? user : this.authService.currentUser;      
@@ -77,6 +82,19 @@ export class NavbarComponent implements OnInit {
       rowByPage: environment.paginator.row_per_page, 
       buzonId: id,
       sort: null })*/
+  }
+
+  /**
+   * Go to page notifications.
+   * @param email 
+   * @param dropdown 
+   */
+
+  async goToNotificationPage(email:string,dropdown: NgbDropdown){
+    dropdown.close();
+    this.notificationService.sendChangeStatusNotification(email);
+    this.notifications = await this.notificationService.getNotificationsWithoutreadingPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null, email:this.user.email});
+    this.router.navigate(['/notifications'])
   }
 
   ngOnDestroy(){

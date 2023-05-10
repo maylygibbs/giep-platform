@@ -1,0 +1,75 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Notificaciones</a></li>
+    </ol>
+  </nav>
+  
+  <div *ngIf="step==1" class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+              <div class="search-form">
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <i class="feather icon-search" (click)="search()"></i>
+                  </div>
+                  <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (ngModelChange)="search()"
+                    placeholder="Buscar aqui...">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body card-dt">
+          <h6 class="card-title"></h6>
+          <div class="row">
+            <div class="col-lg-12" *ngIf="notifications && notifications.data">
+              <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Notificación</th>
+                    <th></th>
+                 </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let notification of notifications.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: notifications.count }">
+                    <td>
+                        <a href="" (click)="false" class="dropdown-item d-flex align-items-center py-2">
+                            <div class="wd-30 ht-30 d-flex align-items-center justify-content-center bg-primary rounded-circle me-3">
+                              <i class="feather icon-volume-2 icon-sm text-white"></i>
+                            </div>
+                            <div  class="flex-grow-1 me-2">
+                              <p>{{notification.message}}</p>
+                              <p>{{notification.notificationDateStr}}
+                              </p>
+                            </div>	
+                          </a>
+                    </td>
+                    <td class="text-center">
+                      <i class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar Notificación" (click)="delete(notification.id)"></i>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th colspan="2" class="text-right">
+                      <app-pager (onChangePage)="loadPage($event)"></app-pager>
+                    </th>
+                  </tr>
+  
+                </tfoot>
+  
+              </table>
+            </div>
+  
+          </div>
+
+  
+  
+        </div>
+      </div>
+    </div>
+  </div>

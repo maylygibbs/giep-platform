@@ -277,7 +277,9 @@ export class CommonsService extends HttpService {
     let inputsType: Array<SelectOption> = new Array<SelectOption>();
     const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/list/all'));
     inputsType = resp.data.map((item: any) => {
-      return new SelectOption(item.id, item.nombre);
+      const selectOption = new SelectOption(item.id, item.nombre);
+      selectOption.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true:false) : false;
+      return selectOption;
     });
     return inputsType;
   }

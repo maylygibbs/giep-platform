@@ -45,6 +45,10 @@ export class InstrumentsService extends HttpService {
     super(http);
   }
 
+  shuffleArray(inputArray){
+    return inputArray.sort(()=> Math.random() - 0.5);
+  }
+
   /** INSTRUMENTS **/
 
   async storeInstrument(data: any) {
@@ -194,6 +198,11 @@ export class InstrumentsService extends HttpService {
         }
         return question;
       });
+
+      if(section.questions && section.questions.length>0){
+        section.questions = this.shuffleArray(section.questions);
+        console.log('shuffleArray',section.questions);
+      }
 
       return section;
 
@@ -425,107 +434,6 @@ export class InstrumentsService extends HttpService {
   }
 
 
-  /**
-   * Get results by category
-   * @param id 
-   */
-  async getInstrumentResultByCategory(id: number): Promise<any> {
-
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/resultados/${id}`));
-
-    let results: any[] = [];
-    if (resp && resp.usuarios.length > 0) {
-
-      results = resp.usuarios.map((item: any) => {
-        const result: any = {};
-        result.name = item.nombre;
-        const data1 = item.resultado.map((itemData: any) => {
-          return {
-            x: itemData.categoria,
-            y: itemData.puntos
-          }
-        });
-        const data2 = item.resultado.map((itemData: any) => {
-          return itemData.puntos;
-        });
-        const categories = item.resultado.map((itemData: any) => {
-          return itemData.categoria;
-        });
-        result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, true);
-        return result;
-      })
-
-    }
-
-    return results;
-  }
-
-
-  /**
-   * Get results by questions
-   * @param id 
-   */
-  async getInstrumentResultByQuestions(id: number): Promise<any> {
-
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/resultados/sincategoria/${id}`));
-
-    let results: any[] = [];
-    if (resp && resp.preguntas.length > 0) {
-
-      results = resp.preguntas.map((item: any) => {
-        const result: any = {};
-        result.name = item.pregunta;
-        const data1 = item.resultado.map((itemData: any) => {
-          return {
-            x: itemData.opcion,
-            y: itemData.total
-          }
-        });
-        const data2 = item.resultado.map((itemData: any) => {
-          return itemData.total;
-        });
-        const categories = item.resultado.map((itemData: any) => {
-          return itemData.opcion;
-        });
-        result.optionsChart = this.getOptionsChartBarByQuestions(this.obj, data2, categories, false);
-        return result;
-      })
-
-    }
-
-    return results;
-  }
-
-  async getIntrumentResultByCounter(id: number): Promise<any> {
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/${id}/resultados/contador`));
-
-    let results: any[] = [];
-    if (resp && resp.usuarios.length > 0) {
-
-      results = resp.usuarios.map((item: any) => {
-        const result: any = {};
-        result.name = item.nombre;
-        result.warning = !item.resultado || item.resultado.length == 0 ? ': Falta por participar en la encuesta' : null;
-        const data1 = item.resultado.map((itemData: any) => {
-          return {
-            x: itemData.valor,
-            y: itemData.puntos
-          }
-        });
-        const data2 = item.resultado?.map((itemData: any) => {
-          return itemData.puntos;
-        });
-        const categories = item.resultado.map((itemData: any) => {
-          return itemData.valor;
-        });
-        result.optionsChart = this.getOptionsChartBarByCounter(this.obj, data2, categories, true);
-        return result;
-      })
-
-    }
-
-    return results;
-  }
 
 
   /**
@@ -533,7 +441,7 @@ export class InstrumentsService extends HttpService {
  * @param filter 
  * @returns 
  */
-  async getInstrumentResultsPagined(filter: any, instrumentId: number, selectedGraphic: string, isHorizontal: boolean = true): Promise<PaginationResponse> {
+  async getInstrumentResultsPagined(filter: any, instrumentId: number, selectedGraphic: string,  globalsPoints: boolean): Promise<PaginationResponse> {
     const resp = await firstValueFrom(this.post(environment.apiUrl, `/encuesta/resultados/instrumento/${instrumentId}`, filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
@@ -547,6 +455,14 @@ export class InstrumentsService extends HttpService {
         result.state = item.estado;
         result.city = item.ciudad;
         result.sex = item.sexo;
+        result.charge = item.cargo;
+        result.dependence = item.dependencia;
+        result.management = item.gerencia;
+        result.coordination = item.coordinacion;
+        if(!globalsPoints){
+          result.adecuacyLevel = item.totales.adecuacyLevel;
+        }
+        
         if (item.fecha_inicio) {
           if (!item.resultado || item.resultado.length == 0) {
             result.warning = 'Inició el instrumento, sin embargo no culminó.';
@@ -565,33 +481,64 @@ export class InstrumentsService extends HttpService {
           }
         }
 
-        const data1 = item.resultado.map((itemData: any) => {
-          return {
-            x: itemData.label,
-            y: itemData.value
-          }
-        });
-        const data2 = item.resultado?.map((itemData: any) => {
+
+        const source = [];
+        let data = item.resultado?.map((itemData: any) => {
           return itemData.value;
         });
-        const data3 = item.resultado?.map((itemData: any) => {
+        source.push({data: data, name:'Nivel demostrado'});
+        if(!globalsPoints){
+          data = item.resultado?.map((itemData: any) => {
+            return itemData.levelRequired;
+          })
+          source.push({data: data, name:'Nivel requerido'});
+        }
+
+        const data2 = item.resultado?.map((itemData: any) => {
           return parseInt(itemData.value);
         });
         const categories = item.resultado.map((itemData: any) => {
           return itemData.label;
         });
 
+        if(!globalsPoints){
+          result.tableResult = item.resultado.map((itemData: any) => {
+            return {
+              competence: itemData.label,
+              value:itemData.value,
+              levelRequired: itemData.levelRequired,
+              porcenageWeighing: itemData.porcenageWeighing,
+              gap:itemData.gap,
+              weightedRequirement: itemData.weightedRequirement,
+              weightedLevel: itemData.weightedLevel,
+              weightPerGap: itemData.weightPerGap,
+              dif:itemData.DIF
+            }
+          });
+        }
+
+
         switch (selectedGraphic) {
 
           case '1':
-            result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, true);
-
+            if(globalsPoints){
+              result.optionsChart = this.getOptionsChartBar(this.obj, source, categories, true);
+            }else{
+              result.optionsChart = this.getOptionsChartBarGrouped(this.obj, source, categories, true);
+            }
             break;
           case '2':
-            result.optionsChart = this.getOptionsChartBar(this.obj, data1, data2, categories, false);
+            if(globalsPoints){
+              result.optionsChart = this.getOptionsChartBar(this.obj, source, categories, false);
+            }else{
+              result.optionsChart = this.getOptionsChartBarGrouped(this.obj, source, categories, false);
+            }
             break;
           case '3':
-            result.optionsChart = this.getOptionsChartPie(this.obj, data3, categories);
+            result.optionsChart = this.getOptionsChartPie(this.obj, data2, categories);
+            break;
+          case '4':
+            result.optionsChart = this.getOptionsChartLine(this.obj, source, categories);
             break;
 
           default:
@@ -617,11 +564,9 @@ export class InstrumentsService extends HttpService {
    * @param textLabelyAxis 
    * @returns 
    */
-  getOptionsChartBar(obj: any, data1: any, data2: any, categories: any, horizontal: boolean, textLabelyAxis: string = 'Categorias') {
+  getOptionsChartBar(obj: any, source: any, categories: any, horizontal: boolean, textLabelyAxis: string = 'Categorias') {
     return {
-      series: [{
-        data: data2,
-      }],
+      series: source,
       chart: {
         type: 'bar',
         height: horizontal ? '480' : '380',
@@ -721,6 +666,72 @@ export class InstrumentsService extends HttpService {
     }
   }
 
+  getOptionsChartBarGrouped(obj: any, source: any, categories: any, horizontal: boolean, textLabelyAxis: string = 'Categorias') {
+    return {
+      series: source,
+      chart: {
+        type: 'bar',
+        height: horizontal ? '480' : '380',
+        background: obj.cardBg,
+        toolbar: {
+          show: false
+        },
+      },
+      xaxis: {
+        categories: categories,
+        labels:{
+          style:{
+            fontSize:'8px'
+          }
+        }
+      },
+      stroke: {
+        show: true,
+        width: 1,
+        colors: ['#fff']
+      },
+      tooltip: {
+        shared: true,
+        intersect: false
+      },
+      legend: {
+        show: true,
+        position: horizontal ? "bottom" : "top",
+        horizontalAlign: 'left',
+        fontFamily: obj.fontFamily,
+        itemMargin: {
+          horizontal: 8,
+          vertical: 5
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        textAnchor: 'start',
+        distributed: false,
+        style: {
+          fontSize: '10px',
+          fontFamily: obj.fontFamily,
+        },
+        formatter: function (val, opt) {
+          //return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+          return val
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: horizontal,
+          barHeight: '85%',
+          columnWidth: "50%",
+          borderRadius: 4,
+          dataLabels: {
+            position: 'bottom',
+            orientation: horizontal ? 'horizontal' : 'vertical',
+          }
+        },
+      },
+    }
+  }
+
   /**
    * Generate chart type: Pie
    * @param obj 
@@ -769,6 +780,60 @@ export class InstrumentsService extends HttpService {
           horizontal: 8,
           vertical: 5
         },
+      }
+
+    };
+  }
+
+
+  /**
+   * Generate chart type: Pie
+   * @param obj 
+   * @param data2 
+   * @param categories 
+   * @param horizontal 
+   * @param textLabelyAxis 
+   * @returns 
+   */
+  getOptionsChartLine(obj: any, source: any, categories: any, chartType: string = 'area') {
+    console.log('soruce', source)
+    return {
+      series: source,
+      chart: {
+        height: 350,
+        type: chartType,
+        zoom: {
+          enabled: false
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontSize: '10px',
+          fontFamily: obj.fontFamily,
+        },
+        formatter: function (val, opt) {
+          //return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+          return val
+        }
+      },
+      stroke: {
+        curve: 'straight'
+      },
+      xaxis: {
+        categories: categories,        
+        labels:{
+          style:{
+            fontSize:'8px'
+          }
+        }
+      },
+      yaxis: {
+        opposite: true
+      },
+      legend: {
+        position: "top",
+        horizontalAlign: 'center'
       }
 
     };

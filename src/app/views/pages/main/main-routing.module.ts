@@ -80,6 +80,10 @@ const routes: Routes = [
         path: 'authorizations',
         loadChildren: () => import('../authorizations/authorizations.module').then(m => m.AuthorizationsModule),
       },
+      {
+        path: 'notifications',
+        loadChildren: () => import('../notification/notification.module').then(m => m.NotificationModule),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

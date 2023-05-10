@@ -17,6 +17,7 @@ export class SelectOption{
   public flag:boolean;
   public scales:Array<any>; //escalas por cargos
   public weights: Array<any>; // escalas por niveles
+  public globalsPoints:boolean;
 
 
   /**
