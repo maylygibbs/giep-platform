@@ -101,7 +101,7 @@
         </a>
         <div ngbDropdownMenu class="px-0" aria-labelledby="notificationDropdown">
           <div *ngIf="notifications && notifications.data" class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
-            <p>{{(notifications.data.length+1) + ' Notificaciones sin leer'}}</p>
+            <p>{{(notifications.data.length) + ' Notificaciones sin leer'}}</p>
             <a href="" (click)="false" class="text-muted" style="visibility: hidden;">Clear all</a>
           </div>
           <div *ngIf="notifications && notifications.data && notifications.data.length > 0" class="p-1">
@@ -120,7 +120,7 @@
             <a (click)="goToNotificationPage(user.email, dd1)">Ver todas</a>
           </div>
           <div *ngIf="!notifications || !notifications.data || notifications.data.length == 0" class="px-3 py-2 d-flex align-items-center justify-content-center border-top">
-            <a (click)="goToNotificationPage(user.email, dd1)">Ver todas</a>
+            <a (click)="goToNotificationPage(user.email, dd1)">Ir a notificaciones</a>
           </div>
         </div>
       </li>
