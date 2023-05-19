@@ -40,13 +40,20 @@ export class NavbarComponent implements OnInit {
 
   async ngOnInit() {
     this.user = this.authService.currentUser;
-    this.notifications = await this.notificationService.getNotificationsWithoutreadingPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null, email:this.user.email});
+    this.notificationSubcribe();
     this.notificationService.joinRoom(this.user.email);
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
       this.user = user ? user : this.authService.currentUser;      
     });
 
     //this.mailboxes = await this.emailAccountService.getMailboxesPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
+  }
+
+
+  notificationSubcribe(){
+    this.notificationService.getNotificationsWithoutreading().subscribe((resp)=>{
+      this.notifications = resp;
+    })
   }
   
 
@@ -93,7 +100,7 @@ export class NavbarComponent implements OnInit {
   async goToNotificationPage(email:string,dropdown: NgbDropdown){
     dropdown.close();
     this.notificationService.sendChangeStatusNotification(email);
-    this.notifications = await this.notificationService.getNotificationsWithoutreadingPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null, email:this.user.email});
+    await this.notificationService.getNotificationsWithoutreadingPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null, email:this.user.email});
     this.router.navigate(['/notifications'])
   }
 

@@ -429,8 +429,9 @@ export class DocumentsComponent extends BaseComponent implements OnInit {
 
   /** Process change state document **/
   async onProcessStageSubmit(form: NgForm, doc: DocumentGiep) {
-        if(form.valid){
+      if(form.valid){
        await this.documentService.documentChangeState(parseInt(doc.id), this.stateId, doc.comments);
+       this.closeModal();
        this.loadPage(this.page);
     }
   }

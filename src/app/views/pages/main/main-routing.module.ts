@@ -3,13 +3,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './../../../core/guard/auth.guard';
 import { BaseComponent } from '../../layout/base/base.component';
+import { NotificationResolver } from '../../../core/resolvers/notification.resolver';
 
 const routes: Routes = [
   { path: '',
     component: BaseComponent,
     canActivate: [AuthGuard],
     resolve:{
-      options: GetMenuOptions
+      options: GetMenuOptions,
+      notifications: NotificationResolver
     },
     children: [
       {

@@ -165,9 +165,20 @@ export class DocumentService extends HttpService {
             if (temp.length > 0) {
               docOutput.users = temp.map((userData) => {
                 return parseInt(userData.id);
+              });
+              docOutput.usersView = temp.map((userData) => {
+                const user = new User();
+                user.id = userData.id;
+                user.email = userData.email;
+                user.firstName = userData.primerNombre;
+                user.secondName = userData.segundoNombre;
+                user.lastName = userData.primerApellido;
+                user.secondLastName = userData.segundoApellido;
+                return user;
               })
             }
           }
+
 
           if (item.historico && item.historico.length > 0) {
             docOutput.history = item.historico.map((itemHist: any) => {
@@ -240,8 +251,6 @@ export class DocumentService extends HttpService {
     let response: any = null;
     try {
       const resp = await firstValueFrom(this.put(environment.apiUrl, `/archivo/cambiostatusarchivo`, { id_archivo, id_estado, comentarios }));
-      console.log(resp);
-      this.toastrService.success('Camnio de estado del archivo realizado con éxito.');
       switch (id_estado) {
         case 2:
           this.toastrService.success('El documento a pasado a revisión con éxito.');

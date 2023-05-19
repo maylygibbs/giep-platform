@@ -93,7 +93,7 @@
         </div>
       </li>
       <li class="nav-item nav-notifications" ngbDropdown #dd1="ngbDropdown">
-        <a class="nav-link" ngbDropdownToggle id="notificationDropdown">
+        <a class="nav-link" ngbDropdownToggle id="notificationDropdown" (click)="notificationService.changeStatusNotification(false)">
           <i class="link-icon feather icon-bell"></i>
           <div *ngIf="notificationService.showNotification | async" class="indicator">
             <div class="circle"></div>
@@ -101,13 +101,13 @@
         </a>
         <div ngbDropdownMenu class="px-0" aria-labelledby="notificationDropdown">
           <div *ngIf="notifications && notifications.data" class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
-            <p>{{(notifications.data.length) + ' Notificaciones sin leer'}}</p>
+            <p>{{(notifications.count) + ' Notificaciones sin leer'}}</p>
             <a href="" (click)="false" class="text-muted" style="visibility: hidden;">Clear all</a>
           </div>
           <div *ngIf="notifications && notifications.data && notifications.data.length > 0" class="p-1">
             <a *ngFor="let notification of notifications.data" href="" (click)="false" class="dropdown-item d-flex align-items-center py-2">
               <div class="wd-30 ht-30 d-flex align-items-center justify-content-center bg-primary rounded-circle me-3">
-                <i class="feather icon-gift icon-sm text-white"></i>
+                <i class="feather icon-volume-2 icon-sm text-white"></i>
               </div>
               <div  class="flex-grow-1 me-2">
                 <p>{{notification.message}}</p>

@@ -21,8 +21,9 @@ TimeAgo.addDefaultLocale(es)
   providedIn: 'root'
 })
 export class NotificationService extends HttpService {
-
+  environment = environment;
   showNotification$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  notificationsWithoutreading: BehaviorSubject<PaginationResponse> = new BehaviorSubject<PaginationResponse>(null)
 
   constructor(protected http: HttpClient,
     private socket: Socket,
@@ -40,6 +41,8 @@ export class NotificationService extends HttpService {
       console.log('handle new_message event')
       console.log('notificacion', message);
       this.changeStatusNotification(true);
+      const user = this.authService.currentUser;
+      this.getNotificationsWithoutreadingPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null, email:user.email});
     });
 
     socket.fromEvent('disconnect').subscribe(() => {
@@ -119,7 +122,17 @@ export class NotificationService extends HttpService {
       notification.notificationDateStr = timeAgo.format(new Date(item.created_at))
       return notification;
     })
+    this.setNotificationsWithoutreading(paginator);
     return paginator;
+  }
+
+  setNotificationsWithoutreading(noti:PaginationResponse){
+    this.notificationsWithoutreading.next(noti)
+  }
+
+
+  getNotificationsWithoutreading():Observable<PaginationResponse>{
+    return this.notificationsWithoutreading.asObservable()
   }
 
   /**

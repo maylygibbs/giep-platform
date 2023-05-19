@@ -22,6 +22,7 @@ export class DocumentGiep {
     file:File;
     hashtag: Array<string>;
     users: Array<User>;
+    usersView: Array<User>;
     history: Array<any>;
     isBloqued: boolean;
     bloquedBy: User;
