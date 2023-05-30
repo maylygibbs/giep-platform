@@ -27,6 +27,11 @@ const routes: Routes = [
         loadChildren: () => import('../projects/projects.module').then(m => m.ProjectsModule),
       },
       {
+        path: 'staexped',
+        loadChildren: () => import('../staexped/staexped.module').then(m => m.StaexpedModule),
+        
+      },
+      {
         path: 'apps',
         loadChildren: () => import('../apps/apps.module').then(m => m.AppsModule)
       },
