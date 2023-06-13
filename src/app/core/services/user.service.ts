@@ -10,7 +10,7 @@ import { SelectOption } from '../models/select-option';
 import { ToastrService } from 'ngx-toastr';
 import { MenuItem } from '../models/menu.model';
 import * as saveAs from 'file-saver';
-
+import { ExpPersonalInformation } from 'src/app/core/models/exp-personal-information';
 
 @Injectable({
   providedIn: 'root'
@@ -428,6 +428,37 @@ export class UserService extends HttpService {
       return null;
     }
   }
+
+
+  
+    /**
+   * Query user by ci
+   * @param ci 
+   * @returns 
+   */
+    async getUserByCi(data:any){
+      let events: Array<any> = new Array<any>();
+        try {
+            const ci = data;
+            const resp = await firstValueFrom(this.get(environment.apiUrl,`/user/info/${ci}`, data));
+            const expPersonalInformation = ExpPersonalInformation.mapFromObject(resp[0]);
+            return expPersonalInformation;
+            //return resp;
+          
+        } catch (error:any) {
+          debugger
+          console.log(error);
+          if (error.status == 409) {
+            this.toastrService.error('',error.msg);
+          }
+          if (error.status != 500) {
+            this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
+          }
+          
+        }
+        
+      //return project;
+    }
 
 }
 

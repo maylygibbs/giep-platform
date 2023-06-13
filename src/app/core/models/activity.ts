@@ -1,7 +1,5 @@
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { User } from './user';
-
-
 export class Activity {
     id: string;
     title: string;
@@ -22,7 +20,6 @@ export class Activity {
         newInstace.hoursActivity = project.hoursActivity;
         return newInstace
     }
-
     public static mapForPost(project: Activity) {
         let projectMap: any = {};
         if (project.id) {
@@ -36,7 +33,6 @@ export class Activity {
         Object.assign(projectMap, { HorasProyecto: project.hoursActivity });
         return projectMap;
     }
-
     public static mapFromObject(projectObj: any) {
         if (!projectObj)
             return;
@@ -50,7 +46,6 @@ export class Activity {
         project.resource = User.mapFromObject(projectObj.recursosAsignado);
         return project;
     }
-
     static loadActivitiesList(activities: Array<any>): Array<Activity> {
         let activitiesList: Array<Activity> = new Array<Activity>();
         activities.forEach(a => {

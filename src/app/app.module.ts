@@ -42,7 +42,7 @@ const config: SocketIoConfig = { url: environment.wsserver, options: {} };
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
   ],
   imports: [
     BrowserModule,
