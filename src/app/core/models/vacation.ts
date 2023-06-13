@@ -43,7 +43,7 @@ export class Vacation {
         Object.assign(areaspecialtiesMap, { periodo_difrute: areaspecialties.enjoy_Period });
         Object.assign(areaspecialtiesMap, { fecha_desde: `${areaspecialties.date_From.year}-${areaspecialties.date_From.month}-${areaspecialties.date_From.day}` });
         Object.assign(areaspecialtiesMap, { fecha_hasta: `${areaspecialties.date_Until.year}-${areaspecialties.date_Until.month}-${areaspecialties.date_Until.day}` });
-        Object.assign(areaspecialtiesMap, { fecha_incorporacion: `${areaspecialties.date_Incorporation.year}-${areaspecialties.date_Incorporation.month}-${areaspecialties.date_Until.day}` });
+        Object.assign(areaspecialtiesMap, { fecha_incorporacion: `${areaspecialties.date_Incorporation.year}-${areaspecialties.date_Incorporation.month}-${areaspecialties.date_Incorporation.day}` });
         return areaspecialtiesMap;
     }
     //Object Map Method

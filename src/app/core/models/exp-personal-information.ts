@@ -15,6 +15,7 @@ export class ExpPersonalInformation {
     sex: string;
     age: number;
     admissionDate: any;
+    //admissionDate: NgbDate;
     elapsedtime: number;
     public static map(exppersonalinformation: ExpPersonalInformation): ExpPersonalInformation {
         const newInstace = new ExpPersonalInformation();
@@ -53,9 +54,9 @@ export class ExpPersonalInformation {
         exppersonalinformation.birthDate = exppersonalinformationObj.birthDate;
         exppersonalinformation.familyBusiness = exppersonalinformationObj.familyBusiness;
         if (exppersonalinformationObj.autorizacion_ingreso.id)
-        exppersonalinformation.familyBusiness = new SelectOption(exppersonalinformationObj.autorizacion_ingreso.id, exppersonalinformationObj.autorizacion_ingreso.nombre);
+        exppersonalinformation.entryAuthorization = new SelectOption(exppersonalinformationObj.autorizacion_ingreso.id, exppersonalinformationObj.autorizacion_ingreso.nombre);
         if (exppersonalinformationObj.familyBusiness.id)
-        exppersonalinformation.entryAuthorization = new SelectOption(exppersonalinformationObj.familyBusiness.id, exppersonalinformationObj.familyBusiness.nombre);
+        exppersonalinformation.familyBusiness = new SelectOption(exppersonalinformationObj.familyBusiness.id, exppersonalinformationObj.familyBusiness.nombre);
         exppersonalinformation.userName = exppersonalinformationObj.userName;
         exppersonalinformation.lastName = exppersonalinformationObj.primerNombre;
         exppersonalinformation.firstName = exppersonalinformationObj.segundoNombre;
@@ -64,8 +65,8 @@ export class ExpPersonalInformation {
         exppersonalinformation.sex = exppersonalinformationObj.sex;
         if (!exppersonalinformation.admissionDate)
            exppersonalinformation.admissionDate = exppersonalinformationObj.admissionDate;
-           const d = new Date(exppersonalinformationObj.admissionDate);
-          exppersonalinformation.admissionDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() + 1};
+           let arr = exppersonalinformationObj.admissionDate.split('-');
+           exppersonalinformation.admissionDate = {year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2])};
         return exppersonalinformation;
     }
 }

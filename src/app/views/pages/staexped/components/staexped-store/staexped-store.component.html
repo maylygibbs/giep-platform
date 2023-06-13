@@ -186,7 +186,7 @@
                            <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
                                 <!-- <button class="btn btn-secondary" (click)="back()">Reset</button> -->
-                                <button (click)="saveStaff()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="saveStaff()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                             </div>
                            </section>
@@ -197,7 +197,7 @@
                         <a ngbNavLink >Estudios Academicos</a>
                         <ng-template ngbNavContent>
                             <div class="row">
-                               <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                               <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputFamilyBusiness" class="form-label required">Profesion  <i class="feather icon-edit-2" (click)="openNewProfession(contenidonew)" placement="start" ngbTooltip="Nuevo"></i></label>
                                     <ng-select id="inputFamilyBusiness" [items]="data.selectedProfession" name="familyBusiness"
@@ -269,7 +269,7 @@
                         <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
                                 <!-- <button class="btn btn-secondary" (click)="back()">Reset</button> -->
-                                <button (click)="saveAcademicstudy()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="saveAcademicstudy()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                             </div>
                         </ng-template>
@@ -279,7 +279,7 @@
                         <a ngbNavLink >Especialidades en Areas</a>
                         <ng-template ngbNavContent>
                             <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputEntryAuthorizationd" class="form-label required">Departamento  <i class="feather icon-edit-2" (click)="openNewdepartment(newdepartment)" placement="start" ngbTooltip="Nuevo"></i></label>
                                     <ng-select id="inputdepartment_idd" [items]="data.selectedDepartment"  name="department_idd"
@@ -294,7 +294,7 @@
                                     </div>
                                 </div>
                             </div> 
-                               <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputFamilyBusiness" class="form-label required">Area  <i class="feather icon-edit-2" (click)="openNewarea(newarea)" placement="start" ngbTooltip="Nuevo"></i></label>
                                     <ng-select id="inputFamilyBusiness" [items]="data.selectedEspcArea" name="familyBusiness"
@@ -339,7 +339,7 @@
                         </div>
                         <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
-                                <button (click)="saveAreaspecialties()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="saveAreaspecialties()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                         </div>
                     </section>
@@ -561,7 +561,7 @@
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="mb-3">
                                         <label for="inputEntryAuthorization" class="form-label required">Departamento  <i class="feather icon-edit-2" (click)="openNewdepartment(newdepartment)" placement="start" ngbTooltip="Nuevo"></i></label>
                                         <ng-select id="inputdepartment_id" [items]="data.selectedDepartment"  name="department_id"
@@ -576,7 +576,7 @@
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="mb-3">
                                         <label for="inputEntryAuthorization" class="form-label required">Area  <i class="feather icon-edit-2" (click)="openNewarea(newarea)" placement="start" ngbTooltip="Nuevo"></i></label>
                                         <ng-select id="inputid_area" [items]="data.selectedArea"  name="id_area"
@@ -609,7 +609,7 @@
                            </div>
                            <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
-                                <button (click)="SaveIncomedocuments()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="SaveIncomedocuments()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                             </div>
                            </section>
@@ -669,7 +669,7 @@
                            </div>
                            <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
-                                <button (click)="saveVariouscontrls()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="saveVariouscontrls()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                             </div>
                            </section>
@@ -680,22 +680,7 @@
                         <a ngbNavLink >Movimientos (Transferencia)</a>
                         <ng-template ngbNavContent>
                             <div class="row">
-                               <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                <div class="mb-3">
-                                    <label for="inputFamilyBusiness" class="form-label required">Region</label>
-                                    <ng-select id="inputFamilyBusiness" [items]="data.selectedRegion" name="familyBusiness"
-                                        #familyBusiness="ngModel"
-                                        [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
-                                        [searchable]="false" (change)="onChangeTransfRegion($event)" 
-                                        [(ngModel)]="mmovtransfers.id_Region" required>
-                                    </ng-select>
-                                    <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="familyBusiness.errors?.required">Campo es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>
-                              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputFamilyBusiness" class="form-label required">Departamento  <i class="feather icon-edit-2" (click)="openNewdepartment(newdepartment)" placement="start" ngbTooltip="Nuevo"></i></label>
                                     <ng-select id="inputFamilyBusiness" [items]="data.selectedDepartment" name="familyBusiness"
@@ -710,7 +695,7 @@
                                     </div>
                                 </div>
                               </div>
-                              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputFamilyBusiness" class="form-label required">Area  <i class="feather icon-edit-2" (click)="openNewarea(newarea)" placement="start" ngbTooltip="Nuevo"></i></label>
                                     <ng-select id="inputFamilyBusiness" [items]="data.selectedAreaTransf" name="familyBusiness"
@@ -718,6 +703,21 @@
                                         [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
                                         [searchable]="false" (change)="onChangeTransfarea($event)" 
                                         [(ngModel)]="mmovtransfers.idArea" required>
+                                    </ng-select>
+                                    <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="familyBusiness.errors?.required">Campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="mb-3">
+                                    <label for="inputFamilyBusiness" class="form-label required">Region</label>
+                                    <ng-select id="inputFamilyBusiness" [items]="data.selectedRegion" name="familyBusiness"
+                                        #familyBusiness="ngModel"
+                                        [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
+                                        [searchable]="false" (change)="onChangeTransfRegion($event)" 
+                                        [(ngModel)]="mmovtransfers.id_Region" required>
                                     </ng-select>
                                     <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
                                         <div *ngIf="familyBusiness.errors?.required">Campo es requerido
@@ -792,7 +792,7 @@
                         </section>
                         <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
-                                <button (click)="saveMovTransf()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="saveMovTransf()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                             </div>
                         </ng-template>
@@ -802,7 +802,7 @@
                         <a ngbNavLink >Movimientos (Promoción)</a>
                         <ng-template ngbNavContent>
                             <div class="row">
-                              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                              <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputFamilyBusiness" class="form-label required">Cargo</label>
                                     <ng-select id="inputFamilyBusiness" [items]="data.positions" name="familyBusiness"
@@ -872,7 +872,7 @@
                         </section>
                          <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
-                                <button (click)="savePromotion()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="savePromotion()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                             </div>
                         </ng-template>
@@ -882,36 +882,6 @@
                         <a ngbNavLink >Movimientos (Vacaciones)</a>
                         <ng-template ngbNavContent>
                            <div class="row">
-                              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                <div class="mb-3">
-                                    <label for="inputFamilyBusiness" class="form-label required">Autorización Vacaciones</label>
-                                    <ng-select id="inputFamilyBusiness" [items]="data.selectedItem" name="familyBusiness"
-                                        #familyBusiness="ngModel"
-                                        [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
-                                        [searchable]="false" 
-                                        [(ngModel)]="vacation.vacation_Authorization" required>
-                                    </ng-select>
-                                    <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="familyBusiness.errors?.required">Campo es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>
-                              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                <div class="mb-3">
-                                    <label for="inputFamilyBusiness" class="form-label required">Tipo Vacaciones  <i class="feather icon-edit-2" (click)="openNewvacationtype(newvacationtype)" placement="start" ngbTooltip="Nuevo"></i></label>
-                                    <ng-select id="inputFamilyBusiness" [items]="data.selectedvacationtype" name="familyBusiness"
-                                        #familyBusiness="ngModel"
-                                        [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
-                                        [searchable]="false"
-                                        [(ngModel)]="vacation.vacation_Type_Id" required>
-                                    </ng-select>
-                                    <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="familyBusiness.errors?.required">Campo es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputAdmissionDate" class="form-label required">Fecha Desde</label>
@@ -966,6 +936,37 @@
                                     </div>
                                 </div>
                             </div>
+                              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="mb-3">
+                                    <label for="inputFamilyBusiness" class="form-label required">Autorización Vacaciones</label>
+                                    <ng-select id="inputFamilyBusiness" [items]="data.selectedItem" name="familyBusiness"
+                                        #familyBusiness="ngModel"
+                                        [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
+                                        [searchable]="false" (change)="onChangeCalcVacation($event)"
+                                        [(ngModel)]="vacation.vacation_Authorization" required>
+                                    </ng-select>
+                                    <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="familyBusiness.errors?.required">Campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="mb-3">
+                                    <label for="inputFamilyBusiness" class="form-label required">Tipo Vacaciones  <i class="feather icon-edit-2" (click)="openNewvacationtype(newvacationtype)" placement="start" ngbTooltip="Nuevo"></i></label>
+                                    <ng-select id="inputFamilyBusiness" [items]="data.selectedvacationtype" name="familyBusiness"
+                                        #familyBusiness="ngModel"
+                                        [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
+                                        [searchable]="false" (change)="onChangeCalcVacation($event)"
+                                        [(ngModel)]="vacation.vacation_Type_Id" required>
+                                    </ng-select>
+                                    <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="familyBusiness.errors?.required">Campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                            
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <div class="mb-3">
                                     <label for="inputCumulative_periods" class="form-label required">Periodos Acumulados</label>
@@ -994,7 +995,7 @@
                             <div class="mb-3">
                                 <label for="inputDocumentNumber" class="form-label required">Tiempo Difrute</label>
                                 <input type="text" name="documentnumber" #documentnumber="ngModel" maxlength="255"
-                                    [(ngModel)]="vacation.enjoy_Period"
+                                    [(ngModel)]="vacation.timeCalculation"
                                     [ngClass]="{'ng-dirty ng-invalid' : documentnumber.errors && ( documentnumber.dirty || documentnumber.touched || staexpedForm.submitted) }"
                                     class="form-control" id="inputDocumentNumber" autocomplete="off" required disabled>
                                 <div *ngIf="documentnumber.invalid && staexpedForm.submitted" class="invalid-feedback">
@@ -1002,6 +1003,20 @@
                                 </div>
                             </div>
                           </div>
+
+                          <div class="col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputobservation" class="form-label required">Observación</label>
+                                <input type="text" name="observation" #observation="ngModel" maxlength="255"
+                                    [(ngModel)]="vacationobservation.observation"
+                                    [ngClass]="{'ng-dirty ng-invalid' : documentnumber.errors && ( documentnumber.dirty || documentnumber.touched || staexpedForm.submitted) }"
+                                    class="form-control" id="observation" autocomplete="off" required>
+                                <div *ngIf="documentnumber.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="documentnumber.errors?.required">Campo es requerido</div>
+                                </div>
+                            </div>
+                          </div>
+
                            </div>
                            <section>
                             <div class="col-sm-12 col-xs-12">
@@ -1077,7 +1092,7 @@
                         </section>
                         <div class="col-md-offset-2 col-md-4">
                             <div class="d-flex align-items-center flex-row">
-                                <button (click)="saveVacation()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                                <button [disabled]="lock" (click)="saveVacation()" class="btn btn-primary ms-2 me-2">Guardar</button>
                             </div>
                             </div>
                         </ng-template>
@@ -1089,11 +1104,47 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <div class="mb-3">
+                                    <label for="inputAdmissionDate" class="form-label required">Fecha Desde</label>
+                                    <div class="input-group">
+                                        <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
+                                        class="form-control" placeholder="yyyy-mm-dd" name="dpdesde"
+                                        [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
+                                        [(ngModel)]="permission.date_From" ngbDatepicker #dpdesde="ngbDatepicker" required>
+                                        <button class="input-group-text" type="button" (click)="dpdesde.toggle()">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                        <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                            <div *ngIf="admissionDate.errors?.required">Campo es requerido
+                                            </div>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="mb-3">
+                                    <label for="inputAdmissionDate" class="form-label required">Fecha Hasta</label>
+                                    <div class="input-group">
+                                        <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
+                                        class="form-control" placeholder="yyyy-mm-dd" name="dphasta"  
+                                        [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
+                                        [(ngModel)]="permission.date_Until" ngbDatepicker #dphasta="ngbDatepicker"  required>
+                                        <button class="input-group-text" type="button" (click)="dphasta.toggle()">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                        <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                            <div *ngIf="admissionDate.errors?.required">Campo es requerido
+                                            </div>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="mb-3">
                                     <label for="inputEntryAuthorization" class="form-label required">Autorizacion Permiso</label>
                                     <ng-select id="inputEntryAuthorization" [items]="data.selectedItem"  name="entryAuthorization"
                                         #entryAuthorization="ngModel"
                                         [ngClass]="{'ng-dirty ng-invalid' : entryAuthorization.errors && ( entryAuthorization.dirty || entryAuthorization.touched || staexpedForm.submitted) }"
-                                        [searchable]="false" (change)="onChangeEntryAuthorization($event)"
+                                        [searchable]="false" (change)="onChangeCalcPermition($event)"
                                         [(ngModel)]="permission.authorization_Permissions" required>
                                     </ng-select>
                                     <div *ngIf="entryAuthorization.invalid && staexpedForm.submitted" class="invalid-feedback">
@@ -1102,13 +1153,25 @@
                                     </div>
                                 </div>
                             </div>
-                          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="mb-3">
+                                    <label for="inputDocumentNumber" class="form-label required">Tiempo Permiso</label>
+                                    <input type="text" name="documentnumber" #documentnumber="ngModel" maxlength="255"
+                                        [(ngModel)]="permission.timeCalculation"
+                                        [ngClass]="{'ng-dirty ng-invalid' : documentnumber.errors && ( documentnumber.dirty || documentnumber.touched || staexpedForm.submitted) }"
+                                        class="form-control" id="inputDocumentNumber" autocomplete="off" required disabled>
+                                    <div *ngIf="documentnumber.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                        <div *ngIf="documentnumber.errors?.required">Campo es requerido</div>
+                                    </div>
+                                </div>
+                           </div>
+                          <div class="col-sm-12 col-xs-12">
                             <div class="mb-3">
                                 <label for="inputFamilyBusiness" class="form-label required">Motivo Permiso  <i class="feather icon-edit-2" (click)="openNewProfession(newpermissiontype)" placement="start" ngbTooltip="Nuevo"></i></label>
                                 <ng-select id="inputFamilyBusiness" [items]="data.selectedReasonPermission" name="familyBusiness"
                                     #familyBusiness="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
-                                    [searchable]="false" (change)="onChangeFamilyBusiness($event)" 
+                                    [searchable]="false" (change)="onChangeCalcPermition($event)"
                                     [(ngModel)]="permission.permission_Reason_Id" required>
                                 </ng-select>
                                 <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
@@ -1117,54 +1180,8 @@
                                 </div>
                             </div>
                           </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputAdmissionDate" class="form-label required">Fecha Desde</label>
-                                <div class="input-group">
-                                    <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
-                                    class="form-control" placeholder="yyyy-mm-dd" name="dpdesde"
-                                    [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
-                                    [(ngModel)]="permission.date_From" ngbDatepicker #dpdesde="ngbDatepicker" required>
-                                    <button class="input-group-text" type="button" (click)="dpdesde.toggle()">
-                                        <i class="feather icon-calendar icon-md text-muted"></i>
-                                    </button>
-                                    <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="admissionDate.errors?.required">Campo es requerido
-                                        </div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputAdmissionDate" class="form-label required">Fecha Hasta</label>
-                                <div class="input-group">
-                                    <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
-                                    class="form-control" placeholder="yyyy-mm-dd" name="dphasta"  
-                                    [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
-                                    [(ngModel)]="permission.date_Until" ngbDatepicker #dphasta="ngbDatepicker"  required>
-                                    <button class="input-group-text" type="button" (click)="dphasta.toggle()">
-                                        <i class="feather icon-calendar icon-md text-muted"></i>
-                                    </button>
-                                    <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="admissionDate.errors?.required">Campo es requerido
-                                        </div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                        </div>
-                      <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputDocumentNumber" class="form-label required">Tiempo Permiso</label>
-                                <input type="text" name="documentnumber" #documentnumber="ngModel" maxlength="255"
-                                    [(ngModel)]="permission.timeCalculation"
-                                    [ngClass]="{'ng-dirty ng-invalid' : documentnumber.errors && ( documentnumber.dirty || documentnumber.touched || staexpedForm.submitted) }"
-                                    class="form-control" id="inputDocumentNumber" autocomplete="off" required disabled>
-                                <div *ngIf="documentnumber.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                    <div *ngIf="documentnumber.errors?.required">Campo es requerido</div>
-                                </div>
-                            </div>
-                       </div>
+                        
+                      
                        </div>
                        <section>
                         <div class="col-sm-12 col-xs-12">
@@ -1221,7 +1238,7 @@
                     <div class="col-md-offset-2 col-md-4">
                         <div class="d-flex align-items-center flex-row">
                             <!-- <button class="btn btn-secondary" (click)="back()">Reset</button> -->
-                            <button (click)="savePermission()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                            <button [disabled]="lock" (click)="savePermission()" class="btn btn-primary ms-2 me-2">Guardar</button>
                         </div>
                         </div>
                     </ng-template>
@@ -1232,12 +1249,48 @@
                     <ng-template ngbNavContent>
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="mb-3">
+                                    <label for="inputAdmissionDate" class="form-label required">Fecha Desde</label>
+                                    <div class="input-group">
+                                        <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
+                                        class="form-control" placeholder="yyyy-mm-dd" name="dpdesderepose"
+                                        [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
+                                        [(ngModel)]="repose.date_From" ngbDatepicker #dpdesderepose="ngbDatepicker" required>
+                                        <button class="input-group-text" type="button" (click)="dpdesderepose.toggle()">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                        <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                            <div *ngIf="admissionDate.errors?.required">Campo es requerido
+                                            </div>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="mb-3">
+                                    <label for="inputAdmissionDate" class="form-label required">Fecha Hasta</label>
+                                    <div class="input-group">
+                                        <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
+                                        class="form-control" placeholder="yyyy-mm-dd" name="dphastarepose" 
+                                        [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
+                                        [(ngModel)]="repose.date_Until" ngbDatepicker #dphastarepose="ngbDatepicker" required>
+                                        <button class="input-group-text" type="button" (click)="dphastarepose.toggle()">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                        <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                            <div *ngIf="admissionDate.errors?.required">Campo es requerido
+                                            </div>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                             <div class="mb-3">
                                 <label for="inputEntryAuthorization" class="form-label required">Tipo Reposo  <i class="feather icon-edit-2" (click)="openNewSleeptype(newsleeptype)" placement="start" ngbTooltip="Nuevo"></i></label>
                                 <ng-select id="inputEntryAuthorization" [items]="data.selectedSleeptypeService"  name="entryAuthorization"
                                     #entryAuthorization="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : entryAuthorization.errors && ( entryAuthorization.dirty || entryAuthorization.touched || staexpedForm.submitted) }"
-                                    [searchable]="false" (change)="onChangeEntryAuthorization($event)"
+                                    [searchable]="false" (change)="onChangeCalcRepose($event)"
                                     [(ngModel)]="repose.id_Tipoposo" required>
                                 </ng-select>
                                 <div *ngIf="entryAuthorization.invalid && staexpedForm.submitted" class="invalid-feedback">
@@ -1246,13 +1299,26 @@
                                 </div>
                             </div>
                         </div>
-                          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputDocumentNumber" class="form-label required">Tiempo Reposo</label>
+                                <input type="text" name="documentnumber" #documentnumber="ngModel" maxlength="255"
+                                    [(ngModel)]="repose.timeCalculation"
+                                    [ngClass]="{'ng-dirty ng-invalid' : documentnumber.errors && ( documentnumber.dirty || documentnumber.touched || staexpedForm.submitted) }"
+                                    class="form-control" id="inputDocumentNumber" autocomplete="off" required disabled>
+                                <div *ngIf="documentnumber.invalid && staexpedForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="documentnumber.errors?.required">Campo es requerido</div>
+                                </div>
+                            </div>
+                       </div>
+
+                          <div class="col-sm-12 col-xs-12">
                             <div class="mb-3">
                                 <label for="inputFamilyBusiness" class="form-label required">Motivo Reposo  <i class="feather icon-edit-2" (click)="openNewReasonres(newreasonrest)" placement="start" ngbTooltip="Nuevo"></i></label>
                                 <ng-select id="inputFamilyBusiness" [items]="data.selectedreasonrest" name="familyBusiness"
                                     #familyBusiness="ngModel"
                                     [ngClass]="{'ng-dirty ng-invalid' : familyBusiness.errors && ( familyBusiness.dirty || familyBusiness.touched || staexpedForm.submitted) }"
-                                    [searchable]="false" (change)="onChangeFamilyBusiness($event)" 
+                                    [searchable]="false" (change)="onChangeCalcRepose($event)"
                                     [(ngModel)]="repose.id_Reason_Rest" required>
                                 </ng-select>
                                 <div *ngIf="familyBusiness.invalid && staexpedForm.submitted" class="invalid-feedback">
@@ -1261,54 +1327,8 @@
                                 </div>
                             </div>
                           </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputAdmissionDate" class="form-label required">Fecha Desde</label>
-                                <div class="input-group">
-                                    <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
-                                    class="form-control" placeholder="yyyy-mm-dd" name="dpdesderepose"
-                                    [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
-                                    [(ngModel)]="repose.date_From" ngbDatepicker #dpdesderepose="ngbDatepicker" required>
-                                    <button class="input-group-text" type="button" (click)="dpdesderepose.toggle()">
-                                        <i class="feather icon-calendar icon-md text-muted"></i>
-                                    </button>
-                                    <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="admissionDate.errors?.required">Campo es requerido
-                                        </div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputAdmissionDate" class="form-label required">Fecha Hasta</label>
-                                <div class="input-group">
-                                    <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
-                                    class="form-control" placeholder="yyyy-mm-dd" name="dphastarepose"
-                                    [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched || staexpedForm.submitted) }"
-                                    [(ngModel)]="repose.date_Until" ngbDatepicker #dphastarepose="ngbDatepicker" required>
-                                    <button class="input-group-text" type="button" (click)="dphastarepose.toggle()">
-                                        <i class="feather icon-calendar icon-md text-muted"></i>
-                                    </button>
-                                    <div *ngIf="admissionDate.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                        <div *ngIf="admissionDate.errors?.required">Campo es requerido
-                                        </div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                        </div>
-                      <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <div class="mb-3">
-                                <label for="inputDocumentNumber" class="form-label required">Tiempo Reposo</label>
-                                <input type="text" name="documentnumber" #documentnumber="ngModel" maxlength="255"
-                                    [(ngModel)]="user.documentNumber"
-                                    [ngClass]="{'ng-dirty ng-invalid' : documentnumber.errors && ( documentnumber.dirty || documentnumber.touched || staexpedForm.submitted) }"
-                                    class="form-control" id="inputDocumentNumber" autocomplete="off" required disabled>
-                                <div *ngIf="documentnumber.invalid && staexpedForm.submitted" class="invalid-feedback">
-                                    <div *ngIf="documentnumber.errors?.required">Campo es requerido</div>
-                                </div>
-                            </div>
-                       </div>
+                        
+                      
                        </div>
                        <section>
                         <div class="col-sm-12 col-xs-12">
@@ -1364,7 +1384,7 @@
                    </section>
                     <div class="col-md-offset-2 col-md-4">
                         <div class="d-flex align-items-center flex-row">
-                            <button (click)="saveRepose()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                            <button [disabled]="lock" (click)="saveRepose()" class="btn btn-primary ms-2 me-2">Guardar</button>
                         </div>
                         </div>
                     </ng-template>
@@ -1408,7 +1428,7 @@
                        <div class="col-md-offset-2 col-md-4">
                         <div class="d-flex align-items-center flex-row">
                             <!-- <button class="btn btn-secondary" (click)="back()">Reset</button> -->
-                            <button (click)="saveEscrow()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                            <button [disabled]="lock" (click)="saveEscrow()" class="btn btn-primary ms-2 me-2">Guardar</button>
                         </div>
                        </div>
                     </ng-template>
@@ -1511,7 +1531,7 @@
                        </div>
                        <div class="col-md-offset-2 col-md-4">
                         <div class="d-flex align-items-center flex-row">
-                            <button (click)="saveSafetyhealth()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                            <button [disabled]="lock" (click)="saveSafetyhealth()" class="btn btn-primary ms-2 me-2">Guardar</button>
                         </div>
                         </div>
                     </ng-template>
@@ -1599,7 +1619,7 @@
                        <div class="col-md-offset-2 col-md-4">
                         <div class="d-flex align-items-center flex-row">
                             <!-- <button class="btn btn-secondary" (click)="back()">Reset</button> -->
-                            <button (click)="saveOthers()" class="btn btn-primary ms-2 me-2">Guardar</button>
+                            <button [disabled]="lock" (click)="saveOthers()" class="btn btn-primary ms-2 me-2">Guardar</button>
                         </div>
                         </div>
                     </ng-template>
@@ -1654,7 +1674,7 @@
                        </div>
                        <div class="modal-footer">
                         <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-                        <button type="button" class="btn btn-success"  (click)="SaveNewProfession()">Guardar!</button> 
+                        <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewProfession()">Guardar!</button> 
                        </div>
                   </ng-template>
                 <!-- ---------**********************---------------->
@@ -1701,7 +1721,7 @@
                     </div>
                     <div class="modal-footer">
                      <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-                     <button type="button" class="btn btn-success"  (click)="SaveNewTypereasonfile()">Guardar!</button> 
+                     <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewTypereasonfile()">Guardar!</button> 
                     </div>
                </ng-template>
              <!-- ---------**********************---------------->
@@ -1748,7 +1768,7 @@
                     </div>
                     <div class="modal-footer">
                      <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-                     <button type="button" class="btn btn-success"  (click)="SaveNewTypereasonfile()">Guardar!</button> 
+                     <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewTypereasonfile()">Guardar!</button> 
                     </div>
                </ng-template>
                <!-- ---------**********************---------------->
@@ -1795,7 +1815,7 @@
                 </div>
                 <div class="modal-footer">
                  <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-                 <button type="button" class="btn btn-success"  (click)="SaveNewPermissiontype()">Guardar!</button> 
+                 <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewPermissiontype()">Guardar!</button> 
                 </div>
            </ng-template>
          <!-- ---------**********************---------------->
@@ -1824,7 +1844,7 @@
                  <table datatable  class="table" id="datatableSleeptype"  name="datatableSleeptype">
                      <thead>
                          <tr>
-                             <th>Tipo Motivo Permisos</th>
+                             <th>Tipo Motivo Reposo</th>
                          </tr>
                      </thead>
                      <tbody>
@@ -1842,7 +1862,7 @@
             </div>
             <div class="modal-footer">
              <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-             <button type="button" class="btn btn-success"  (click)="SaveNewSleeptype()">Guardar!</button> 
+             <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewSleeptype()">Guardar!</button> 
             </div>
        </ng-template>
      <!-- ---------**********************---------------->
@@ -1889,7 +1909,7 @@
             </div>
             <div class="modal-footer">
              <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-             <button type="button" class="btn btn-success"  (click)="SaveNewReasonres()">Guardar!</button> 
+             <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewReasonres()">Guardar!</button> 
             </div>
        </ng-template>
        <!-- ---------**********************---------------->
@@ -1936,7 +1956,7 @@
         </div>
         <div class="modal-footer">
          <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-         <button type="button" class="btn btn-success"  (click)="SaveNewVacationtype()">Guardar!</button> 
+         <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewVacationtype()">Guardar!</button> 
         </div>
    </ng-template>
             <!-- ---------**********************---------------->
@@ -1983,7 +2003,7 @@
                 </div>
                 <div class="modal-footer">
                 <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-                <button type="button" class="btn btn-success"  (click)="SaveNewDepartment()">Guardar!</button> 
+                <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewDepartment()">Guardar!</button> 
                 </div>
             </ng-template>
             <!-- ---------**********************---------------->
@@ -2013,7 +2033,7 @@
                         <label for="inputare" class="form-label required">Area</label>
                         <input type="text" name="are" #are="ngModel" [(ngModel)]="area.area"
                         [ngClass]="{'ng-dirty ng-invalid' : are.errors && ( are.dirty || are.touched || staexpedForm.submitted) }"
-                            class="form-control" id="are" autocomplete="off" minlength="3" maxlength="50" required>
+                            class="form-control" id="are" autocomplete="off" minlength="3" maxlength="100" required>
                             <div *ngIf="are.invalid && staexpedForm.submitted" class="invalid-feedback">
                                 <div *ngIf="are.errors?.required">Campo es requerido
                                 </div>
@@ -2045,7 +2065,7 @@
                 </div>
                 <div class="modal-footer">
                 <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-                <button type="button" class="btn btn-success"  (click)="SaveNewArea()">Guardar!</button> 
+                <button [disabled]="lock" type="button" class="btn btn-success"  (click)="SaveNewArea()">Guardar!</button> 
                 </div>
             </ng-template>
             <!-- ---------**********************---------------->
