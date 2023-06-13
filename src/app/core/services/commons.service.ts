@@ -719,6 +719,21 @@ export class CommonsService extends HttpService {
   }
 
 
+    /**
+* Return list charges type
+* @returns 
+*/
+async getAllAccreditationType(): Promise<Array<SelectOption>> {
+
+  const resp = await firstValueFrom(this.get(environment.apiUrl, '/acreditacion/tipoitem/list'));
+
+  return resp.data.map((item: any) => {
+    return new SelectOption(item.id, item.descripcion);
+  })
+
+}
+
+
 
 
 

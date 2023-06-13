@@ -70,6 +70,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
       this.sectionActive = 0;
     } else {
       this.instrument.questionsByCategory = false;
+      this.instrument.globalsPoints = true;
       this.defaultNavActiveId = 1;
     }
 
@@ -190,10 +191,12 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
 
 
   changeInGlobalsPoints() {
-    if (this.instrument.globalsPoints) {
+    if (!this.instrument.globalsPoints) {
       this.charges = this.data.charges;
+      this.instrument.questionsByCategory = true;
     } else {
-      this.categories = null;
+      this.instrument.questionsByCategory = false;
+      this.charges = null;
     }
   }
 
