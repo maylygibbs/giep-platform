@@ -47,10 +47,14 @@ export class Permission {
         movtransfers.permission_Reason_Id =  new SelectOption(areaspecialtiesObj.motivo.id, areaspecialtiesObj.motivo.nombre);
         movtransfers.date_Fromv = areaspecialtiesObj.idDatosFechaDesde;
         movtransfers.date_Untilv = areaspecialtiesObj.idDatosFechaHasta;
-        const dd = new Date(areaspecialtiesObj.idDatosFechaDesde);
-        movtransfers.date_From = {year: dd.getFullYear(), month: dd.getMonth() + 1, day: dd.getDate() + 1};
-        const dh = new Date(areaspecialtiesObj.idDatosFechaHasta);
-        movtransfers.date_Until = {year: dh.getFullYear(), month: dh.getMonth() + 1, day: dh.getDate() + 1};
+        let arrFechaDesde = areaspecialtiesObj.idDatosFechaDesde.split('-');
+        movtransfers.date_From = {year: parseInt(arrFechaDesde[0]), month: parseInt(arrFechaDesde[1]), day: parseInt(arrFechaDesde[2])};
+        let arrFechaHasta = areaspecialtiesObj.idDatosFechaHasta.split('-');
+        movtransfers.date_Until = {year: parseInt(arrFechaHasta[0]), month: parseInt(arrFechaHasta[1]), day: parseInt(arrFechaHasta[2])};
+        let dateFromrest = new Date(movtransfers.date_From.year+'/'+movtransfers.date_From.month +'/'+movtransfers.date_From.day);
+        let date_Untilrest = new Date(movtransfers.date_Until.year+'/'+movtransfers.date_Until.month +'/'+movtransfers.date_Until.day); 
+        let rest = date_Untilrest.getTime() - dateFromrest.getTime()
+        movtransfers.timeCalculation= Math.round(rest/ (1000*60*60*24)) + 1 ;
         return movtransfers;
     }        
 }

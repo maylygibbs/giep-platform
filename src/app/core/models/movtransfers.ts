@@ -46,8 +46,8 @@ export class Movtransfers {
         movtransfers.department_Id =  new SelectOption(areaspecialtiesObj.departamento.id, areaspecialtiesObj.departamento.nombre);
         movtransfers.transfer_Date = areaspecialtiesObj.Datosfecha_transferencia;
         movtransfers.transfer_Date =areaspecialtiesObj.Datosfecha_transferencia;
-        const d = new Date(areaspecialtiesObj.Datosfecha_transferencia);
-        movtransfers.transfer_Date = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() + 1};
+        let arr = areaspecialtiesObj.Datosfecha_transferencia.split('-');
+        movtransfers.transfer_Date = {year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2])};
         return movtransfers;
     }       
 }

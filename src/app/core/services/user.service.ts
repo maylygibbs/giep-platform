@@ -188,8 +188,13 @@ export class UserService extends HttpService {
     
     user.position = new SelectOption(resp[0].cargo.id, resp[0].cargo.Descripcion);
     user.phones = resp[0].telefonos;
-    let arr = resp[0].fechaNacimiento.split('-');
-    user.birthDate = {year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2])};
+    if (resp[0].fechaNacimiento) {
+      let arr = resp[0].fechaNacimiento.split('-');
+      user.birthDate = {year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2])};
+    }else{
+      const d = new Date(resp[0].fechaNacimiento);
+      user.birthDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+    }
     user.documentType = resp[0].tipoDocumentoIdentidad;
     user.documentNumber = resp[0].numeroDocumento;
     user.roles = resp[0].roles.map((item: any) => {

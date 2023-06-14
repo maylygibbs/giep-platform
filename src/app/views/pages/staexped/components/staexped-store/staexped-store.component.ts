@@ -533,7 +533,7 @@ async professionlist() {
       movtransfers.date_Untilv = u.date_Untilv;
       movtransfers.date_From = u.date_From.year+'-'+u.date_From.month +'-'+u.date_From.day;
       movtransfers.date_Until = u.date_Until.year+'-'+u.date_Until.month +'-'+u.date_Until.day;
-      movtransfers.timeCalculation = 0;
+      movtransfers.timeCalculation = u.timeCalculation;
       return movtransfers;
     });
   }
@@ -556,7 +556,7 @@ async professionlist() {
       movtransfers.date_Untilv = u.date_Untilv;
       movtransfers.date_From = u.date_From.year+'-'+u.date_From.month +'-'+u.date_From.day;
       movtransfers.date_Until = u.date_Until.year+'-'+u.date_Until.month +'-'+u.date_Until.day;
-      movtransfers.timeCalculation = 0;
+      movtransfers.timeCalculation = u.timeCalculation;
       return movtransfers;
     });
   }
@@ -568,6 +568,7 @@ async professionlist() {
   if (verdata2) {
     const events1 = verdata2.map((ac: Vacation, index: number) => {
       this.vacation.idPersonal=ac.idPersonal;
+      
     });
       this.assignedVacation = verdata2.map((u: Vacation, index: number) => {
       const movtransfers = new Vacation();
@@ -580,7 +581,7 @@ async professionlist() {
       movtransfers.date_Incorporationv = u.date_Incorporationv;
       movtransfers.cumulative_Periods = u.cumulative_Periods;
       movtransfers.enjoy_Period = u.enjoy_Period;
-      movtransfers.timeCalculation = 0;
+      movtransfers.timeCalculation= u.timeCalculation;
       return movtransfers;
     });
   }
@@ -766,14 +767,22 @@ async professionlist() {
   //Method Calc day repose
    async onChangeCalcRepose(event: any) {
     if(this.repose.date_From && this.repose.date_Until){
-      this.repose.timeCalculation = ( moment(this.repose.date_Until).diff(moment(this.repose.date_From), 'days'));
+    let date_Fromrest = new Date(this.repose.date_From.year+'/'+this.repose.date_From.month +'/'+this.repose.date_From.day);
+    let date_Untilrest = new Date(this.repose.date_Until.year+'/'+this.repose.date_Until.month +'/'+this.repose.date_Until.day);
+    let rest = date_Untilrest.getTime() - date_Fromrest.getTime()
+    let acm = Math.round(rest/ (1000*60*60*24)) + 1 ;
+     this.repose.timeCalculation = (acm);
     }
    }
    
 //Method Calc day Permition
 async onChangeCalcPermition(event: any) {
   if(this.permission.date_From && this.permission.date_Until){
-    this.permission.timeCalculation = ( moment(this.permission.date_Until).diff(moment(this.permission.date_From), 'days'));
+    let date_Fromrest = new Date(this.permission.date_From.year+'/'+this.permission.date_From.month +'/'+this.permission.date_From.day);
+    let date_Untilrest = new Date(this.permission.date_Until.year+'/'+this.permission.date_Until.month +'/'+this.permission.date_Until.day);
+    let rest = date_Untilrest.getTime() - date_Fromrest.getTime()
+    let acm = Math.round(rest/ (1000*60*60*24)) + 1 ;
+     this.permission.timeCalculation = (acm);
   }
   
 }
@@ -781,12 +790,15 @@ async onChangeCalcPermition(event: any) {
 //Method Calc day Vacation
 async onChangeCalcVacation(event: any) {
   if(this.vacation.date_From && this.vacation.date_Until){
-     this.vacation.timeCalculation = ( moment(this.vacation.date_Until).diff(moment(this.vacation.date_From), 'days'));
+    let date_Fromrest = new Date(this.vacation.date_From.year+'/'+this.vacation.date_From.month +'/'+this.vacation.date_From.day);
+    let date_Untilrest = new Date(this.vacation.date_Until.year+'/'+this.vacation.date_Until.month +'/'+this.vacation.date_Until.day);
+     let rest = date_Untilrest.getTime() - date_Fromrest.getTime()
+    let acm = Math.round(rest/ (1000*60*60*24)) + 1 ;
+     this.vacation.timeCalculation = (acm); 
   }
 }
 
-
-  //Method that verifies change of answers
+ //Method that verifies change of answers
   async onChangeArea(event: any) {
     if(event){
        this.data.selectedArea = await this.areaService.getAreaById(event.value);
@@ -979,8 +991,8 @@ async savePermission() {
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.permission.authorization_Permissions.value || this.permission.permission_Reason_Id.value || this.permission.date_From.value || this.permission.date_Until.value) {
-    let dateFrom =  this.repose.date_From.year+'-'+this.repose.date_From.month +'-'+this.repose.date_From.day;
-    let date_Until =  this.repose.date_Until.year+'-'+this.repose.date_Until.month +'-'+this.repose.date_Until.day;
+    let dateFrom =  this.permission.date_From.year+'-'+this.permission.date_From.month +'-'+this.permission.date_From.day;
+    let date_Until =  this.permission.date_Until.year+'-'+this.permission.date_Until.month +'-'+this.permission.date_Until.day;
     if (this.assignedPermission) { 
       for (var j = 0; j <  this.assignedPermission.length; j++){
         if (this.assignedPermission[j].date_From === dateFrom  && this.assignedPermission[j].date_Until === date_Until && this.assignedPermission[j].authorization_Permissions.id == parseInt(this.permission.authorization_Permissions.value) && this.assignedPermission[j].permission_Reason_Id.id == parseInt(this.permission.permission_Reason_Id.value))  { 
@@ -1068,8 +1080,8 @@ async saveVacation() {
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.vacation.vacation_Authorization || this.vacation.vacation_Type_Id || this.vacation.date_From || this.vacation.date_Until || this.vacation.date_Incorporation || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
-    let dateFrom =  this.repose.date_From.year+'-'+this.repose.date_From.month +'-'+this.repose.date_From.day;
-    let date_Until =  this.repose.date_Until.year+'-'+this.repose.date_Until.month +'-'+this.repose.date_Until.day;
+    let dateFrom =  this.vacation.date_From.year+'-'+this.vacation.date_From.month +'-'+this.vacation.date_From.day;
+    let date_Until =  this.vacation.date_Until.year+'-'+this.vacation.date_Until.month +'-'+this.vacation.date_Until.day;
     if (this.assignedVacation) { 
       for (var j = 0; j <  this.assignedVacation.length; j++){
         if (this.assignedVacation[j].date_From === dateFrom  && this.assignedVacation[j].date_Until === date_Until && this.assignedVacation[j].vacation_Authorization.id == parseInt(this.vacation.vacation_Authorization.value) && this.assignedVacation[j].vacation_Type_Id.id == parseInt(this.vacation.vacation_Type_Id.value))  { 
@@ -1267,19 +1279,6 @@ async SaveIncomedocuments() {
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.incomedocuments.job_Application || this.incomedocuments.curricular_Synthesis) {
-    /* if (this.assignedIncomedocuments) { 
-      for (var j = 0; j <  this.assignedIncomedocuments.length; j++){
-        if (this.assignedIncomedocuments[j].job_Application.id == parseInt(this.incomedocuments.job_Application.value) && this.assignedIncomedocuments[j].curricular_Synthesis.id == parseInt(this.incomedocuments.curricular_Synthesis.value)) {   
-          this.toastrService.error('Verifique el items seleccionado ya existe.'); 
-          this.vald = 0;
-          break;
-        }else{
-          this.vald = 1;
-        }
-      }
-    }else{
-      this.vald = 1;
-    }  */
     if (this.vald==1){
         if (!this.incomedocuments.job_Application.value || !this.incomedocuments.curricular_Synthesis.value) {}
           this.incomedocuments.idPersonal = this.exppersonalinformation.id;
