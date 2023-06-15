@@ -242,6 +242,17 @@ export class CommonsListLevelsResolver implements Resolve<any> {
 }
 
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListAccreditationTypeResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllAccreditationType();
+  }
+}
+
+
 
 
 

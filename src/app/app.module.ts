@@ -26,7 +26,9 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { OnlineStatusModule } from 'ngx-online-status';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
-
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-VE';
+registerLocaleData(localeEs);
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -58,7 +60,8 @@ const config: SocketIoConfig = { url: environment.wsserver, options: {} };
       enableHtml: true,
     }),
     SocketIoModule.forRoot(config),
-    OnlineStatusModule
+    OnlineStatusModule,
+    
   ],
   providers: [
     AuthGuard,

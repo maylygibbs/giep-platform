@@ -48,7 +48,7 @@
                                                         [(ngModel)]="instrument.path"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentPath.errors && ( instrumentPath.dirty || instrumentPath.touched || instrumentForm.submitted) }"
                                                         class="form-control" id="inputInstrumentPath" autocomplete="off"
-                                                        minlength="3" maxlength="300">
+                                                        minlength="3" maxlength="300" readonly>
                                                     <div *ngIf="instrumentPath.invalid && instrumentForm.submitted"
                                                         class="invalid-feedback">
                                                         <div *ngIf="instrumentPath.errors?.required">Campo es requerido
@@ -124,32 +124,15 @@
                                             </div>
                                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
-                                                    <label for="inputBirthDate" class="form-label required">¿Agrupar
-                                                        preguntas por categorías?</label>
-                                                    <div class="mt-2 d-flex align-items-center">
-                                                        <div class="form-check form-switch mb-2">
-                                                            <input type="checkbox" name=byCategory #byCategory="ngModel"
-                                                                [(ngModel)]="instrument.questionsByCategory"
-                                                                (change)="changeQuestionAgrupation()"
-                                                                class="form-check-input" id="formSwitch1"
-                                                                [disabled]="instrument.id && !instrument.isEditable">
-                                                            <label class="form-check-label"
-                                                                for="formSwitch">{{instrument.questionsByCategory ? 'Sí'
-                                                                : 'No'}}</label>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                                <div class="mb-3">
                                                     <label for="inputBirthDate" class="form-label required">¿Puntaje 
-                                                        Generalizado?</label>
+                                                        Generalizado?</label><i
+                                                        class="feather icon-info ms-1" placement="right"
+                                                        ngbTooltip="Indique si el puntaje de las preguntas será el mismo para todos los usuarios candidatos o si se requiere establecer puntos de acuerdo al cargo."></i>
                                                     <div class="mt-2 d-flex align-items-center">
                                                         <div class="form-check form-switch mb-2">
                                                             <input type="checkbox" name=globalsPoints #globalsPoints="ngModel"
                                                                 [(ngModel)]="instrument.globalsPoints"
-                                                                (change)="changeQuestionAgrupation()"
+                                                                (change)="changeInGlobalsPoints()"
                                                                 class="form-check-input" id="formSwitch1"
                                                                 [disabled]="instrument.id && !instrument.isEditable">
                                                             <label class="form-check-label"
@@ -160,6 +143,26 @@
 
                                                 </div>
                                             </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputBirthDate" class="form-label required">¿Agrupar
+                                                        preguntas por categorías?</label>
+                                                    <div class="mt-2 d-flex align-items-center">
+                                                        <div class="form-check form-switch mb-2">
+                                                            <input type="checkbox" name=byCategory #byCategory="ngModel"
+                                                                [(ngModel)]="instrument.questionsByCategory"
+                                                                (change)="changeQuestionAgrupation()"
+                                                                class="form-check-input" id="formSwitch1"
+                                                                [disabled]="(instrument.id && !instrument.isEditable) || !instrument.globalsPoints">
+                                                            <label class="form-check-label"
+                                                                for="formSwitch">{{instrument.questionsByCategory ? 'Sí'
+                                                                : 'No'}}</label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputRoles" class="form-label required">Roles</label>

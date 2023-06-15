@@ -1,0 +1,37 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AccreditationComponent } from './accreditation.component';
+import { CalendarComponent } from './calendar/calendar.component';
+import { CommonsListColorsCalendarResolver, CommonsListUsersEmailsResolver, CommonsListAccreditationTypeResolver } from '../../../core/resolvers/commons.resolver';
+import { PrintAccreditationComponent } from './print-accreditation/print-accreditation.component';
+
+const routes: Routes = [  {
+  path: '',
+  component: AccreditationComponent,
+  children: [
+    {
+      path: '',
+      redirectTo: 'calendar',
+      pathMatch: 'full',
+    },
+    {
+      path: 'calendar',
+      component: CalendarComponent,
+      resolve:{
+        colors: CommonsListColorsCalendarResolver,
+        users: CommonsListUsersEmailsResolver,
+        accreditationType: CommonsListAccreditationTypeResolver
+      }
+    },
+    {
+      path: 'print',
+      component: PrintAccreditationComponent,
+    },
+  ]
+}];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class AccreditationRoutingModule { }

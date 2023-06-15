@@ -182,6 +182,7 @@ export class ResultsComponent extends BaseComponent implements OnInit {
   changeSelectFilter() {
     
     this.instrument = this.data.instruments.filter((item:SelectOption)=>parseInt(item.value) == this.instrumentId)[0];
+    console.log('this.instrument', this.instrument)
     this.loadPage(environment.paginator.default_page);
   }
 
