@@ -502,6 +502,12 @@ export class InstrumentsService extends HttpService {
         });
 
         if(!globalsPoints){
+          if(item.resultado){
+            result.quantityUsers = item.resultado[0].cantidadPersonas
+          }
+        }
+
+        if(!globalsPoints){
           result.tableResult = item.resultado.map((itemData: any) => {
             return {
               competence: itemData.label,

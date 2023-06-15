@@ -2,6 +2,7 @@ import { SelectOption } from './select-option';
 import * as moment from 'moment';
 import { MenuItem } from './menu.model';
 import { EventApi } from '@fullcalendar/core';
+import { AcreditationItem } from './accreditation-item';
 export class EventDetail {
 
     id: string;
@@ -14,7 +15,11 @@ export class EventDetail {
     description:string;
     classNames:string; 
     usersInvited: any[];
+    usersAccredited: any[];
     ownerEvent:string;
+    accreditationRequired:boolean;
+    accreditationItems:Array<AcreditationItem>;
+    urlImg:string;
 
 
 
@@ -26,6 +31,10 @@ export class EventDetail {
         Object.assign(eventOut, {description: eventDetail.description});
         Object.assign(eventOut, {classNames: eventDetail.classNames});
         Object.assign(eventOut, {users: this.getUsers(eventDetail.usersInvited)});
+        Object.assign(eventOut, {acreditacion: eventDetail.accreditationRequired ? 1 : 0});
+        if(eventDetail.accreditationRequired){
+            Object.assign(eventOut, {accreditationItems: eventDetail.accreditationItems.map((item:AcreditationItem)=>{ return {id:item.id, quantity: item.quantity}})});
+        }
         return eventOut;
     }
 

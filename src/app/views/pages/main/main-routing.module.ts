@@ -91,6 +91,10 @@ const routes: Routes = [
         path: 'notifications',
         loadChildren: () => import('../notification/notification.module').then(m => m.NotificationModule),
       },
+      {
+        path: 'accreditations',
+        loadChildren: () => import('../accreditation/accreditation.module').then(m => m.AccreditationModule),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

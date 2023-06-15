@@ -89,7 +89,8 @@
               <ng-select id="inputSex" name="resultType" #resultType="ngModel" (change)="changeSelectFilter()"
                 [searchable]="true" [(ngModel)]="selectedResult" required>
                 <ng-option value="1">Por usuario</ng-option>
-                <ng-option *ngIf="instrument && instrument.globalsPoints" value="0">Global</ng-option>
+                <ng-option *ngIf="(instrument && !instrument.globalsPoints)" value="2">Por dependencia</ng-option>
+                <ng-option *ngIf="(instrument && instrument.globalsPoints) || !instrument" value="0">Global</ng-option>
               </ng-select>
             </div>
           </div>
@@ -163,6 +164,7 @@
                 <p *ngIf="selectedResult==='1' && result.dateResponse" class="text-muted">{{result.dateResponse |
                   date:'yyyy-MM-dd hh:mm a'}}</p>
                 <p *ngIf="selectedResult==='1' && !result.dateResponse" class="text-muted">No participó</p>
+                <p *ngIf="result.quantityUsers" class="text-muted">Muestra de Usuarios: {{result.quantityUsers}}</p>
                 <p *ngIf="result.country" class="text-muted">País: {{result.country}}</p>
                 <p *ngIf="result.state" class="text-muted">Estado: {{result.state}}</p>
                 <p *ngIf="result.city" class="text-muted">Ciudad: {{result.city}}</p>
@@ -202,7 +204,7 @@
                 [legend]="result.optionsChart.legend"></apx-chart>  
               </div>
 
-              <div *ngIf="selectedResult==='1' && result.tableResult" class="card mt-2">
+              <div *ngIf="(selectedResult==='1' || selectedResult==='2')  && result.tableResult" class="card mt-2">
                 <div class="card-body">
                   <table datatable [dtOptions]="dtOptions" class="sampletable">
                     <thead>

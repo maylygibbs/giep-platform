@@ -213,7 +213,9 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="mb-3">
-                                <label for="inputPhone" class="form-label required">Telefono/Cel</label>
+                                <label for="inputPhone" class="form-label required">Telefono/Cel</label><i
+                                class="feather icon-info ms-1" placement="right"
+                                ngbTooltip="Indique el número de contacto del usuario y posterior a esto presione enter para confirmar la entrada del número."></i>
                                 <tag-input [(ngModel)]="user.phones"
                                     name="phone" 
                                     #phone="ngModel" 
