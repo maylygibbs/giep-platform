@@ -43,7 +43,7 @@ export class Vacation {
         Object.assign(areaspecialtiesMap, { periodo_difrute: areaspecialties.enjoy_Period });
         Object.assign(areaspecialtiesMap, { fecha_desde: `${areaspecialties.date_From.year}-${areaspecialties.date_From.month}-${areaspecialties.date_From.day}` });
         Object.assign(areaspecialtiesMap, { fecha_hasta: `${areaspecialties.date_Until.year}-${areaspecialties.date_Until.month}-${areaspecialties.date_Until.day}` });
-        Object.assign(areaspecialtiesMap, { fecha_incorporacion: `${areaspecialties.date_Incorporation.year}-${areaspecialties.date_Incorporation.month}-${areaspecialties.date_Until.day}` });
+        Object.assign(areaspecialtiesMap, { fecha_incorporacion: `${areaspecialties.date_Incorporation.year}-${areaspecialties.date_Incorporation.month}-${areaspecialties.date_Incorporation.day}` });
         return areaspecialtiesMap;
     }
     //Object Map Method
@@ -60,12 +60,16 @@ export class Vacation {
         movtransfers.date_Fromv = areaspecialtiesObj.idDatosFechaDesde;
         movtransfers.date_Untilv = areaspecialtiesObj.idDatosFechaHasta;
         movtransfers.date_Incorporationv = areaspecialtiesObj.idDatosfecha_incorporacion;
-        const dd = new Date(areaspecialtiesObj.idDatosFechaDesde);
-        movtransfers.date_From = {year: dd.getFullYear(), month: dd.getMonth() + 1, day: dd.getDate() + 1};
-        const dh = new Date(areaspecialtiesObj.idDatosFechaHasta);
-        movtransfers.date_Until = {year: dh.getFullYear(), month: dh.getMonth() + 1, day: dh.getDate() + 1};
-        const di = new Date(areaspecialtiesObj.idDatosfecha_incorporacion);
-        movtransfers.date_Incorporation = {year: di.getFullYear(), month: di.getMonth() + 1, day: di.getDate() + 1};
+        let arrFechaDesde = areaspecialtiesObj.idDatosFechaDesde.split('-');
+        movtransfers.date_From = {year: parseInt(arrFechaDesde[0]), month: parseInt(arrFechaDesde[1]), day: parseInt(arrFechaDesde[2])};
+        let arrFechaHasta = areaspecialtiesObj.idDatosFechaHasta.split('-');
+        movtransfers.date_Until = {year: parseInt(arrFechaHasta[0]), month: parseInt(arrFechaHasta[1]), day: parseInt(arrFechaHasta[2])};
+        let dateFromrest = new Date(movtransfers.date_From.year+'/'+movtransfers.date_From.month +'/'+movtransfers.date_From.day);
+        let date_Untilrest = new Date(movtransfers.date_Until.year+'/'+movtransfers.date_Until.month +'/'+movtransfers.date_Until.day); 
+        let rest = date_Untilrest.getTime() - dateFromrest.getTime()
+        movtransfers.timeCalculation= Math.round(rest/ (1000*60*60*24)) + 1 ;
+        let arrFechaIncorporacion = areaspecialtiesObj.idDatosfecha_incorporacion.split('-');
+        movtransfers.date_Incorporation = {year: parseInt(arrFechaIncorporacion[0]), month: parseInt(arrFechaIncorporacion[1]), day: parseInt(arrFechaIncorporacion[2])};
         return movtransfers;
     }        
 }

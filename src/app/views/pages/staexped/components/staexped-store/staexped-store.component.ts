@@ -28,6 +28,9 @@ import { Permissiontype } from 'src/app/core/models/permissiontype';
 import { Sleeptype } from 'src/app/core/models/sleeptype';
 import { Vacationtype } from 'src/app/core/models/vacationtype';
 import { Department } from 'src/app/core/models/department';
+import { Answers } from './../../../../../core/models/answers';
+import { Vacationobservation } from 'src/app/core/models/vacationobservation';
+
 import { NgForm } from '@angular/forms';
 import * as moment from "moment";
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
@@ -55,7 +58,8 @@ import { EscrowService } from '../../../../../core/services/escrow.service';
 import { IncomedocumentsService } from '../../../../../core/services/incomedocuments.service';
 import { TypereasonfileService } from '../../../../../core/services/typereasonfile.service';
 import { SleeptypeService } from 'src/app/core/services/sleeptype.service';
-import { Answers } from './../../../../../core/models/answers';
+import { VacationobservationService } from 'src/app/core/services/vacationobservation.service';
+
 import { ToastrService } from 'ngx-toastr';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Area } from 'src/app/core/models/area';
@@ -89,10 +93,12 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   sleeptype: Sleeptype=new Sleeptype();
   reasonres: Reasonrest=new Reasonrest();
   vacationtype: Vacationtype=new Vacationtype();
+  vacationobservation: Vacationobservation=new Vacationobservation();
   department: Department=new Department();
   area: Area=new Area();
   @Output()
   onBack: EventEmitter<any> = new EventEmitter<any>();
+  lock: boolean = false;
   isLoading = false;
   assignedAcademicstudy: Array<Academicstudy>;
   assignedAreaspecialties: Array<Areaspecialties>;
@@ -114,6 +120,7 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   assignedSleeptype: Array<Sleeptype>;
   assignedReasonrest: Array<Reasonrest>;
   assignedVacationtype: Array<Vacationtype>;
+  assignedVacationobservation: Array<Vacationobservation>;
   assignedDepartment: Array<Department>;
   assignedArea: Array<Area>;
   selectedAutorizacion: Array<SelectOption>;
@@ -129,7 +136,7 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   idSelectedItempermissiondate_from: number =0;
   idSelectedItempermissiondate_until: number =0;
   idSelectedItempermissionpermission_reason_id: number =0;
-  vald: number =0;
+  vald: number =1;
   idonline: number =0;
   environment = environment;
   step:number = 1;
@@ -189,6 +196,8 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
     private incomedocumentsService : IncomedocumentsService,
     private movtransfers: MovtransfersService,
     private typereasonfileService: TypereasonfileService,
+    private vacationobservationService: VacationobservationService,
+    
     
     
     private router: Router) {
@@ -206,6 +215,9 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   }else{
     this.userStatus = this.user.status.value == '1'? true: false;
   }
+  console.log("Datos del usuario");
+  console.log(this.data);
+
   this.answers();
   this.answersci(this.user.documentNumber);
  }
@@ -234,6 +246,23 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
       this.exppersonalinformation.admissionDate=ep.admissionDate;
       this.exppersonalinformation.entryAuthorization=ep.entryAuthorization;
       this.exppersonalinformation.familyBusiness=ep.familyBusiness;
+      
+      this.academicstudylist(); 
+      this.areaspecialtieslist();
+      this.movtransferslist();
+      this.promotionlist();
+      this.permissionlist();
+      this.reposelist();
+      this.vacationlist();
+      this.vacationobservationlist();
+      this.Safetyhealthlist();
+      this.Otherslist();
+      this.Variouscontrolslist();
+      this.Escrowlist();
+      this.Incomedocumentslist();
+   });
+  }
+      this.lock = false;
       this.onChangeTiempo(1);
       this.professionlist();
       this.Typereasonfilelist();
@@ -243,20 +272,7 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
       this.Vacationtypelist();
       this.Departmentlist();
       this.Arealist();
-      this.academicstudylist(); 
-      this.areaspecialtieslist();
-      this.movtransferslist();
-      this.promotionlist();
-      this.permissionlist();
-      this.reposelist();
-      this.vacationlist();
-      this.Safetyhealthlist();
-      this.Otherslist();
-      this.Variouscontrolslist();
-      this.Escrowlist();
-      this.Incomedocumentslist();
-   });
-  }
+      
 }
  //Method Filling in the lists
 async answersconci(ci) {
@@ -271,6 +287,7 @@ async answersconci(ci) {
       this.exppersonalinformation.familyBusiness=ep.familyBusiness;
    });
   }
+  this.lock = false;
 }
 //Method Area List
 async Arealist() {
@@ -288,6 +305,7 @@ async Arealist() {
       return datat;
     });
   }
+  this.lock = false;
 }
 //Method Area
 async onChangeAreaM(event: any) {
@@ -317,6 +335,7 @@ async Departmentlist() {
       return datat;
     });
   }
+  this.lock = false;
 }
 //Method Vacation Type List
 async Vacationtypelist() {
@@ -333,6 +352,7 @@ async Vacationtypelist() {
       return datat;
     });
   }
+  this.lock = false;
 }
 //Method Reason Rest List 
 async Reasonrestlist() {
@@ -349,6 +369,7 @@ async Reasonrestlist() {
       return datat;
     });
   }
+  this.lock = false;
 }
 //Method Sleep Type List 
 async Sleeptypelist() {
@@ -365,6 +386,7 @@ async Sleeptypelist() {
       return datat;
     });
   }
+  this.lock = false;
 }
 //Method Reason Permission List
 async Reasonpermissionlist() {
@@ -381,6 +403,7 @@ async Reasonpermissionlist() {
       return datat;
     });
   }
+  this.lock = false;
 }
 //Method Type Reason File List
 async Typereasonfilelist() {
@@ -397,6 +420,7 @@ async Typereasonfilelist() {
       return datat;
     });
   }
+  this.lock = false;
 }
 //Method Profession List
 async professionlist() {
@@ -413,6 +437,7 @@ async professionlist() {
       return datap;
     });
   }
+  this.lock = false;
 }
 //*********************************************************************************************** */
 //*********************************************************************************************** */
@@ -433,6 +458,7 @@ async professionlist() {
       return academicstudy;
     });
   }
+  this.lock = false;
  }
 //Method Area Specialties List
  async areaspecialtieslist() {
@@ -449,6 +475,7 @@ async professionlist() {
       return areaspecialties;
     });
   }
+  this.lock = false;
  }
 //Method Mov Transfers List 
  async movtransferslist() {
@@ -468,6 +495,7 @@ async professionlist() {
       return movtransfers;
     });
   }
+  this.lock = false;
  }
 //Method Promotion List
  async promotionlist() {
@@ -485,6 +513,7 @@ async professionlist() {
       return movtransfers;
     });
   }
+  this.lock = false;
  }
  //Method Permission List 
  async permissionlist() {
@@ -504,10 +533,11 @@ async professionlist() {
       movtransfers.date_Untilv = u.date_Untilv;
       movtransfers.date_From = u.date_From.year+'-'+u.date_From.month +'-'+u.date_From.day;
       movtransfers.date_Until = u.date_Until.year+'-'+u.date_Until.month +'-'+u.date_Until.day;
-      movtransfers.timeCalculation = 0;
+      movtransfers.timeCalculation = u.timeCalculation;
       return movtransfers;
     });
   }
+  this.lock = false;
  }
  //Method Repose List
  async reposelist() {
@@ -526,10 +556,11 @@ async professionlist() {
       movtransfers.date_Untilv = u.date_Untilv;
       movtransfers.date_From = u.date_From.year+'-'+u.date_From.month +'-'+u.date_From.day;
       movtransfers.date_Until = u.date_Until.year+'-'+u.date_Until.month +'-'+u.date_Until.day;
-      movtransfers.timeCalculation = 0;
+      movtransfers.timeCalculation = u.timeCalculation;
       return movtransfers;
     });
   }
+  this.lock = false;
  }
 //Method Vacation List 
  async vacationlist() {
@@ -537,6 +568,7 @@ async professionlist() {
   if (verdata2) {
     const events1 = verdata2.map((ac: Vacation, index: number) => {
       this.vacation.idPersonal=ac.idPersonal;
+      
     });
       this.assignedVacation = verdata2.map((u: Vacation, index: number) => {
       const movtransfers = new Vacation();
@@ -549,10 +581,30 @@ async professionlist() {
       movtransfers.date_Incorporationv = u.date_Incorporationv;
       movtransfers.cumulative_Periods = u.cumulative_Periods;
       movtransfers.enjoy_Period = u.enjoy_Period;
-      movtransfers.timeCalculation = 0;
+      movtransfers.timeCalculation= u.timeCalculation;
       return movtransfers;
     });
   }
+  this.lock = false;
+ }
+ //Method Vacation Observation List 
+ async vacationobservationlist() {
+  const verdata2= await this.vacationobservationService.getVacationobservationById(this.academicstudy.idPersonal);
+  if (verdata2) {
+    const events1 = verdata2.map((ac: Vacationobservation, index: number) => {
+      this.vacationobservation.id=ac.id;
+      this.vacationobservation.idPersonal=ac.idPersonal;
+      this.vacationobservation.observation=ac.observation;
+    });
+      this.assignedVacationobservation = verdata2.map((u: Vacationobservation, index: number) => {
+      const vacationobservation = new Vacationobservation();
+      vacationobservation.id = u.id;
+      vacationobservation.idPersonal = u.idPersonal;
+      vacationobservation.observation = u.observation;
+      return vacationobservation;
+    });
+  }
+  this.lock = false;
  }
 //Method Safetyhealth List 
  async Safetyhealthlist() {
@@ -582,6 +634,7 @@ async professionlist() {
       return movtransfers;
     });
   }
+  this.lock = false;
  }
 //Method Others List
  async Otherslist() {
@@ -608,6 +661,7 @@ async professionlist() {
       return movtransfers;
     });
   }
+  this.lock = false;
  }
 //Method Various Controls List 
  async Variouscontrolslist() {
@@ -628,6 +682,7 @@ async professionlist() {
       return movtransfers;
     });
   }
+  this.lock = false;
  }
 //Method Escrow List 
  async Escrowlist() {
@@ -646,6 +701,7 @@ async professionlist() {
       return movtransfers;
     });
   }
+  this.lock = false;
  }
 //Method Income Documents List 
  async Incomedocumentslist() {
@@ -695,6 +751,7 @@ async professionlist() {
       return movtransfers;
     });
   }
+  this.lock = false;
  }
   //Method that checks the back
   back() {
@@ -707,7 +764,41 @@ async professionlist() {
     this.idEntryAuthorization= event.value;
     }
    }
-  //Method that verifies change of answers
+  //Method Calc day repose
+   async onChangeCalcRepose(event: any) {
+    if(this.repose.date_From && this.repose.date_Until){
+    let date_Fromrest = new Date(this.repose.date_From.year+'/'+this.repose.date_From.month +'/'+this.repose.date_From.day);
+    let date_Untilrest = new Date(this.repose.date_Until.year+'/'+this.repose.date_Until.month +'/'+this.repose.date_Until.day);
+    let rest = date_Untilrest.getTime() - date_Fromrest.getTime()
+    let acm = Math.round(rest/ (1000*60*60*24)) + 1 ;
+     this.repose.timeCalculation = (acm);
+    }
+   }
+   
+//Method Calc day Permition
+async onChangeCalcPermition(event: any) {
+  if(this.permission.date_From && this.permission.date_Until){
+    let date_Fromrest = new Date(this.permission.date_From.year+'/'+this.permission.date_From.month +'/'+this.permission.date_From.day);
+    let date_Untilrest = new Date(this.permission.date_Until.year+'/'+this.permission.date_Until.month +'/'+this.permission.date_Until.day);
+    let rest = date_Untilrest.getTime() - date_Fromrest.getTime()
+    let acm = Math.round(rest/ (1000*60*60*24)) + 1 ;
+     this.permission.timeCalculation = (acm);
+  }
+  
+}
+
+//Method Calc day Vacation
+async onChangeCalcVacation(event: any) {
+  if(this.vacation.date_From && this.vacation.date_Until){
+    let date_Fromrest = new Date(this.vacation.date_From.year+'/'+this.vacation.date_From.month +'/'+this.vacation.date_From.day);
+    let date_Untilrest = new Date(this.vacation.date_Until.year+'/'+this.vacation.date_Until.month +'/'+this.vacation.date_Until.day);
+     let rest = date_Untilrest.getTime() - date_Fromrest.getTime()
+    let acm = Math.round(rest/ (1000*60*60*24)) + 1 ;
+     this.vacation.timeCalculation = (acm); 
+  }
+}
+
+ //Method that verifies change of answers
   async onChangeArea(event: any) {
     if(event){
        this.data.selectedArea = await this.areaService.getAreaById(event.value);
@@ -748,6 +839,7 @@ async onChangeTiempo(numop) {
   }
 //Method to verify form and persist data save staff
   async saveStaff() {
+    this.lock = true;
     if (this.exppersonalinformation.admissionDate.value || this.exppersonalinformation.entryAuthorization.value || this.exppersonalinformation.familyBusiness.value ){
       this.exppersonalinformation.documentNumber = this.user.documentNumber;
       this.exppersonalinformationService.storeStaff(ExpPersonalInformation.mapForPost(this.exppersonalinformation)).finally(() => 
@@ -757,6 +849,8 @@ async onChangeTiempo(numop) {
   }
 //Method to verify form and persist data save Academicstudy
 async saveAcademicstudy() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.academicstudy.dateGraduated.value || this.academicstudy.idProfesion.value) {
     if (this.assignedAcademicstudy) { 
@@ -790,6 +884,8 @@ async saveAcademicstudy() {
 }
 //Method to verify form and persist data save area specialties
 async saveAreaspecialties() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.areaspecialties.idArea.value) {
     if (this.assignedAreaspecialties) { 
@@ -822,6 +918,8 @@ async saveAreaspecialties() {
 }
 //Method to verify form and persist data save MovTransf
 async saveMovTransf() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.mmovtransfers.idArea.value) {
     if (this.assignedMovtransfers) { 
@@ -855,6 +953,8 @@ async saveMovTransf() {
 }
 //Method to verify form and persist data save promotion
 async savePromotion() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.promotion.idCargo.value || this.promotion.promotion_Date.value) {
     if (this.assignedPromotion) { 
@@ -887,12 +987,15 @@ async savePromotion() {
 }
 //Method to verify form and persist data save permission
 async savePermission() {
+  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.permission.authorization_Permissions.value || this.permission.permission_Reason_Id.value || this.permission.date_From.value || this.permission.date_Until.value) {
+    let dateFrom =  this.permission.date_From.year+'-'+this.permission.date_From.month +'-'+this.permission.date_From.day;
+    let date_Until =  this.permission.date_Until.year+'-'+this.permission.date_Until.month +'-'+this.permission.date_Until.day;
     if (this.assignedPermission) { 
       for (var j = 0; j <  this.assignedPermission.length; j++){
-        if (this.assignedPermission[j].authorization_Permissions.id == parseInt(this.permission.authorization_Permissions.value) && this.assignedPermission[j].permission_Reason_Id.id == parseInt(this.permission.permission_Reason_Id.value)) {   
+        if (this.assignedPermission[j].date_From === dateFrom  && this.assignedPermission[j].date_Until === date_Until && this.assignedPermission[j].authorization_Permissions.id == parseInt(this.permission.authorization_Permissions.value) && this.assignedPermission[j].permission_Reason_Id.id == parseInt(this.permission.permission_Reason_Id.value))  { 
           this.toastrService.error('Verifique el items seleccionado ya existe.'); 
           this.vald = 0;
           break;
@@ -905,9 +1008,9 @@ async savePermission() {
     } 
     if (this.vald==1){
         if (!this.permission.authorization_Permissions.value || !this.permission.permission_Reason_Id.value || !this.permission.date_From.value || !this.permission.date_Until.value) {}
-          let dateFrom =  this.permission.date_From.year+'-'+this.permission.date_From.month +'-'+this.permission.date_From.day;
-          let date_Until =  this.permission.date_Until.year+'-'+this.permission.date_Until.month +'-'+this.permission.date_Until.day;
-          if (date_Until < dateFrom ) { //This checks if time is in the past. If so, 
+          let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
+          let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
+          if (date_Untilc < dateFromc ) { //This checks if time is in the past. If so, 
             this.toastrService.error('No se permiten selección de fechas anteriores verifique fecha hasta.'); 
           }else{
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
@@ -928,14 +1031,19 @@ async savePermission() {
 }
 //Method to verify form and persist data save repose
 async saveRepose() {
+  this.lock = true;
   this.vald = 1;
+  
   if (this.exppersonalinformation.id){
   if (this.repose.id_Tipoposo.value || this.repose.id_Reason_Rest.value || this.repose.date_From.value || this.repose.date_Until.value) {
+    let dateFrom =  this.repose.date_From.year+'-'+this.repose.date_From.month +'-'+this.repose.date_From.day;
+    let date_Until =  this.repose.date_Until.year+'-'+this.repose.date_Until.month +'-'+this.repose.date_Until.day;
     if (this.assignedRepose) { 
       for (var j = 0; j <  this.assignedRepose.length; j++){
-        if (this.assignedRepose[j].id_Tipoposo.id == parseInt(this.repose.id_Tipoposo.value) && this.assignedRepose[j].id_Reason_Rest.id == parseInt(this.repose.id_Reason_Rest.value)) {   
+        if (this.assignedRepose[j].date_From === dateFrom  && this.assignedRepose[j].date_Until === date_Until && this.assignedRepose[j].id_Tipoposo.id == parseInt(this.repose.id_Tipoposo.value) && this.assignedRepose[j].id_Reason_Rest.id == parseInt(this.repose.id_Reason_Rest.value))  { 
           this.toastrService.error('Verifique el items seleccionado ya existe.'); 
           this.vald = 0;
+          this.lock = false;
           break;
         }else{
           this.vald = 1;
@@ -946,9 +1054,9 @@ async saveRepose() {
     } 
     if (this.vald==1){
         if (!this.repose.id_Tipoposo.value || !this.repose.id_Reason_Rest.value || !this.repose.date_From.value || !this.repose.date_Until.value) {}
-        let dateFrom =  this.repose.date_From.year+'-'+this.repose.date_From.month +'-'+this.repose.date_From.day;
-        let date_Until =  this.repose.date_Until.year+'-'+this.repose.date_Until.month +'-'+this.repose.date_Until.day;
-        if (date_Until < dateFrom ) { //This checks if time is in the past. If so, 
+        let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
+        let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
+        if (date_Untilc < dateFromc ) { //This checks if time is in the past. If so, 
           this.toastrService.error('No se permiten selección de fechas anteriores verifique fecha hasta.'); 
         }else{
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
@@ -963,16 +1071,20 @@ async saveRepose() {
  }
 }else{
   this.toastrService.error('Ingrece Datos Personales.'); 
+  this.lock = false;
 }
 }
 //Method to verify form and persist data save vacation
 async saveVacation() {
+  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
-  if (this.vacation.vacation_Authorization.value || this.vacation.vacation_Type_Id.value || this.vacation.date_From.value || this.vacation.date_Until.value || this.vacation.date_Incorporation.value || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
+  if (this.vacation.vacation_Authorization || this.vacation.vacation_Type_Id || this.vacation.date_From || this.vacation.date_Until || this.vacation.date_Incorporation || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
+    let dateFrom =  this.vacation.date_From.year+'-'+this.vacation.date_From.month +'-'+this.vacation.date_From.day;
+    let date_Until =  this.vacation.date_Until.year+'-'+this.vacation.date_Until.month +'-'+this.vacation.date_Until.day;
     if (this.assignedVacation) { 
       for (var j = 0; j <  this.assignedVacation.length; j++){
-        if (this.assignedVacation[j].vacation_Authorization.id == parseInt(this.vacation.vacation_Authorization.value) && this.assignedVacation[j].vacation_Type_Id.id == parseInt(this.vacation.vacation_Type_Id.value)) {   
+        if (this.assignedVacation[j].date_From === dateFrom  && this.assignedVacation[j].date_Until === date_Until && this.assignedVacation[j].vacation_Authorization.id == parseInt(this.vacation.vacation_Authorization.value) && this.assignedVacation[j].vacation_Type_Id.id == parseInt(this.vacation.vacation_Type_Id.value))  { 
           this.toastrService.error('Verifique el items seleccionado ya existe.'); 
           this.vald = 0;
           break;
@@ -986,14 +1098,15 @@ async saveVacation() {
   
     if (this.vald==1){
         if (!this.vacation.vacation_Authorization.value || !this.vacation.vacation_Type_Id.value || !this.vacation.date_From.value || !this.vacation.date_Until.value || !this.vacation.date_Incorporation.value || !this.vacation.enjoy_Period || !this.vacation.cumulative_Periods) {}
-        let dateFrom =  this.vacation.date_From.year+'-'+this.vacation.date_From.month +'-'+this.vacation.date_From.day;
-        let date_Until =  this.vacation.date_Until.year+'-'+this.vacation.date_Until.month +'-'+this.vacation.date_Until.day;
         let date_Incorporation =  this.vacation.date_Incorporation.year+'-'+this.vacation.date_Incorporation.month +'-'+this.vacation.date_Incorporation.day;
-          if (date_Until < dateFrom ) { //This checks if time is in the past. If so, 
-            this.toastrService.error('No se permiten selección de fechas anteriores verifique fecha hasta.'); 
+        let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
+        let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
+        let date_Incorporationc =  moment(date_Incorporation).format("YYYY-MM-DD")
+          if (date_Untilc < dateFromc ) { //This checks if time is in the past. If so, 
+            this.toastrService.error('La fecha hasta es menor a la fecha desde verifique fecha hasta.'); 
           }else{
-            if ( date_Incorporation < date_Until ) { //This checks if time is in the past. If so, 
-              this.toastrService.error('No se permiten selección de fechas anteriores verifique fecha incorporación.'); 
+            if ( date_Incorporationc < date_Untilc ) { //This checks if time is in the past. If so, 
+              this.toastrService.error('La fecha incorporación es menor a la fecha hasta verifique fecha incorporación.'); 
             }else{
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.vacation.idPersonal = this.exppersonalinformation.id;
@@ -1010,12 +1123,24 @@ async saveVacation() {
 
 
  }
+  if (this.vacationobservation.observation){
+    this.lock = true;
+      this.vacationobservation.idPersonal = this.exppersonalinformation.id;
+      this.vacationobservationService.storeVacationobservation(Vacationobservation.mapForPost(this.vacationobservation)).finally(() => 
+       this.vacationobservationlist()
+      );
+  }else{
+    this.lock = false;
+    console.log("Si esta vacio");
+  }
 }else{
   this.toastrService.error('Ingrece Datos Personales.'); 
 }
 }
 //Method to verify form and persist data save safetyhealth
 async saveSafetyhealth() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.safetyhealth.copy_Registration_Delegate.value || this.safetyhealth.delivery_Protection_Equipment.value || this.safetyhealth.metro_Route.value || this.safetyhealth.proof_Safety_Rules.value || this.safetyhealth.record_Occupational_Exams.value || this.safetyhealth.work_Insurance_Analysis.value) {
     if (this.assignedSafetyhealth) { 
@@ -1048,8 +1173,10 @@ async saveSafetyhealth() {
 }
 //Method to verify form and persist data save others
 async saveOthers() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
-  if (this.others.id_Category_Others.value || this.others.labor_Area_Development_Course.value || this.others.legal_Files.value || this.others.reason.value || this.others.service_Area_Oriented_Profession.value) {
+  if (this.others.id_Category_Others.value || this.others.labor_Area_Development_Course.value || this.others.legal_Files.value || this.others.reason.value) {
     if (this.assignedOthers) { 
       for (var j = 0; j <  this.assignedOthers.length; j++){
         if (this.assignedOthers[j].id_Category_Others.id == parseInt(this.others.id_Category_Others.value) && this.assignedOthers[j].labor_Area_Development_Course.id == parseInt(this.others.labor_Area_Development_Course.value) && this.assignedOthers[j].legal_Files.id == parseInt(this.others.legal_Files.value) && this.assignedOthers[j].reason.id == parseInt(this.others.reason.value) && this.assignedOthers[j].service_Area_Oriented_Profession.id == parseInt(this.others.service_Area_Oriented_Profession.value)) {   
@@ -1067,7 +1194,7 @@ async saveOthers() {
       this.vald = 1;
     }
     if (this.vald==1){
-        if (!this.others.id_Category_Others.value || !this.others.labor_Area_Development_Course.value || !this.others.legal_Files.value || !this.others.reason.value || !this.others.service_Area_Oriented_Profession.value) {}
+        if (!this.others.id_Category_Others.value || !this.others.labor_Area_Development_Course.value || !this.others.legal_Files.value || !this.others.reason.value) {}
           this.others.idPersonal = this.exppersonalinformation.id;
           this.othersService.storeOthers(Others.mapForPost(this.others)).finally(() => 
           this.Otherslist()
@@ -1082,6 +1209,8 @@ async saveOthers() {
 }
 //Method to verify form and persist data save various contrls 
 async saveVariouscontrls() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.variouscontrols.enrolled_Ivss.value || this.variouscontrols.internal_Rules.value || this.variouscontrols.shape_Ari.value) {
     if (this.assignedVariouscontrols) { 
@@ -1113,6 +1242,8 @@ async saveVariouscontrls() {
 }
 //Method to verify form and persist data save escrow
 async saveEscrow() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.escrow.annual_Interest_Receipt.value || this.escrow.const_Depos_Prestac_Sociales.value) {
     if (this.assignedEscrow) { 
@@ -1144,21 +1275,10 @@ async saveEscrow() {
 }
 //Method to verify form and persist data save income documents
 async SaveIncomedocuments() {
+  this.lock = true;
+  this.vald = 1;
   if (this.exppersonalinformation.id){
-  if (this.incomedocuments.job_Application.value || this.incomedocuments.curricular_Synthesis.value) {
-    if (this.assignedIncomedocuments) { 
-      for (var j = 0; j <  this.assignedIncomedocuments.length; j++){
-        if (this.assignedIncomedocuments[j].job_Application.id == parseInt(this.incomedocuments.job_Application.value) && this.assignedIncomedocuments[j].curricular_Synthesis.id == parseInt(this.incomedocuments.curricular_Synthesis.value)) {   
-          this.toastrService.error('Verifique el items seleccionado ya existe.'); 
-          this.vald = 0;
-          break;
-        }else{
-          this.vald = 1;
-        }
-      }
-    }else{
-      this.vald = 1;
-    } 
+  if (this.incomedocuments.job_Application || this.incomedocuments.curricular_Synthesis) {
     if (this.vald==1){
         if (!this.incomedocuments.job_Application.value || !this.incomedocuments.curricular_Synthesis.value) {}
           this.incomedocuments.idPersonal = this.exppersonalinformation.id;
@@ -1169,6 +1289,8 @@ async SaveIncomedocuments() {
     }
     this.vald = 0;
  }
+ this.lock = false;
+
 }else{
   this.toastrService.error('Ingrece Datos Personales.'); 
 }
@@ -1248,38 +1370,55 @@ deleteVacation(vacation:Vacation){
 }
 //Method to open new profession 
 async openNewProfession(contenidonew){
-  this.modal.open(contenidonew,{backdropClass:'azul'});
+  this.professionlist().finally(() => 
+      this.modal.open(contenidonew,{backdropClass:'azul'})
+   );
 }
 //Method to open new type reasonfile
 async openNewtypereasonfile(newtypereasonfile){
-   this.modal.open(newtypereasonfile,{backdropClass:'azul'});
+  this.Typereasonfilelist().finally(() => 
+  this.modal.open(newtypereasonfile,{backdropClass:'azul'})
+   );
 }
 //Method to open new permission type 
 async openNewpermissiontype(newpermissiontype){
-  this.modal.open(newpermissiontype,{backdropClass:'azul'});
+  this.Reasonpermissionlist().finally(() => 
+  this.modal.open(newpermissiontype,{backdropClass:'azul'})
+   );
 }
 //Method to open new sleep type
 async openNewSleeptype(newsleeptype){
-  this.modal.open(newsleeptype,{backdropClass:'azul'});
+  this.Sleeptypelist().finally(() => 
+  this.modal.open(newsleeptype,{backdropClass:'azul'})
+   );
 }
 //Method to open new reasonres 
 async openNewReasonres(newsleeptype){
-  this.modal.open(newsleeptype,{backdropClass:'azul'});
+  this.Reasonrestlist().finally(() => 
+  this.modal.open(newsleeptype,{backdropClass:'azul'})
+   );
 }
 //Method to open new vacation type
 async openNewvacationtype(newvacationtype){
-  this.modal.open(newvacationtype,{backdropClass:'azul'});
+  this.Vacationtypelist().finally(() => 
+  this.modal.open(newvacationtype,{backdropClass:'azul'})
+   );
 }
 //Method to open new department
 async openNewdepartment(newdepartment){
-  this.modal.open(newdepartment,{backdropClass:'azul'});
+  this.Departmentlist().finally(() => 
+  this.modal.open(newdepartment,{backdropClass:'azul'})
+   );
 }
 //Method to open new area
 async openNewarea(newarea){
-  this.modal.open(newarea,{backdropClass:'azul'});
+  this.Arealist().finally(() => 
+  this.modal.open(newarea,{backdropClass:'azul'})
+   );
 }
 //Method modal save new profession
 async SaveNewProfession() {
+  this.lock = true;
   if (this.profession.professio) {
     if (this.assignedProfession) { 
       for (var j = 0; j <  this.assignedProfession.length; j++){
@@ -1308,6 +1447,7 @@ async SaveNewProfession() {
 }
 //Method modal save new type reason file 
 async SaveNewTypereasonfile() {
+  this.lock = true;
   if (this.typereasonfile.typeReasonFile) {
     if (this.assignedTypereasonfile) { 
       for (var j = 0; j <  this.assignedTypereasonfile.length; j++){
@@ -1336,6 +1476,7 @@ async SaveNewTypereasonfile() {
 }
 //Method modal save new permission type
 async SaveNewPermissiontype() {
+  this.lock = true;
   if (this.permissiontype.permission) {
     if (this.assignedPermissiontype) { 
       for (var j = 0; j <  this.assignedPermissiontype.length; j++){
@@ -1363,6 +1504,7 @@ async SaveNewPermissiontype() {
 }
 //Method modal save new sleep type
 async SaveNewSleeptype() {
+  this.lock = true;
   if (this.sleeptype.sleepType) {
     if (this.assignedPermissiontype) { 
       for (var j = 0; j <  this.assignedPermissiontype.length; j++){
@@ -1391,6 +1533,7 @@ async SaveNewSleeptype() {
 }
 //Method modal save new reason res
 async SaveNewReasonres() {
+  this.lock = true;
   if (this.reasonres.reasonRest) {
     if (this.assignedReasonrest) { 
       for (var j = 0; j <  this.assignedReasonrest.length; j++){
@@ -1418,6 +1561,7 @@ async SaveNewReasonres() {
 }
 //Method modal save new vacation type
 async SaveNewVacationtype() {
+  this.lock = true;
   if (this.vacationtype.vacationType) {
     if (this.assignedVacationtype) { 
       for (var j = 0; j <  this.assignedVacationtype.length; j++){
@@ -1446,6 +1590,7 @@ async SaveNewVacationtype() {
 }
 //Method modal save new department
 async SaveNewDepartment() {
+  this.lock = true;
   if (this.department.department) {
     if (this.assignedDepartment) { 
       for (var j = 0; j <  this.assignedDepartment.length; j++){
@@ -1463,8 +1608,8 @@ async SaveNewDepartment() {
     if (this.vald==1){
         if (!this.department.department) {}
           this.incomedocuments.idPersonal = this.exppersonalinformation.id;
-          this.departmentService.storeDepartment(Department.mapForPost(this.department)).finally(() => 
-          this.Departmentlist()
+          this.departmentService.storeDepartment(Department.mapForPost(this.department)).finally(() =>
+          this.Departmentlist() 
           );
           this.vald = 0;
     }
@@ -1473,6 +1618,7 @@ async SaveNewDepartment() {
 }
 //Method modal save new area
 async SaveNewArea() {
+  this.lock = true;
   if (this.area.area) {
     if (this.assignedArea) { 
       for (var j = 0; j <  this.assignedArea.length; j++){

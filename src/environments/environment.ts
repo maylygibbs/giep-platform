@@ -11,6 +11,9 @@ export const environment = {
   apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
   apiAuth: 'https://giepboffice.pafar.com.ve/public',
   //wsserver:"http://localhost:81",
+
+
+  
   wsserver:"https://wsplatformstage.pafar.com.ve",
   localstorage:{
     userKey : 'cusr'
