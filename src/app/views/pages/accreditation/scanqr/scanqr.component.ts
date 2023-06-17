@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./scanqr.component.scss']
 })
 export class ScanqrComponent implements OnInit {
+  
 
   constructor() { }
 
