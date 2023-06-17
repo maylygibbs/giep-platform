@@ -14,6 +14,8 @@ import { DROPZONE_CONFIG, DropzoneConfigInterface, DropzoneModule } from 'ngx-dr
 import { DndDirective } from './directives/dnd.directive';
 import { QRCodeModule } from 'angularx-qrcode';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ScanqrComponent } from './scanqr/scanqr.component';
+import { AccreditationDetailComponent } from './accreditation-detail/accreditation-detail.component';
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
   url: 'https://httpbin.org/post',
@@ -37,7 +39,9 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   declarations: [
     AccreditationComponent,
     CalendarComponent,
-    PrintAccreditationComponent
+    PrintAccreditationComponent,
+    ScanqrComponent,
+    AccreditationDetailComponent
   ],
   imports: [
     CommonModule,

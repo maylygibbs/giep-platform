@@ -4,6 +4,8 @@ import { AccreditationComponent } from './accreditation.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CommonsListColorsCalendarResolver, CommonsListUsersEmailsResolver, CommonsListAccreditationTypeResolver } from '../../../core/resolvers/commons.resolver';
 import { PrintAccreditationComponent } from './print-accreditation/print-accreditation.component';
+import { ScanqrComponent } from './scanqr/scanqr.component';
+import { AccreditationDetailComponent } from './accreditation-detail/accreditation-detail.component';
 
 const routes: Routes = [  {
   path: '',
@@ -26,6 +28,14 @@ const routes: Routes = [  {
     {
       path: 'print',
       component: PrintAccreditationComponent,
+    },
+    {
+      path: 'scanqr',
+      component: ScanqrComponent,
+    },
+    {
+      path: 'detail',
+      component: AccreditationDetailComponent,
     },
   ]
 }];
