@@ -16,6 +16,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ScanqrComponent } from './scanqr/scanqr.component';
 import { AccreditationDetailComponent } from './accreditation-detail/accreditation-detail.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -57,7 +58,8 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     SharedModule,
     DropzoneModule, // Ngx-dropzone-wrapper
     QRCodeModule,
-    ColorPickerModule
+    ColorPickerModule,
+    ZXingScannerModule
   ],
   providers: [
     {

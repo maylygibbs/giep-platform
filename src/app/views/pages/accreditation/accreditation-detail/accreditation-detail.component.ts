@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EventDetail } from '../../../../core/models/event-detail';
+import { CalendarService } from '../../../../core/services/calendar.service';
 
 @Component({
   selector: 'app-accreditation-detail',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccreditationDetailComponent implements OnInit {
 
-  constructor() { }
+  data:any
+  eventDetail: EventDetail;
 
-  ngOnInit(): void {
+  constructor(private calendarService: CalendarService) { }
+
+  async ngOnInit() {
+    this.data ={"idEvent":27,"userId":48} //history.state.infoQR;
+    await this.getEventById(this.data.idEvent);
   }
+
+
+    /**
+   * Get event detail by id
+   * @param id 
+   */
+    async getEventById(id: string) {
+      this.eventDetail = await this.calendarService.getEventByIdWithAccreditation(id);
+      console.log('eventDetail', this.eventDetail)
+    }
 
 }

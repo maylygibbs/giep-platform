@@ -183,7 +183,8 @@ export class CalendarService extends HttpService {
             return item.email;
           });
           eventDetail.usersAccredited = item.calendarUsers?.map((user)=>{
-            Object.assign(user,{dataQr: JSON.stringify({idEvent: eventDetail.id, email: user.email, cedula:user.cedula})});
+            debugger
+            Object.assign(user,{dataQr: JSON.stringify({idEvent: eventDetail.id, userId: user.userId})});
             return user;
           });
           eventDetail.ownerEvent = item.ownerEvent === currentUser.email? item.ownerEvent : null;
@@ -193,7 +194,7 @@ export class CalendarService extends HttpService {
               const acreditationItem = new AcreditationItem();
               acreditationItem.id = accItem.idTipo;
               acreditationItem.name = accItem.description;
-              acreditationItem.quantity = accItem.cantidad? accItem.cantidad : 1;
+              acreditationItem.quantity = accItem.Cantidad? accItem.Cantidad : 1;
               acreditationItem.controlName = 'accreditatioType'+index;
               acreditationItem.controlQuantity = 'accreditatioQuantity'+index;
               return acreditationItem;
