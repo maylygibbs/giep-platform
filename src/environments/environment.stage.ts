@@ -1,9 +1,10 @@
 export const environment = {
   production: true,
-  ttl: 18000000,
+  ttl: 28800000,
   name_system: 'GIEP',
   apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
   apiAuth: 'https://bofficegiepstage.pafar.com.ve/public', 
+  appUrl: 'https://platformstage.pafar.com.ve',
   wsserver:"https://wsplatformstage.pafar.com.ve",
   localstorage:{
     userKey : 'cusr'

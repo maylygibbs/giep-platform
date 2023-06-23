@@ -1,0 +1,33 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/scanqr">Lector Código QR</a></li>
+
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12 p-1 text-center">
+                        <span> Encienda la Cámara y presente el Código QR</span>
+                    </div>
+                    <div class="col-lg-12 p-1">
+                        <zxing-scanner [enable]="enableCamera" [formats]="allowedFormats" (scanComplete)="scanCompleteHandler($event)"></zxing-scanner>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary btn-create-dt" (click)="enableCamera = !enableCamera" placement="start" ngbTooltip="Encender Cámara" [disabled]="enableCamera">
+                            <i class="feather icon-play"></i>
+                          </button>
+                          <button type="button" class="btn btn-primary btn-create-dt ms-2" placement="start" (click)="enableCamera = !enableCamera" ngbTooltip="Pausar Cámara" [disabled]="!enableCamera">
+                            <i class="feather icon-pause"></i>
+                          </button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+     </div>
+</div>   

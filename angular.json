@@ -37,7 +37,12 @@
               "src/favicon.ico",
               "src/assets",
               "src/.htaccess",
-              "src/web.config"
+              "src/web.config",
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-scanner-qrcode/wasm/",
+                "output": "./assets/wasm/"
+              }
             ],
             "styles": [
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",

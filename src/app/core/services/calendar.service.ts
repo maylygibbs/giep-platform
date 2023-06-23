@@ -65,7 +65,7 @@ export class CalendarService extends HttpService {
         eventDetail.startHour = moment(item.start).format('HH:mm');
         eventDetail.endHour = moment(item.end).format('HH:mm');
         eventDetail.classNames = classNames;
-        eventDetail.ownerEvent = item.ownerEvent === currentUser.email? item.ownerEvent : null;
+        eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
 
         return eventDetail;
 
@@ -94,9 +94,9 @@ export class CalendarService extends HttpService {
   async storeEvent(event: any, id: any) {
     try {
       !id ? await firstValueFrom(this.post(environment.apiUrl, '/calendario/event', event)) : await firstValueFrom(this.put(environment.apiUrl, `/calendario/event/${id}`, event));
-      this.toastrService.success(!id ? 'El evento fué creado con éxito.': 'El evento fué actualizado con éxito.');
+      this.toastrService.success(!id ? 'El evento fué creado con éxito.' : 'El evento fué actualizado con éxito.');
     } catch (error) {
-      this.toastrService.error(!id ? 'Ha ocurrido un error creando evento.': 'Ha ocurrido un error actualizando evento.');
+      this.toastrService.error(!id ? 'Ha ocurrido un error creando evento.' : 'Ha ocurrido un error actualizando evento.');
     }
   }
 
@@ -139,8 +139,8 @@ export class CalendarService extends HttpService {
         eventDetail.endHour = { hour: parseInt(moment(item.end).format('HH')), minute: parseInt(moment(item.end).format('mm')), second: 0 };
         eventDetail.classNames = classNames;
         eventDetail.usersInvited = item.calendarUsers;
-        eventDetail.ownerEvent = item.ownerEvent === currentUser.email? item.ownerEvent : null;
-        eventDetail.accreditationRequired = item.acreditacion == 1 ? true:false;
+        eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
+        eventDetail.accreditationRequired = item.acreditacion == 1 ? true : false;
         return eventDetail;
 
       });
@@ -154,124 +154,206 @@ export class CalendarService extends HttpService {
 
 
 
-    /**
-   * Get evento by id
-   */
-    async getEventByIdWithAccreditation(id: string): Promise<EventDetail> {
-      const currentUser = this.authService.currentUser;
-      let eventsDetail: Array<EventDetail>;
-      let eventDetail: EventDetail;
-      try {
-        const resp = await firstValueFrom(this.get(environment.apiUrl, `/calendario/event/getone/acreditacion/${id}`));
-        let currentDate = moment(new Date()).startOf('date');
-        eventsDetail = resp.data?.map((item: any) => {
-  
-          const eventPast = moment(item.end).isBefore(currentDate);
-          const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
-          const eventDetail = new EventDetail();
-          eventDetail.id = item.id;
-          eventDetail.title = item.title;
-          eventDetail.start = item.start;
-          eventDetail.end = item.end;
-          eventDetail.description = item.description;
-          const d = new Date(item.start);
-          eventDetail.eventDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
-          eventDetail.startHour = { hour: parseInt(moment(item.start).format('HH')), minute: parseInt(moment(item.start).format('mm')), second: 0 };
-          eventDetail.endHour = { hour: parseInt(moment(item.end).format('HH')), minute: parseInt(moment(item.end).format('mm')), second: 0 };
-          eventDetail.classNames = classNames;
-          eventDetail.usersInvited = item.calendarUsers.map((item:any)=>{
-            return item.email;
-          });
-          eventDetail.usersAccredited = item.calendarUsers;
-          eventDetail.ownerEvent = item.ownerEvent === currentUser.email? item.ownerEvent : null;
-          eventDetail.accreditationRequired = item.acreditacion == 1 ? true:false;
-          if(item.calendarUsers && item.calendarUsers.length>0){
-            eventDetail.accreditationItems = item.calendarUsers[0].accreditationItems.map((accItem:any,index:number)=>{
-              const acreditationItem = new AcreditationItem();
-              acreditationItem.id = accItem.idTipo;
-              acreditationItem.name = accItem.description;
-              acreditationItem.quantity = accItem.cantidad? accItem.cantidad : 1;
-              acreditationItem.controlName = 'accreditatioType'+index;
-              acreditationItem.controlQuantity = 'accreditatioQuantity'+index;
-              return acreditationItem;
-            })
-          };
+  /**
+ * Get evento by id
+ */
+  async getEventByIdWithAccreditation(id: string): Promise<EventDetail> {
+    const currentUser = this.authService.currentUser;
+    let eventsDetail: Array<EventDetail>;
+    let eventDetail: EventDetail;
+    try {
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/calendario/event/getone/acreditacion/${id}`));
+      let currentDate = moment(new Date()).startOf('date');
+      eventsDetail = resp.data?.map((item: any) => {
 
-          return eventDetail;
-  
+        const eventPast = moment(item.end).isBefore(currentDate);
+        const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
+        const eventDetail = new EventDetail();
+        eventDetail.id = item.id;
+        eventDetail.title = item.title;
+        eventDetail.start = item.start;
+        eventDetail.end = item.end;
+        eventDetail.description = item.description;
+        const d = new Date(item.start);
+        eventDetail.eventDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+        eventDetail.startHour = { hour: parseInt(moment(item.start).format('HH')), minute: parseInt(moment(item.start).format('mm')), second: 0 };
+        eventDetail.endHour = { hour: parseInt(moment(item.end).format('HH')), minute: parseInt(moment(item.end).format('mm')), second: 0 };
+        eventDetail.classNames = classNames;
+        eventDetail.usersInvited = item.calendarUsers.map((item: any) => {
+          return item.email;
         });
-        eventDetail = eventsDetail[0];
+        eventDetail.usersAccredited = item.calendarUsers?.map((user) => {
+          
+          Object.assign(user, { dataQr: JSON.stringify({ idEvent: eventDetail.id, userId: user.userId }) });
+          return user;
+        });
+        eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
+        eventDetail.accreditationRequired = item.acreditacion == 1 ? true : false;
+        if (item.calendarUsers && item.calendarUsers.length > 0) {
+          eventDetail.accreditationItems = item.calendarUsers[0].accreditationItems.map((accItem: any, index: number) => {
+            const acreditationItem = new AcreditationItem();
+            acreditationItem.id = accItem.idTipo;
+            acreditationItem.name = accItem.description;
+            acreditationItem.quantity = accItem.Cantidad ? accItem.Cantidad : 1;
+            acreditationItem.controlName = 'accreditatioType' + index;
+            acreditationItem.controlQuantity = 'accreditatioQuantity' + index;
+            return acreditationItem;
+          })
+        };
+
         return eventDetail;
-      } catch (error) {
-        this.toastrService.error('Ha ocurrido un error cargando el evento.');
-        return eventDetail;
-      }
+
+      });
+      eventDetail = eventsDetail[0];
+      return eventDetail;
+    } catch (error) {
+      this.toastrService.error('Ha ocurrido un error cargando el evento.');
+      return eventDetail;
     }
+  }
 
 
 
-    /**
-   * Get events by range
-   * @param startDate 
-   * @param endDate 
+  /**
+ * Get events by range
+ * @param startDate 
+ * @param endDate 
+ * @returns 
+ */
+  async getEventsWithAccreditations(start: string, end: string): Promise<any> {
+    const currentUser = this.authService.currentUser;
+    let events: Array<any> = new Array<any>();
+    let eventsDetail: Array<EventDetail> = new Array<EventDetail>();
+    try {
+      const resp = await firstValueFrom(this.post(environment.apiUrl, `/calendario/event/list/acreditacion`, { start, end }));
+      let currentDate = moment(new Date()).startOf('date');
+      events = resp.data?.map((item: any) => {
+
+        const eventPast = moment(item.end).isBefore(currentDate);
+        const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
+
+
+        return {
+          id: item.id,
+          title: item.title,
+          start: item.start,
+          end: item.end,
+          classNames: classNames,
+          editable: eventPast ? false : true
+        }
+
+      });
+
+      eventsDetail = resp.data?.map((item: any) => {
+
+        const eventPast = moment(item.end).isBefore(currentDate);
+        const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
+        const eventDetail = new EventDetail();
+        eventDetail.id = item.id;
+        eventDetail.title = item.title;
+        eventDetail.start = item.start;
+        eventDetail.end = item.end;
+        eventDetail.description = item.description;
+
+        eventDetail.startHour = moment(item.start).format('HH:mm');
+        eventDetail.endHour = moment(item.end).format('HH:mm');
+        eventDetail.classNames = classNames;
+        eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
+
+        return eventDetail;
+
+      });
+
+      return {
+        events: events,
+        eventsDetail: eventsDetail,
+      };
+
+    } catch (error: any) {
+      if (error.status != 500) {
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      } else {
+        this.toastrService.error('', error.msg);
+      }
+      return null;
+    }
+  }
+
+
+
+  /**
+   * Get user accreditation detail
+   * @param id 
    * @returns 
    */
-    async getEventsWithAccreditations(start: string, end: string): Promise<any> {
-      const currentUser = this.authService.currentUser;
-      let events: Array<any> = new Array<any>();
-      let eventsDetail: Array<EventDetail> = new Array<EventDetail>();
-      try {
-        const resp = await firstValueFrom(this.post(environment.apiUrl, `/calendario/event/list/acreditacion`, { start, end }));
-        let currentDate = moment(new Date()).startOf('date');
-        events = resp.data?.map((item: any) => {
-  
-          const eventPast = moment(item.end).isBefore(currentDate);
-          const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
-  
-  
-          return {
-            id: item.id,
-            title: item.title,
-            start: item.start,
-            end: item.end,
-            classNames: classNames,
-            editable: eventPast ? false : true
-          }
-  
-        });
-  
-        eventsDetail = resp.data?.map((item: any) => {
-  
-          const eventPast = moment(item.end).isBefore(currentDate);
-          const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
-          const eventDetail = new EventDetail();
-          eventDetail.id = item.id;
-          eventDetail.title = item.title;
-          eventDetail.start = item.start;
-          eventDetail.end = item.end;
-          eventDetail.description = item.description;
-  
-          eventDetail.startHour = moment(item.start).format('HH:mm');
-          eventDetail.endHour = moment(item.end).format('HH:mm');
-          eventDetail.classNames = classNames;
-          eventDetail.ownerEvent = item.ownerEvent === currentUser.email? item.ownerEvent : null;
-  
-          return eventDetail;
-  
-        });
-  
-        return {
-          events: events,
-          eventsDetail: eventsDetail,
+  async getUserAccreditationDetail(idEvent: string, userId: string): Promise<EventDetail> {
+    const currentUser = this.authService.currentUser;
+    let eventsDetail: Array<EventDetail>;
+    let eventDetail: EventDetail;
+    try {
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/calendario/event/getone/acreditacion/${idEvent}/user/${userId}`));
+      let currentDate = moment(new Date()).startOf('date');
+      eventsDetail = resp.data?.map((item: any) => {
+
+        const eventPast = moment(item.end).isBefore(currentDate);
+        const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
+        const eventDetail = new EventDetail();
+        eventDetail.id = item.id;
+        eventDetail.title = item.title;
+        eventDetail.start = item.start;
+        eventDetail.end = item.end;
+        eventDetail.description = item.description;
+        const d = new Date(item.start);
+        eventDetail.eventDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+        eventDetail.startHour = { hour: parseInt(moment(item.start).format('HH')), minute: parseInt(moment(item.start).format('mm')), second: 0 };
+        eventDetail.endHour = { hour: parseInt(moment(item.end).format('HH')), minute: parseInt(moment(item.end).format('mm')), second: 0 };
+        eventDetail.classNames = classNames;
+        eventDetail.userInvited = item.calendarUsers;
+
+
+
+        eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
+        eventDetail.accreditationRequired = item.acreditacion == 1 ? true : false;
+        if (item.calendarUsers && item.calendarUsers && item.calendarUsers.accreditationItems && item.calendarUsers.accreditationItems.length > 0) {
+          eventDetail.accreditationItems = item.calendarUsers.accreditationItems.map((accItem: any, index: number) => {
+            const acreditationItem = new AcreditationItem();
+            acreditationItem.idAccreditationItem = accItem.Id;
+            acreditationItem.id = accItem.idTipo;
+            acreditationItem.name = accItem.description;
+            acreditationItem.quantity = accItem.Cantidad ? accItem.Cantidad : 1;
+            acreditationItem.used = accItem.Usado == 1 ? true : false;
+            return acreditationItem;
+          })
         };
-  
-      } catch (error: any) {
-        if (error.status != 500) {
-          this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
-        } else {
-          this.toastrService.error('', error.msg);
+
+        return eventDetail;
+
+      });
+      eventDetail = eventsDetail[0];
+      return eventDetail;
+    } catch (error) {
+      this.toastrService.error('Ha ocurrido un error cargando el evento.');
+      return eventDetail;
+    }
+  }
+
+    /**
+   * Get user accreditation detail
+   * @param id 
+   * @returns 
+   */
+    async consumeAccreditationItem(idAccreditationItem: string): Promise<any> {
+
+      try {
+        const resp = await firstValueFrom(this.put(environment.apiUrl, `/use/item/acreditacion/${idAccreditationItem}`));
+        console.log('consumeAccreditationItem resp', resp)
+        if(resp){
+          this.toastrService.success('El item ha sido marcado como consumido.');
+          return true
         }
-        return null;
+      } catch (error) {
+        this.toastrService.error('Ha ocurrido un error tratando de consumir el item acreditado.');
+        return false;
       }
     }
 

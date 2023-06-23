@@ -14,8 +14,8 @@
                         <div *ngIf="eventDetail" class="d-flex mt-2 align-items-center"><i class="feather icon-calendar me-2"></i><h4>{{eventDetail?.title}}</h4></div>
                         <div *ngIf="eventDetail" class="d-flex align-items-center"><i class="feather icon-clock me-2"></i><h5 class="text-muted">{{eventDetail?.start | date:'MMMM d, y'}}{{' de '+(eventDetail?.start | date: 'hh:mm a')}}{{' a '+(eventDetail?.end | date: 'hh:mm a')}}</h5></div>
                         <div *ngIf="eventDetail" class="d-flex align-items-center"><i class="feather icon-users me-2"></i><h5 class="text-muted">{{eventDetail.usersInvited.length > 0? eventDetail.usersInvited.length +' Invitados': eventDetail.usersInvited.length +' Invitado'}}</h5></div>
-                        <div class="d-flex flex-column mt-4">
-                            <div *ngIf="eventDetail" class="d-flexalign-items-center"><i class="feather icon-clipboard me-2"></i><h5>Detalle</h5></div>
+                        <div class="d-flex flex-column  mt-4">
+                            <div *ngIf="eventDetail" class="d-flex align-items-center"><i class="feather icon-clipboard me-2"></i><h5>Detalle</h5></div>
                             <div *ngIf="eventDetail"><p class="text-muted">{{eventDetail.description}}</p></div>                            
                         </div>                  
                         
@@ -187,92 +187,9 @@
                                         <h5 class="font-weight-bold" [style.font-size.px]="(appearance.textSize-3)" [style.color]="appearance.textColor">{{'CI. '+accreditation.cedula}}</h5>                                        
                                     </div>
                                     <div [class]="appearance.qrPosition">
-                                        <qrcode [elementType]="'img'" [qrdata]="'Your data string'" [colorDark]="appearance.qrColor" [width]="appearance.qrSize" [errorCorrectionLevel]="'M'"></qrcode>
+                                        <qrcode [elementType]="'img'" [qrdata]="accreditation.dataQr" [colorDark]="appearance.qrColor" [width]="appearance.qrSize" [errorCorrectionLevel]="'M'"></qrcode>
                                     </div>
                                 </div>
-                                <!--<div style="page-break-after: always;border:1px red solid;width: 100%;height:29rem;background-image: url('assets/images/arte-acreditacion.png');background-repeat: no-repeat;background-size: 100% auto; background-position:center">
-
-                                </div>-->
-                               <!--<div class="card"
-                                    style="width: 18rem;background-image: url('assets/images/arte-acreditacion.png');background-repeat: no-repeat;background-size: 100% auto; background-position:center">
-                                    <div class="card-body mt-6">
-                                        <h4 class="text-center mt-3 mb-4">&nbsp;</h4>
-                                        <i class="feather icon-gift text-success icon-xxl d-block text-center my-3"
-                                            style="visibility: hidden;"></i>                                        
-                                        <p class="text-muted text-center mb-4 fw-light">&nbsp;</p>
-                                        <h3 class="text-center mt-6 font-weight-bold">{{accreditation.primer_nombre+' '+accreditation.primer_apellido | titlecase}}</h3>
-                                        <h5 class="text-center mb-4 font-weight-bold">{{'CI. '+accreditation.cedula}}</h5>
-                                        
-                                        <table class="mx-auto" style="visibility: hidden;">
-                                            <tr>
-                                                <td><i class="feather icon-check icon-md text-primary me-2"></i></td>
-                                                <td>
-                                                    <p>Accounting dashboard</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-check icon-md text-primary me-2"></i></td>
-                                                <td>
-                                                    <p>Invoicing</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-check icon-md text-primary me-2"></i></td>
-                                                <td>
-                                                    <p>Online payments</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-check icon-md text-primary me-2"></i></td>
-                                                <td>
-                                                    <p>Branded website</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-check icon-md text-primary me-2"></i></td>
-                                                <td>
-                                                    <p>Dedicated account manager</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-x icon-md text-danger me-2"></i></td>
-                                                <td>
-                                                    <p class="text-muted">Premium apps</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-x icon-md text-danger me-2"></i></td>
-                                                <td>
-                                                    <p class="text-muted">Premium apps</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-x icon-md text-danger me-2"></i></td>
-                                                <td>
-                                                    <p class="text-muted">Premium apps</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-x icon-md text-danger me-2"></i></td>
-                                                <td>
-                                                    <p class="text-muted">Premium apps</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-x icon-md text-danger me-2"></i></td>
-                                                <td>
-                                                    <p class="text-muted">Premium apps</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="feather icon-check icon-md text-primary me-2"></i></td>
-                                                <td>
-                                                    <p>Premium apps</p>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>-->
                             </div>
                         </div>
                     </div>
