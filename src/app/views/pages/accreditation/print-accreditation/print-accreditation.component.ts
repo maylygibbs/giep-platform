@@ -64,11 +64,11 @@ export class PrintAccreditationComponent implements OnInit {
 
     this.appearance.qrColor = '#000000';
     this.appearance.qrPosition = 'qrcode-right-button';
-    this.appearance.qrSize = 64;
+    this.appearance.qrSize = 85;
     this.qrColorValue = '#000000';
-    this.qrSizeValue = 64;
+    this.qrSizeValue = 85;
     await this.getEventById(this.idEvent);
-    console.log('eventDetail',this.eventDetail)
+  
   }
 
   /**

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  ttl: 18000000,
+  ttl: 28800000,
   name_system: 'GIEP',
   apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
   apiAuth: 'https://giepboffice.pafar.com.ve/public',

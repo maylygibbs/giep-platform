@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EventDetail } from '../../../../core/models/event-detail';
 import { CalendarService } from '../../../../core/services/calendar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-accreditation-detail',
@@ -12,11 +13,16 @@ export class AccreditationDetailComponent implements OnInit {
   data:any
   eventDetail: EventDetail;
 
-  constructor(private calendarService: CalendarService) { }
+  constructor(private calendarService: CalendarService, private router: Router) { }
 
   async ngOnInit() {
-    this.data ={"idEvent":27,"userId":48} //history.state.infoQR;
-    await this.getEventById(this.data.idEvent);
+    this.data = history.state.infoQR;
+    if(this.data){
+      await this.getEventById(this.data.idEvent, this.data.userId);
+    }else{
+      this.router.navigate(['/accreditations/scanqr'])
+    }
+    
   }
 
 
@@ -24,9 +30,14 @@ export class AccreditationDetailComponent implements OnInit {
    * Get event detail by id
    * @param id 
    */
-    async getEventById(id: string) {
-      this.eventDetail = await this.calendarService.getEventByIdWithAccreditation(id);
+    async getEventById(idEvent: string, userId:string) {
+      this.eventDetail = await this.calendarService.getUserAccreditationDetail(idEvent, userId);
       console.log('eventDetail', this.eventDetail)
+    }
+
+    async consumeAccreditationItem(idAccreditationItem:string){
+      await this.calendarService.consumeAccreditationItem(idAccreditationItem);
+      await this.getEventById(this.data.idEvent, this.data.userId);   
     }
 
 }

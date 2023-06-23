@@ -15,6 +15,7 @@ export class EventDetail {
     description:string;
     classNames:string; 
     usersInvited: any[];
+    userInvited: any;
     usersAccredited: any[];
     ownerEvent:string;
     accreditationRequired:boolean;

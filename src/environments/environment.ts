@@ -5,11 +5,11 @@
 export const environment = {
   production: false,
   name_system: 'GIEP',
-  ttl: 18000000,
-  //apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
-  //apiAuth: 'https://bofficegiepstage.pafar.com.ve/public', 
-  apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
-  apiAuth: 'https://giepboffice.pafar.com.ve/public',
+  ttl: 28800000,
+  apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
+  apiAuth: 'https://bofficegiepstage.pafar.com.ve/public', 
+  //apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
+  //apiAuth: 'https://giepboffice.pafar.com.ve/public',
   appUrl: 'http://localhost:4200',  
   wsserver:"https://wsplatformstage.pafar.com.ve",
   localstorage:{
