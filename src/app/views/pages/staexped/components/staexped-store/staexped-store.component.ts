@@ -8,6 +8,7 @@ import { CommonsService } from './../../../../../core/services/commons.service';
 import { UserService } from './../../../../../core/services/user.service';
 import { ExppersonalinformationService } from '../../../../../core/services/exppersonalinformation';
 import { User } from './../../../../../core/models/user';
+import * as saveAs from 'file-saver';
 import { ExpPersonalInformation } from './../../../../../core/models/exp-personal-information'
 import { Academicstudy } from './../../../../../core/models/academicstudy'
 import { Areaspecialties } from 'src/app/core/models/areaspecialties';
@@ -99,6 +100,7 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   @Output()
   onBack: EventEmitter<any> = new EventEmitter<any>();
   lock: boolean = false;
+  lockReports: boolean = false;
   isLoading = false;
   assignedAcademicstudy: Array<Academicstudy>;
   assignedAreaspecialties: Array<Areaspecialties>;
@@ -137,6 +139,7 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   idSelectedItempermissiondate_until: number =0;
   idSelectedItempermissionpermission_reason_id: number =0;
   vald: number =1;
+  tiprepots: number =1;
   idonline: number =0;
   environment = environment;
   step:number = 1;
@@ -215,6 +218,16 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   }else{
     this.userStatus = this.user.status.value == '1'? true: false;
   }
+
+   const info = localStorage.getItem('arrayUsersRepots');
+    if (info=='"true"') {
+      this.lockReports=true;
+    }else{
+      this.lockReports=false;
+    }
+    console.log("Ves reportes");
+    console.log(info);
+
   console.log("Datos del usuario");
   console.log(this.data);
 
@@ -509,7 +522,7 @@ async professionlist() {
       movtransfers.id = u.id;
       movtransfers.idPersonal = u.idPersonal;
       movtransfers.idCargo = u.idCargo;
-      movtransfers.promotion_Date = u.promotion_Date.year+'-'+u.promotion_Date.month +'-'+u.promotion_Date.day;
+      movtransfers.promotion_Date = u.promotion_Datev;
       return movtransfers;
     });
   }
@@ -1644,4 +1657,24 @@ async SaveNewArea() {
     this.vald = 0;
  }
 }
+
+async validReports(event: number) {
+    this.tiprepots = event;
+}
+
+async repotsImp() {
+  if (this.tiprepots==1){
+    this.lock = true;
+    const resp = await this.exppersonalinformationService.reports(this.tiprepots);
+    if (resp) {
+        let file = this.convertBase64ToFile(resp.file, resp.title);
+        saveAs(file, resp.title + '.' + resp.extension);
+    }
+      this.lock = false;
+  }else{
+   //customizado
+   this.toastrService.error('Reporte en construcción estamos trabajando gracias.'); 
+  }
+}
+
 }

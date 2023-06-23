@@ -1623,7 +1623,47 @@
                         </div>
                         </div>
                     </ng-template>
-                </li>       
+                </li>    
+                
+                <!---------------------- REPORTES ----------------->
+                
+                <li [ngbNavItem]="14">
+                    <a ngbNavLink >Reportes</a>
+                    <ng-template ngbNavContent>
+                       <div class="row">
+                            
+                        <label for="inputBirthDate" class="form-label required">Tipos de Reportes</label>
+                        
+                        <div class="mt-2 d-flex align-items-center">
+                            
+                            <div class="form-check mb-2">
+                                <input type="radio" (change)="validReports(1)" class="form-check-input" name="byCategory" value="false" checked>
+                                <label class="form-check-label">
+                                    <h6></h6>
+                                    Reporte General
+                                </label>
+                            </div>
+                            <div class="form-check mb-2 mx-3">
+                                <input type="radio" (change)="validReports(2)" class="form-check-input" name="byCategory" value="true">
+                                <label class="form-check-label">
+                                    <h5></h5>
+                                    Reporte Customizado
+                                </label>
+                            </div>
+                        </div>
+                       </div>
+                       <div *ngIf="lockReports==true"> 
+                       <div class="col-md-offset-2 col-md-4">
+                        <div class="d-flex align-items-center flex-row">
+                            <button [disabled]="lock" (click)="repotsImp()" class="btn btn-primary ms-2 me-2">Reporte</button>
+                        </div>
+                        </div>
+                    </div>
+                    </ng-template>
+                </li>    
+                
+
+                <!---------------------- REPORTES ----------------->
                 </ul>
                 <div [ngbNavOutlet]="defaultNav" class="border border-top-0 p-3"></div>
                 <div class="row">
@@ -1631,6 +1671,14 @@
                         <button class="btn btn-secondary" (click)="back()">Cancelar</button>
                     </div>
                 </div>
+
+                
+
+
+
+
+
+                
                 <!-- --------- modal new profession-------- -->
                 <ng-template class="flex w-full flex-wrap pb-16" #contenidonew let-modal>
                        <div class="modal-header">
