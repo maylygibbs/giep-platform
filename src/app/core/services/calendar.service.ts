@@ -185,6 +185,7 @@ export class CalendarService extends HttpService {
         eventDetail.usersAccredited = item.calendarUsers?.map((user) => {
           
           Object.assign(user, { dataQr: JSON.stringify({ idEvent: eventDetail.id, userId: user.userId }) });
+          Object.assign(user, { fullName: `${user.primer_nombre} ${user.primer_apellido} (${user.email})`  });
           return user;
         });
         eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;

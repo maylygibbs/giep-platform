@@ -46,6 +46,8 @@ export class PrintAccreditationComponent implements OnInit {
 
   quantityCard:string;
 
+  selectedUsersAccredited:any;
+
   constructor(private route: ActivatedRoute,
     private calendarService: CalendarService,
     private toastrService: ToastrService) {
@@ -74,8 +76,14 @@ export class PrintAccreditationComponent implements OnInit {
   /**
    * Generate accreditations
    */
-  async generateAccreditations(){   
-    this.accreditations = this.eventDetail.usersAccredited;
+  async generateAccreditations(){  
+    if(this.selectedUsersAccredited && this.selectedUsersAccredited.length>0) 
+    this.accreditations = this.eventDetail.usersAccredited.filter((user)=>{
+      return this.selectedUsersAccredited.includes(user.userId);
+    });
+    else{
+      this.accreditations = this.eventDetail.usersAccredited;
+    }
   }
 
   /**
@@ -190,6 +198,19 @@ export class PrintAccreditationComponent implements OnInit {
     this.requestQrSizeValue = setTimeout(() => {
       this.appearance.qrSize= this.qrSizeValue;
     }, 300);
+  }
+
+  onChangeSelectUsera(){
+    if(this.accreditations){
+      if(this.selectedUsersAccredited && this.selectedUsersAccredited.length>0) 
+        this.accreditations = this.eventDetail.usersAccredited.filter((user)=>{
+          return this.selectedUsersAccredited.includes(user.userId);
+        });
+      else{
+        this.accreditations = this.eventDetail.usersAccredited;
+      }
+    }
+
   }
 
 }
