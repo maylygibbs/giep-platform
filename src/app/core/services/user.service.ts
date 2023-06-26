@@ -57,6 +57,23 @@ export class UserService extends HttpService {
     user.roles = resp[0].roles.map((itemRol: any) => {
       return itemRol.rol;
     })
+
+    var datauserresorce ='';
+    var repotsAct = resp[0].roles.filter((item) => item.rol == 'ROLE_STAEXPED_REPORTS');
+    console.log("TIENES PERMISOS PARA REPORTES");
+    console.log(repotsAct);
+
+    if (repotsAct.length != 0) {
+      datauserresorce='true';
+    }else{
+      datauserresorce='false';
+    }
+    console.log("TIENES PERMISOS PARA REPORTES fin");
+    console.log(datauserresorce);
+
+    const jsonData = JSON.stringify(datauserresorce) 
+    localStorage.setItem('arrayUsersRepots', jsonData)
+
     user.instrumentsPending = resp[0].instrumentosPendientes && resp[0].instrumentosPendientes.length > 0 ? resp[0].instrumentosPendientes : null;
     this.instruments.next(user.instrumentsPending);
     user.sex = resp[0].sexo

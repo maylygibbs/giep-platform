@@ -17,6 +17,9 @@ export class ExpPersonalInformation {
     admissionDate: any;
     //admissionDate: NgbDate;
     elapsedtime: number;
+    reporttype: number;
+    
+
     public static map(exppersonalinformation: ExpPersonalInformation): ExpPersonalInformation {
         const newInstace = new ExpPersonalInformation();
         newInstace.id = exppersonalinformation.id;
@@ -44,6 +47,22 @@ export class ExpPersonalInformation {
         Object.assign(exppersonalinformationMap, { familiar_empresa: `${exppersonalinformation.familyBusiness.value}` });
         return exppersonalinformationMap;
     }
+
+     //Variable Mapping Method
+     public static mapForPostRepots(exppersonalinformation: ExpPersonalInformation) {
+        let exppersonalinformationMap: any = {};
+        if (exppersonalinformation.reporttype) {
+            Object.assign(exppersonalinformationMap, { tiporeporte: exppersonalinformation.reporttype})
+        }
+        Object.assign(exppersonalinformationMap, { users: exppersonalinformation.documentNumber });
+        
+        return exppersonalinformationMap;
+    }
+
+
+    
+
+
     //Object Map Method
     public static mapFromObject(exppersonalinformationObj: any) {
         if (!exppersonalinformationObj)

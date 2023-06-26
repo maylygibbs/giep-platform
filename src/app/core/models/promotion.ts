@@ -7,6 +7,7 @@ export class Promotion {
     idPersonal: number;
     idCargo: SelectOption;
     promotion_Date: any;
+    promotion_Datev: any;
   
   public static map(promotion: Promotion): Promotion {
         const newInstace = new Promotion();
@@ -36,6 +37,7 @@ export class Promotion {
         movtransfers.id = areaspecialtiesObj.id;
         movtransfers.idPersonal = areaspecialtiesObj.idDatosPersonales;
         movtransfers.idCargo =  new SelectOption(areaspecialtiesObj.cargo.id, areaspecialtiesObj.cargo.nombre);
+        movtransfers.promotion_Datev = areaspecialtiesObj.idDatosFechaPromocion;
         const d = new Date(areaspecialtiesObj.idDatosFechaPromocion);
         movtransfers.promotion_Date = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() + 1};
         return movtransfers;
