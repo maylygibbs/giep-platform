@@ -893,8 +893,7 @@ async saveAcademicstudy() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.academicstudy.dateGraduated){}
-        if (!this.academicstudy.idProfesion.value){}
+        if (this.academicstudy.idProfesion && this.academicstudy.dateGraduated) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.academicstudy.idPersonal = this.exppersonalinformation.id;
           this.academicstudy.idPersonal = this.idonline;
@@ -902,6 +901,10 @@ async saveAcademicstudy() {
           this.academicstudylist()
           );
           this.vald = 0;
+       }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -929,13 +932,17 @@ async saveAreaspecialties() {
     } 
   
     if (this.vald==1){
-        if (!this.areaspecialties.idArea.value){}
+      if (this.areaspecialties.idArea) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.areaspecialties.idPersonal = this.exppersonalinformation.id;
           this.areaspecialtiesService.storeAreaspecialties(Areaspecialties.mapForPost(this.areaspecialties)).finally(() => 
           this.areaspecialtieslist()
           );
           this.vald = 0;
+       }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -964,13 +971,17 @@ async saveMovTransf() {
     } 
   
     if (this.vald==1){
-        if (!this.mmovtransfers.idArea.value){}
+      if (this.mmovtransfers.department_Id && this.mmovtransfers.idArea && this.mmovtransfers.id_Region && this.mmovtransfers.transfer_Date) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.mmovtransfers.idPersonal = this.exppersonalinformation.id;
           this.movtransfersService.storeMovtransfers(Movtransfers.mapForPost(this.mmovtransfers)).finally(() => 
           this.movtransferslist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -998,13 +1009,17 @@ async savePromotion() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.promotion.idCargo.value || !this.promotion.promotion_Date.value) {}
+      if (this.promotion.idCargo && this.promotion.promotion_Date) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.promotion.idPersonal = this.exppersonalinformation.id;
           this.promotionservice.storePromotion(Promotion.mapForPost(this.promotion)).finally(() => 
           this.promotionlist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -1034,7 +1049,7 @@ async savePermission() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.permission.authorization_Permissions.value || !this.permission.permission_Reason_Id.value || !this.permission.date_From.value || !this.permission.date_Until.value) {}
+      if (this.permission.authorization_Permissions && this.permission.permission_Reason_Id && this.permission.date_From && this.permission.date_Until) {
           let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
           let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
           if (date_Untilc < dateFromc ) { //This checks if time is in the past. If so, 
@@ -1047,8 +1062,12 @@ async savePermission() {
           );
 
           this.vald = 0;
-
+          }
+        }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
       }
+
     }
     this.vald = 0;
  }
@@ -1079,7 +1098,7 @@ async saveRepose() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.repose.id_Tipoposo.value || !this.repose.id_Reason_Rest.value || !this.repose.date_From.value || !this.repose.date_Until.value) {}
+      if (this.repose.id_Tipoposo && this.repose.id_Reason_Rest && this.repose.date_From && this.repose.date_Until) {
         let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
         let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
         if (date_Untilc < dateFromc ) { //This checks if time is in the past. If so, 
@@ -1092,6 +1111,11 @@ async saveRepose() {
           );
           this.vald = 0;
        }
+    }else{
+        this.lock = false;
+        this.toastrService.error('Faltan datos verifique.'); 
+    }
+
     }
     this.vald = 0;
  }
@@ -1103,8 +1127,20 @@ async saveRepose() {
 //Method to verify form and persist data save vacation
 async saveVacation() {
   this.vald = 1;
+
+  if (this.vacationobservation.observation){
+    this.lock = true;
+      this.vacationobservation.idPersonal = this.exppersonalinformation.id;
+      this.vacationobservationService.storeVacationobservation(Vacationobservation.mapForPost(this.vacationobservation)).finally(() => 
+       this.vacationobservationlist()
+      );
+  }else{
+    this.lock = false;
+    console.log("Si esta vacio");
+  }
+
   if (this.exppersonalinformation.id){
-  if (this.vacation.vacation_Authorization || this.vacation.vacation_Type_Id || this.vacation.date_From || this.vacation.date_Until || this.vacation.date_Incorporation || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
+  if (this.vacation.vacation_Authorization || this.vacation.vacation_Type_Id || this.vacation.date_From.value || this.vacation.date_Until.value || this.vacation.date_Incorporation.value || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
     this.lock = true;
     let dateFrom =  this.vacation.date_From.year+'-'+this.vacation.date_From.month +'-'+this.vacation.date_From.day;
     let date_Until =  this.vacation.date_Until.year+'-'+this.vacation.date_Until.month +'-'+this.vacation.date_Until.day;
@@ -1123,7 +1159,7 @@ async saveVacation() {
     } 
   
     if (this.vald==1){
-        if (!this.vacation.vacation_Authorization.value || !this.vacation.vacation_Type_Id.value || !this.vacation.date_From.value || !this.vacation.date_Until.value || !this.vacation.date_Incorporation.value || !this.vacation.enjoy_Period || !this.vacation.cumulative_Periods) {}
+      if (this.vacation.vacation_Authorization && this.vacation.vacation_Type_Id && this.vacation.date_From && this.vacation.date_Until && this.vacation.date_Incorporation && this.vacation.enjoy_Period && this.vacation.cumulative_Periods) {
         let date_Incorporation =  this.vacation.date_Incorporation.year+'-'+this.vacation.date_Incorporation.month +'-'+this.vacation.date_Incorporation.day;
         let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
         let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
@@ -1143,22 +1179,18 @@ async saveVacation() {
           this.vald = 0;
       }
      }
+    }else{
+      this.lock = false;
+      this.toastrService.error('Faltan datos verifique.'); 
+    }
+
     }
     this.vald = 0;
 
 
 
  }
-  if (this.vacationobservation.observation){
-    this.lock = true;
-      this.vacationobservation.idPersonal = this.exppersonalinformation.id;
-      this.vacationobservationService.storeVacationobservation(Vacationobservation.mapForPost(this.vacationobservation)).finally(() => 
-       this.vacationobservationlist()
-      );
-  }else{
-    this.lock = false;
-    console.log("Si esta vacio");
-  }
+  
 }else{
   this.toastrService.error('Ingrece Datos Personales.'); 
 }
@@ -1184,12 +1216,18 @@ async saveSafetyhealth() {
     } 
   
     if (this.vald==1){
-        if (!this.safetyhealth.copy_Registration_Delegate.value || !this.safetyhealth.delivery_Protection_Equipment.value || !this.safetyhealth.metro_Route.value || !this.safetyhealth.proof_Safety_Rules.value || !this.safetyhealth.record_Occupational_Exams.value || !this.safetyhealth.work_Insurance_Analysis.value) {}
+      if (this.safetyhealth.copy_Registration_Delegate && this.safetyhealth.delivery_Protection_Equipment && this.safetyhealth.metro_Route && this.safetyhealth.proof_Safety_Rules && this.safetyhealth.record_Occupational_Exams && this.safetyhealth.work_Insurance_Analysis) {
+
           this.safetyhealth.idPersonal = this.exppersonalinformation.id;
           this.safetyhealthService.storeSafetyhealth(Safetyhealth.mapForPost(this.safetyhealth)).finally(() => 
           this.Safetyhealthlist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
+
     }
     this.vald = 0;
  }
@@ -1220,12 +1258,16 @@ async saveOthers() {
       this.vald = 1;
     }
     if (this.vald==1){
-        if (!this.others.id_Category_Others.value || !this.others.labor_Area_Development_Course.value || !this.others.legal_Files.value || !this.others.reason.value) {}
+      if (this.others.id_Category_Others && this.others.labor_Area_Development_Course && this.others.legal_Files && this.others.reason) {
           this.others.idPersonal = this.exppersonalinformation.id;
           this.othersService.storeOthers(Others.mapForPost(this.others)).finally(() => 
           this.Otherslist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -1253,12 +1295,17 @@ async saveVariouscontrls() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.variouscontrols.enrolled_Ivss.value || !this.variouscontrols.internal_Rules.value || !this.variouscontrols.shape_Ari.value) {}
+      if (this.variouscontrols.internal_Rules && this.variouscontrols.enrolled_Ivss && this.variouscontrols.shape_Ari) {
           this.variouscontrols.idPersonal = this.exppersonalinformation.id;
           this.variouscontrolsService.storeVariouscontrols(Variouscontrols.mapForPost(this.variouscontrols)).finally(() => 
           this.Variouscontrolslist()
           );
           this.vald = 0;
+     }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
+
     }
     this.vald = 0;
  }
@@ -1286,12 +1333,16 @@ async saveEscrow() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.escrow.annual_Interest_Receipt.value || !this.escrow.const_Depos_Prestac_Sociales.value) {}
+      if (this.escrow.annual_Interest_Receipt && this.escrow.const_Depos_Prestac_Sociales) {
           this.escrow.idPersonal = this.exppersonalinformation.id;
           this.escrowService.storeEscrow(Escrow.mapForPost(this.escrow)).finally(() => 
           this.Escrowlist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -1306,11 +1357,16 @@ async SaveIncomedocuments() {
   if (this.incomedocuments.job_Application || this.incomedocuments.curricular_Synthesis) {
     this.lock = true;
     if (this.vald==1){
-        if (!this.incomedocuments.job_Application.value || !this.incomedocuments.curricular_Synthesis.value) {}
+      if (this.incomedocuments.job_Application && this.incomedocuments.curricular_Synthesis   && this.incomedocuments.copia_Cedula && this.incomedocuments.record_Work && this.incomedocuments.reg_Fiscal_Information && this.incomedocuments.labor_Ref_Verification && this.incomedocuments.certification_Affidavit_Affidavit && this.incomedocuments.license && this.incomedocuments.medical_Certificate && this.incomedocuments.point_Account && this.incomedocuments.own_Title && this.incomedocuments.job_Description && this.incomedocuments.id_Charge && this.incomedocuments.id_Region && this.incomedocuments.department_Id && this.incomedocuments.id_Area && this.incomedocuments.id_Confidentiality) {
           this.incomedocuments.idPersonal = this.exppersonalinformation.id;
           this.incomedocumentsService.storeIncomedocuments(Incomedocuments.mapForPost(this.incomedocuments)).finally(() => 
           this.Incomedocumentslist()
           );
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
+          
           this.vald = 0;
     }
     this.vald = 0;
