@@ -89,10 +89,9 @@ async getStaffById(data:any){
    async reports(id: number): Promise<any> {
     let response: any = null;
     try {
-
       const resp = await firstValueFrom(this.get(environment.apiUrl, `/tokenpdf/reportes/${id}`));
       console.log(resp);
-      this.toastrService.success('Descarga realizada con éxito.');
+      this.toastrService.success('Reporte Generado con éxito.');
       response = resp;
     } catch (error: any) {
       console.log(error)
@@ -106,6 +105,27 @@ async getStaffById(data:any){
     }
   }
 
+/**
+   * Persists reportsStaff data
+   * @param data 
+   */
+async reportsStaff(data:any){
+  let response: any = null;
+  try {
+      const resp = await firstValueFrom(this.post(environment.apiUrl,'/tokenpdf/reportesstaff/', data));
+      this.toastrService.success('Reporte Generado con éxito.');
+      response = resp;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status) {
+        this.toastrService.error(error.error.error);
+      } else {
+        this.toastrService.error('Ha ocurrido un error descargando el archivo.');
+      }
+    } finally {
+      return response;
+    }
+}
 
 
 }

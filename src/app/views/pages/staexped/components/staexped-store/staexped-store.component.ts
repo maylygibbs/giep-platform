@@ -150,6 +150,20 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   selectedItem: ExpPersonalInformation;
   isCitiesControlVisible = true;
   startDate: NgbDate | null;
+  reports: any[] = [
+    { id: 1, value: 'Estudios Academicos', label: 'Estudios Academicos' },
+    { id: 2, value: 'Especialidades en Areas', label: 'Especialidades en Areas' },
+    { id: 3, value: 'Documentos de ingresos', label: 'Documentos de ingresos'},
+    { id: 4, value: 'Controles varios', label: 'Controles varios' },
+    { id: 5, value: 'Movimientos (Transferencia)', label: 'Movimientos (Transferencia)' },
+    { id: 6, value: 'Movimientos (Promoción)', label: 'Movimientos (Promoción)' },
+    { id: 7, value: 'Movimientos (Vacaciones)', label: 'Movimientos (Vacaciones)' },
+    { id: 8, value: 'Movimientos (Permisos)', label: 'Movimientos (Permisos)' },
+    { id: 9, value: 'Movimientos (Reposos)', label: 'Movimientos (Reposos)' },
+    { id: 10, value: 'Fideicomiso', label: 'Fideicomiso' },
+    { id: 11, value: 'Seguridad y Salud Laboral', label: 'Seguridad y Salud Laboral' },
+    { id: 12, value: 'Otros', label: 'Otros' },
+];
 //********************************** */
   data:any;
   userStatus:boolean;
@@ -852,8 +866,8 @@ async onChangeTiempo(numop) {
   }
 //Method to verify form and persist data save staff
   async saveStaff() {
-    this.lock = true;
-    if (this.exppersonalinformation.admissionDate.value || this.exppersonalinformation.entryAuthorization.value || this.exppersonalinformation.familyBusiness.value ){
+      if (this.exppersonalinformation.admissionDate.value || this.exppersonalinformation.entryAuthorization.value || this.exppersonalinformation.familyBusiness.value ){
+      this.lock = true;
       this.exppersonalinformation.documentNumber = this.user.documentNumber;
       this.exppersonalinformationService.storeStaff(ExpPersonalInformation.mapForPost(this.exppersonalinformation)).finally(() => 
       this.answersconci(this.user.documentNumber)
@@ -862,10 +876,10 @@ async onChangeTiempo(numop) {
   }
 //Method to verify form and persist data save Academicstudy
 async saveAcademicstudy() {
-  this.lock = true;
-  this.vald = 1;
+   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.academicstudy.dateGraduated.value || this.academicstudy.idProfesion.value) {
+    this.lock = true;
     if (this.assignedAcademicstudy) { 
       for (var j = 0; j <  this.assignedAcademicstudy.length; j++){
         if (this.assignedAcademicstudy[j].idProfesion.id == this.idSelectedItem ) { 
@@ -897,10 +911,10 @@ async saveAcademicstudy() {
 }
 //Method to verify form and persist data save area specialties
 async saveAreaspecialties() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.areaspecialties.idArea.value) {
+    this.lock = true;
     if (this.assignedAreaspecialties) { 
       for (var j = 0; j <  this.assignedAreaspecialties.length; j++){
         if (this.assignedAreaspecialties[j].idArea.id == this.idSelectedItemArea) { 
@@ -931,10 +945,10 @@ async saveAreaspecialties() {
 }
 //Method to verify form and persist data save MovTransf
 async saveMovTransf() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.mmovtransfers.idArea.value) {
+    this.lock = true;
     if (this.assignedMovtransfers) { 
       for (var j = 0; j <  this.assignedMovtransfers.length; j++){
         if (this.assignedMovtransfers[j].idArea.id == this.idSelectedItemTransArea && this.assignedMovtransfers[j].id_Region.id == this.idSelectedItemTransRegion && this.assignedMovtransfers[j].department_Id.id == this.  idSelectedItemTransDepartamento) { 
@@ -966,10 +980,10 @@ async saveMovTransf() {
 }
 //Method to verify form and persist data save promotion
 async savePromotion() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.promotion.idCargo.value || this.promotion.promotion_Date.value) {
+    this.lock = true;
     if (this.assignedPromotion) { 
       for (var j = 0; j <  this.assignedPromotion.length; j++){
         if (this.assignedPromotion[j].idCargo.id == this.idSelectedItemCargo) { 
@@ -1000,10 +1014,10 @@ async savePromotion() {
 }
 //Method to verify form and persist data save permission
 async savePermission() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.permission.authorization_Permissions.value || this.permission.permission_Reason_Id.value || this.permission.date_From.value || this.permission.date_Until.value) {
+    this.lock = true;
     let dateFrom =  this.permission.date_From.year+'-'+this.permission.date_From.month +'-'+this.permission.date_From.day;
     let date_Until =  this.permission.date_Until.year+'-'+this.permission.date_Until.month +'-'+this.permission.date_Until.day;
     if (this.assignedPermission) { 
@@ -1044,11 +1058,10 @@ async savePermission() {
 }
 //Method to verify form and persist data save repose
 async saveRepose() {
-  this.lock = true;
   this.vald = 1;
-  
   if (this.exppersonalinformation.id){
   if (this.repose.id_Tipoposo.value || this.repose.id_Reason_Rest.value || this.repose.date_From.value || this.repose.date_Until.value) {
+    this.lock = true;
     let dateFrom =  this.repose.date_From.year+'-'+this.repose.date_From.month +'-'+this.repose.date_From.day;
     let date_Until =  this.repose.date_Until.year+'-'+this.repose.date_Until.month +'-'+this.repose.date_Until.day;
     if (this.assignedRepose) { 
@@ -1089,10 +1102,10 @@ async saveRepose() {
 }
 //Method to verify form and persist data save vacation
 async saveVacation() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.vacation.vacation_Authorization || this.vacation.vacation_Type_Id || this.vacation.date_From || this.vacation.date_Until || this.vacation.date_Incorporation || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
+    this.lock = true;
     let dateFrom =  this.vacation.date_From.year+'-'+this.vacation.date_From.month +'-'+this.vacation.date_From.day;
     let date_Until =  this.vacation.date_Until.year+'-'+this.vacation.date_Until.month +'-'+this.vacation.date_Until.day;
     if (this.assignedVacation) { 
@@ -1152,10 +1165,10 @@ async saveVacation() {
 }
 //Method to verify form and persist data save safetyhealth
 async saveSafetyhealth() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.safetyhealth.copy_Registration_Delegate.value || this.safetyhealth.delivery_Protection_Equipment.value || this.safetyhealth.metro_Route.value || this.safetyhealth.proof_Safety_Rules.value || this.safetyhealth.record_Occupational_Exams.value || this.safetyhealth.work_Insurance_Analysis.value) {
+    this.lock = true;
     if (this.assignedSafetyhealth) { 
       for (var j = 0; j <  this.assignedSafetyhealth.length; j++){
         if (this.assignedSafetyhealth[j].copy_Registration_Delegate.id == parseInt(this.safetyhealth.copy_Registration_Delegate.value) && this.assignedSafetyhealth[j].delivery_Protection_Equipment.id == parseInt(this.safetyhealth.delivery_Protection_Equipment.value) && this.assignedSafetyhealth[j].metro_Route.id == parseInt(this.safetyhealth.metro_Route.value) && this.assignedSafetyhealth[j].proof_Safety_Rules.id == parseInt(this.safetyhealth.proof_Safety_Rules.value) && this.assignedSafetyhealth[j].record_Occupational_Exams.id == parseInt(this.safetyhealth.record_Occupational_Exams.value) && this.assignedSafetyhealth[j].work_Insurance_Analysis.id == parseInt(this.safetyhealth.work_Insurance_Analysis.value)) {   
@@ -1186,10 +1199,10 @@ async saveSafetyhealth() {
 }
 //Method to verify form and persist data save others
 async saveOthers() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.others.id_Category_Others.value || this.others.labor_Area_Development_Course.value || this.others.legal_Files.value || this.others.reason.value) {
+    this.lock = true;
     if (this.assignedOthers) { 
       for (var j = 0; j <  this.assignedOthers.length; j++){
         if (this.assignedOthers[j].id_Category_Others.id == parseInt(this.others.id_Category_Others.value) && this.assignedOthers[j].labor_Area_Development_Course.id == parseInt(this.others.labor_Area_Development_Course.value) && this.assignedOthers[j].legal_Files.id == parseInt(this.others.legal_Files.value) && this.assignedOthers[j].reason.id == parseInt(this.others.reason.value) && this.assignedOthers[j].service_Area_Oriented_Profession.id == parseInt(this.others.service_Area_Oriented_Profession.value)) {   
@@ -1222,10 +1235,10 @@ async saveOthers() {
 }
 //Method to verify form and persist data save various contrls 
 async saveVariouscontrls() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.variouscontrols.enrolled_Ivss.value || this.variouscontrols.internal_Rules.value || this.variouscontrols.shape_Ari.value) {
+    this.lock = true;
     if (this.assignedVariouscontrols) { 
       for (var j = 0; j <  this.assignedVariouscontrols.length; j++){
         if (this.assignedVariouscontrols[j].enrolled_Ivss.id == parseInt(this.variouscontrols.enrolled_Ivss.value) && this.assignedVariouscontrols[j].internal_Rules.id == parseInt(this.variouscontrols.internal_Rules.value) && this.assignedVariouscontrols[j].shape_Ari.id == parseInt(this.variouscontrols.shape_Ari.value)) {   
@@ -1255,10 +1268,10 @@ async saveVariouscontrls() {
 }
 //Method to verify form and persist data save escrow
 async saveEscrow() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.escrow.annual_Interest_Receipt.value || this.escrow.const_Depos_Prestac_Sociales.value) {
+    this.lock = true;
     if (this.assignedEscrow) { 
       for (var j = 0; j <  this.assignedEscrow.length; j++){
         if (this.assignedEscrow[j].annual_Interest_Receipt.id == parseInt(this.escrow.annual_Interest_Receipt.value) && this.assignedEscrow[j].const_Depos_Prestac_Sociales.id == parseInt(this.escrow.const_Depos_Prestac_Sociales.value)) {   
@@ -1288,10 +1301,10 @@ async saveEscrow() {
 }
 //Method to verify form and persist data save income documents
 async SaveIncomedocuments() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.incomedocuments.job_Application || this.incomedocuments.curricular_Synthesis) {
+    this.lock = true;
     if (this.vald==1){
         if (!this.incomedocuments.job_Application.value || !this.incomedocuments.curricular_Synthesis.value) {}
           this.incomedocuments.idPersonal = this.exppersonalinformation.id;
@@ -1431,8 +1444,8 @@ async openNewarea(newarea){
 }
 //Method modal save new profession
 async SaveNewProfession() {
-  this.lock = true;
   if (this.profession.professio) {
+    this.lock = true;
     if (this.assignedProfession) { 
       for (var j = 0; j <  this.assignedProfession.length; j++){
         if (this.assignedProfession[j].professio == this.profession.professio) {   
@@ -1460,8 +1473,8 @@ async SaveNewProfession() {
 }
 //Method modal save new type reason file 
 async SaveNewTypereasonfile() {
-  this.lock = true;
   if (this.typereasonfile.typeReasonFile) {
+    this.lock = true;
     if (this.assignedTypereasonfile) { 
       for (var j = 0; j <  this.assignedTypereasonfile.length; j++){
         if (this.assignedTypereasonfile[j].typeReasonFile == this.typereasonfile.typeReasonFile) {   
@@ -1489,8 +1502,8 @@ async SaveNewTypereasonfile() {
 }
 //Method modal save new permission type
 async SaveNewPermissiontype() {
-  this.lock = true;
   if (this.permissiontype.permission) {
+    this.lock = true;
     if (this.assignedPermissiontype) { 
       for (var j = 0; j <  this.assignedPermissiontype.length; j++){
         if (this.assignedPermissiontype[j].permission == this.permissiontype.permission) {   
@@ -1517,8 +1530,8 @@ async SaveNewPermissiontype() {
 }
 //Method modal save new sleep type
 async SaveNewSleeptype() {
-  this.lock = true;
   if (this.sleeptype.sleepType) {
+    this.lock = true;
     if (this.assignedPermissiontype) { 
       for (var j = 0; j <  this.assignedPermissiontype.length; j++){
         if (this.assignedPermissiontype[j].permission == this.sleeptype.sleepType) {   
@@ -1546,8 +1559,8 @@ async SaveNewSleeptype() {
 }
 //Method modal save new reason res
 async SaveNewReasonres() {
-  this.lock = true;
   if (this.reasonres.reasonRest) {
+    this.lock = true;
     if (this.assignedReasonrest) { 
       for (var j = 0; j <  this.assignedReasonrest.length; j++){
         if (this.assignedReasonrest[j].reasonRest == this.reasonres.reasonRest) {   
@@ -1574,8 +1587,8 @@ async SaveNewReasonres() {
 }
 //Method modal save new vacation type
 async SaveNewVacationtype() {
-  this.lock = true;
   if (this.vacationtype.vacationType) {
+    this.lock = true;
     if (this.assignedVacationtype) { 
       for (var j = 0; j <  this.assignedVacationtype.length; j++){
         if (this.assignedVacationtype[j].vacationType == this.vacationtype.vacationType) {   
@@ -1603,8 +1616,8 @@ async SaveNewVacationtype() {
 }
 //Method modal save new department
 async SaveNewDepartment() {
-  this.lock = true;
   if (this.department.department) {
+    this.lock = true;
     if (this.assignedDepartment) { 
       for (var j = 0; j <  this.assignedDepartment.length; j++){
         if (this.assignedDepartment[j].department == this.department.department) {   
@@ -1631,8 +1644,8 @@ async SaveNewDepartment() {
 }
 //Method modal save new area
 async SaveNewArea() {
-  this.lock = true;
   if (this.area.area) {
+    this.lock = true;
     if (this.assignedArea) { 
       for (var j = 0; j <  this.assignedArea.length; j++){
         if (this.assignedArea[j].area == this.area.area) {   
@@ -1673,7 +1686,15 @@ async repotsImp() {
       this.lock = false;
   }else{
    //customizado
-   this.toastrService.error('Reporte en construcción estamos trabajando gracias.'); 
+   /* this.lock = true;
+   const resp = await this.exppersonalinformationService.reportsStaff(ExpPersonalInformation.mapForPostRepots(this.exppersonalinformation));
+   if (resp) {
+       let file = this.convertBase64ToFile(resp.file, resp.title);
+       saveAs(file, resp.title + '.' + resp.extension);
+   }
+     this.lock = false; */
+   
+     this.toastrService.error('Reporte en construcción estamos trabajando gracias.'); 
   }
 }
 

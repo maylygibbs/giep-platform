@@ -18,6 +18,7 @@ export class ExpPersonalInformation {
     //admissionDate: NgbDate;
     elapsedtime: number;
     reporttype: number;
+    reportsSelect: any[];
     
 
     public static map(exppersonalinformation: ExpPersonalInformation): ExpPersonalInformation {
@@ -54,14 +55,9 @@ export class ExpPersonalInformation {
         if (exppersonalinformation.reporttype) {
             Object.assign(exppersonalinformationMap, { tiporeporte: exppersonalinformation.reporttype})
         }
-        Object.assign(exppersonalinformationMap, { users: exppersonalinformation.documentNumber });
-        
+        Object.assign(exppersonalinformationMap, { reportes: this.getReportsSelect(exppersonalinformation.reportsSelect) });
         return exppersonalinformationMap;
     }
-
-
-    
-
 
     //Object Map Method
     public static mapFromObject(exppersonalinformationObj: any) {
@@ -88,4 +84,14 @@ export class ExpPersonalInformation {
            exppersonalinformation.admissionDate = {year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2])};
         return exppersonalinformation;
     }
+
+
+    private static getReportsSelect(reportsSelect: any[]) {
+        let reports;
+        reports = reportsSelect.map((item: any) => {
+            return { reporte: item.value };
+        });
+        return reports;
+   }   
+
 }
