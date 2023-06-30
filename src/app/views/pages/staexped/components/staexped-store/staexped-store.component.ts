@@ -1728,30 +1728,36 @@ async SaveNewArea() {
 }
 
 async validReports(event: number) {
-    this.tiprepots = event;
+  this.tiprepots = event;
 }
 
 async repotsImp() {
-  if (this.tiprepots==1){
-    this.lock = true;
-    const resp = await this.exppersonalinformationService.reports(this.tiprepots);
-    if (resp) {
-        let file = this.convertBase64ToFile(resp.file, resp.title);
-        saveAs(file, resp.title + '.' + resp.extension);
-    }
-      this.lock = false;
+if (this.tiprepots==1){
+  this.lock = true;
+  const resp = await this.exppersonalinformationService.reports(this.tiprepots);
+  if (resp) {
+      let file = this.convertBase64ToFile(resp.file, resp.title);
+      saveAs(file, resp.title + '.' + resp.extension);
+  }
+    this.lock = false;
+}else{
+ //customizado
+ if (this.exppersonalinformation.id){
+  this.lock = true;
+ this.exppersonalinformation.reporttype=this.tiprepots;
+ console.log(this.exppersonalinformation.id);
+ console.log(this.idonline);
+  const resp = await this.exppersonalinformationService.reportsStaff(ExpPersonalInformation.mapForPostRepots(this.exppersonalinformation));
+ if (resp) {
+     let file = this.convertBase64ToFile(resp.file, resp.title);
+     saveAs(file, resp.title + '.' + resp.extension);
+ }
+   this.lock = false;
   }else{
-   //customizado
-   /* this.lock = true;
-   const resp = await this.exppersonalinformationService.reportsStaff(ExpPersonalInformation.mapForPostRepots(this.exppersonalinformation));
-   if (resp) {
-       let file = this.convertBase64ToFile(resp.file, resp.title);
-       saveAs(file, resp.title + '.' + resp.extension);
-   }
-     this.lock = false; */
-   
-     this.toastrService.error('Reporte en construcción estamos trabajando gracias.'); 
+    this.toastrService.error('Ingrece Datos Personales.'); 
   }
 }
+}
+
 
 }

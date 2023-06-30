@@ -109,7 +109,7 @@ async getStaffById(data:any){
    * Persists reportsStaff data
    * @param data 
    */
-async reportsStaff(data:any){
+async reportsStaff(data:any): Promise<any> {
   let response: any = null;
   try {
       const resp = await firstValueFrom(this.post(environment.apiUrl,'/tokenpdf/reportesstaff/', data));

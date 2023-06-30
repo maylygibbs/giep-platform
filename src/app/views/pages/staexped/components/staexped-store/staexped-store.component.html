@@ -1624,13 +1624,12 @@
                         </div>
                     </ng-template>
                 </li>    
-                
                 <!---------------------- REPORTES ----------------->
                 
                 <li [ngbNavItem]="14">
                     <a ngbNavLink >Reportes</a>
                     <ng-template ngbNavContent>
-                       <div class="row">
+                    <div class="row">
                             
                         <label for="inputBirthDate" class="form-label required">Tipos de Reportes</label>
                         
@@ -1672,17 +1671,17 @@
                             </div>
 
                         </div>
-                       </div>
-                       <div *ngIf="lockReports==true"> 
-                       <div class="col-md-offset-2 col-md-4">
+                    </div>
+                    <!-- <div *ngIf="lockReports==true">  -->
+                    <div class="col-md-offset-2 col-md-4">
                         <div class="d-flex align-items-center flex-row">
                             <button [disabled]="lock" (click)="repotsImp()" class="btn btn-primary ms-2 me-2">Reporte</button>
                         </div>
                         </div>
-                    </div>
+                    <!-- </div> -->
                     </ng-template>
                 </li>    
-                
+
 
                 <!---------------------- REPORTES ----------------->
                 </ul>
