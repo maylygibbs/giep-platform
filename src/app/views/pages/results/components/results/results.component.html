@@ -90,10 +90,19 @@
                 [searchable]="true" [(ngModel)]="selectedResult" required>
                 <ng-option value="1">Por usuario</ng-option>
                 <ng-option *ngIf="(instrument && !instrument.globalsPoints)" value="2">Por dependencia</ng-option>
+                <ng-option *ngIf="(instrument && !instrument.globalsPoints)" value="3">Por cargo</ng-option>
                 <ng-option *ngIf="(instrument && instrument.globalsPoints) || !instrument" value="0">Global</ng-option>
               </ng-select>
             </div>
           </div>
+          <div *ngIf="instrument && !instrument.globalsPoints && selectedResult=='3'" class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="mb-3">
+                <label for="inputTipoCategory" class="form-label">Categoría (o Competencia)</label>
+                <ng-select id="inputTipoCategory" [items]="categories" name="category" #category="ngModel" (change)="changeSelectFilter()"
+                    bindValue="value" [searchable]="true" [multiple]="true" [(ngModel)]="selectedCategories">
+                </ng-select>
+            </div>
+        </div>
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <div class="mb-3">
               <label for="inputSex" class="form-label required">Tipo de gráfica</label>

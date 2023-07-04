@@ -27,7 +27,7 @@
                 <div *ngIf="byCategory && data" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="mb-3">
                         <label for="inputTipoCategory" class="form-label required">Categoría</label>
-                        <ng-select id="inputTipoCategory" [items]="data.categories" name="category" #category="ngModel"
+                        <ng-select id="inputTipoCategory" [items]="categories" name="category" #category="ngModel"
                             bindValue="value" [searchable]="true" [(ngModel)]="question.categoryBy" required>
                         </ng-select>
                         <div *ngIf="category.invalid && questionForm.submitted" class="invalid-feedback">

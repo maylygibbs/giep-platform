@@ -235,7 +235,9 @@ export class CommonsService extends HttpService {
     let categories: Array<SelectOption> = new Array<SelectOption>();
     const resp = await firstValueFrom(this.get(environment.apiUrl, '/encuesta/tipocategoria/list'));
     categories = resp.data.map((item: any) => {
-      return new SelectOption(item.id, item.nombre);
+      const option = new SelectOption(item.id, item.nombre);
+       option.haveScales = item.escalaPonderacion == 1 ? true : false;
+      return option;
     });
     return categories;
   }

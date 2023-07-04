@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ResultsComponent } from './components/results/results.component';
-import { CommonsListCountriesResolver, CommonsListInstrumentsResolver } from '../../../core/resolvers/commons.resolver';
+import { CommonsListCategoyTypeResolver, CommonsListCountriesResolver, CommonsListInstrumentsResolver } from '../../../core/resolvers/commons.resolver';
 
 const routes: Routes = [
   {
@@ -12,7 +12,8 @@ const routes: Routes = [
     },
     resolve:{
       instruments: CommonsListInstrumentsResolver,
-      countries: CommonsListCountriesResolver
+      countries: CommonsListCountriesResolver,
+      categories: CommonsListCategoyTypeResolver
     }
   }
 ];

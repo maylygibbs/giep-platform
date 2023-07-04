@@ -50,6 +50,9 @@ export class ResultsComponent extends BaseComponent implements OnInit {
 
   environment = environment;
 
+  categories: Array<SelectOption>;
+  selectedCategories: Array<any>;
+
   resultsRequest: NodeJS.Timeout;
 
   private $eventNavigationEnd: Subscription;
@@ -86,19 +89,26 @@ export class ResultsComponent extends BaseComponent implements OnInit {
       this.page = pageInfo;
       this.results = null;
       this.submited = true;
+
+      const body =         {
+        page: this.page,
+        rowByPage: environment.paginator.row_per_page,
+        word: this.word ?? null,
+        byuser: this.selectedResult ? parseInt(this.selectedResult) : 1,
+        desde: this.startDateFilter ? this.startDateFilter : null,
+        hasta: this.endDateFilter ? this.endDateFilter : null,
+        sexo: this.selectedSex ? this.selectedSex : null,
+        pais: this.selectedCountry?.value ? parseInt(this.selectedCountry?.value) : null,
+        estado: this.selectedState?.value ? parseInt(this.selectedState?.value) : null,
+        ciudad: this.selectedCity?.value ? parseInt(this.selectedCity?.value) : null
+      }
+
+      if(this.selectedResult == '3'){
+        Object.assign(body,{categoryIds: this.selectedCategories && this.selectedCategories.length > 0 ? this.selectedCategories.map((item)=> {return parseInt(item)}) : null})
+      }
+
       this.results = await this.instrumentsService.getInstrumentResultsPagined(
-        {
-          page: this.page,
-          rowByPage: environment.paginator.row_per_page,
-          word: this.word ?? null,
-          byuser: this.selectedResult ? parseInt(this.selectedResult) : 1,
-          desde: this.startDateFilter ? this.startDateFilter : null,
-          hasta: this.endDateFilter ? this.endDateFilter : null,
-          sexo: this.selectedSex ? this.selectedSex : null,
-          pais: this.selectedCountry?.value ? parseInt(this.selectedCountry?.value) : null,
-          estado: this.selectedState?.value ? parseInt(this.selectedState?.value) : null,
-          ciudad: this.selectedCity?.value ? parseInt(this.selectedCity?.value) : null
-        },
+        body,
         this.instrumentId,
         this.selectedGraphic,
         this.instrument.globalsPoints
@@ -180,8 +190,19 @@ export class ResultsComponent extends BaseComponent implements OnInit {
  *  
  */
   changeSelectFilter() {
-    
+
     this.instrument = this.data.instruments.filter((item:SelectOption)=>parseInt(item.value) == this.instrumentId)[0];
+    if(this.instrument.globalsPoints){
+      this.selectedResult = '1';
+      this.selectedCategories = null;
+    }
+
+    if(this.selectedResult == '3'){
+      this.categories = this.data.categories.filter((item:SelectOption)=>item.haveScales);
+
+    }
+    
+   
     console.log('this.instrument', this.instrument)
     this.loadPage(environment.paginator.default_page);
   }

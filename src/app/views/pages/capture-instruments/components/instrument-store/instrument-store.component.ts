@@ -200,6 +200,10 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
     }
   }
 
+  filterCategoryList(){
+
+  }
+
   /**
    * handle event add role
    */

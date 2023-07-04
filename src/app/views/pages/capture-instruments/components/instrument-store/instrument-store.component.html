@@ -181,39 +181,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                          <!--  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <div class="mb-3">
-                                                    <label for="inputUsers" class="form-label required">Usuarios</label>
-                                                    <ng-select id="inputUsers" [items]="users" [multiple]="true"
-                                                        [searchable]="true" groupBy="role" [selectableGroup]="true"
-                                                        [selectableGroupAsModel]="false" [closeOnSelect]="false"
-                                                        [virtualScroll]="true" name="instrumentUsers"
-                                                        #instrumentUsers="ngModel"
-                                                        [ngClass]="{'ng-dirty ng-invalid' : instrumentUsers.errors && ( instrumentUsers.dirty || instrumentUsers.touched || instrumentForm.submitted) }"
-                                                        bindLabel="fullName" bindValue="id"
-                                                        (remove)="onRemoveUsuario($event)"
-                                                        (clear)="onRemoveAllUsuario()" [(ngModel)]="selectedUsers"
-                                                        [loading]="showLoading" required>
-                                                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
-                                                            let-index="index">
-                                                            <input id="item-{{index}}" type="checkbox"
-                                                                name="itemgroup1-{{index}}"
-                                                                [ngModel]="item$.selected" /> {{item.role}}
-                                                        </ng-template>
-                                                        <ng-template ng-option-tmp let-item="item" let-item$="item$"
-                                                            let-index="index">
-                                                            <input id="item-{{index}}" type="checkbox"
-                                                                name="item-{{index}}" [ngModel]="item$.selected" />
-                                                            {{item.fullName}}
-                                                        </ng-template>
-                                                    </ng-select>
-                                                    <div *ngIf="instrumentUsers.invalid && instrumentForm.submitted"
-                                                        class="invalid-feedback">
-                                                        <div *ngIf="instrumentUsers.errors?.required">Campo es requerido
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>-->
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputInstrumentDescription"

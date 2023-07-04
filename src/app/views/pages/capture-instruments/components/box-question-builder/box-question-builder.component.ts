@@ -2,7 +2,7 @@ import { QuestionOption } from './../../../../../core/models/question-option';
 import { CommonsService } from './../../../../../core/services/commons.service';
 import { SelectOption } from './../../../../../core/models/select-option';
 import { Question } from './../../../../../core/models/question';
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { environment } from './../../../../../../environments/environment';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
@@ -15,7 +15,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './box-question-builder.component.html',
   styleUrls: ['./box-question-builder.component.scss']
 })
-export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit {
+export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit, OnChanges {
 
   @Input()
   byCategory: boolean;
@@ -31,7 +31,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
 
   selectedOption: QuestionOption;
 
-
+  categories: Array<SelectOption>;
 
   environment = environment;
 
@@ -49,7 +49,21 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
     //this.inputsType = await this.commonsService.getAllInputsType();
     this.route.data.subscribe((data) => {
       this.data = data;
+      
+      if(!this.globalsPoints && this.byCategory){
+        this.categories = this.data.categories.filter((item:SelectOption)=>item.haveScales)
+      }else{
+        this.categories = this.data.categories
+      }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(!this.globalsPoints && this.byCategory){
+      this.categories = this.data.categories.filter((item:SelectOption)=>item.haveScales)
+    }else{
+      this.categories = this.data.categories
+    }
   }
 
   /**
