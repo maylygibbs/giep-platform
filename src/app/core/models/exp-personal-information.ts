@@ -18,6 +18,7 @@ export class ExpPersonalInformation {
     //admissionDate: NgbDate;
     elapsedtime: number;
     reporttype: number;
+    reportsSelect: any[];
     
 
     public static map(exppersonalinformation: ExpPersonalInformation): ExpPersonalInformation {
@@ -48,21 +49,6 @@ export class ExpPersonalInformation {
         return exppersonalinformationMap;
     }
 
-     //Variable Mapping Method
-     public static mapForPostRepots(exppersonalinformation: ExpPersonalInformation) {
-        let exppersonalinformationMap: any = {};
-        if (exppersonalinformation.reporttype) {
-            Object.assign(exppersonalinformationMap, { tiporeporte: exppersonalinformation.reporttype})
-        }
-        Object.assign(exppersonalinformationMap, { users: exppersonalinformation.documentNumber });
-        
-        return exppersonalinformationMap;
-    }
-
-
-    
-
-
     //Object Map Method
     public static mapFromObject(exppersonalinformationObj: any) {
         if (!exppersonalinformationObj)
@@ -88,4 +74,26 @@ export class ExpPersonalInformation {
            exppersonalinformation.admissionDate = {year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2])};
         return exppersonalinformation;
     }
+
+     //Variable Mapping Method
+     public static mapForPostRepots(exppersonalinformation: ExpPersonalInformation) {
+        let exppersonalinformationMap: any = {};
+        if (exppersonalinformation.reporttype) {
+            Object.assign(exppersonalinformationMap, { tiporeporte: exppersonalinformation.reporttype})
+        }
+        Object.assign(exppersonalinformationMap, { id_datos_personales: exppersonalinformation.id})
+        Object.assign(exppersonalinformationMap, { reportes: this.getReportsSelect(exppersonalinformation.reportsSelect) });
+        return exppersonalinformationMap;
+    }
+    
+    private static getReportsSelect(reportsSelect: any[]) {
+        let reports;
+        reports = reportsSelect.map((item: any) => {
+            return { reporte: item.value };
+        });
+        return reports;
+   }   
+
+
+
 }

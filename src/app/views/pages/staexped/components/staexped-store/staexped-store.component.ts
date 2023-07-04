@@ -150,6 +150,20 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   selectedItem: ExpPersonalInformation;
   isCitiesControlVisible = true;
   startDate: NgbDate | null;
+  reports: any[] = [
+    { id: 1, value: 'Estudios Academicos', label: 'Estudios Academicos' },
+    { id: 2, value: 'Especialidades en Areas', label: 'Especialidades en Areas' },
+    { id: 3, value: 'Documentos de ingresos', label: 'Documentos de ingresos'},
+    { id: 4, value: 'Controles varios', label: 'Controles varios' },
+    { id: 5, value: 'Movimientos (Transferencia)', label: 'Movimientos (Transferencia)' },
+    { id: 6, value: 'Movimientos (Promoción)', label: 'Movimientos (Promoción)' },
+    { id: 7, value: 'Movimientos (Vacaciones)', label: 'Movimientos (Vacaciones)' },
+    { id: 8, value: 'Movimientos (Permisos)', label: 'Movimientos (Permisos)' },
+    { id: 9, value: 'Movimientos (Reposos)', label: 'Movimientos (Reposos)' },
+    { id: 10, value: 'Fideicomiso', label: 'Fideicomiso' },
+    { id: 11, value: 'Seguridad y Salud Laboral', label: 'Seguridad y Salud Laboral' },
+    { id: 12, value: 'Otros', label: 'Otros' },
+];
 //********************************** */
   data:any;
   userStatus:boolean;
@@ -852,8 +866,8 @@ async onChangeTiempo(numop) {
   }
 //Method to verify form and persist data save staff
   async saveStaff() {
-    this.lock = true;
-    if (this.exppersonalinformation.admissionDate.value || this.exppersonalinformation.entryAuthorization.value || this.exppersonalinformation.familyBusiness.value ){
+      if (this.exppersonalinformation.admissionDate.value || this.exppersonalinformation.entryAuthorization.value || this.exppersonalinformation.familyBusiness.value ){
+      this.lock = true;
       this.exppersonalinformation.documentNumber = this.user.documentNumber;
       this.exppersonalinformationService.storeStaff(ExpPersonalInformation.mapForPost(this.exppersonalinformation)).finally(() => 
       this.answersconci(this.user.documentNumber)
@@ -862,10 +876,10 @@ async onChangeTiempo(numop) {
   }
 //Method to verify form and persist data save Academicstudy
 async saveAcademicstudy() {
-  this.lock = true;
-  this.vald = 1;
+   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.academicstudy.dateGraduated.value || this.academicstudy.idProfesion.value) {
+    this.lock = true;
     if (this.assignedAcademicstudy) { 
       for (var j = 0; j <  this.assignedAcademicstudy.length; j++){
         if (this.assignedAcademicstudy[j].idProfesion.id == this.idSelectedItem ) { 
@@ -879,8 +893,7 @@ async saveAcademicstudy() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.academicstudy.dateGraduated){}
-        if (!this.academicstudy.idProfesion.value){}
+        if (this.academicstudy.idProfesion && this.academicstudy.dateGraduated) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.academicstudy.idPersonal = this.exppersonalinformation.id;
           this.academicstudy.idPersonal = this.idonline;
@@ -888,6 +901,10 @@ async saveAcademicstudy() {
           this.academicstudylist()
           );
           this.vald = 0;
+       }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -897,10 +914,10 @@ async saveAcademicstudy() {
 }
 //Method to verify form and persist data save area specialties
 async saveAreaspecialties() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.areaspecialties.idArea.value) {
+    this.lock = true;
     if (this.assignedAreaspecialties) { 
       for (var j = 0; j <  this.assignedAreaspecialties.length; j++){
         if (this.assignedAreaspecialties[j].idArea.id == this.idSelectedItemArea) { 
@@ -915,13 +932,17 @@ async saveAreaspecialties() {
     } 
   
     if (this.vald==1){
-        if (!this.areaspecialties.idArea.value){}
+      if (this.areaspecialties.idArea) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.areaspecialties.idPersonal = this.exppersonalinformation.id;
           this.areaspecialtiesService.storeAreaspecialties(Areaspecialties.mapForPost(this.areaspecialties)).finally(() => 
           this.areaspecialtieslist()
           );
           this.vald = 0;
+       }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -931,10 +952,10 @@ async saveAreaspecialties() {
 }
 //Method to verify form and persist data save MovTransf
 async saveMovTransf() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.mmovtransfers.idArea.value) {
+    this.lock = true;
     if (this.assignedMovtransfers) { 
       for (var j = 0; j <  this.assignedMovtransfers.length; j++){
         if (this.assignedMovtransfers[j].idArea.id == this.idSelectedItemTransArea && this.assignedMovtransfers[j].id_Region.id == this.idSelectedItemTransRegion && this.assignedMovtransfers[j].department_Id.id == this.  idSelectedItemTransDepartamento) { 
@@ -950,13 +971,17 @@ async saveMovTransf() {
     } 
   
     if (this.vald==1){
-        if (!this.mmovtransfers.idArea.value){}
+      if (this.mmovtransfers.department_Id && this.mmovtransfers.idArea && this.mmovtransfers.id_Region && this.mmovtransfers.transfer_Date) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.mmovtransfers.idPersonal = this.exppersonalinformation.id;
           this.movtransfersService.storeMovtransfers(Movtransfers.mapForPost(this.mmovtransfers)).finally(() => 
           this.movtransferslist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -966,10 +991,10 @@ async saveMovTransf() {
 }
 //Method to verify form and persist data save promotion
 async savePromotion() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.promotion.idCargo.value || this.promotion.promotion_Date.value) {
+    this.lock = true;
     if (this.assignedPromotion) { 
       for (var j = 0; j <  this.assignedPromotion.length; j++){
         if (this.assignedPromotion[j].idCargo.id == this.idSelectedItemCargo) { 
@@ -984,13 +1009,17 @@ async savePromotion() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.promotion.idCargo.value || !this.promotion.promotion_Date.value) {}
+      if (this.promotion.idCargo && this.promotion.promotion_Date) {
           this.exppersonalinformation.documentNumber = this.user.documentNumber;
           this.promotion.idPersonal = this.exppersonalinformation.id;
           this.promotionservice.storePromotion(Promotion.mapForPost(this.promotion)).finally(() => 
           this.promotionlist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -1000,10 +1029,10 @@ async savePromotion() {
 }
 //Method to verify form and persist data save permission
 async savePermission() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.permission.authorization_Permissions.value || this.permission.permission_Reason_Id.value || this.permission.date_From.value || this.permission.date_Until.value) {
+    this.lock = true;
     let dateFrom =  this.permission.date_From.year+'-'+this.permission.date_From.month +'-'+this.permission.date_From.day;
     let date_Until =  this.permission.date_Until.year+'-'+this.permission.date_Until.month +'-'+this.permission.date_Until.day;
     if (this.assignedPermission) { 
@@ -1020,7 +1049,7 @@ async savePermission() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.permission.authorization_Permissions.value || !this.permission.permission_Reason_Id.value || !this.permission.date_From.value || !this.permission.date_Until.value) {}
+      if (this.permission.authorization_Permissions && this.permission.permission_Reason_Id && this.permission.date_From && this.permission.date_Until) {
           let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
           let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
           if (date_Untilc < dateFromc ) { //This checks if time is in the past. If so, 
@@ -1033,8 +1062,12 @@ async savePermission() {
           );
 
           this.vald = 0;
-
+          }
+        }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
       }
+
     }
     this.vald = 0;
  }
@@ -1044,11 +1077,10 @@ async savePermission() {
 }
 //Method to verify form and persist data save repose
 async saveRepose() {
-  this.lock = true;
   this.vald = 1;
-  
   if (this.exppersonalinformation.id){
   if (this.repose.id_Tipoposo.value || this.repose.id_Reason_Rest.value || this.repose.date_From.value || this.repose.date_Until.value) {
+    this.lock = true;
     let dateFrom =  this.repose.date_From.year+'-'+this.repose.date_From.month +'-'+this.repose.date_From.day;
     let date_Until =  this.repose.date_Until.year+'-'+this.repose.date_Until.month +'-'+this.repose.date_Until.day;
     if (this.assignedRepose) { 
@@ -1066,7 +1098,7 @@ async saveRepose() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.repose.id_Tipoposo.value || !this.repose.id_Reason_Rest.value || !this.repose.date_From.value || !this.repose.date_Until.value) {}
+      if (this.repose.id_Tipoposo && this.repose.id_Reason_Rest && this.repose.date_From && this.repose.date_Until) {
         let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
         let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
         if (date_Untilc < dateFromc ) { //This checks if time is in the past. If so, 
@@ -1079,6 +1111,11 @@ async saveRepose() {
           );
           this.vald = 0;
        }
+    }else{
+        this.lock = false;
+        this.toastrService.error('Faltan datos verifique.'); 
+    }
+
     }
     this.vald = 0;
  }
@@ -1089,10 +1126,22 @@ async saveRepose() {
 }
 //Method to verify form and persist data save vacation
 async saveVacation() {
-  this.lock = true;
   this.vald = 1;
+
+  if (this.vacationobservation.observation){
+    this.lock = true;
+      this.vacationobservation.idPersonal = this.exppersonalinformation.id;
+      this.vacationobservationService.storeVacationobservation(Vacationobservation.mapForPost(this.vacationobservation)).finally(() => 
+       this.vacationobservationlist()
+      );
+  }else{
+    this.lock = false;
+    console.log("Si esta vacio");
+  }
+
   if (this.exppersonalinformation.id){
-  if (this.vacation.vacation_Authorization || this.vacation.vacation_Type_Id || this.vacation.date_From || this.vacation.date_Until || this.vacation.date_Incorporation || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
+  if (this.vacation.vacation_Authorization || this.vacation.vacation_Type_Id || this.vacation.date_From.value || this.vacation.date_Until.value || this.vacation.date_Incorporation.value || this.vacation.enjoy_Period || this.vacation.cumulative_Periods) {
+    this.lock = true;
     let dateFrom =  this.vacation.date_From.year+'-'+this.vacation.date_From.month +'-'+this.vacation.date_From.day;
     let date_Until =  this.vacation.date_Until.year+'-'+this.vacation.date_Until.month +'-'+this.vacation.date_Until.day;
     if (this.assignedVacation) { 
@@ -1110,7 +1159,7 @@ async saveVacation() {
     } 
   
     if (this.vald==1){
-        if (!this.vacation.vacation_Authorization.value || !this.vacation.vacation_Type_Id.value || !this.vacation.date_From.value || !this.vacation.date_Until.value || !this.vacation.date_Incorporation.value || !this.vacation.enjoy_Period || !this.vacation.cumulative_Periods) {}
+      if (this.vacation.vacation_Authorization && this.vacation.vacation_Type_Id && this.vacation.date_From && this.vacation.date_Until && this.vacation.date_Incorporation && this.vacation.enjoy_Period && this.vacation.cumulative_Periods) {
         let date_Incorporation =  this.vacation.date_Incorporation.year+'-'+this.vacation.date_Incorporation.month +'-'+this.vacation.date_Incorporation.day;
         let dateFromc = moment(dateFrom).format("YYYY-MM-DD"); 
         let date_Untilc = moment(date_Until).format("YYYY-MM-DD"); 
@@ -1130,32 +1179,28 @@ async saveVacation() {
           this.vald = 0;
       }
      }
+    }else{
+      this.lock = false;
+      this.toastrService.error('Faltan datos verifique.'); 
+    }
+
     }
     this.vald = 0;
 
 
 
  }
-  if (this.vacationobservation.observation){
-    this.lock = true;
-      this.vacationobservation.idPersonal = this.exppersonalinformation.id;
-      this.vacationobservationService.storeVacationobservation(Vacationobservation.mapForPost(this.vacationobservation)).finally(() => 
-       this.vacationobservationlist()
-      );
-  }else{
-    this.lock = false;
-    console.log("Si esta vacio");
-  }
+  
 }else{
   this.toastrService.error('Ingrece Datos Personales.'); 
 }
 }
 //Method to verify form and persist data save safetyhealth
 async saveSafetyhealth() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.safetyhealth.copy_Registration_Delegate.value || this.safetyhealth.delivery_Protection_Equipment.value || this.safetyhealth.metro_Route.value || this.safetyhealth.proof_Safety_Rules.value || this.safetyhealth.record_Occupational_Exams.value || this.safetyhealth.work_Insurance_Analysis.value) {
+    this.lock = true;
     if (this.assignedSafetyhealth) { 
       for (var j = 0; j <  this.assignedSafetyhealth.length; j++){
         if (this.assignedSafetyhealth[j].copy_Registration_Delegate.id == parseInt(this.safetyhealth.copy_Registration_Delegate.value) && this.assignedSafetyhealth[j].delivery_Protection_Equipment.id == parseInt(this.safetyhealth.delivery_Protection_Equipment.value) && this.assignedSafetyhealth[j].metro_Route.id == parseInt(this.safetyhealth.metro_Route.value) && this.assignedSafetyhealth[j].proof_Safety_Rules.id == parseInt(this.safetyhealth.proof_Safety_Rules.value) && this.assignedSafetyhealth[j].record_Occupational_Exams.id == parseInt(this.safetyhealth.record_Occupational_Exams.value) && this.assignedSafetyhealth[j].work_Insurance_Analysis.id == parseInt(this.safetyhealth.work_Insurance_Analysis.value)) {   
@@ -1171,12 +1216,18 @@ async saveSafetyhealth() {
     } 
   
     if (this.vald==1){
-        if (!this.safetyhealth.copy_Registration_Delegate.value || !this.safetyhealth.delivery_Protection_Equipment.value || !this.safetyhealth.metro_Route.value || !this.safetyhealth.proof_Safety_Rules.value || !this.safetyhealth.record_Occupational_Exams.value || !this.safetyhealth.work_Insurance_Analysis.value) {}
+      if (this.safetyhealth.copy_Registration_Delegate && this.safetyhealth.delivery_Protection_Equipment && this.safetyhealth.metro_Route && this.safetyhealth.proof_Safety_Rules && this.safetyhealth.record_Occupational_Exams && this.safetyhealth.work_Insurance_Analysis) {
+
           this.safetyhealth.idPersonal = this.exppersonalinformation.id;
           this.safetyhealthService.storeSafetyhealth(Safetyhealth.mapForPost(this.safetyhealth)).finally(() => 
           this.Safetyhealthlist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
+
     }
     this.vald = 0;
  }
@@ -1186,10 +1237,10 @@ async saveSafetyhealth() {
 }
 //Method to verify form and persist data save others
 async saveOthers() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.others.id_Category_Others.value || this.others.labor_Area_Development_Course.value || this.others.legal_Files.value || this.others.reason.value) {
+    this.lock = true;
     if (this.assignedOthers) { 
       for (var j = 0; j <  this.assignedOthers.length; j++){
         if (this.assignedOthers[j].id_Category_Others.id == parseInt(this.others.id_Category_Others.value) && this.assignedOthers[j].labor_Area_Development_Course.id == parseInt(this.others.labor_Area_Development_Course.value) && this.assignedOthers[j].legal_Files.id == parseInt(this.others.legal_Files.value) && this.assignedOthers[j].reason.id == parseInt(this.others.reason.value) && this.assignedOthers[j].service_Area_Oriented_Profession.id == parseInt(this.others.service_Area_Oriented_Profession.value)) {   
@@ -1207,12 +1258,16 @@ async saveOthers() {
       this.vald = 1;
     }
     if (this.vald==1){
-        if (!this.others.id_Category_Others.value || !this.others.labor_Area_Development_Course.value || !this.others.legal_Files.value || !this.others.reason.value) {}
+      if (this.others.id_Category_Others && this.others.labor_Area_Development_Course && this.others.legal_Files && this.others.reason) {
           this.others.idPersonal = this.exppersonalinformation.id;
           this.othersService.storeOthers(Others.mapForPost(this.others)).finally(() => 
           this.Otherslist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -1222,10 +1277,10 @@ async saveOthers() {
 }
 //Method to verify form and persist data save various contrls 
 async saveVariouscontrls() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.variouscontrols.enrolled_Ivss.value || this.variouscontrols.internal_Rules.value || this.variouscontrols.shape_Ari.value) {
+    this.lock = true;
     if (this.assignedVariouscontrols) { 
       for (var j = 0; j <  this.assignedVariouscontrols.length; j++){
         if (this.assignedVariouscontrols[j].enrolled_Ivss.id == parseInt(this.variouscontrols.enrolled_Ivss.value) && this.assignedVariouscontrols[j].internal_Rules.id == parseInt(this.variouscontrols.internal_Rules.value) && this.assignedVariouscontrols[j].shape_Ari.id == parseInt(this.variouscontrols.shape_Ari.value)) {   
@@ -1240,12 +1295,17 @@ async saveVariouscontrls() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.variouscontrols.enrolled_Ivss.value || !this.variouscontrols.internal_Rules.value || !this.variouscontrols.shape_Ari.value) {}
+      if (this.variouscontrols.internal_Rules && this.variouscontrols.enrolled_Ivss && this.variouscontrols.shape_Ari) {
           this.variouscontrols.idPersonal = this.exppersonalinformation.id;
           this.variouscontrolsService.storeVariouscontrols(Variouscontrols.mapForPost(this.variouscontrols)).finally(() => 
           this.Variouscontrolslist()
           );
           this.vald = 0;
+     }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
+
     }
     this.vald = 0;
  }
@@ -1255,10 +1315,10 @@ async saveVariouscontrls() {
 }
 //Method to verify form and persist data save escrow
 async saveEscrow() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.escrow.annual_Interest_Receipt.value || this.escrow.const_Depos_Prestac_Sociales.value) {
+    this.lock = true;
     if (this.assignedEscrow) { 
       for (var j = 0; j <  this.assignedEscrow.length; j++){
         if (this.assignedEscrow[j].annual_Interest_Receipt.id == parseInt(this.escrow.annual_Interest_Receipt.value) && this.assignedEscrow[j].const_Depos_Prestac_Sociales.id == parseInt(this.escrow.const_Depos_Prestac_Sociales.value)) {   
@@ -1273,12 +1333,16 @@ async saveEscrow() {
       this.vald = 1;
     } 
     if (this.vald==1){
-        if (!this.escrow.annual_Interest_Receipt.value || !this.escrow.const_Depos_Prestac_Sociales.value) {}
+      if (this.escrow.annual_Interest_Receipt && this.escrow.const_Depos_Prestac_Sociales) {
           this.escrow.idPersonal = this.exppersonalinformation.id;
           this.escrowService.storeEscrow(Escrow.mapForPost(this.escrow)).finally(() => 
           this.Escrowlist()
           );
           this.vald = 0;
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
     }
     this.vald = 0;
  }
@@ -1288,16 +1352,21 @@ async saveEscrow() {
 }
 //Method to verify form and persist data save income documents
 async SaveIncomedocuments() {
-  this.lock = true;
   this.vald = 1;
   if (this.exppersonalinformation.id){
   if (this.incomedocuments.job_Application || this.incomedocuments.curricular_Synthesis) {
+    this.lock = true;
     if (this.vald==1){
-        if (!this.incomedocuments.job_Application.value || !this.incomedocuments.curricular_Synthesis.value) {}
+      if (this.incomedocuments.job_Application && this.incomedocuments.curricular_Synthesis   && this.incomedocuments.copia_Cedula && this.incomedocuments.record_Work && this.incomedocuments.reg_Fiscal_Information && this.incomedocuments.labor_Ref_Verification && this.incomedocuments.certification_Affidavit_Affidavit && this.incomedocuments.license && this.incomedocuments.medical_Certificate && this.incomedocuments.point_Account && this.incomedocuments.own_Title && this.incomedocuments.job_Description && this.incomedocuments.id_Charge && this.incomedocuments.id_Region && this.incomedocuments.department_Id && this.incomedocuments.id_Area && this.incomedocuments.id_Confidentiality) {
           this.incomedocuments.idPersonal = this.exppersonalinformation.id;
           this.incomedocumentsService.storeIncomedocuments(Incomedocuments.mapForPost(this.incomedocuments)).finally(() => 
           this.Incomedocumentslist()
           );
+      }else{
+          this.lock = false;
+          this.toastrService.error('Faltan datos verifique.'); 
+      }
+          
           this.vald = 0;
     }
     this.vald = 0;
@@ -1431,8 +1500,8 @@ async openNewarea(newarea){
 }
 //Method modal save new profession
 async SaveNewProfession() {
-  this.lock = true;
   if (this.profession.professio) {
+    this.lock = true;
     if (this.assignedProfession) { 
       for (var j = 0; j <  this.assignedProfession.length; j++){
         if (this.assignedProfession[j].professio == this.profession.professio) {   
@@ -1460,8 +1529,8 @@ async SaveNewProfession() {
 }
 //Method modal save new type reason file 
 async SaveNewTypereasonfile() {
-  this.lock = true;
   if (this.typereasonfile.typeReasonFile) {
+    this.lock = true;
     if (this.assignedTypereasonfile) { 
       for (var j = 0; j <  this.assignedTypereasonfile.length; j++){
         if (this.assignedTypereasonfile[j].typeReasonFile == this.typereasonfile.typeReasonFile) {   
@@ -1489,8 +1558,8 @@ async SaveNewTypereasonfile() {
 }
 //Method modal save new permission type
 async SaveNewPermissiontype() {
-  this.lock = true;
   if (this.permissiontype.permission) {
+    this.lock = true;
     if (this.assignedPermissiontype) { 
       for (var j = 0; j <  this.assignedPermissiontype.length; j++){
         if (this.assignedPermissiontype[j].permission == this.permissiontype.permission) {   
@@ -1517,8 +1586,8 @@ async SaveNewPermissiontype() {
 }
 //Method modal save new sleep type
 async SaveNewSleeptype() {
-  this.lock = true;
   if (this.sleeptype.sleepType) {
+    this.lock = true;
     if (this.assignedPermissiontype) { 
       for (var j = 0; j <  this.assignedPermissiontype.length; j++){
         if (this.assignedPermissiontype[j].permission == this.sleeptype.sleepType) {   
@@ -1546,8 +1615,8 @@ async SaveNewSleeptype() {
 }
 //Method modal save new reason res
 async SaveNewReasonres() {
-  this.lock = true;
   if (this.reasonres.reasonRest) {
+    this.lock = true;
     if (this.assignedReasonrest) { 
       for (var j = 0; j <  this.assignedReasonrest.length; j++){
         if (this.assignedReasonrest[j].reasonRest == this.reasonres.reasonRest) {   
@@ -1574,8 +1643,8 @@ async SaveNewReasonres() {
 }
 //Method modal save new vacation type
 async SaveNewVacationtype() {
-  this.lock = true;
   if (this.vacationtype.vacationType) {
+    this.lock = true;
     if (this.assignedVacationtype) { 
       for (var j = 0; j <  this.assignedVacationtype.length; j++){
         if (this.assignedVacationtype[j].vacationType == this.vacationtype.vacationType) {   
@@ -1603,8 +1672,8 @@ async SaveNewVacationtype() {
 }
 //Method modal save new department
 async SaveNewDepartment() {
-  this.lock = true;
   if (this.department.department) {
+    this.lock = true;
     if (this.assignedDepartment) { 
       for (var j = 0; j <  this.assignedDepartment.length; j++){
         if (this.assignedDepartment[j].department == this.department.department) {   
@@ -1631,8 +1700,8 @@ async SaveNewDepartment() {
 }
 //Method modal save new area
 async SaveNewArea() {
-  this.lock = true;
   if (this.area.area) {
+    this.lock = true;
     if (this.assignedArea) { 
       for (var j = 0; j <  this.assignedArea.length; j++){
         if (this.assignedArea[j].area == this.area.area) {   
@@ -1659,22 +1728,36 @@ async SaveNewArea() {
 }
 
 async validReports(event: number) {
-    this.tiprepots = event;
+  this.tiprepots = event;
 }
 
 async repotsImp() {
-  if (this.tiprepots==1){
-    this.lock = true;
-    const resp = await this.exppersonalinformationService.reports(this.tiprepots);
-    if (resp) {
-        let file = this.convertBase64ToFile(resp.file, resp.title);
-        saveAs(file, resp.title + '.' + resp.extension);
-    }
-      this.lock = false;
+if (this.tiprepots==1){
+  this.lock = true;
+  const resp = await this.exppersonalinformationService.reports(this.tiprepots);
+  if (resp) {
+      let file = this.convertBase64ToFile(resp.file, resp.title);
+      saveAs(file, resp.title + '.' + resp.extension);
+  }
+    this.lock = false;
+}else{
+ //customizado
+ if (this.exppersonalinformation.id){
+  this.lock = true;
+ this.exppersonalinformation.reporttype=this.tiprepots;
+ console.log(this.exppersonalinformation.id);
+ console.log(this.idonline);
+  const resp = await this.exppersonalinformationService.reportsStaff(ExpPersonalInformation.mapForPostRepots(this.exppersonalinformation));
+ if (resp) {
+     let file = this.convertBase64ToFile(resp.file, resp.title);
+     saveAs(file, resp.title + '.' + resp.extension);
+ }
+   this.lock = false;
   }else{
-   //customizado
-   this.toastrService.error('Reporte en construcción estamos trabajando gracias.'); 
+    this.toastrService.error('Ingrece Datos Personales.'); 
   }
 }
+}
+
 
 }

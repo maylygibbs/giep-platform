@@ -1624,13 +1624,12 @@
                         </div>
                     </ng-template>
                 </li>    
-                
                 <!---------------------- REPORTES ----------------->
                 
                 <li [ngbNavItem]="14">
                     <a ngbNavLink >Reportes</a>
                     <ng-template ngbNavContent>
-                       <div class="row">
+                    <div class="row">
                             
                         <label for="inputBirthDate" class="form-label required">Tipos de Reportes</label>
                         
@@ -1650,18 +1649,39 @@
                                     Reporte Customizado
                                 </label>
                             </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <label for="inputreportsSelect" class="form-label required">Item Reportes</label>
+
+                                <ng-select id="inputreportsSelect" [items]="reports" [multiple]=true
+                                    name="reportsSelct" #reportsSelct="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : reportsSelct.errors && ( reportsSelct.dirty || reportsSelct.touched || staexpedForm.submitted) }"
+                                    [searchable]="false" 
+                                    [(ngModel)]="exppersonalinformation.reportsSelect">
+                                    <ul>
+                                        <div *ngIf="reportsSelct.invalid && staexpedForm.submitted"
+                                            class="invalid-feedback">
+                                            <div *ngIf="reportsSelct.errors?.required">Campo es requerido
+                                            </div>
+                                        </div>
+                                    </ul>
+
+                                </ng-select>
+
+                            </div>
+
                         </div>
-                       </div>
-                       <div *ngIf="lockReports==true"> 
-                       <div class="col-md-offset-2 col-md-4">
+                    </div>
+                    <!-- <div *ngIf="lockReports==true">  -->
+                    <div class="col-md-offset-2 col-md-4">
                         <div class="d-flex align-items-center flex-row">
                             <button [disabled]="lock" (click)="repotsImp()" class="btn btn-primary ms-2 me-2">Reporte</button>
                         </div>
                         </div>
-                    </div>
+                    <!-- </div> -->
                     </ng-template>
                 </li>    
-                
+
 
                 <!---------------------- REPORTES ----------------->
                 </ul>
