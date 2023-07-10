@@ -485,6 +485,10 @@ export class CalendarComponent extends BaseComponent implements OnInit {
     this.eventDetail.accreditationItems.push(accreditationItems)
   }
 
+  deleteAccreditationItem(i:number){
+    this.eventDetail.accreditationItems.splice(i,1);
+  }
+
   /**
    * mark como selectable
    * @param items 

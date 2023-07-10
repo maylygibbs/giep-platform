@@ -17,6 +17,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { ScanqrComponent } from './scanqr/scanqr.component';
 import { AccreditationDetailComponent } from './accreditation-detail/accreditation-detail.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { AccreditationstypesComponent } from './accreditationstypes/accreditationstypes.component';
+import { AccreditationtypeStoreComponent } from './accreditationtype-store/accreditationtype-store.component';
 
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -44,7 +46,9 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     CalendarComponent,
     PrintAccreditationComponent,
     ScanqrComponent,
-    AccreditationDetailComponent
+    AccreditationDetailComponent,
+    AccreditationstypesComponent,
+    AccreditationtypeStoreComponent
   ],
   imports: [
     CommonModule,

@@ -83,8 +83,8 @@
 </div>
 <ng-template #addEvent let-modal>
   <div class="modal-header">
-    <h4 *ngIf="!eventDetail.id" id="modalTitle1" class="modal-title">Nueva acreditación</h4>
-    <h4 *ngIf="eventDetail.id && eventDetail.ownerEvent" id="modalTitle1" class="modal-title">Actualizar acreditación</h4>
+    <h4 *ngIf="!eventDetail.id" id="modalTitle1" class="modal-title">Nueva Acreditación</h4>
+    <h4 *ngIf="eventDetail.id && eventDetail.ownerEvent" id="modalTitle1" class="modal-title">Actualizar Acreditación</h4>
     <button type="button" class="btn-close" (click)="close(modalAddEvent)"><span
         class="visually-hidden">close</span></button>
   </div>
@@ -236,7 +236,7 @@
       </div>
     </div>
     <div class="row" *ngFor="let accreditation of eventDetail.accreditationItems; let i = index">
-      <div class="col-lg-4">
+      <div class="col-lg-9">
         <div class="mb-3">
           <label for="inputAccreditationType" class="form-label required">Tipo acreditación </label>
           <ng-select id="inputAccreditationType" [items]="data.accreditationType" [multiple]="false"
@@ -252,7 +252,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-2">
         <div class="mb-3">
           <label for="inputQuantity" class="form-label required">Cantidad</label>
           <input type="number" [name]="accreditation.controlQuantity" [(ngModel)]="accreditation.quantity"
@@ -264,8 +264,8 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4 d-flex align-items-center">
-        <i *ngIf="(i+1) < eventDetail.accreditationItems.length" class="feather icon-plus" placement="start" ngbTooltip="Nuevo Item" (click)="addAccreditationItem()"></i>
+      <div class="col-lg-1 d-flex align-items-center">
+        <i *ngIf="(i+1) < eventDetail.accreditationItems.length" class="feather icon-trash" placement="start" ngbTooltip="Nuevo Item" (click)="deleteAccreditationItem(i)"></i>
         <i *ngIf="(i+1) === eventDetail.accreditationItems.length" class="feather icon-plus" placement="start" ngbTooltip="Nuevo Item" (click)="addAccreditationItem()"></i>
       </div>
     </div>
