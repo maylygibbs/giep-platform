@@ -1,0 +1,75 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Tipos de Acreditación</a></li>
+      <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Nuevo tipo de acreditación</li>
+      <li *ngIf="selectedItem && selectedItem.id" class="breadcrumb-item active" aria-current="page">Actualizar tipo de acreditación</li>
+    </ol>
+  </nav>
+  
+  <div *ngIf="step==1" class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+              <div class="search-form">
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <i class="feather icon-search" (click)="search()"></i>
+                  </div>
+                  <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (ngModelChange)="search()"  placeholder="Buscar aqui...">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+              <button type="button" (click)="create()" class="btn btn-primary btn-create-dt" placement="start" ngbTooltip="Crear Tipo de Acreditación">
+                <i class="mdi mdi-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body card-dt">
+          <h6 class="card-title"></h6>
+          <div class="row">
+            <div class="col-lg-12" *ngIf="accreditationsTypes && accreditationsTypes.data">
+              <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Id</th> 
+                    <th>Tipo de acreditación</th>
+                    <th>Estado</th>
+                    <th data-priority="1" class="text-center">Accion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let input of accreditationsTypes.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: accreditationsTypes.count }">
+                    <td>{{input.id}}</td>
+                    <td>{{input.label}}</td>
+                    <td>{{input.status?.label}}</td>                    
+                    <td class="text-center">
+                      <i class="feather icon-edit-2" (click)="select(input)" placement="start" ngbTooltip="Editar"></i>
+                      <i hidden *ngIf="input.status?.value=='1'" class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar" (click)="delete(input.id)"></i>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th colspan="4" class="text-right">
+                      <app-pager (onChangePage)="loadPage($event)"></app-pager>
+                    </th>
+                  </tr>    
+                </tfoot>    
+              </table>
+            </div>
+  
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step==2">
+   <app-accreditationtype-store [input]="selectedItem" (onBack)="back($event)"></app-accreditationtype-store>
+  </div>
+

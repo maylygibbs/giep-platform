@@ -8,6 +8,8 @@ import * as moment from 'moment';
 import { EventDetail } from '../models/event-detail';
 import { AuthService } from './auth.service';
 import { AcreditationItem } from '../models/accreditation-item';
+import { PaginationResponse } from '../models/pagination-response';
+import { AccreditationType } from '../models/accreditation-type';
 
 @Injectable({
   providedIn: 'root'
@@ -183,9 +185,9 @@ export class CalendarService extends HttpService {
           return item.email;
         });
         eventDetail.usersAccredited = item.calendarUsers?.map((user) => {
-          
+
           Object.assign(user, { dataQr: JSON.stringify({ idEvent: eventDetail.id, userId: user.userId }) });
-          Object.assign(user, { fullName: `${user.primer_nombre} ${user.primer_apellido} (${user.email})`  });
+          Object.assign(user, { fullName: `${user.primer_nombre} ${user.primer_apellido} (${user.email})` });
           return user;
         });
         eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
@@ -338,24 +340,74 @@ export class CalendarService extends HttpService {
     }
   }
 
-    /**
-   * Get user accreditation detail
-   * @param id 
-   * @returns 
-   */
-    async consumeAccreditationItem(idAccreditationItem: string): Promise<any> {
+  /**
+ * Get user accreditation detail
+ * @param id 
+ * @returns 
+ */
+  async consumeAccreditationItem(idAccreditationItem: string): Promise<any> {
 
-      try {
-        const resp = await firstValueFrom(this.put(environment.apiUrl, `/use/item/acreditacion/${idAccreditationItem}`));
-        console.log('consumeAccreditationItem resp', resp)
-        if(resp){
-          this.toastrService.success('El item ha sido marcado como consumido.');
-          return true
-        }
-      } catch (error) {
-        this.toastrService.error('Ha ocurrido un error tratando de consumir el item acreditado.');
-        return false;
+    try {
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/use/item/acreditacion/${idAccreditationItem}`));
+      console.log('consumeAccreditationItem resp', resp)
+      if (resp) {
+        this.toastrService.success('El item ha sido marcado como consumido.');
+        return true
       }
+    } catch (error) {
+      this.toastrService.error('Ha ocurrido un error tratando de consumir el item acreditado.');
+      return false;
     }
+  }
+
+
+  /** ACCREDITATION TYPE */
+
+  /**
+ * Check all Accreditations Types, supports pagination and filter
+ * @param filter 
+ * @returns 
+ */
+  async getAccreditationsTypesPagined(filter: any): Promise<PaginationResponse> {
+    //const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipoinput/pagined', filter));
+    const paginator = new PaginationResponse(filter.page, filter.rowByPage);
+    paginator.count = 1; //resp.count;
+    paginator.data = []; /*resp.data.map((item: any) => {
+      const accreditationType = new AccreditationType();
+      accreditationType.id = item.id;
+      accreditationType.label = item.nombre;
+      return accreditationType;
+    });*/
+
+    return this.resolveWith(paginator) ;
+  }
+
+    /**
+* Persists user data
+* @param data 
+*/
+async storeAccreditationType(data: AccreditationType) {
+  try {
+    if (data.id) {
+      const id = data.id;
+      await firstValueFrom(this.put(environment.apiUrl, `/acreditacion/tipoitem/${id}`, { descripcion: data.label}));
+      this.toastrService.success('Tipo de input acreditación con exito.');
+    } else {
+      await firstValueFrom(this.post(environment.apiUrl, '/acreditacion/tipoitem', { descripcion: data.label }));
+      this.toastrService.success('Tipo de acreditación registrado con exito.');
+    }
+  } catch (error: any) {
+
+    console.log(error);
+    if (error.status == 409) {
+      this.toastrService.error('', error.msg);
+    }
+    if (error.status != 500) {
+      this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+    }
+
+  }
+}
+
 
 }

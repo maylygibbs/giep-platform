@@ -6,6 +6,7 @@ import { CommonsListColorsCalendarResolver, CommonsListUsersEmailsResolver, Comm
 import { PrintAccreditationComponent } from './print-accreditation/print-accreditation.component';
 import { ScanqrComponent } from './scanqr/scanqr.component';
 import { AccreditationDetailComponent } from './accreditation-detail/accreditation-detail.component';
+import { AccreditationstypesComponent } from './accreditationstypes/accreditationstypes.component';
 
 const routes: Routes = [  {
   path: '',
@@ -37,6 +38,10 @@ const routes: Routes = [  {
       path: 'detail',
       component: AccreditationDetailComponent,
     },
+    {
+      path: 'types',
+      component: AccreditationstypesComponent,
+    }
   ]
 }];
 
