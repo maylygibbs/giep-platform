@@ -40,7 +40,8 @@ export class StaexpedComponent extends BaseComponent implements OnInit {
   environment = environment;
   tiprepots: number =1;
   lock: boolean = false;
-
+  lockReports: boolean = false;
+  
   reports: any[] = [
     { id: 1, value: 'Expedientes-Detalles-Lineal', label: 'Expedientes-Detalles-Lineal' },
     { id: 2, value: 'Expedientes-Estudios-Academicos', label: 'Expedientes-Estudios-Academicos' },
@@ -65,6 +66,16 @@ export class StaexpedComponent extends BaseComponent implements OnInit {
       this.step = 1;
       this.loadPage(environment.paginator.default_page);
     });
+
+    const info = localStorage.getItem('arrayUsersRepots');
+    if (info=='"true"') {
+      this.lockReports=true;
+    }else{
+      this.lockReports=false;
+    }
+    console.log("Ves reportes");
+    console.log(info);
+
   }
   async loadPage(pageInfo: any) {
     console.log('pageInfo', pageInfo);

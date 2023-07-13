@@ -2,8 +2,13 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink=".">Personal</a></li>
     </ol>
-
+    <div *ngIf="lockReports==true"> 
     <ol class="breadcrumb">
+      <div class="col-md-offset-2 col-md-4">
+        <div class="d-flex align-items-center flex-row">
+            <button  [disabled]="lock" (click)="repotsImp()" class="btn btn-primary ms-2 me-2">Reporte</button>
+        </div>
+        </div>
      
       <div class="form-check mb-2">
         <input type="radio" (change)="validReports(1)" class="form-check-input" name="byCategory" value="false" checked>
@@ -21,24 +26,18 @@
       </label>
     </div>
 
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-      <ng-select id="inputreportsSelect" [items]="reports" [multiple]=false
-          name="reportsSelct" #reportsSelct="ngModel"
-          [searchable]="false"
-          [(ngModel)]="exppersonalinformation.reportsSelectEcel">
-      </ng-select>
-    </div>
-
-    <div class="col-md-offset-2 col-md-4">
-      <div class="d-flex align-items-center flex-row">
-          <button  [disabled]="lock" (click)="repotsImp()" class="btn btn-primary ms-2 me-2">Reporte</button>
-      </div>
-      </div>
-
-
     </ol>
+  </div>
 
-
+    <div *ngIf="tiprepots==2"> 
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <ng-select id="inputreportsSelect" [ngStyle]="{'min-width': '100%'}" [items]="reports" [multiple]=false
+            name="reportsSelct" #reportsSelct="ngModel"
+            [searchable]="false"
+            [(ngModel)]="exppersonalinformation.reportsSelectEcel">
+        </ng-select>
+      </div>
+    </div>
 
   </nav>
   
