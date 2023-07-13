@@ -139,7 +139,7 @@ export class StaexpedStoreComponent extends BaseComponent implements OnInit {
   idSelectedItempermissiondate_until: number =0;
   idSelectedItempermissionpermission_reason_id: number =0;
   vald: number =1;
-  tiprepots: number =1;
+  tiprepots: number =2;
   idonline: number =0;
   environment = environment;
   step:number = 1;
@@ -1733,13 +1733,13 @@ async validReports(event: number) {
 
 async repotsImp() {
 if (this.tiprepots==1){
-  this.lock = true;
+  /* this.lock = true;
   const resp = await this.exppersonalinformationService.reports(this.tiprepots);
   if (resp) {
       let file = this.convertBase64ToFile(resp.file, resp.title);
       saveAs(file, resp.title + '.' + resp.extension);
   }
-    this.lock = false;
+    this.lock = false; */
 }else{
  //customizado
  if (this.exppersonalinformation.id){

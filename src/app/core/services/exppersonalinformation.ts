@@ -128,4 +128,30 @@ async reportsStaff(data:any): Promise<any> {
 }
 
 
+/**
+   * Upload document
+   * @param formData 
+   */
+async reportsExcel(reports: string): Promise<any> {
+  let response: any = null;
+  try {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/tokenpdf/reportesdetallesexcel/${reports}`));
+    console.log(resp);
+    this.toastrService.success('Reporte Generado con éxito.');
+    response = resp;
+  } catch (error: any) {
+    console.log(error)
+    if (error.status) {
+      this.toastrService.error(error.error.error);
+    } else {
+      this.toastrService.error('Ha ocurrido un error descargando el archivo.');
+    }
+  } finally {
+    return response;
+  }
+}
+
+
+
+
 }

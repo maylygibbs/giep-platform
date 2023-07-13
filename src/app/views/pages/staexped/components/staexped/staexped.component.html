@@ -2,6 +2,44 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink=".">Personal</a></li>
     </ol>
+
+    <ol class="breadcrumb">
+     
+      <div class="form-check mb-2">
+        <input type="radio" (change)="validReports(1)" class="form-check-input" name="byCategory" value="false" checked>
+        <label class="form-check-label">
+            <h6></h6>
+            Reporte General
+        </label>
+    </div>
+
+    <div class="form-check mb-2 mx-3">
+      <input type="radio" (change)="validReports(2)"  class="form-check-input" name="byCategory" value="true">
+      <label class="form-check-label">
+          <h5></h5>
+          Reporte Excel
+      </label>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+      <ng-select id="inputreportsSelect" [items]="reports" [multiple]=false
+          name="reportsSelct" #reportsSelct="ngModel"
+          [searchable]="false"
+          [(ngModel)]="exppersonalinformation.reportsSelectEcel">
+      </ng-select>
+    </div>
+
+    <div class="col-md-offset-2 col-md-4">
+      <div class="d-flex align-items-center flex-row">
+          <button  [disabled]="lock" (click)="repotsImp()" class="btn btn-primary ms-2 me-2">Reporte</button>
+      </div>
+      </div>
+
+
+    </ol>
+
+
+
   </nav>
   
   <div *ngIf="step==1 && users && users.data.length>0" class="row">
