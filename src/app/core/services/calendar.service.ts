@@ -369,15 +369,15 @@ export class CalendarService extends HttpService {
  * @returns 
  */
   async getAccreditationsTypesPagined(filter: any): Promise<PaginationResponse> {
-    //const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/tipoinput/pagined', filter));
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/acreditacion/tipoitem/page', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
-    paginator.count = 1; //resp.count;
-    paginator.data = []; /*resp.data.map((item: any) => {
+    paginator.count = resp.count;
+    paginator.data = resp.data.map((item: any) => {
       const accreditationType = new AccreditationType();
       accreditationType.id = item.id;
-      accreditationType.label = item.nombre;
+      accreditationType.label = item.descripcion;
       return accreditationType;
-    });*/
+    });
 
     return this.resolveWith(paginator) ;
   }

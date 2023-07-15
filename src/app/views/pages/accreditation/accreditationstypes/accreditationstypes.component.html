@@ -37,7 +37,7 @@
                   <tr>
                     <th>Id</th> 
                     <th>Tipo de acreditación</th>
-                    <th>Estado</th>
+                    <th hidden>Estado</th>
                     <th data-priority="1" class="text-center">Accion</th>
                   </tr>
                 </thead>
@@ -46,7 +46,7 @@
                     *ngFor="let input of accreditationsTypes.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: accreditationsTypes.count }">
                     <td>{{input.id}}</td>
                     <td>{{input.label}}</td>
-                    <td>{{input.status?.label}}</td>                    
+                    <td hidden>{{input.status?.label}}</td>                    
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(input)" placement="start" ngbTooltip="Editar"></i>
                       <i hidden *ngIf="input.status?.value=='1'" class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar" (click)="delete(input.id)"></i>
