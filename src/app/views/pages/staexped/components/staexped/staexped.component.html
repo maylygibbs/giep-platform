@@ -26,6 +26,14 @@
       </label>
     </div>
 
+    <div class="form-check mb-2 mx-3">
+      <input type="radio" (change)="validReports(3)"  class="form-check-input" name="byCategory" value="true">
+      <label class="form-check-label">
+          <h5></h5>
+          Cargar Expedientes Excel
+      </label>
+    </div>
+
     </ol>
   </div>
 
@@ -36,6 +44,22 @@
             [searchable]="false"
             [(ngModel)]="exppersonalinformation.reportsSelectEcel">
         </ng-select>
+      </div>
+    </div>
+
+
+    <div *ngIf="tiprepots==3"> 
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <ng-select id="inputreportsSelectExcelCarg" [ngStyle]="{'min-width': '100%'}" [items]="reportsEcel" [multiple]=false
+            name="reportsSelctExcelCarg" #reportsSelct="ngModel"
+            [searchable]="false"
+            [(ngModel)]="exppersonalinformation.reportsSelectEcelCarg">
+        </ng-select>
+        
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <input #inputFile type="file" name="avatar" accept=".xlsx, .xls" 
+        (change)="repotsImp()">
       </div>
     </div>
 

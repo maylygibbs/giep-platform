@@ -20,6 +20,7 @@ export class ExpPersonalInformation {
     reporttype: number;
     reportsSelect: any[];
     reportsSelectEcel: SelectOption;
+    reportsSelectEcelCarg: SelectOption;
 
     public static map(exppersonalinformation: ExpPersonalInformation): ExpPersonalInformation {
         const newInstace = new ExpPersonalInformation();

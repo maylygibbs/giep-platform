@@ -15,6 +15,7 @@ import { filter, Subscription } from 'rxjs';
 import { ExppersonalinformationService } from '../../../../../core/services/exppersonalinformation';
 import { ExpPersonalInformation } from './../../../../../core/models/exp-personal-information'
 import * as saveAs from 'file-saver';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-staexped',
@@ -23,6 +24,9 @@ import * as saveAs from 'file-saver';
   encapsulation: ViewEncapsulation.None
 })
 export class StaexpedComponent extends BaseComponent implements OnInit {
+  @ViewChild('inputFile')
+  inputFile: ElementRef;
+
   exppersonalinformation:ExpPersonalInformation=new ExpPersonalInformation();
   data: any;
   defaultView:boolean=true
@@ -53,8 +57,26 @@ export class StaexpedComponent extends BaseComponent implements OnInit {
     { id: 8, value: 'Expedientes-Reposos', label: 'Expedientes-Reposos' },
 ];
 
+reportsEcel: any[] = [
+  { id: 1, value: '1', label: 'Datos Personales' },
+  { id: 2, value: '2', label: 'Estudios Academicos' },
+  { id: 3, value: '3', label: 'Especialidades en Areas' },
+  { id: 4, value: '4', label: 'Documentos de ingresos'},
+  { id: 5, value: '5', label: 'Controles varios' },
+  { id: 6, value: '6', label: 'Movimientos (Transferencia)' },
+  { id: 7, value: '7', label: 'Movimientos (Promoción)' },
+  { id: 8, value: '8', label: 'Movimientos (Vacaciones)' },
+  { id: 9, value: '9', label: 'Movimientos (Permisos)' },
+  { id: 10, value: '10', label: 'Movimientos (Reposos)' },
+  { id: 11, value: '11', label: 'Fideicomiso' },
+  { id: 12, value: '12', label: 'Seguridad y Salud Laboral' },
+  { id: 13, value: '13', label: 'Otros' },
+];
+
+
   private $eventNavigationEnd: Subscription;
   constructor(private userService: UserService,
+    private toastrService: ToastrService,
     private exppersonalinformationService: ExppersonalinformationService,
     private router: Router) {
     super();
@@ -129,7 +151,7 @@ if (this.tiprepots==1){
       saveAs(file, resp.title + '.' + resp.extension);
   }
     this.lock = false;
-}else{
+}else if (this.tiprepots==2){
  //customizado
       this.lock = true;
       this.exppersonalinformation.reporttype=this.tiprepots;
@@ -140,8 +162,259 @@ if (this.tiprepots==1){
           saveAs(file, resp.title + '.' + resp.extension);
       }
       this.lock = false;
+
+}else if (this.tiprepots==3){
+
+  console.log("llamadas para cargar EXCEL");
+
+ /*  { id: 1, value: '1', label: 'Datos Personales' },
+  { id: 2, value: '2', label: 'Estudios Academicos' },
+  { id: 3, value: '3', label: 'Especialidades en Areas' },
+  { id: 4, value: '4', label: 'Documentos de ingresos'},
+  { id: 5, value: '5', label: 'Controles varios' },
+  { id: 6, value: '6', label: 'Movimientos (Transferencia)' },
+  { id: 7, value: '7', label: 'Movimientos (Promoción)' },
+  { id: 8, value: '8', label: 'Movimientos (Vacaciones)' },
+  { id: 9, value: '9', label: 'Movimientos (Permisos)' },
+  { id: 10, value: '10', label: 'Movimientos (Reposos)' },
+  { id: 11, value: '11', label: 'Fideicomiso' },
+  { id: 12, value: '12', label: 'Seguridad y Salud Laboral' },
+  { id: 13, value: '13', label: 'Otros' }, */
+
+  if (this.exppersonalinformation.reportsSelectEcelCarg.value=='1'){
+     //Datos Personales
+     let file: File = event.target[`files`][0];
+     if (file) {
+       const nameFile = file.name;
+        let extArray = nameFile.split('.');
+       let ext = extArray[extArray.length - 1];
+       const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+       if(filters.length == 0){
+         this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+       }else{
+         const formData = new FormData();
+         formData.append("users", file);
+         const upload = await this.exppersonalinformationService.reportsExcelPersonalinformation(formData);
+         this.inputFile.nativeElement.value = null;
+       }
+     }
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='2'){
+    let file: File = event.target[`files`][0];
+     if (file) {
+       const nameFile = file.name;
+        let extArray = nameFile.split('.');
+       let ext = extArray[extArray.length - 1];
+       const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+       if(filters.length == 0){
+         this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+       }else{
+         const formData = new FormData();
+         formData.append("users", file);
+         const upload = await this.exppersonalinformationService.reportsExcelAcademicstudies(formData);
+         this.inputFile.nativeElement.value = null;
+       }
+     }
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='3'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelSpecialtiesinAreas(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='4'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelincomeDocuments(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='5'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelVariousControls(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='6'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelTransferMovements(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='7'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelMovementsPromotion(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+    
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='8'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelMovementsHolidays(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='9'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelMovementsPermits(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='10'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelMovementsRests(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='11'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelEscrow(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='12'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelOccupationalHealthSafety(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+  }else if (this.exppersonalinformation.reportsSelectEcelCarg.value=='13'){
+    let file: File = event.target[`files`][0];
+    if (file) {
+      const nameFile = file.name;
+       let extArray = nameFile.split('.');
+      let ext = extArray[extArray.length - 1];
+      const filters = environment.form.file_extension_excel.filter((element: string) => element.toLowerCase().includes(ext.toLowerCase()));
+      if(filters.length == 0){
+        this.toastrService.error('Archivo no permitido. Solo se permiten archivos con extensión .xlsx y .xls');
+      }else{
+        const formData = new FormData();
+        formData.append("users", file);
+        const upload = await this.exppersonalinformationService.reportsExcelOthers(formData);
+        this.inputFile.nativeElement.value = null;
+      }
+    }
+
+
+
+
+    
+
   }
+
+  //console.log(this.exppersonalinformation.reportsSelectEcelCarg.value);
   
+
+
+
+
+ }
 }
 
 }
