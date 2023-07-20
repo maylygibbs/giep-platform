@@ -236,7 +236,7 @@ export class CommonsService extends HttpService {
     const resp = await firstValueFrom(this.get(environment.apiUrl, '/encuesta/tipocategoria/list'));
     categories = resp.data.map((item: any) => {
       const option = new SelectOption(item.id, item.nombre);
-       option.haveScales = item.escalaPonderacion == 1 ? true : false;
+      option.haveScales = item.escalaPonderacion == 1 ? true : false;
       return option;
     });
     return categories;
@@ -280,7 +280,7 @@ export class CommonsService extends HttpService {
     const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/list/all'));
     inputsType = resp.data.map((item: any) => {
       const selectOption = new SelectOption(item.id, item.nombre);
-      selectOption.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true:false) : false;
+      selectOption.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true : false) : false;
       return selectOption;
     });
     return inputsType;
@@ -721,40 +721,32 @@ export class CommonsService extends HttpService {
   }
 
 
-    /**
+  /**
 * Return list charges type
 * @returns 
 */
-async getAllAccreditationType(): Promise<Array<SelectOption>> {
+  async getAllAccreditationType(): Promise<Array<SelectOption>> {
 
-  const resp = await firstValueFrom(this.get(environment.apiUrl, '/acreditacion/tipoitem/list'));
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/acreditacion/tipoitem/list'));
 
-  return resp.data.map((item: any) => {
-    return new SelectOption(item.id, item.descripcion);
-  })
+    return resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.descripcion);
+    })
 
-}
-
-
+  }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  /**
+   * Check all department
+   * @param filter 
+   * @returns 
+   */
+  async getDepartments(): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/staexped/departamento/List'));
+    return resp.data.map((item: any) => {
+      return new SelectOption(item.id, item.departamento);
+    });
+  }
 
 
 

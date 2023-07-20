@@ -1,0 +1,125 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Reportes Gráficos</a></li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center flex-row-reverse py-2"><i
+                (click)="clearFilters()" class="mdi mdi-broom btn-clear my-2" placement="top"
+                ngbTooltip="Limpiar filtros"></i></div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
+                <label for="inputInstrument" class="form-label required">Departamento </label><i
+                  class="feather icon-info ms-1" placement="right"
+                  ngbTooltip="El departamento es requerido para visualizar los resultados respectivos. Por favor, indique el departamento."></i>
+                <ng-select id="inputInstrument" name="instrument" [items]="data.departments" [(ngModel)]="selectedDepartment"
+                  bindValue="id" [searchable]="true"required (ngModelChange)="changeSelectFilter()">
+                </ng-select>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <div class="mb-3">
+                <label for="inputSex" class="form-label required">Tipo de gráfica</label>
+                <ng-select id="inputSex" name="resultType" #resultType="ngModel"
+                  [searchable]="true" [(ngModel)]="selectedGraphic" required (ngModelChange)="changeSelectFilter()">
+                  <ng-option value="1">Barras horizontales</ng-option>
+                  <ng-option value="2">Barras verticales</ng-option>
+                  <ng-option value="3">Pie</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="results && results.data" class="row mt-5">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="text-muted">{{ 'Muestra: '+results.sample+ ' usuarios'}} </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div
+              *ngFor="let result of results.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: results.count }"
+              class="col-lg-6 col-md-6 col-xs-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-baseline mb-2">
+                    <h6 class="card-title mb-0">{{result.name}}</h6>
+                    <div ngbDropdown class="mb-2" style="visibility: hidden;">
+                      <button ngbDropdownToggle class="btn p-0 no-dropdown-toggle-icon" type="button"
+                        id="dropdownMenuButton4">
+                        <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal" appFeatherIcon></i>
+                      </button>
+                      <div ngbDropdownMenu aria-labelledby="dropdownMenuButton4">
+                        <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i data-feather="eye"
+                            appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
+                        <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                            data-feather="edit-2" appFeatherIcon class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                        <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                            data-feather="trash" appFeatherIcon class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                        <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                            data-feather="printer" appFeatherIcon class="icon-sm me-2"></i> <span
+                            class="">Print</span></a>
+                        <a ngbDropdownItem class="d-flex align-items-center" href="" (click)="false"><i
+                            data-feather="download" appFeatherIcon class="icon-sm me-2"></i> <span
+                            class="">Download</span></a>
+                      </div>
+                    </div>
+                  </div>
+                  <p *ngIf="result.dependence" class="text-muted">Departamento: {{result.dependence}}</p>
+
+                  <!--GRAFICO DE BARRAS PARA INSTRUMENTOS CON PUNTUACION GLOBAL-->
+                  <apx-chart *ngIf="(selectedGraphic=='1' || selectedGraphic=='2')"
+                    [series]="result.optionsChart.series" [chart]="result.optionsChart.chart"
+                    [colors]="result.optionsChart.colors" [fill]="result.optionsChart.fill"
+                    [grid]="result.optionsChart.grid" [xaxis]="result.optionsChart.xaxis"
+                    [yaxis]="result.optionsChart.yaxis" [legend]="result.optionsChart.legend"
+                    [stroke]="result.optionsChart.stroke" [dataLabels]="result.optionsChart.dataLabels"
+                    [plotOptions]="result.optionsChart.plotOptions"></apx-chart>
+                    <!--GRAFICO DE PIE PARA INSTRUMENTOS CON PUNTUACION GLOBA Y POR CARGO-->
+                  <apx-chart *ngIf="selectedGraphic=='3'" [series]="result.optionsChart.series"
+                    [chart]="result.optionsChart.chart" [colors]="result.optionsChart.colors"
+                    [labels]="result.optionsChart.labels" [responsive]="result.optionsChart.responsive"
+                    [plotOptions]="result.optionsChart.plotOptions" [legend]="result.optionsChart.legend"></apx-chart>
+                </div>  
+
+              </div>
+  
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+              <app-pager (onChangePage)="loadPage($event)"></app-pager>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!submited && (!results || !results.data)" class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="card">
+        <div class="card-body text-center">
+          <p>No hay datos disponibles</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="submited && (!results || !results.data)" class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="card">
+        <div class="card-body text-center">
+          <p>Buscando ...</p>
+        </div>
+      </div>
+    </div>
+  </div>
