@@ -19,7 +19,8 @@ export class ExpPersonalInformation {
     elapsedtime: number;
     reporttype: number;
     reportsSelect: any[];
-    
+    reportsSelectEcel: SelectOption;
+    reportsSelectEcelCarg: SelectOption;
 
     public static map(exppersonalinformation: ExpPersonalInformation): ExpPersonalInformation {
         const newInstace = new ExpPersonalInformation();
