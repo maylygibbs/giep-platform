@@ -20,6 +20,20 @@ export class ExppersonalinformationService extends HttpService {
     super(http);
   }
 
+  /**
+   * Check all Answers
+   * @param filter 
+   * @returns 
+   */
+  async getUserLoad(): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, '/tokenpdf/usuarioscargasexpedientes/List'));
+    const data = resp.data.map((item: any) => {
+      const profession = ExpPersonalInformation.mapFromObjectUserLoad(item);
+      return profession;
+    });
+    return data;
+  }
+
 
   /**
    * Query project by id
@@ -104,6 +118,32 @@ async getStaffById(data:any){
       return response;
     }
   }
+
+  
+  /**
+   * Upload user load
+   * @param formData 
+   */
+  async reportsUserLoad(user: string,date_From: string,date_Until: string): Promise<any> {
+    let response: any = null;
+    try {
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/tokenpdf/reportescargausuario/${user}/${date_From}/${date_Until}`));
+      console.log(resp);
+      this.toastrService.success('Reporte Generado con éxito.');
+      response = resp;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status) {
+        this.toastrService.error(error.error.error);
+      } else {
+        this.toastrService.error('Ha ocurrido un error descargando el archivo.');
+      }
+    } finally {
+      return response;
+    }
+  }
+
+
 
 /**
    * Persists reportsStaff data

@@ -34,6 +34,14 @@
       </label>
     </div>
 
+    <div class="form-check mb-2 mx-3">
+      <input type="radio" (change)="validReports(4)"  class="form-check-input" name="byCategory" value="true">
+      <label class="form-check-label">
+          <h5></h5>
+          Detalles Carga Usuarios
+      </label>
+    </div>
+
     </ol>
   </div>
 
@@ -61,6 +69,58 @@
         <input #inputFile type="file" name="avatar" accept=".xlsx, .xls" 
         (change)="repotsImp()">
       </div>
+    </div>
+
+    <div *ngIf="tiprepots==4"> 
+      <ol class="breadcrumb">
+      
+      <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        
+
+        <ng-select id="inputreportsselectedItemUserLoad" [ngStyle]="{'min-width': '100%'}" [items]="selectedItemUserLoad" [multiple]=false
+            name="reportsselectedItemUserLoad" #reportsSelct="ngModel"
+            [searchable]="false"
+            [(ngModel)]="exppersonalinformation.selectedItemUserLoad">
+            </ng-select>
+          
+          <div class="input-group">
+            <label for="inputAdmissionDate" class="form-label required">Fecha Desde</label>
+              <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
+              class="form-control" placeholder="yyyy-mm-dd" name="dpdesdevacation"
+              [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched) }"
+              [(ngModel)]="exppersonalinformation.date_From" ngbDatepicker #dpdesdevacation="ngbDatepicker" required>
+              <button class="input-group-text" type="button" (click)="dpdesdevacation.toggle()">
+                  <i class="feather icon-calendar icon-md text-muted"></i>
+              </button>
+              <div *ngIf="admissionDate.invalid" class="invalid-feedback">
+                  <div *ngIf="admissionDate.errors?.required">Campo es requerido
+                  </div>
+              </div>                                    
+              
+          </div>
+
+          <div class="input-group">
+            <label for="inputAdmissionDate" class="form-label required">Fecha Hasta</label>
+            <input id="inputAdmissionDate" name="admissionDate" #admissionDate="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" 
+            class="form-control" placeholder="yyyy-mm-dd" name="dphastavacation"
+            [ngClass]="{'ng-dirty ng-invalid' : admissionDate.errors && ( admissionDate.dirty || admissionDate.touched) }"
+            [(ngModel)]="exppersonalinformation.date_Until" ngbDatepicker #dphastavacation="ngbDatepicker" required>
+            <button class="input-group-text" type="button" (click)="dphastavacation.toggle()">
+                <i class="feather icon-calendar icon-md text-muted"></i>
+            </button>
+            <div *ngIf="admissionDate.invalid" class="invalid-feedback">
+                <div *ngIf="admissionDate.errors?.required">Campo es requerido
+                </div>
+            </div>                                    
+
+
+          </div>
+
+        
+      </div>
+    </ol>
+
+ 
     </div>
 
   </nav>

@@ -16,6 +16,8 @@ import { ExppersonalinformationService } from '../../../../../core/services/expp
 import { ExpPersonalInformation } from './../../../../../core/models/exp-personal-information'
 import * as saveAs from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
+import { SelectOption } from '../../../../../core/models/select-option';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-staexped',
@@ -45,7 +47,8 @@ export class StaexpedComponent extends BaseComponent implements OnInit {
   tiprepots: number =1;
   lock: boolean = false;
   lockReports: boolean = false;
-  
+  selectedItemUserLoad: Array<SelectOption>;
+
   reports: any[] = [
     { id: 1, value: 'Expedientes-Detalles-Lineal', label: 'Expedientes-Detalles-Lineal' },
     { id: 2, value: 'Expedientes-Estudios-Academicos', label: 'Expedientes-Estudios-Academicos' },
@@ -97,6 +100,9 @@ reportsEcel: any[] = [
     }
     console.log("Ves reportes");
     console.log(info);
+
+    this.selectedItemUserLoad = await this.exppersonalinformationService.getUserLoad();
+
 
   }
   async loadPage(pageInfo: any) {
@@ -402,7 +408,7 @@ if (this.tiprepots==1){
     }
 
 
-
+  
 
     
 
@@ -410,9 +416,16 @@ if (this.tiprepots==1){
 
   //console.log(this.exppersonalinformation.reportsSelectEcelCarg.value);
   
-
-
-
+}else if (this.tiprepots==4){
+  const fcehDateFrom = this.exppersonalinformation.date_From.year+'-'+this.exppersonalinformation.date_From.month +'-'+this.exppersonalinformation.date_From.day;
+  const fcehDateUntil = this.exppersonalinformation.date_Until.year+'-'+this.exppersonalinformation.date_Until.month +'-'+this.exppersonalinformation.date_Until.day;
+  const resp = await this.exppersonalinformationService.reportsUserLoad(this.exppersonalinformation.selectedItemUserLoad.label,fcehDateFrom,fcehDateUntil);
+  if (resp) {
+      let file = this.convertBase64ToFile(resp.file, resp.title);
+      saveAs(file, resp.title + '.' + resp.extension);
+  }
+    this.lock = false;
+ 
 
  }
 }

@@ -21,6 +21,9 @@ export class ExpPersonalInformation {
     reportsSelect: any[];
     reportsSelectEcel: SelectOption;
     reportsSelectEcelCarg: SelectOption;
+    selectedItemUserLoad: SelectOption;
+    date_From: any;
+    date_Until: any;
 
     public static map(exppersonalinformation: ExpPersonalInformation): ExpPersonalInformation {
         const newInstace = new ExpPersonalInformation();
@@ -94,6 +97,12 @@ export class ExpPersonalInformation {
         });
         return reports;
    }   
+
+   public static mapFromObjectUserLoad(professionObj: any) {
+    if (!professionObj)
+        return;
+    return new SelectOption(professionObj.id, professionObj.userload);
+}
 
 
 
