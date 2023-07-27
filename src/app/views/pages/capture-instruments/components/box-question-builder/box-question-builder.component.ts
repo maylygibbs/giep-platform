@@ -60,9 +60,9 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
 
   ngOnChanges(changes: SimpleChanges): void {
     if(!this.globalsPoints && this.byCategory){
-      this.categories = this.data.categories.filter((item:SelectOption)=>item.haveScales)
+      this.categories = this.data ? this.data.categories.filter((item:SelectOption)=>item.haveScales) : null
     }else{
-      this.categories = this.data.categories
+      this.categories = this.data ?  this.data.categories : null;
     }
   }
 

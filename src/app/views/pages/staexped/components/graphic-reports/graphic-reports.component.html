@@ -12,14 +12,36 @@
                 (click)="clearFilters()" class="mdi mdi-broom btn-clear my-2" placement="top"
                 ngbTooltip="Limpiar filtros"></i></div>
           </div>
-
           <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mb-3">
+              <label for="inputStartDate" class="form-label">Fecha inicio</label>
+              <div class="input-group">
+                <input id="inputStartDate" name="startDate" #startDateI="ngModel"
+                  [minDate]="{year: 1930 , month: 9, day: 1}" class="form-control" placeholder="yyyy-mm-dd"
+                  [(ngModel)]="startDate" ngbDatepicker #dp1="ngbDatepicker"
+                  (ngModelChange)="changeDateFilter(startDateI,endDateI)">
+                <button class="input-group-text" type="button" (click)="dp1.toggle()">
+                  <i class="feather icon-calendar icon-md text-muted"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mb-3">
+              <label for="inputEndDate" class="form-label">Fecha fin</label>
+              <div class="input-group">
+                <input id="inputEndDate" name="endDate" #endDateI="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}"
+                  class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="endDate" ngbDatepicker #dp2="ngbDatepicker"
+                  (ngModelChange)="changeDateFilter(startDateI,endDateI)">
+                <button class="input-group-text" type="button" (click)="dp2.toggle()">
+                  <i class="feather icon-calendar icon-md text-muted"></i>
+                </button>
+              </div>
+            </div>
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
                 <label for="inputInstrument" class="form-label required">Departamento </label><i
                   class="feather icon-info ms-1" placement="right"
                   ngbTooltip="El departamento es requerido para visualizar los resultados respectivos. Por favor, indique el departamento."></i>
                 <ng-select id="inputInstrument" name="instrument" [items]="data.departments" [(ngModel)]="selectedDepartment"
-                  bindValue="id" [searchable]="true"required (ngModelChange)="changeSelectFilter()">
+                  bindValue="id" [searchable]="true" (ngModelChange)="changeSelectFilter()">
                 </ng-select>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">

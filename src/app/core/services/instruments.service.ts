@@ -452,8 +452,28 @@ export class InstrumentsService extends HttpService {
         result.name = item.entidad;
         result.dateResponse = item.fecha_inicio;
         result.country = item.pais;
-        result.state = item.estado;
-        result.city = item.ciudad;
+        if(!globalsPoints){
+          if(filter.byuser=='2' || filter.byuser=='3'){
+            if(filter.estado || filter.ciudad){
+              result.state = item.estado;
+              result.city = item.ciudad;
+            }
+          }else{
+            result.state = item.estado;
+            result.city = item.ciudad;
+          }
+        }else{
+          if(filter.byuser=='0'){
+            if(filter.estado || filter.ciudad){
+              result.state = item.estado;
+              result.city = item.ciudad;
+            }
+          }else{
+            result.state = item.estado;
+            result.city = item.ciudad;
+          }
+        }
+
         result.sex = item.sexo;
         result.charge = item.cargo;
         result.dependence = item.dependencia;
