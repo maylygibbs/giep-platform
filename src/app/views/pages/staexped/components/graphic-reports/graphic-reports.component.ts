@@ -89,12 +89,13 @@ export class GraphicReportsComponent extends BaseComponent implements OnInit {
 
 
   clearFilters() {
-
+    this.startDate = null;
+    this.endDate = null;
+    this.startDateFilter = null;
+    this.endDateFilter = null;
     this.selectedReport = '1';
     this.selectedGraphic = '1';
     this.selectedDepartment = null;
-
-    // this.loadPage(environment.paginator.default_page);
   }
 
   /**
