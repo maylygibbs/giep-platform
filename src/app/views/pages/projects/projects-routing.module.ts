@@ -5,6 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { GetAllUserResolver } from '../../../core/resolvers/user.resolver';
 import { GetAllCompanyResolver } from '../../../core/resolvers/company.resolver';
+import { BoardDndComponent } from './components/board-dnd/board-dnd.component';
+import { ProjectDashboardComponent } from './components/project-dashboard/project-dashboard.component';
+import { MembersComponent } from './components/members/members.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 const routes: Routes = [
   {
@@ -14,11 +18,29 @@ const routes: Routes = [
       title: 'Proyectos - GIEP',
     },
     resolve:{
-      statusList: CommonsListStatusResolver,
-      countries: CommonsListCountriesResolver,
-      users: GetAllUserResolver,
       Companies: GetAllCompanyResolver
     }
+  },
+  {
+    path:'dashboard',
+    component: ProjectDashboardComponent,
+    children:[
+      {
+        path:'board',
+        component: BoardDndComponent
+      },
+      {
+        path:'members',
+        component: MembersComponent,
+        resolve:{
+          users: GetAllUserResolver,
+        }
+      },
+      {
+        path:'settings',
+        component: SettingsComponent
+      }
+    ]
   }
 ];
 

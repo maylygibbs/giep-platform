@@ -166,7 +166,7 @@
 				<div>
 				 <p class="card-text">{{issue.title}}</p>
 				</div>
-				<div class="card text-left">
+				<div *ngIf="users" class="card text-left">
 					<div *ngFor="let user of users.data">
 						<div class="d-flex flex-row-reverse" *ngIf="user.fullName=='Juan Blanco'">
 							<div *ngIf="user.fullName=='Juan Blanco'"> 

@@ -1,0 +1,262 @@
+<div *ngIf="selectedItem" class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 stretch-card">
+        <div class="card">
+            <div class="card-header">
+                Mienbros del Equipo
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-5 col-md-5 col-sm-12 stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div *ngIf="!selectedItem.pmo" class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <label for="inputHours" class="form-label required">PMO</label>
+                                        <ng-select id="pmo" [items]="data.users" [multiple]=false name="pmoInput"
+                                            #pmoInput="ngModel" [searchable]="true" bindLabel="label" bindValue="value"
+                                            [(ngModel)]="selectedPmo" (change)="addPmo()">
+
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div *ngIf="selectedItem.pmo" class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <p>PMO</p>
+                                        <div class="row mt-3">
+                                            <div *ngIf="selectedItem.pmo.avatar" class="col-lg-6 col-md-6 col-sm-6">
+                                                <img ngbTooltip="{{selectedItem.pmo.fullName}}"
+                                                    [src]="selectedItem.pmo.avatar"
+                                                    class="wd-40 ht-40 rounded-circle card-img-top mt-1"> <span
+                                                    class="ms-2">{{selectedItem.pmo.fullName}}</span>
+                                            </div>
+                                            <div *ngIf="!selectedItem.pmo.avatar" class="col-lg-6 col-md-6 col-sm-6">
+                                                <div class="wd-40 ht-40 rounded-circle-without-img mt-1">{{selectedItem.pmo.initialsName}}</div>  <span
+                                                    class="ms-2">{{selectedItem.pmo.fullName}}</span>
+                                            </div>
+                                            
+                                            <div class="col-lg-6 col-md-6 col-sm-6 d-flex align-items-center">
+                                                <i class="feather icon-trash ms-1 icon-members"
+                                                    (click)="deletePmo(selectedItem.pmo.id)" placement="start"
+                                                    ngbTooltip="Eliminar PMO"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-12 stretch-card">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <form name="resourceForm" #resourceForm="ngForm"
+                                            (ngSubmit)="resourceAdd(resourceForm)">
+                                            <div class="row">
+                                                <div class="col-lg-8 col-md-8 col-sm-12">
+                                                    <label for="inputHours" class="form-label required">Recurso</label>
+                                                    <ng-select id="pmo" [items]="data.users" [multiple]=false
+                                                        name="resourceInput" #resourceInput="ngModel"
+                                                        [searchable]="true" bindLabel="label" bindValue="value"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : resourceInput.errors && ( resourceInput.dirty || resourceInput.touched || resourceForm.submitted) }"
+                                                        [(ngModel)]="newResource.id" (change)="onChangeResource()"
+                                                        required>
+                                                    </ng-select>
+                                                    <div *ngIf="resourceInput.invalid && resourceForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="resourceInput.errors?.required">Campo es requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-12">
+                                                    <label for="inputHours" class="form-label required">Esfuerzo</label>
+                                                    <input type="text" name="hours" #hours="ngModel" maxlength="255"
+                                                        [(ngModel)]="newResource.hours"
+                                                        [pattern]="environment.form.number.validations.pattern"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : hours?.errors && (hours?.dirty || hours?.touched || resourceForm.submitted) }"
+                                                        class="form-control" id="inputHours" autocomplete="off"
+                                                        required>
+                                                    <div *ngIf="hours.invalid && resourceForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="hours.errors?.required">Campo es requerido
+                                                        </div>
+                                                        <div *ngIf="hours.errors?.pattern">Campo es numérico
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-12 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary btn-create-dt"
+                                                        placement="bottom" ngbTooltip="Crear">
+                                                        <i class="feather icon-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                                        <hr>
+                                    </div>
+                                    <div *ngIf="selectedItem.assignedResources && selectedItem.assignedResources.length > 0; else  message"
+                                        class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                                        <table class="table mt-3">
+                                            <thead>
+                                                <tr>
+                                                    <th>Recurso</th>
+                                                    <th>Esfuerzo</th>
+                                                    <th>Dia(s) Libre(s)</th>
+                                                    <th data-priority="1" class="text-center"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let resource of selectedItem.assignedResources">
+                                                    <td *ngIf="resource.avatar"> <img ngbTooltip="{{resource.fullName}}" [src]="resource.avatar"
+                                                            class="wd-40 ht-40 rounded-circle card-img-top mt-1"> <span
+                                                            class="ms-2">{{resource.fullName}}</span></td>
+                                                    <td *ngIf="!resource.avatar" class="d-flex align-items-center"> <div class="wd-40 ht-40 rounded-circle-without-img mt-1">{{resource.initialsName}}</div> <span
+                                                                class="ms-2">{{resource.fullName}}</span></td>
+                                                    <td>{{resource.hoursDedication}}</td>
+                                                    <td><a class="setting-days"
+                                                            (click)="openAddFreeDaysModal(addFreeDaysModal,resource)">
+                                                            {{resource.totalFreeDays == 1 ? resource.totalFreeDays+' día': resource.totalFreeDays+' días' }} 
+                                                    </a></td>
+                                                    <td><i class="feather icon-trash ms-1 icon-members"
+                                                            (click)="deleteResource(resource.id)" placement="start"
+                                                            ngbTooltip="Eliminar Recurso"></i></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <ng-template #message>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 mt-3 text-center">
+                                            <p>¡El proyecto no tiene recursos asignados! </p>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #addFreeDaysModal let-modal>
+    <div class="modal-header">
+        <button type="button" class="btn-close" (click)="closeAddFreeDaysModal()" aria-label="Close"></button>
+    </div>
+    <form name="addFreeDaysForm" #addFreeDaysForm="ngForm" (ngSubmit)="addFreeDays(addFreeDaysForm)">
+        <div *ngIf="selectedResource" class="modal-body">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <h5 class="mt-1 mb-3">Dias libres para: {{selectedResource.fullName}}</h5>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="row">
+
+                        <!-- VINCULAR DIAS LIBRES AL RECURSO  -->
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div *ngIf="inputError"
+                                        class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+                                        <div [innerHtml]="inputError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                    <label for="inputStartDate" class="form-label">Fecha inicio</label>
+                                    <div class="input-group">
+                                        <input id="inputStartDate" name="startDate" #startDateI="ngModel"
+                                            [minDate]="minDate" class="form-control"
+                                            placeholder="yyyy-mm-dd" [(ngModel)]="startDate" ngbDatepicker
+                                            #dp1="ngbDatepicker" (ngModelChange)="changeDateFilter(startDateI,endDateI)"
+                                            required>
+                                        <button class="input-group-text" type="button" (click)="dp1.toggle()">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="startDateI.invalid && addFreeDaysForm.submitted"
+                                        class="invalid-feedback">
+                                        <div *ngIf="startDateI.errors?.required">Campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                    <label for="inputEndDate" class="form-label">Fecha fin</label>
+                                    <div class="input-group">
+                                        <input id="inputEndDate" name="endDate" #endDateI="ngModel"
+                                            [minDate]="minDate" class="form-control"
+                                            placeholder="yyyy-mm-dd" [(ngModel)]="endDate" ngbDatepicker
+                                            #dp2="ngbDatepicker" (ngModelChange)="changeDateFilter(startDateI,endDateI)"
+                                            required>
+                                        <button class="input-group-text" type="button" (click)="dp2.toggle()">
+                                            <i class="feather icon-calendar icon-md text-muted"></i>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="endDateI.invalid && addFreeDaysForm.submitted"
+                                        class="invalid-feedback">
+                                        <div *ngIf="endDateI.errors?.required">Campo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+
+                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 d-flex  align-items-center" >
+                                    <button type="submit" class="btn btn-primary btn-create-dt" placement="bottom"
+                                        ngbTooltip="Registrar fechas">
+                                        <i class="feather icon-plus"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                                    <hr>
+                                </div>
+                                <div *ngIf="selectedResource.freeDays && selectedResource.freeDays.length > 0; else  messageDates"
+                                    class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                                    <table class="table mt-3">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
+                                                <th>Dias Libres</th>
+                                                <th data-priority="1" class="text-center"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let range of selectedResource.freeDays">
+                                                <td>{{range.startDate | date:'YYYY-MM-dd'}}</td>
+                                                <td>{{range.endDate | date:'YYYY-MM-dd'}}</td>
+                                                <td>{{range.days}}</td>
+                                                <td><i class="feather icon-trash ms-1 icon-members"
+                                                        (click)="deleteRange(range.id)" placement="start"
+                                                        ngbTooltip="Eliminar Fechas"></i></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #messageDates>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 mt-3 text-center">
+                                        <p>{{selectedResource.fullName}} tiene 0 dias libres</p>
+                                    </div>
+                                </ng-template>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeAddFreeDaysModal()">Cerrar</button>
+        </div>
+    </form>
+</ng-template>

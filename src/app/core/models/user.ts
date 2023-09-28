@@ -40,9 +40,22 @@ export class User {
     hoursDedication: string; 
     nameInputHours:  string; 
     instrument:Instrument;
+    freeDays:any; // range of dates
+    totalFreeDays:any;
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');
+    }
+
+    get initialsName() {
+        let initial= '';
+        if(this.firstName){
+            initial = this.firstName.charAt(0);
+        }
+        if(this.lastName){
+            initial = initial+this.lastName.charAt(0);            
+        }
+        return initial;
     }
 
     public static map(user: User): User {

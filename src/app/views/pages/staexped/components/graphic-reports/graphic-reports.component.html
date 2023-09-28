@@ -13,6 +13,14 @@
                 ngbTooltip="Limpiar filtros"></i></div>
           </div>
           <div class="row">
+            <div class="col-lg-12">
+              <div *ngIf="inputError"
+              class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+                <div [innerHtml]="inputError"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mb-3">
               <label for="inputStartDate" class="form-label">Fecha inicio</label>
               <div class="input-group">

@@ -250,3 +250,14 @@ p.badge{
 .bg-green-1 {
   background-color: #086e2e !important;
 }
+
+/** avatar whitout imge **/
+
+.rounded-circle-without-img{
+  background-color: #6571ff ;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

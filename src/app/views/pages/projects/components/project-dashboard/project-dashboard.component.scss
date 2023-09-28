@@ -1,0 +1,25 @@
+.horizontal-list{
+    list-style: none;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 0 !important;
+    li{
+        display: inline-block;
+        padding: 0 0.9rem;
+        cursor: pointer;
+        color: #6571ff;
+
+        &:hover{
+            color: #2536f7;
+        }
+    }
+
+}
+
+
+.active-option {
+    font-size: 15px;
+    color: #2536f7 !important;
+    border-bottom: 1px solid #2536f7;
+    box-shadow: 0px 1px 2px -1px rgb(0 0 0 / 30%);
+  }

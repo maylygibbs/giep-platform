@@ -163,7 +163,6 @@ export class BoardDndListComponent implements OnInit {
 
     configPanel(datos){
       const myArray = datos.split(".");
-      console.log(myArray[1]);
       this.nompanel=  myArray[1];
     }
  

@@ -13,6 +13,14 @@
               ngbTooltip="Limpiar filtros"></i></div>
         </div>
         <div class="row">
+          <div class="col-lg-12">
+            <div *ngIf="inputError"
+            class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+              <div [innerHtml]="inputError"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
             <label for="inputInstrument" class="form-label required">Instrumento </label><i
               class="feather icon-info ms-1" placement="right"

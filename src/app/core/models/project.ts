@@ -22,9 +22,8 @@ export class Project {
     hoursProject: number;
     progress: number;
     TypeGbProgressbar: string;
-    projectManagementOfficeF?: User[];
-    projectManagementOffice: User;
-    
+
+    pmo: User;
 
     userPmo?: User[];
 
@@ -36,32 +35,11 @@ export class Project {
     status: SelectOption;
     idProject: string;
     idResorce: string;
-    hoursDedication: string; 
+    hoursDedication: string;
     
-    //Variable Mapping Method
-    public static map(project: Project): Project {
-        const newInstace = new Project();
-        newInstace.id = project.id;
-        newInstace.name = project.name
-        newInstace.description = project.description;
-        newInstace.assignedResources = project.assignedResources;
-        newInstace.assignedResourcesf = project.assignedResourcesf;
-        newInstace.progress = project.progress;
-        newInstace.startDate = project.startDate;
-        newInstace.springs = project.springs;
-        newInstace.endDate = project.endDate;
-        newInstace.hoursProject = project.hoursProject;
-        newInstace.projectManagementOffice = project.projectManagementOffice;
-        newInstace.projectManagementOfficeF = project.projectManagementOfficeF;
-        newInstace.userPmo = project.userPmo;
-        
-        
-        newInstace.assignNonWorkingDays = project.assignNonWorkingDays;
-        newInstace.company = project.company;
-        newInstace.status = project.status;
-        newInstace.condition = project.condition;
-        return newInstace
-    }
+    freeDays:any; // range of dates
+    totalFreeDays:any;
+    
 
     //Project Variable Mapping Method
     public static mapForPost(project: Project) {
@@ -72,8 +50,7 @@ export class Project {
         Object.assign(projectMap, { nombre: project.name });
         Object.assign(projectMap, { descripcion: project.description });
         Object.assign(projectMap, { fechainicio: `${project.startDate.year}-${project.startDate.month}-${project.startDate.day}` });
-        Object.assign(projectMap, { IdUserPmo: project.projectManagementOffice });
-        //Object.assign(projectMap, { IdUserPmo: 1 });
+        Object.assign(projectMap, { IdUserPmo: null });
         Object.assign(projectMap, { idempresa: project.company.id });
         Object.assign(projectMap, { horaestimadas: project.hoursProject });
         Object.assign(projectMap, { idstatuscalendarioproyecto: 2 });
@@ -99,8 +76,7 @@ export class Project {
 
     //Map variables of non-working days
     public static map3ForPost(options: Array<ProyectCalendar>,proyect: Project){
-        //let optionsOutput;
-        //let calendarMap: any = {};
+
         var dataProyectCalendar = [];
         let proyectoCalendarMap: any = {};
         if (proyect.id) {
@@ -115,19 +91,6 @@ export class Project {
         Object.assign(proyectoCalendarMap, { arrayofnonworkingdays: dataProyectCalendar });
         return proyectoCalendarMap; 
 
-        /* optionsOutput = options.map((opt:ProyectCalendar)=>{
-            return {
-                idproyecto: localStorage.getItem('idusersproyecadd'),
-                startDate: opt.start,
-                endDate: opt.start
-                datauserresorce.push({ idproyecto: localStorage.getItem('idusersproyecadd'), idrecurso: sectionItem.id, horasdedicacion: sectionItem.hoursDedication});    
-            }
-        }); */
-
-
-
-        //return optionsOutput;
-
     }
 
     //Object Map Method
@@ -137,14 +100,7 @@ export class Project {
         let project = new Project();
         project.id = projectObj.id;
         project.name = projectObj.nombre;
-        project.assignedResources = projectObj.recursos.map((item:any)=>{
-            const user = new User();
-            user.id = item.id;
-            user.firstName = item.primerNombre;
-            user.lastName = item.primerApellido;
-            user.hoursDedication = item.horasdedicadas;
-            return user;
-        });
+
         
         project.startDate = projectObj.fechaInicio;
         project.endDate = projectObj.fechaFin;
@@ -153,15 +109,18 @@ export class Project {
         project.progress = projectObj.progreso;
         project.condition = projectObj.estado;
         let min = 0, max = 100;
-        // project.progress = Math.floor(Math.random() * (max - min + 1) + min);
+
          project.progress = projectObj.total[0].totalprogress;
          project.TypeGbProgressbar=projectObj.total[0].colorprogress;
-        project.projectManagementOfficeF = projectObj.userPmo.id;
-         project.projectManagementOffice = User.mapFromObject(projectObj.userPmo);
+         if(projectObj.userPmo){
+            project.pmo = new User();
+            project.pmo.id = projectObj.userPmo.id;
+            project.pmo.email = projectObj.userPmo.email;
+            project.pmo.firstName = projectObj.userPmo.primerNombre;
+            project.pmo.lastName =  projectObj.userPmo.primerApellido;
+         }
+
         project.company = new SelectOption(projectObj.empresa.id, projectObj.empresa.nombre);
-        project.springs = Spring.loadSpringsList(projectObj.springs);
-        if (project.springs)
-            project.endDate = Project.getEndDate(project.springs);
         if (projectObj.estatus)
             project.status = new SelectOption(projectObj.estatus.id, projectObj.estatus.Descripcion);
         return project;

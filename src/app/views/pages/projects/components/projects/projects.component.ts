@@ -71,12 +71,11 @@ export class ProjectsComponent extends BaseComponent implements  OnInit {
 
   
 
-  async config(id: number) {
-    this.selectedItem = await this.projectService.getProjectById(id);
+  async goToDashboard(id: number) {
+    //this.selectedItem = await this.projectService.getProjectById(id);
     localStorage.setItem('projectidselect', id.toString());
-    this.step++;
-    this.step++;
-    //this.next();
+    this.router.navigate(['/projects/dashboard/board']);
+
   }
 
   async select(id: number) {

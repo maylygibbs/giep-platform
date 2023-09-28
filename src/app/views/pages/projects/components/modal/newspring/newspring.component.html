@@ -1,44 +1,73 @@
-<div class="modal-header bg-primary text-white">
+<div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Nuevo Spring</h4>
 </div>
 <div class="modal-body">
-    <form [formGroup]="editForm" (ngSubmit)="onSubmit()" >
-        <div class="form-group row d-flex justify-content-left">
-            <label for="inputStartDate" class="form-label required">Fecha Inicio</label> 
-            <div class="col-sm-6">
-			      <input formControlName="startDate" id="startDate" name="modstartDate" 
-				     class="form-control" placeholder="yyyy-mm-dd" name="dp"
-				     [minDate]="minDate1" ngbDatepicker  #dp="ngbDatepicker" required>
-
-					 <button class="input-group-text" type="button" (click)="dp.toggle()">
-					   <i class="feather icon-calendar icon-md text-muted"></i>
-					</button>
-							
-			</div>
-        </div>
-        <div class="form-group row d-flex justify-content-left">
-            <label for="inputStartDate" class="form-label required">Fecha Fin</label> 
-            <div class="col-sm-6">
-                <input formControlName="endDate" id="endDate" 
-                   class="form-control" placeholder="yyyy-mm-dd" name="dp2"
-                   [minDate]="minDate1" ngbDatepicker  #dp2="ngbDatepicker" required>
-
-                   <button class="input-group-text" type="button" (click)="dp2.toggle()">
-                     <i class="feather icon-calendar icon-md text-muted"></i>
-                  </button>
-                          
-          </div>
-        </div>
-        <div class="form-group row d-flex justify-content-left">
-            <label for="iteration">Iteración:</label>
-            <div class="col-sm-6">
-                <input type="text" formControlName="iteration" class="form-control" />
+    <form name="createSpringForm" #createSpringForm="ngForm" (ngSubmit)="storeSpring(createSpringForm)">
+        <div class="row">
+            <div class="col-lg-12">
+                <div *ngIf="inputError"
+                    class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+                    <div [innerHtml]="inputError"></div>
+                </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="mb-3">
+                    <label for="inputStartDate" class="form-label">Fecha
+                        inicio</label>
+                    <div class="input-group">
+                        <input id="inputStartDate" name="startDate" #startDateI="ngModel" [minDate]="minDate"
+                            class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="startDate" ngbDatepicker
+                            #dp1="ngbDatepicker" (ngModelChange)="changeDateFilter(startDateI,endDateI)" required>
+                        <button class="input-group-text" type="button" (click)="dp1.toggle()">
+                            <i class="feather icon-calendar icon-md text-muted"></i>
+                        </button>
+                    </div>
+                    <div *ngIf="startDateI.invalid && createSpringForm.submitted" class="invalid-feedback">
+                        <div *ngIf="startDateI.errors?.required">Campo es
+                            requerido
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="mb-3">
+                    <label for="inputEndDate" class="form-label">Fecha
+                        fin</label>
+                    <div class="input-group">
+                        <input id="inputEndDate" name="endDate" #endDateI="ngModel" [minDate]="minDate" class="form-control"
+                            placeholder="yyyy-mm-dd" [(ngModel)]="endDate" ngbDatepicker #dp2="ngbDatepicker"
+                            (ngModelChange)="changeDateFilter(startDateI,endDateI)" required>
+                        <button class="input-group-text" type="button" (click)="dp2.toggle()">
+                            <i class="feather icon-calendar icon-md text-muted"></i>
+                        </button>
+                    </div>
+                    <div *ngIf="endDateI.invalid && createSpringForm.submitted" class="invalid-feedback">
+                        <div *ngIf="endDateI.errors?.required">Campo es
+                            requerido
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="mb-3">
+                    <label for="inputName" class="form-label required">Nombre</label>
+                    <input type="text" name="name" #name="ngModel" maxlength="255" [(ngModel)]="springName"
+                        [ngClass]="{'ng-dirty ng-invalid' : name.errors && ( name.dirty || name.touched || createSpringForm.submitted) }"
+                        class="form-control" id="inputName" autocomplete="off" required>
+                    <div *ngIf="name.invalid && createSpringForm.submitted" class="invalid-feedback">
+                        <div *ngIf="name.errors?.required">Campo es requerido</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal-footer">
             <button [disabled]="isLoading" class="btn btn-secondary" (click)="modal.close('Cancel')">Cancel</button>
-            <!-- <button [disabled]="isLoading" class="btn btn-primary mr-2">Guardar</button> -->
-            <button type="button" class="btn btn-success">Guardar!</button>
+            <button type="submit" class="btn btn-success" [disabled]="isSubmited">Guardar</button>
         </div>
 
     </form>

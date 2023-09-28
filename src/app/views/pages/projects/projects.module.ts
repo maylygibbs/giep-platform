@@ -23,6 +23,9 @@ import { BoardDndListComponent } from './components/board-dnd-list/board-dnd-lis
 
 import { AppComponent } from "../../../../app/app.component";
 import { NewspringComponent } from './components/modal/newspring/newspring.component';
+import { ProjectDashboardComponent } from './components/project-dashboard/project-dashboard.component';
+import { MembersComponent } from './components/members/members.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -38,7 +41,10 @@ FullCalendarModule.registerPlugins([
     BoardDndComponent,
     SimpleDivComponent,
     BoardDndListComponent,
-    NewspringComponent
+    NewspringComponent,
+    ProjectDashboardComponent,
+    MembersComponent,
+    SettingsComponent
   ],bootstrap: [AppComponent],
   imports: [
     CommonModule,
