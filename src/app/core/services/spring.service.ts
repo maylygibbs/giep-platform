@@ -118,8 +118,8 @@ export class SpringService extends HttpService {
   async createItem(data: any): Promise<boolean> {
     try {
       const resp = await firstValueFrom(this.post(environment.apiUrl, '/spring/items', data));
-
-      this.toastrService.success(`El elemento de tipo xxxx fue creado con éxito.`);
+      const typeItem = data.typeItemId == 1 ? 'Actividad' : data.typeItemId == 2 ? 'Tarea': 'Error';
+      this.toastrService.success(`El elemento de tipo ${typeItem} fue creado con éxito.`);
       return true;
     } catch (error: any) {
 
