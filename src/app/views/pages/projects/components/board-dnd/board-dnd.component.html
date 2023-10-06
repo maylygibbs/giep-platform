@@ -1,113 +1,76 @@
-<div class="card">
-	<div class="card-body">
-		<div class="row">
-			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-
-				<ul class="horizontal-list">
-					<li (click)="showModal(showMembers,'md')"><i class="feather icon-users"></i> <span class="ms-1"
-							ngbTooltip="Ver los miembros del proyecto">Ver Miembros</span>
-					<li ngbDropdown>
-						<i class="feather icon-plus"></i> <span ngbDropdownToggle class="ms-1"
-							ngbTooltip="Crear nuevo item/">Nuevo Item</span>
-						<div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
-							<ul class="list-unstyled p-1">
-								<li *ngFor="let item of itemsType" class="dropdown-item py-2">
-									<a class="d-flex align-items-center ms-0"  (click)="preCreateItem(board.activities, 'null', null, item)">
-										<i class="icon-project" [ngClass]="item.icon_class"
-											[style.color]="item.color"></i>
-										<span class="ms-1">{{item.label}}</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-
-					</li>
-				</ul>
-
-				<p></p>
+<div *ngIf="(project && project.pmo && project.assignedResources.length>0); else notResource">
+	<div  class="card">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+	
+					<ul class="horizontal-list">
+						<li (click)="showModal(showMembers,'md')"><i class="feather icon-users"></i> <span class="ms-1"
+								ngbTooltip="Ver los miembros del proyecto">Ver Miembros</span>
+					    </li>
+						<li *ngIf="springs && springs.length>0" ngbDropdown>
+							<i class="feather icon-plus"></i> <span ngbDropdownToggle class="ms-1"
+								ngbTooltip="Crear nuevo item/">Nuevo Item</span>
+							<div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
+								<ul class="list-unstyled p-1">
+									<li *ngFor="let item of itemsType" class="dropdown-item py-2">
+										<a class="d-flex align-items-center ms-0"  (click)="preCreateItem(board.activities, 'null', null, item)">
+											<i class="icon-project" [ngClass]="item.icon_class"
+												[style.color]="item.color"></i>
+											<span class="ms-1">{{item.label}}</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+	
+						</li>
+					</ul>
+	
+					<p></p>
+				</div>
+				<div *ngIf="springs && springs.length>0" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<ng-select id="inputProjectSpring" [items]="springs" [multiple]=false name="ProjectSpring"
+						#projectManagementOffice="ngModel" bindLabel="name" [searchable]="false"
+						[(ngModel)]="selectedSpring" (change)="onChangeSpring()">
+						<ng-template ng-option-tmp let-item="item" let-index="index">
+							<div class="d-flex justify-content-between">
+								<span><b>{{item.name}}</b></span><span>{{item.isCurrent == 0 ? 'Pasado':
+									item.isCurrent == 'NULL' ? 'Futuro': 'Actual'}}</span>
+							</div>
+	
+						</ng-template>
+						<ng-template ng-footer-tmp>
+							<p class="create-new" (click)="openNewSpring()"><i class="feather icon-plus"></i>Nuevo Spring
+							</p>
+						</ng-template>
+					</ng-select>
+				</div>
+				<div *ngIf="!springs || springs.length==0" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<ul class="horizontal-list">
+						<li (click)="openNewSpring()">
+							<p class="create-new"><i class="feather icon-plus"></i>Nuevo Spring
+							</p>
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-				<ng-select id="inputProjectSpring" [items]="springs" [multiple]=false name="ProjectSpring"
-					#projectManagementOffice="ngModel" bindLabel="name" [searchable]="false"
-					[(ngModel)]="selectedSpring" (change)="onChangeSpring()">
-					<ng-template ng-option-tmp let-item="item" let-index="index">
-						<div class="d-flex justify-content-between">
-							<span><b>{{item.name}}</b></span><span>{{item.isCurrent == 0 ? 'Pasado':
-								item.isCurrent == 'NULL' ? 'Futuro': 'Actual'}}</span>
-						</div>
-
-					</ng-template>
-					<ng-template ng-footer-tmp>
-						<p class="create-new" (click)="openNewSpring()"><i class="feather icon-plus"></i>Nuevo Spring
-						</p>
-					</ng-template>
-				</ng-select>
-			</div>
-
 		</div>
 	</div>
-</div>
-<div *ngIf="board" class="card">
-	<div cdkDropListGroup class="card-body">
-		<!--Activity-->
-		<div class="row content-activity py-1" *ngFor="let activity of board.activities;let i=index">
-			<div class="col-lg-12">
-				<div class="row">
-					<!--Columns-->
-					<div class="col">
-						<div *ngIf="i==0" class="row p-1">
-							<div class="col">
-								<h5>&nbsp;</h5>
-							</div>
-						</div>
-						<div class="row p-1">
-							<div class="col">
-								<div class="card">
-									<div class="card-body pt-1">
-										<div ngbDropdown class="d-flex justify-content-end icon-menu-dot">
-											<i class="mdi mdi-dots-vertical" ngbDropdownToggle></i>
-											<div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
-												<ul class="list-unstyled p-1">
-													<li class="dropdown-item py-2">
-														<a class="d-flex align-items-center ms-0"  (click)="openModalItemProjectDetail(itemProjectDetail,activity.itemId)">
-															<span class="ms-1">Abrir</span>
-														</a>
-													</li>
-												</ul>
-											</div>
-										</div>
-										<div><i class="icon-project" [ngClass]="activity.itemType.icon_class"
-												[style.color]="activity.itemType.color"></i>
-												<input id="{{'inputNameItem-'+i}}" #inputNameItem [hidden]="activity.itemId" type="text" [(ngModel)]="activity.name" (keydown.enter)="createItem(board.activities, activity)" (focus)="!activity.itemId">
-												<a *ngIf="activity.itemId" (click)="openModalItemProjectDetail(itemProjectDetail,activity.itemId)"><span class="ms-1">{{activity.itemId}}</span><span  class="ms-1">{{activity.name}}</span></a>
-										</div>
-										<div class="d-flex align-items-center justify-content-between">
-											<div>
-												<img ngbTooltip="{{activity.assignedName}}" [src]="activity.avatar"
-													class="wd-40 ht-40 rounded-circle card-img-top mt-1">
-												<span class="ms-1">{{activity.assignedName ? activity.assignedName: 'Sin asiganar'}}</span>
-											</div>
-											<span>{{activity.hours}}</span>
-										</div>
-										<div class="d-flex align-items-center justify-content-between mt-4">
-											<span class="ms-1">Orden:{{activity.order}}</span>
-										</div>
-									</div>
+	<div *ngIf="board && board.activities.length>0; else notBoard" class="card">
+		<div cdkDropListGroup class="card-body">
+			<!--Activity-->
+			<div class="row content-activity py-1" *ngFor="let activity of board.activities;let i=index">
+				<div class="col-lg-12">
+					<div class="row">
+						<!--Columns-->
+						<div class="col">
+							<div *ngIf="i==0" class="row p-1">
+								<div class="col">
+									<h5>&nbsp;</h5>
 								</div>
 							</div>
-						</div>
-
-					</div>
-					<div class="col" *ngFor="let column of columns; let z= index;">
-						<div *ngIf="i==0" class="row p-1">
-							<div class="col">
-								<h5>{{column.levelName}}</h5>
-							</div>
-						</div>
-						<div class="row p-1">
-							<div class="col task-list p-1" id="{{activity.itemId+'|'+column.id}}" cdkDropList [cdkDropListData]="activity.tasks[column.attr_key]"
-								(cdkDropListDropped)="drop($event)">
-								<div class="mb-1" *ngFor="let task of activity.tasks[column.attr_key]; let y=index;" cdkDrag [cdkDragData]="task">
+							<div class="row p-1">
+								<div class="col">
 									<div class="card">
 										<div class="card-body pt-1">
 											<div ngbDropdown class="d-flex justify-content-end icon-menu-dot">
@@ -115,55 +78,122 @@
 												<div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
 													<ul class="list-unstyled p-1">
 														<li class="dropdown-item py-2">
-															<a class="d-flex align-items-center ms-0"  (click)="openModalItemProjectDetail(itemProjectDetail,task.itemId)">
+															<a class="d-flex align-items-center ms-0"  (click)="openModalItemProjectDetail(itemProjectDetail,activity.itemId)">
 																<span class="ms-1">Abrir</span>
 															</a>
 														</li>
-														<li hidden *ngIf="springsFuture && springsFuture.length>0 && task.nivelboardpanelId!='3'" class="dropdown-item py-2">
-															<div ngbDropdown>
-																<span class="ms-1" ngbDropdownToggle>Mover a</span>
-																<div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
-																	Prueba
-																</div>
-															</div>
-
-														</li>
-
 													</ul>
 												</div>
 											</div>
-											<div><i class="icon-project" [ngClass]="task.itemType.icon_class"
-												[style.color]="task.itemType.color"></i>
-												<input id="{{'inputTaskName-'+activity.itemId+column.id+y}}" *ngIf="!task.itemId" type="text" [(ngModel)]="task.name" (keydown.enter)="createItem(activity.tasks[column.attr_key], task)">
-												<a *ngIf="task.itemId" (click)="openModalItemProjectDetail(itemProjectDetail,task.itemId)"><span class="ms-1">{{task.itemId}}</span><span  class="ms-1">{{task.name}}</span></a>
+											<div><i class="icon-project" [ngClass]="activity.itemType.icon_class"
+													[style.color]="activity.itemType.color"></i>
+													<input id="{{'inputNameItem-'+i}}" #inputNameItem [hidden]="activity.itemId" type="text" [(ngModel)]="activity.name" (keydown.enter)="createItem(board.activities, activity)" (blur)="createItem(board.activities, activity)" (focus)="!activity.itemId">
+													<a *ngIf="activity.itemId" (click)="openModalItemProjectDetail(itemProjectDetail,activity.itemId)"><span class="ms-1">{{activity.itemId}}</span><span  class="ms-1">{{activity.name}}</span></a>
 											</div>
-											<div class="d-flex justify-content-between">
+											<div class="d-flex align-items-center justify-content-between">
 												<div>
-													<img ngbTooltip="{{task.assignedName}}" [src]="task.avatar"
+													<img ngbTooltip="{{activity.assignedName}}" [src]="activity.avatar"
 														class="wd-40 ht-40 rounded-circle card-img-top mt-1">
-														<span class="ms-1">{{task.assignedName ? task.assignedName : 'Sin asignar'}}</span>
+													<span class="ms-1">{{activity.assignedName ? activity.assignedName: 'Sin asiganar'}}</span>
 												</div>
-												<span>{{task.hours}}</span></div>
-											<div class="mt-2 text-muted"><span>{{column.levelName}}</span></div>
+												<span>{{activity.hours}}</span>
+											</div>
 											<div class="d-flex align-items-center justify-content-between mt-4">
-												<span class="ms-1">Orden:{{task.order}}</span>
+												<span class="ms-1">Orden:{{activity.order}}</span>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="mt-5" *ngIf="z==0">
-									<button class="btn btn-primary mt-5" (click)="preCreateItem(activity.tasks[column.attr_key], activity.itemId, column.id)"><i class="feather icon-plus"></i></button>
-								</div>
-								
 							</div>
+	
 						</div>
-
+						<div class="col" *ngFor="let column of columns; let z= index;">
+							<div *ngIf="i==0" class="row p-1">
+								<div class="col">
+									<h5>{{column.levelName}}</h5>
+								</div>
+							</div>
+							<div class="row p-1">
+								<div class="col task-list p-1" id="{{activity.itemId+'|'+column.id}}" cdkDropList [cdkDropListData]="activity.tasks[column.attr_key]"
+									(cdkDropListDropped)="drop($event)">
+									<div class="mb-1" *ngFor="let task of activity.tasks[column.attr_key]; let y=index;" cdkDrag [cdkDragData]="task">
+										<div class="card">
+											<div class="card-body pt-1">
+												<div ngbDropdown class="d-flex justify-content-end icon-menu-dot">
+													<i class="mdi mdi-dots-vertical" ngbDropdownToggle></i>
+													<div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
+														<ul class="list-unstyled p-1">
+															<li class="dropdown-item py-2">
+																<a class="d-flex align-items-center ms-0"  (click)="openModalItemProjectDetail(itemProjectDetail,task.itemId)">
+																	<span class="ms-1">Abrir</span>
+																</a>
+															</li>
+															<li hidden *ngIf="springsFuture && springsFuture.length>0 && task.nivelboardpanelId!='3'" class="dropdown-item py-2">
+																<div ngbDropdown>
+																	<span class="ms-1" ngbDropdownToggle>Mover a</span>
+																	<div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
+																		Prueba
+																	</div>
+																</div>
+	
+															</li>
+	
+														</ul>
+													</div>
+												</div>
+												<div><i class="icon-project" [ngClass]="task.itemType.icon_class"
+													[style.color]="task.itemType.color"></i>
+													<input id="{{'inputTaskName-'+activity.itemId+column.id+y}}" *ngIf="!task.itemId" type="text" [(ngModel)]="task.name" (keydown.enter)="createItem(activity.tasks[column.attr_key], task)" (blur)="createItem(activity.tasks[column.attr_key], task)">
+													<a *ngIf="task.itemId" (click)="openModalItemProjectDetail(itemProjectDetail,task.itemId)"><span class="ms-1">{{task.itemId}}</span><span  class="ms-1">{{task.name}}</span></a>
+												</div>
+												<div class="d-flex justify-content-between">
+													<div>
+														<img ngbTooltip="{{task.assignedName}}" [src]="task.avatar"
+															class="wd-40 ht-40 rounded-circle card-img-top mt-1">
+															<span class="ms-1">{{task.assignedName ? task.assignedName : 'Sin asignar'}}</span>
+													</div>
+													<span>{{task.hours}}</span></div>
+												<div class="mt-2 text-muted"><span>{{column.levelName}}</span></div>
+												<div class="d-flex align-items-center justify-content-between mt-4">
+													<span class="ms-1">Orden:{{task.order}}</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="mt-5" *ngIf="z==0">
+										<button class="btn btn-primary mt-5" (click)="preCreateItem(activity.tasks[column.attr_key], activity.itemId, column.id)"><i class="feather icon-plus"></i></button>
+									</div>
+									
+								</div>
+							</div>
+	
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<ng-template #notBoard>
+		<div class="col-12 col-xl-12 grid-margin">  
+		  <app-box-message 
+			[title]="'¡Inicia la planificación del spring.!'" 
+			[subtitle]="'Pulsa sobre <strong>Nuevo Spring</strong> para iniciar <br> Luego pulsas sobre <strong>Nuevo Item</strong> para crear Actividades y Tareas.'" 
+			[image]="'/assets/images/others/setting2.jpeg'">
+		  </app-box-message>
+		</div>
+	</ng-template>
 </div>
+
+
+<ng-template  #notResource>
+    <div *ngIf="isLoadProject" class="col-12 col-xl-12 grid-margin">  
+      <app-box-message 
+        [title]="'¡Antes de iniciar la planificación, configura el proyecto.!'" 
+        [subtitle]="'Pulsa sobre  <strong>Miembros</strong> y asigna los integrantes del equipo.<br> Opcionalmente, en <strong>Configuraciones</strong> puedes indicar los días no laborables.'" 
+        [image]="'/assets/images/others/settings3.png'">
+      </app-box-message>
+    </div>
+</ng-template>
 
 <!-- SHOW MEMBERS OF PROJECT-->
 <ng-template #showMembers let-modal>

@@ -67,6 +67,8 @@ export class BoardDndComponent implements OnInit {
   board: Board;
   minDate1: NgbDateStruct = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
 
+  isLoadProject:boolean = false;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(
@@ -99,7 +101,8 @@ export class BoardDndComponent implements OnInit {
 
     //Carga info basica del proyecto
     this.project = await this.projectService.getProjectPmoAndResource(this.projectId);
-
+    this.isLoadProject = true;
+    console.log('project', this.project);
 
     console.log('itemsType', this.itemsType);
     console.log('columns', this.columns);
@@ -138,7 +141,11 @@ export class BoardDndComponent implements OnInit {
    * Load item board by spring
    */
   async loadItemsBoardBySpring() {
-    this.board = await this.springService.getItemsBoardBySpring(this.selectedSpring.id, this.columns);
+    if(this.selectedSpring){
+      this.board = await this.springService.getItemsBoardBySpring(this.selectedSpring.id, this.columns);
+      console.log('board', this.board)
+    }
+    
   }
 
   /**

@@ -169,16 +169,19 @@ export class ProjectService extends HttpService {
     try {
 
       const resp = await firstValueFrom(this.get(environment.apiUrl, `/proyecto/springboardpanel/${id}`));
-      results = resp.map((item: any) => {
-        const spring = new SpringProject();
-        spring.id = item.id;
-        spring.startDate = item.fechaInicio;
-        spring.endDate = item.fechaFin;
-        spring.name = item.nombreSpring;
-        spring.projectId = item.idProyecto;
-        spring.isCurrent = item.isCurrent;
-        return spring;
-      })
+      if(resp && resp.length > 0){
+        results = resp.map((item: any) => {
+          const spring = new SpringProject();
+          spring.id = item.id;
+          spring.startDate = item.fechaInicio;
+          spring.endDate = item.fechaFin;
+          spring.name = item.nombreSpring;
+          spring.projectId = item.idProyecto;
+          spring.isCurrent = item.isCurrent;
+          return spring;
+        })
+      }
+
       return results;
     } catch (error: any) {
       console.log(error);
