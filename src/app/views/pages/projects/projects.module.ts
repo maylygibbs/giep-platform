@@ -26,6 +26,7 @@ import { NewspringComponent } from './components/modal/newspring/newspring.compo
 import { ProjectDashboardComponent } from './components/project-dashboard/project-dashboard.component';
 import { MembersComponent } from './components/members/members.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -51,7 +52,8 @@ FullCalendarModule.registerPlugins([
     ProjectsRoutingModule,
     SharedModule,
     FullCalendarModule, // import the FullCalendar module! will make the FullCalendar component available
-    FormsModule, DragDropModule
+    FormsModule, DragDropModule,
+    NgApexchartsModule
 
   ]
 })

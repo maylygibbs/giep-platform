@@ -110,8 +110,8 @@ export class Project {
         project.condition = projectObj.estado;
         let min = 0, max = 100;
 
-         project.progress = projectObj.total[0].totalprogress;
-         project.TypeGbProgressbar=projectObj.total[0].colorprogress;
+         project.progress = projectObj.total && projectObj.total.length>0 ? projectObj.total[0].totalprogress: 0;
+         project.TypeGbProgressbar= projectObj.total && projectObj.total.length>0 ? projectObj.total[0].colorprogress: 'success';
          if(projectObj.userPmo){
             project.pmo = new User();
             project.pmo.id = projectObj.userPmo.id;

@@ -69,6 +69,8 @@ export class BoardDndComponent implements OnInit {
 
   isLoadProject:boolean = false;
 
+  result:any;
+
   private $eventNavigationEnd: Subscription;
 
   constructor(
@@ -166,12 +168,13 @@ export class BoardDndComponent implements OnInit {
   }
 
 
-  openNewSpring() {
+  async openNewSpring() {
     const modalRef = this.modalService.open(NewspringComponent, { size: 'md' });
     modalRef.componentInstance.projectId = this.project.id;
     modalRef.componentInstance.passEntry.subscribe(async (passEntry: boolean) => {
       if (passEntry) {
-        this.loadSpring();
+        await this.loadSpring();
+        await this.loadItemsBoardBySpring();
       }
     })
   }
@@ -339,6 +342,24 @@ export class BoardDndComponent implements OnInit {
       this.closeModal();
       this.loadItemsBoardBySpring();
     }
+  }
+
+  /**
+   * Get data for graphic burndown
+   * @param modalRef 
+   * @param size 
+   */
+  async showModalBurndownGraphic(modalRef: TemplateRef<any>, size: string){
+    if(this.selectedSpring){
+      this.result = await this.springService.getBurndownGraphicData(this.selectedSpring.id);
+      if(this.result){
+        this.modalService.open(modalRef, { size: size }).result.then((result) => {
+          console.log("Modal closed" + result);
+        }).catch((res) => { });
+      }
+
+    }
+
   }
 
 }

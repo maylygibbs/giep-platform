@@ -7,7 +7,7 @@
   </ol>
 </nav>
 
-<div *ngIf="step==1 && projects && projects.data.length>0" class="row">
+<div *ngIf="step==1" class="row">
   <div class="col-lg-12 col-md-12 stretch-card">
     <div class="card">
       <div class="card-header">
@@ -35,7 +35,7 @@
       <div class="card-body card-dt">
         <h6 class="card-title"></h6>
         <div class="row">
-          <div class="col-lg-12">
+          <div *ngIf="projects && projects.data" class="col-lg-12">
             <table datatable [dtOptions]="dtOptions" class="table table-striped" id="datatableResources" name="datatableResources">
               <thead>
                 <tr>
@@ -78,9 +78,7 @@
                   <th colspan="10" class="text-right">
                     <app-pager (onChangePage)="loadPage($event)"></app-pager>
                   </th>
-                </tr>
-
-           
+                </tr>    
 
   
               </tfoot>

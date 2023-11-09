@@ -24,6 +24,9 @@
 							</div>
 	
 						</li>
+						<li *ngIf="springs && springs.length>0 && selectedSpring" (click)="showModalBurndownGraphic(burndown,'lg')"><i class="feather icon-trending-down"></i> <span class="ms-1"
+							ngbTooltip="Ver tendencia del spring actual">Burndown</span>
+						</li>
 					</ul>
 	
 					<p></p>
@@ -87,7 +90,7 @@
 											</div>
 											<div><i class="icon-project" [ngClass]="activity.itemType.icon_class"
 													[style.color]="activity.itemType.color"></i>
-													<input id="{{'inputNameItem-'+i}}" #inputNameItem [hidden]="activity.itemId" type="text" [(ngModel)]="activity.name" (keydown.enter)="createItem(board.activities, activity)" (blur)="createItem(board.activities, activity)" (focus)="!activity.itemId">
+													<input id="{{'inputNameItem-'+i}}" #inputNameItem [hidden]="activity.itemId" type="text" [(ngModel)]="activity.name" (keydown.enter)="createItem(board.activities, activity)" (focus)="!activity.itemId">
 													<a *ngIf="activity.itemId" (click)="openModalItemProjectDetail(itemProjectDetail,activity.itemId)"><span class="ms-1">{{activity.itemId}}</span><span  class="ms-1">{{activity.name}}</span></a>
 											</div>
 											<div class="d-flex align-items-center justify-content-between">
@@ -143,7 +146,7 @@
 												</div>
 												<div><i class="icon-project" [ngClass]="task.itemType.icon_class"
 													[style.color]="task.itemType.color"></i>
-													<input id="{{'inputTaskName-'+activity.itemId+column.id+y}}" *ngIf="!task.itemId" type="text" [(ngModel)]="task.name" (keydown.enter)="createItem(activity.tasks[column.attr_key], task)" (blur)="createItem(activity.tasks[column.attr_key], task)">
+													<input id="{{'inputTaskName-'+activity.itemId+column.id+y}}" *ngIf="!task.itemId" type="text" [(ngModel)]="task.name" (keydown.enter)="createItem(activity.tasks[column.attr_key], task)">
 													<a *ngIf="task.itemId" (click)="openModalItemProjectDetail(itemProjectDetail,task.itemId)"><span class="ms-1">{{task.itemId}}</span><span  class="ms-1">{{task.name}}</span></a>
 												</div>
 												<div class="d-flex justify-content-between">
@@ -337,5 +340,28 @@
 			<button type="submit" class="btn btn-primary" *ngIf="selectedItemProject.levelBoardId!=3" >Guardar</button>
 		</div>
 	</form>
+</ng-template>
+<!-- SHOW BURNDOWN GRAPHIC-->
+<ng-template #burndown let-modal>
+	<div class="modal-header">
+		<span>{{result.springName}}</span>
+		<span class="ms-3">Desde</span>
+		<span class="ms-2"> {{result.startDate | date:'mediumDate'}}</span>
+		<span class="ms-3">al</span>
+		<span class="ms-2">{{result.endDate | date:'mediumDate'}}</span>
+		<button type="button" class="btn-close" (click)="closeModal()" aria-label="Close" aria-label="Close"></button>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <apx-chart 
+                  [series]="result.optionsChart.series" [chart]="result.optionsChart.chart"
+                  [colors]="result.optionsChart.colors" [dataLabels]="result.optionsChart.dataLabels"
+				  [stroke]="result.optionsChart.stroke" [title]="result.optionsChart.title"
+                  [grid]="result.optionsChart.grid" [markers]="result.optionsChart.markers" [xaxis]="result.optionsChart.xaxis"
+                  [yaxis]="result.optionsChart.yaxis" [legend]="result.optionsChart.legend"></apx-chart>
+			</div>
 
+		</div>
+	</div>
 </ng-template>
