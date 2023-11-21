@@ -184,6 +184,26 @@ export class ResultsComponent extends BaseComponent implements OnInit {
     }
   }
 
+  changeSelectInstrument(){
+
+    this.startDate = null; 
+    this.endDate = null;
+    this.selectedCountry = null;
+    this.selectedState = null;
+    this.selectedCity = null;
+    this.selectedSex = null;
+    this.selectedResult = '1';
+    this.selectedGraphic = '1';
+    this.startDateFilter = null;
+    this.endDateFilter = null;
+    this.instrument = this.data.instruments.filter((item:SelectOption)=>parseInt(item.value) == this.instrumentId)[0];
+    if(this.instrument.globalsPoints){
+      this.selectedCategories = null;
+    }
+    console.log('this.instrument', this.instrument)
+    this.loadPage(environment.paginator.default_page);
+  }
+
 
   /**
  * Handle event change input
@@ -191,17 +211,10 @@ export class ResultsComponent extends BaseComponent implements OnInit {
  */
   changeSelectFilter() {
 
-    this.instrument = this.data.instruments.filter((item:SelectOption)=>parseInt(item.value) == this.instrumentId)[0];
-    if(this.instrument.globalsPoints){
-      this.selectedResult = '1';
-      this.selectedCategories = null;
-    }
-
     if(this.selectedResult == '3'){
       this.categories = this.data.categories.filter((item:SelectOption)=>item.haveScales);
 
-    }
-    
+    }   
    
     console.log('this.instrument', this.instrument)
     this.loadPage(environment.paginator.default_page);

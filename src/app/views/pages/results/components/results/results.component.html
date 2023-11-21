@@ -26,7 +26,7 @@
               class="feather icon-info ms-1" placement="right"
               ngbTooltip="El instrumento es requerido para visualizar los resultados respectivos. Por favor, indique el instrumento."></i>
             <ng-select id="inputInstrument" name="instrument" [items]="data.instruments" [(ngModel)]="instrumentId"
-              bindValue="id" [searchable]="true" (ngModelChange)="changeSelectFilter()" required>
+              bindValue="id" [searchable]="true" (ngModelChange)="changeSelectInstrument()" required>
             </ng-select>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-3">
