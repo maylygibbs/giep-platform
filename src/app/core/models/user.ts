@@ -2,6 +2,7 @@ import { SelectOption } from './select-option';
 import * as moment from 'moment';
 import { MenuItem } from './menu.model';
 import { Instrument } from './instrument';
+import { Company } from './company';
 export class User {
 
     id: string;
@@ -42,6 +43,7 @@ export class User {
     instrument:Instrument;
     freeDays:any; // range of dates
     totalFreeDays:any;
+    company: Company;
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');
@@ -88,6 +90,7 @@ export class User {
         newInstace.state = user.state;
         newInstace.city = user.city;
         newInstace.socialNetwork = user.socialNetwork;
+        newInstace.company = user.company;
 
         return newInstace
     }
@@ -120,6 +123,7 @@ export class User {
         Object.assign(userMap, { pais: user.country.id });
         Object.assign(userMap, { estado: user.state.id });
         Object.assign(userMap, { ciudad: user.city.id });
+        Object.assign(userMap, { idempresa: null });
         return userMap;
     }
 

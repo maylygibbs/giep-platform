@@ -4,6 +4,7 @@ import { SelectOption } from './../../../../../core/models/select-option';
 import { Rol } from '../../../../../core/models/rol';
 import { RolesPermissionsService } from './../../../../../core/services/roles-permissions.service';
 import { environment } from './../../../../../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-rol-store',
@@ -23,7 +24,14 @@ export class RolStoreComponent implements OnInit {
 
   environment = environment;
 
-  constructor(private rolesPermissionsService: RolesPermissionsService) { }
+  data: any;
+
+  constructor(private rolesPermissionsService: RolesPermissionsService,private route: ActivatedRoute) { 
+    this.route.data.subscribe((data) => {
+      this.data = data;
+      console.log(this.data)
+    });
+  }
 
   ngOnInit(): void {
     if(!this.rol.id){

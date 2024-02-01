@@ -40,6 +40,7 @@ export class NavbarComponent implements OnInit {
 
   async ngOnInit() {
     this.user = this.authService.currentUser;
+    console.log('company user', this.user)
     this.notificationSubcribe();
     this.notificationService.joinRoom(this.user.email);
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{

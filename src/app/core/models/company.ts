@@ -5,12 +5,14 @@ export class Company {
     id: string;
     name: string;
     status: SelectOption;
+    logo:string;
 
     public static map(company: Company):Company{
         const newInstace = new Company();
         newInstace.id = company.id;
         newInstace.name = company.name
         newInstace.status = company.status;
+        newInstace.logo = company.logo;
         return newInstace
     }
 

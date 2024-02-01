@@ -101,7 +101,7 @@ export class CommonsService extends HttpService {
 
 
   /**
-* Get all roles
+* Get all roles of company of logged user
 * @returns 
 */
   async getAllRoles(): Promise<Array<SelectOption>> {
@@ -749,7 +749,21 @@ export class CommonsService extends HttpService {
   }
 
 
+  /**
+* Get all roles
+* @returns 
+*/
+async getAllRolesList(): Promise<Array<SelectOption>> {
 
+  let roles: Array<SelectOption> = new Array<SelectOption>();
+  const resp = await firstValueFrom(this.get(environment.apiUrl, '/rol/roleslist'))
+  const temp = resp[0];
+  roles = temp.map((item: any) => {
+    return new SelectOption(item.descripcion, `${item.descripcion} ( ${item.empresa} )`);
+  });
+  return roles;
+
+}
 
 
 }

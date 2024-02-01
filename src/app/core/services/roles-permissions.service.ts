@@ -33,9 +33,12 @@ export class RolesPermissionsService extends HttpService {
       rol.id = item.id;
       rol.label = item.descripcion;
       rol.status = new SelectOption(item.id_status_id.statusId, item.id_status_id.statusLabel);
+      if(item.empresa){
+        rol.company = new SelectOption(item.empresa.id,item.empresa.nombre)
+      }
       return rol;
     });
-
+    console.log('paginator',paginator)
     return paginator;
   }
 
@@ -74,10 +77,10 @@ export class RolesPermissionsService extends HttpService {
     try {
       if (data.id) {
         const id = data.id;
-        await firstValueFrom(this.put(environment.apiUrl, `/rol/${id}`, { descripcion: data.label, statusId: parseInt(data.status.value) }));
+        await firstValueFrom(this.put(environment.apiUrl, `/rol/${id}`, { descripcion: data.label, statusId: parseInt(data.status.value), idempresa: data.company.id }));
         this.toastrService.success('Rol actualizado con éxito.');
       } else {
-        await firstValueFrom(this.post(environment.apiUrl, '/rol', { descripcion: data.label }));
+        await firstValueFrom(this.post(environment.apiUrl, '/rol', { descripcion: data.label, idempresa: data.company.id }));
         this.toastrService.success('Rol registrado con éxito.');
       }
     } catch (error: any) {

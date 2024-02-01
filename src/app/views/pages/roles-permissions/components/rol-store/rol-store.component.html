@@ -22,6 +22,21 @@
                                 </div>                                    
                             </div>
                         </div> 
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="inputCompany" class="form-label required">Empresa</label>
+                                <ng-select id="inputCompany" [items]="data.Companies" name="company"
+                                    #company="ngModel"
+                                    [ngClass]="{'ng-dirty ng-invalid' : company.errors && ( company.dirty || company.touched || rolForm.submitted) }"
+                                    [searchable]="false"
+                                    [(ngModel)]="rol.company" required>
+                                </ng-select>
+                                <div *ngIf="company.invalid && rolForm.submitted" class="invalid-feedback">
+                                    <div *ngIf="company.errors?.required">Campo es requerido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-12 col-mg-12 col-sm-12 col-xs-12 p-1">
                             <div class="mb-3 ms-3">
                                 <div class="form-check form-switch mb-2">

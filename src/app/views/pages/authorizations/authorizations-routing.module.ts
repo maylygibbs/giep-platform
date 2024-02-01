@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CommonsListAuthtoritationsResolver, CommonsListModulesResolver, CommonsListOptionsMenuResolver, CommonsListRolesResolver } from '../../../core/resolvers/commons.resolver';
+import { CommonsListAuthtoritationsResolver, CommonsListModulesResolver, CommonsListOptionsMenuResolver, CommonsListRolesAllCompaniesResolver, CommonsListRolesResolver } from '../../../core/resolvers/commons.resolver';
 import { AuthorizationsComponent } from './components/authorizations/authorizations.component';
 
 const routes: Routes = [
@@ -9,7 +9,7 @@ const routes: Routes = [
     component: AuthorizationsComponent,
     resolve:{
       authoritations: CommonsListAuthtoritationsResolver,
-      roles: CommonsListRolesResolver,
+      roles: CommonsListRolesAllCompaniesResolver,
       modulesItems: CommonsListModulesResolver
     },
     data: {

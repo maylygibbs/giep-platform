@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MenuItem } from '../models/menu.model';
 import * as saveAs from 'file-saver';
 import { ExpPersonalInformation } from 'src/app/core/models/exp-personal-information';
+import { Company } from '../models/company';
 
 @Injectable({
   providedIn: 'root'
@@ -88,9 +89,16 @@ export class UserService extends HttpService {
       });
     }
 
-    this.authService.updateUserSource(user);
+    if(resp[0].empresa){
+      user.company = new Company();
+      user.company.id = resp[0].empresa.id;
+      user.company.name = resp[0].empresa.Nombre;
+      user.company.logo = resp[0].empresa.url_logo;
+    }
+    console.log('indo detalles >>>>>', user);
     this.authService.saveUserInLocalstorage(user);
     return user;
+
   }
 
   /**

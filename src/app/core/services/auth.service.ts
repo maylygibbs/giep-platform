@@ -56,6 +56,7 @@ export class AuthService extends HttpService {
       user: value,
       expiry: now.getTime() + environment.ttl,
     }
+    console.log('user >>>>',item);
     localStorage.setItem(environment.localstorage.userKey, JSON.stringify(item));
   }
 
@@ -75,6 +76,7 @@ export class AuthService extends HttpService {
       const resp = await firstValueFrom(this.post(environment.apiUrl, '/login_check', { username, password }));
       const user = new User();
       user.token = resp.token;
+      console.log('login >>>>>');
       this.saveUserInLocalstorage(user);
       return user;
     } catch (error: any) {

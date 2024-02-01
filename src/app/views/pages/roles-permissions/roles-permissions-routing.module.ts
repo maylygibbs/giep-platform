@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RolesComponent } from './components/roles/roles.component';
+import { GetAllCompanyResolver } from '../../../core/resolvers/company.resolver';
 
 
 const routes: Routes = [
@@ -9,6 +10,9 @@ const routes: Routes = [
     component: RolesComponent,
     data: {
       title: 'Roles - GIEp',
+    },
+    resolve:{
+      Companies: GetAllCompanyResolver
     }
   }
 ];
