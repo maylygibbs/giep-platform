@@ -9,6 +9,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { EmailAccountsComponent } from './components/email-accounts/email-accounts.component';
 import { EmailAccountStoreComponent } from './components/email-account-store/email-account-store.component';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { EmailAccountStoreComponent } from './components/email-account-store/ema
     CommonModule,
     UsersRoutingModule,
     SharedModule,
-    ImageCropperModule
+    ImageCropperModule,
+    AngularEditorModule
   ]
 })
 export class UsersModule { }

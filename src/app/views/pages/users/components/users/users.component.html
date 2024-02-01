@@ -132,3 +132,4 @@
 <div *ngIf="step==2">
   <app-user-store [user]="selectedItem" (onBack)="back($event)"></app-user-store>
 </div>
+<angular-editor [placeholder]="'Enter text here...'" [(ngModel)]="htmlContent" [config]="editorConfig"></angular-editor>

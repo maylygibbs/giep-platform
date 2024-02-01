@@ -42,6 +42,11 @@
                 "glob": "**/*",
                 "input": "node_modules/ngx-scanner-qrcode/wasm/",
                 "output": "./assets/wasm/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@kolkov/angular-editor/assets/",
+                "output": "./assets/fonts/"
               }
             ],
             "styles": [
@@ -49,6 +54,7 @@
               "node_modules/datatables.net-responsive-dt/css/responsive.dataTables.css",
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css"
+             
             ],
             "scripts": [
               "node_modules/apexcharts/dist/apexcharts.min.js",
