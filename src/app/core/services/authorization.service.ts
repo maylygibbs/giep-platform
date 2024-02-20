@@ -36,7 +36,11 @@ export class AuthorizationService extends HttpService {
       auth.app.id = item.idModulo;
       auth.app.label = item.nombreModulo;
       auth.app.type = item.tipoComponente;
-      auth.role = item.rol;
+      let company='';
+      if(item.empresa){
+        company = item.empresa.nombre;
+      }
+      auth.role = `${item.rol} (${company})`;
       auth.status = new SelectOption(item.status.id, item.status.Descripcion);
       auth.auths = item.autorizaciones?.map((item: any) => {
         return item.permiso;

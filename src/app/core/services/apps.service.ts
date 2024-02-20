@@ -45,7 +45,7 @@ export class AppsService extends HttpService {
         child.label = item.MenuHijo;
       });
       app.roles = item.roles?.map((item: any) => {
-        return item.rol;
+        return `${item.rol} ( ${item.empresa})`;
       });
       return app;
     });

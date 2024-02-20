@@ -67,7 +67,7 @@
                       ngbTooltip="Ver Documento"></i>
                     <i *ngIf="!doc.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(doc.id)"
                       placement="start" ngbTooltip="Pull Documento"></i>
-                    <i *ngIf="doc.isBloqued && doc.state.value == '1'" class="feather icon-unlock ms-1" (click)="documentUnlock(doc.id)"
+                    <i *ngIf="doc.isBloqued && doc.state.value == '1'" class="feather icon-lock ms-1" (click)="documentUnlock(doc.id)"
                       placement="start" ngbTooltip="Desbloquear Documento"></i>
                     <i *ngIf="doc.state.value !=='4' && doc.state.value !=='3' && doc.state.value !=='5'" class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
                         ngbTooltip="Eliminar Documento"></i>
