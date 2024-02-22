@@ -1413,4 +1413,17 @@ export class InstrumentsService extends HttpService {
   }
 
 
+    /**
+ * Check all instruments, supports pagination and filter
+ * @param filter 
+ * @returns 
+ */
+    async resultDownload(filter: any, instrumentId: number): Promise<Blob> {
+      const resp = await firstValueFrom(this.post(environment.apiUrl, `/encuesta/descarga/resultados/instrumento/${instrumentId}`, filter, { responseType: 'blob' }));
+
+      return resp;
+    }
+  
+
+
 }

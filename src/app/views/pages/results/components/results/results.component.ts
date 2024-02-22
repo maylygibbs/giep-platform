@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { filter, Subscription } from 'rxjs';
 import { throws } from 'assert';
 import { Instrument } from '../../../../../core/models/instrument';
+import * as saveAs from 'file-saver';
 
 @Component({
   selector: 'app-results',
@@ -274,6 +275,29 @@ export class ResultsComponent extends BaseComponent implements OnInit {
     this.startDateFilter = null;
     this.endDateFilter = null;
     this.loadPage(environment.paginator.default_page);
+  }
+
+  async resultDownload(){
+    const body =         {
+      page: this.page,
+      rowByPage: environment.paginator.row_per_page,
+      word: this.word ?? null,
+      byuser: this.selectedResult ? parseInt(this.selectedResult) : 1,
+      desde: this.startDateFilter ? this.startDateFilter : null,
+      hasta: this.endDateFilter ? this.endDateFilter : null,
+      sexo: this.selectedSex ? this.selectedSex : null,
+      pais: this.selectedCountry?.value ? parseInt(this.selectedCountry?.value) : null,
+      estado: this.selectedState?.value ? parseInt(this.selectedState?.value) : null,
+      ciudad: this.selectedCity?.value ? parseInt(this.selectedCity?.value) : null
+    }
+
+    if(this.selectedResult == '3'){
+      Object.assign(body,{categoryIds: this.selectedCategories && this.selectedCategories.length > 0 ? this.selectedCategories.map((item)=> {return parseInt(item)}) : null})
+    }
+    const resp:any = await this.instrumentsService.resultDownload(body, this.instrumentId);
+    if (resp) {
+      saveAs(resp, "resultados.xlsx");
+    }
   }
 
 
