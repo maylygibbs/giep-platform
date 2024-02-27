@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { filter, Subscription } from 'rxjs';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { environment } from './../../../../../../environments/environment';
@@ -7,6 +7,7 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
 import { Rol } from './../../../../../core/models/rol';
 import { NavigationEnd, Router } from '@angular/router';
 import { RolesPermissionsService } from './../../../../../core/services/roles-permissions.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-roles',
@@ -14,6 +15,8 @@ import { RolesPermissionsService } from './../../../../../core/services/roles-pe
   styleUrls: ['./roles.component.scss']
 })
 export class RolesComponent extends BaseComponent implements OnInit {
+
+  @ViewChild('alertModal') alertModal: TemplateRef<any>;
 
   step: number = 1;
   roles: PaginationResponse;
@@ -32,6 +35,8 @@ export class RolesComponent extends BaseComponent implements OnInit {
   selectedItem: Rol;
   word: string;
 
+  message:string;
+
   environment = environment;
 
   rolesRequest: NodeJS.Timeout;
@@ -40,7 +45,8 @@ export class RolesComponent extends BaseComponent implements OnInit {
 
   constructor(
     private rolesPermissionsService: RolesPermissionsService,
-    private router: Router) {
+    private router: Router,
+    protected modalService: NgbModal) {
     super();
   }
 
@@ -77,17 +83,28 @@ export class RolesComponent extends BaseComponent implements OnInit {
    * @param id 
    */
   async select(rol: Rol) {
-    this.selectedItem = rol; //await this.rolesPermissionsService.getRolById(rol);
-    this.next();
+    if(!rol.linked){
+      this.selectedItem = rol; //await this.rolesPermissionsService.getRolById(rol);
+      this.next();
+    }else{
+      this.message = `El rol ${rol.label} debe ser desvinculado de los usuarios antes de editarlo.`
+      this.modalService.open(this.alertModal,{size:'s'})
+    }
   }
 
   /**
    * Delete item
    * @param id 
    */
-  async delete(id: number) {
-    await this.rolesPermissionsService.deleteRole(id);
-    this.loadPage(this.page);
+  async delete(rol: Rol) {
+    if(!rol.linked){
+      await this.rolesPermissionsService.deleteRole(+rol.id);
+      this.loadPage(this.page);
+    }else{
+      this.message = `El rol ${rol.label} debe ser desvinculado de los usuarios antes de eliminarlo.`
+      this.modalService.open(this.alertModal,{size:'s'})
+    }
+
   }
 
   /**
@@ -121,6 +138,9 @@ export class RolesComponent extends BaseComponent implements OnInit {
 
   }
 
+  closeModal(){
+    this.modalService.dismissAll();
+  } 
 
   ngOnDestroy() {
     if (this.$eventNavigationEnd) {

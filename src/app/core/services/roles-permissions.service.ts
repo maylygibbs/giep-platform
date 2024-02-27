@@ -33,6 +33,7 @@ export class RolesPermissionsService extends HttpService {
       rol.id = item.id;
       rol.label = item.descripcion;
       rol.status = new SelectOption(item.id_status_id.statusId, item.id_status_id.statusLabel);
+      rol.linked = item.vinculado == 1 ? true : false;
       if(item.empresa){
         rol.company = new SelectOption(item.empresa.id,item.empresa.nombre)
       }

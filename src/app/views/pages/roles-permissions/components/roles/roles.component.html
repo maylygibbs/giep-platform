@@ -42,6 +42,7 @@
                                     <th>Id</th>
                                     <th>Rol</th>
                                     <th>Empresa</th>
+                                    <th>Vinculado a usuario</th>
                                     <th>Estado</th>
                                     <th data-priority="1" class="text-center">Accion</th>
                                 </tr>
@@ -52,18 +53,19 @@
                                     <td>{{role.id}}</td>
                                     <td>{{role.label}}</td>
                                     <td>{{role.company?.label}}</td>
+                                    <td>{{role.linked ? 'Sí':'No'}}</td>
                                     <td>{{role.status?.label}}</td>
                                     <td class="text-center">
                                         <i class="feather icon-edit-2" (click)="select(role)" placement="start"
                                             ngbTooltip="Editar Rol"></i>
-                                        <i *ngIf="role.status.value == '1'" class="feather icon-trash ms-1" (click)="delete(role.id)" placement="start"
+                                        <i *ngIf="role.status.value == '1'" class="feather icon-trash ms-1" (click)="delete(role)" placement="start"
                                             ngbTooltip="Eliminar Rol"></i>
                                     </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="5" class="text-right">
+                                    <th colspan="6" class="text-right">
                                         <app-pager (onChangePage)="loadPage($event)"></app-pager>
                                     </th>
                                 </tr>
@@ -80,3 +82,14 @@
 <div *ngIf="step==2">
     <app-rol-store [rol]="selectedItem" (onBack)="back($event)"></app-rol-store>
 </div>
+<ng-template #alertModal let-modal>
+    <div class="modal-header">
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <p>{{message}}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closeModal()">Cerrar</button>
+    </div>
+</ng-template>

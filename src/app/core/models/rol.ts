@@ -6,5 +6,6 @@ export class Rol {
     label: string;
     status:SelectOption;
     company:SelectOption;
+    linked:boolean;
  
 }
