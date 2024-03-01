@@ -1413,8 +1413,8 @@ export class InstrumentsService extends HttpService {
   }
 
 
-    /**
- * Check all instruments, supports pagination and filter
+/**
+ * Call download result service
  * @param filter 
  * @returns 
  */

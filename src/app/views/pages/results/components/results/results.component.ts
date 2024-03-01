@@ -277,6 +277,9 @@ export class ResultsComponent extends BaseComponent implements OnInit {
     this.loadPage(environment.paginator.default_page);
   }
 
+  /**
+   * Download results
+   */
   async resultDownload(){
     const body =         {
       page: this.page,
