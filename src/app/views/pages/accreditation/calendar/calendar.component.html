@@ -109,12 +109,12 @@
           <label for="inputTitle" class="form-label required">Descripción</label>
           <textarea type="text" name="description" #description="ngModel" [(ngModel)]="eventDetail.description" rows="3"
             [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || calendarForm.submitted) }"
-            class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="255" required></textarea>
+            class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="1000" required></textarea>
           <div *ngIf="description.invalid && calendarForm.submitted" class="invalid-feedback">
             <div *ngIf="description.errors?.required">Campo es requerido
             </div>
-            <div *ngIf="description.errors?.minlength || title.errors?.maxlength">
-              Campo permite entre 3 y 255 caracteres</div>
+            <div *ngIf="description.errors?.minlength || description.errors?.maxlength">
+              Campo permite entre 3 y 1000 caracteres</div>
           </div>
         </div>
       </div>
