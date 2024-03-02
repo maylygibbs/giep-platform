@@ -35,6 +35,7 @@ export class CompanyService extends HttpService {
     });
     return data;
   }
+
 }
 
 

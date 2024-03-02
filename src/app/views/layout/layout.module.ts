@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BaseComponent } from './base/base.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -17,6 +17,8 @@ import { FeatherIconModule } from '../../core/feather-icon/feather-icon.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -29,10 +31,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     NgbDropdownModule,
     NgbCollapseModule,
     PerfectScrollbarModule,
-    FeatherIconModule
+    FeatherIconModule,
+    NgSelectModule,
+    NgxPermissionsModule.forChild()
   ],
   providers: [
     {

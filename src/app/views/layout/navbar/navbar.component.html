@@ -4,12 +4,12 @@
   </a>
   <div class="navbar-content">
     <form class="search-form">
-      <div *ngIf="user.company" class="row">
+      <div *ngIf="user && user.company" class="row">
         <div class="col-1">
           <img class="wd-30 ht-30 rounded-circle" [src]="user.company.logo ? user.company.logo : 'https://via.placeholder.com/30x30'" alt="profile">
         </div>
-        <div class="col-1 d-flex align-items-center">
-          <span class="ps-2">{{user.company.name}}</span>
+        <div class="col-1 d-flex align-items-center">          
+          <span class="ps-3">{{user.company.name}}</span>
         </div>
       </div>
     </form>

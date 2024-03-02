@@ -76,7 +76,6 @@ export class AuthService extends HttpService {
       const resp = await firstValueFrom(this.post(environment.apiUrl, '/login_check', { username, password }));
       const user = new User();
       user.token = resp.token;
-      console.log('login >>>>>');
       this.saveUserInLocalstorage(user);
       return user;
     } catch (error: any) {

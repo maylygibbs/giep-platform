@@ -1,6 +1,6 @@
 import { User } from './../../../core/models/user';
 import { AuthService } from './../../../core/services/auth.service';
-import { Component, OnInit, ViewChild, ElementRef, Inject, Renderer2 } from '@angular/core';
+import { Component, OnInit, Inject, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { EmailAccountService } from '../../../core/services/email-account.servic
 import { PaginationResponse } from '../../../core/models/pagination-response';
 import { environment } from '../../../../environments/environment';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-navbar',
@@ -29,6 +30,8 @@ export class NavbarComponent implements OnInit {
 
   notifications: PaginationResponse;
 
+
+
   constructor(
     @Inject(DOCUMENT) private document: Document, 
     private renderer: Renderer2,
@@ -39,12 +42,14 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    
     this.user = this.authService.currentUser;
     console.log('company user', this.user)
     this.notificationSubcribe();
     this.notificationService.joinRoom(this.user.email);
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
-      this.user = user ? user : this.authService.currentUser;      
+      this.user = user ? user : this.authService.currentUser;  
+      console.log('user ++++++',this.user )    
     });
 
     //this.mailboxes = await this.emailAccountService.getMailboxesPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });

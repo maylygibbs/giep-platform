@@ -18,6 +18,7 @@ import { BoxMessageComponent } from './components/box-message/box-message.compon
 import { BoxUtilViewsComponent } from './components/box-util-views/box-util-views.component';
 import { ModalConfirmComponent } from './components/modal-confirm/modal-confirm.component';
 import { CountdownConfig, CountdownGlobalConfig, CountdownModule } from 'ngx-countdown';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 export function countdownConfigFactory(): CountdownConfig {
   return {};
@@ -37,10 +38,10 @@ export function countdownConfigFactory(): CountdownConfig {
     NgxPaginationModule,
     NgbPaginationModule,
     NgbModule,
-    NgSelectModule,
     LazyLoadImageModule,
     TagInputModule,
-    CountdownModule
+    CountdownModule,
+    NgxPermissionsModule.forChild()
   ],
   exports:[
     FormsModule,
@@ -59,7 +60,8 @@ export function countdownConfigFactory(): CountdownConfig {
     BoxInstrumentsComponent,
     BoxMessageComponent,
     BoxUtilViewsComponent,
-    ModalConfirmComponent
+    ModalConfirmComponent,
+    NgxPermissionsModule
   ],
   providers:[
     { provide: CountdownGlobalConfig, useFactory: countdownConfigFactory }

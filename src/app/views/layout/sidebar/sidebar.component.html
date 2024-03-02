@@ -87,7 +87,21 @@
     <a href="" class="settings-sidebar-toggler" (click)="toggleSettingsSidebar($event)">
       <i class="icon feather icon-settings"></i>
     </a>
-    <h6 class="text-muted mb-2">Sidebar:</h6>
+    <h6 *ngxPermissionsOnly="['ROLE_OPERADOR_MULTIEMPRESA']" class="text-muted mt-2">Workspace:</h6>
+    <div *ngxPermissionsOnly="['ROLE_OPERADOR_MULTIEMPRESA']" class="mb-3 pb-3 border-bottom">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="mt-2">
+              <label for="inputCompany" class="form-label required">Empresa</label>
+              <ng-select id="inputCompany" [items]="companies" (change)="changeWorkspace()"
+                [searchable]="false"
+                [(ngModel)]="companySelected" bindLabel="name" bindValue="id">
+              </ng-select>
+          </div>
+      </div>
+      </div>
+    </div>
+    <h6 class="text-muted mb-4">Sidebar:</h6>
     <div class="mb-3 pb-3 border-bottom">
       <div class="form-check form-check-inline">
         <label class="form-check-label">
@@ -114,5 +128,6 @@
         <img src="assets/images/screenshots/dark.jpg" alt="dark theme">
       </a>
     </div>
+
   </div>
 </nav>

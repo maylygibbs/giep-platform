@@ -6,7 +6,11 @@ import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { Router, NavigationEnd } from '@angular/router';
 import { UserService } from './../../../core/services/user.service';
-import { NotificationService } from '../../../core/services/notification.service';
+import { CompanyService } from '../../../core/services/company.service';
+import { Company } from '../../../core/models/company';
+import { Subscription } from 'rxjs';
+import { User } from '../../../core/models/user';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,11 +24,24 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   menuItems: MenuItem[] = [];
   @ViewChild('sidebarMenu') sidebarMenu: ElementRef;
 
+  companies:Array<Company>;
+  companySelected:any;
+
+  //Subcription
+  user$: Subscription;
+  user:User;
+
+  
+
+
   constructor(@Inject(DOCUMENT) private document: Document, 
   private renderer: Renderer2, 
   router: Router,
   private userService: UserService,
-  private authService: AuthService) { 
+  private authService: AuthService,
+  private companyService: CompanyService,
+  private permissionsService: NgxPermissionsService) { 
+    
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
 
@@ -44,10 +61,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit():void{
+  async ngOnInit(){
     
     const user = this.authService.currentUser;
     this.menuItems = user.optionsMenu;
+    this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
+      this.user = user ? user : this.authService.currentUser;   
+      this.companySelected = this.user.company.id;    
+    });
+
     //this.getAllMenuOptions();
     /**
      * Sidebar-folded on desktop (min-width:992px and max-width: 1199px)
@@ -57,6 +79,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       this.iconSidebar;
     });
     this.iconSidebar(desktopMedium);
+    this.companies = await this.companyService.getCompanies();
+    console.log('permisos', this.permissionsService.getPermissions());
+    
+
   }
 
   ngAfterViewInit() {
@@ -264,6 +290,26 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.menuItems = items;
         console.log('menu', this.menuItems);
     });  
+  }
+ 
+  async changeWorkspace(){
+
+    if(this.companySelected){
+      if(this.user.company.id != this.companySelected){
+        const resp = await this.userService.setUserCompanyWorkspace(this.companySelected)
+        if(resp){
+          const user = await this.userService.getInfoUser();
+          this.authService.updateUserSource(user);
+          this.document.body.classList.remove('settings-open');
+        }
+      }     
+    }
+  }
+
+  ngOnDestroy(){
+    if(this.user$){
+      this.user$.unsubscribe();
+    }
   }
 
 

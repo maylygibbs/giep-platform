@@ -12,6 +12,7 @@ import { MenuItem } from '../models/menu.model';
 import * as saveAs from 'file-saver';
 import { ExpPersonalInformation } from 'src/app/core/models/exp-personal-information';
 import { Company } from '../models/company';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class UserService extends HttpService {
 
   constructor(protected http: HttpClient,
     private authService: AuthService,
-    private toastrService: ToastrService) {
+    private toastrService: ToastrService,
+    private permissionsService: NgxPermissionsService) {
     super(http);
   }
 
@@ -56,9 +58,11 @@ export class UserService extends HttpService {
     user.createAt = resp[0].createAt;
     user.updateAt = resp[0].updateAt;
     user.roles = resp[0].roles.map((itemRol: any) => {
+      
       return itemRol.rol;
     })
-
+    this.permissionsService.loadPermissions(user.roles)
+    console.log('permission >>>>>>>',this.permissionsService.getPermissions())
     var datauserresorce ='';
     var repotsAct = resp[0].roles.filter((item) => item.rol == 'ROLE_STAEXPED_REPORTS');
     console.log("TIENES PERMISOS PARA REPORTES");
@@ -488,6 +492,23 @@ export class UserService extends HttpService {
         }
         
       //return project;
+    }
+
+
+
+    /**
+   * change workspace campany of user
+   * @param filter 
+   * @returns 
+   */
+    async setUserCompanyWorkspace(companyId:number): Promise<any> {
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/empresa',{idempresa:companyId}));
+      if(resp){
+        this.toastrService.success(`Ha cambiado el workspace exitosamente.`);
+        return true;
+      }else{
+        return false;
+      }
     }
 
 }
