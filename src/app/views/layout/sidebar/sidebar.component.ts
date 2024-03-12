@@ -11,6 +11,7 @@ import { Company } from '../../../core/models/company';
 import { Subscription } from 'rxjs';
 import { User } from '../../../core/models/user';
 import { NgxPermissionsService } from 'ngx-permissions';
+import { Location } from "@angular/common";
 
 @Component({
   selector: 'app-sidebar',
@@ -36,11 +37,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   constructor(@Inject(DOCUMENT) private document: Document, 
   private renderer: Renderer2, 
-  router: Router,
+  private router: Router,
   private userService: UserService,
   private authService: AuthService,
   private companyService: CompanyService,
-  private permissionsService: NgxPermissionsService) { 
+  private permissionsService: NgxPermissionsService,
+  private location: Location) { 
     
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
@@ -64,6 +66,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   async ngOnInit(){
     
     const user = this.authService.currentUser;
+    this.permissionsService.loadPermissions(user.roles)
     this.menuItems = user.optionsMenu;
     this.user$ = this.authService.currentUser$.subscribe((user:User)=>{
       this.user = user ? user : this.authService.currentUser;   
@@ -301,6 +304,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           const user = await this.userService.getInfoUser();
           this.authService.updateUserSource(user);
           this.document.body.classList.remove('settings-open');
+          console.log('url', this.location.path())
+          this.router.navigateByUrl(this.location.path());
         }
       }     
     }
