@@ -55,12 +55,13 @@
                   [ngClass]="event.classNames">
                   <div class="row">
                     <div class="col-lg-8">
-                      <span>{{event.title}}</span><br>
+                      <span>{{'C'+event.id}}-{{event.title}}</span><br>
                       <span>{{event.startHour}} - {{event.endHour}}</span>
                     </div>
                     <div class="col-lg-4  d-flex align-items-center justify-content-end">
                       <i *ngIf="event.ownerEvent" class="feather icon-printer" (click)="print(event.id)" placement="start" ngbTooltip="Imprimir Acreditaciones"></i>
                       <i *ngIf="event.ownerEvent" class="feather icon-edit-2 ms-1" (click)="handleEditEvent(event.id)" placement="start" ngbTooltip="Editar Evento"></i>
+                      <i *ngIf="event.ownerEvent" class="feather icon-copy ms-1" (click)="cloneEvent(event.id)" placement="start" ngbTooltip="Clonar Evento"></i>
                       <i class="feather icon-trash ms-1" (click)="deleteEvent(event.id)" placement="start" ngbTooltip="Eliminar Evento"></i>
                     </div>
                   </div>

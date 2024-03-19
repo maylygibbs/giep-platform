@@ -509,4 +509,15 @@ export class CalendarComponent extends BaseComponent implements OnInit {
   }
 
 
+  /**
+   * 
+   * @param id 
+   */
+  async cloneEvent(id:string){
+    await this.calendarService.cloneEvent(id);
+    this.loadCalendarByRangeDate(this.currentViewCalendar);
+    this.showCardEvents = false;
+  }
+
+
 }

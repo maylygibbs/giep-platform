@@ -238,7 +238,7 @@ export class CalendarService extends HttpService {
 
         return {
           id: item.id,
-          title: item.title,
+          title: `C${item.id}-${item.title}`,
           start: item.start,
           end: item.end,
           classNames: classNames,
@@ -408,6 +408,19 @@ async storeAccreditationType(data: AccreditationType) {
 
   }
 }
+
+  /**
+   * Clone event
+   * @param event 
+   */
+  async cloneEvent(id: any) {
+    try {
+      await firstValueFrom(this.get(environment.apiUrl, `/calendario/${id}/clonar`));
+      this.toastrService.success('El evento fué clonado con éxito.');
+    } catch (error) {
+      this.toastrService.error('Ha ocurrido un error clonando evento.');
+    }
+  }
 
 
 }
