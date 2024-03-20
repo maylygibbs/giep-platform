@@ -16,13 +16,17 @@
                 <div class='fc-event bgcolor-orange'
                   [ngStyle]="{'background-color': 'rgba(253,126,20,.25)', 'border-color': '#fd7e14'}"
                   [attr.bgColor]="'rgba(253,126,20,.25)'" [attr.bdcolor]="'#fd7e14'">Naranja</div>
-                <div class='fc-event bgcolor-pink' [ngStyle]="{'background-color': 'rgba(241,0,117,.25)', 'border-color': '#f10075'}"
-                  [attr.bgColor]="'rgba(241,0,117,.25)'" [attr.bdColor]="'#f10075'" >Rosa</div>
-                <div class='fc-event bgcolor-emerald' [ngStyle]="{'background-color': 'rgba(0,204,204,.25)', 'border-color': '#00cccc'}"
+                <div class='fc-event bgcolor-pink'
+                  [ngStyle]="{'background-color': 'rgba(241,0,117,.25)', 'border-color': '#f10075'}"
+                  [attr.bgColor]="'rgba(241,0,117,.25)'" [attr.bdColor]="'#f10075'">Rosa</div>
+                <div class='fc-event bgcolor-emerald'
+                  [ngStyle]="{'background-color': 'rgba(0,204,204,.25)', 'border-color': '#00cccc'}"
                   [attr.bgColor]="'rgba(0,204,204,.25)'" [attr.bdColor]="'#00cccc'">Esmeralda</div>
-                <div class='fc-event bgcolor-green' [ngStyle]="{'background-color': 'rgb(18,182,89,.25)', 'border-color': '#10b759'}"
+                <div class='fc-event bgcolor-green'
+                  [ngStyle]="{'background-color': 'rgb(18,182,89,.25)', 'border-color': '#10b759'}"
                   [attr.bgColor]="'rgb(18,182,89,.25)'" [attr.bdColor]="'#10b759'">Verde</div>
-                <div class='fc-event bgcolor-lilac' [ngStyle]="{'background-color': 'rgba(91,71,251,.2)', 'border-color': '#5b47fb'}"
+                <div class='fc-event bgcolor-lilac'
+                  [ngStyle]="{'background-color': 'rgba(91,71,251,.2)', 'border-color': '#5b47fb'}"
                   [attr.bgColor]="'rgba(91,71,251,.2)'" [attr.bdColor]="'#5b47fb'">Lila</div>
               </div>
             </div>
@@ -48,28 +52,32 @@
               <div>
                 <div class="d-flex justify-content-between">
                   <h6 class="mb-2 text-muted">Eventos</h6>
-                  <i class="feather icon-plus" placement="start" ngbTooltip="Nuevo Evento" (click)="handleNewEvent()"></i>
+                  <i class="feather icon-plus" placement="start" ngbTooltip="Nuevo Evento"
+                    (click)="handleNewEvent()"></i>
                 </div>
-                
-                <div *ngFor="let event of eventsByDay" class='fc-event'
-                  [ngClass]="event.classNames">
+
+                <div *ngFor="let event of eventsByDay" class='fc-event' [ngClass]="event.classNames">
                   <div class="row">
                     <div class="col-lg-8">
                       <span>{{'C'+event.id}}-{{event.title}}</span><br>
                       <span>{{event.startHour}} - {{event.endHour}}</span>
                     </div>
                     <div class="col-lg-4  d-flex align-items-center justify-content-end">
-                      <i *ngIf="event.ownerEvent" class="feather icon-printer" (click)="print(event.id)" placement="start" ngbTooltip="Imprimir Acreditaciones"></i>
-                      <i *ngIf="event.ownerEvent" class="feather icon-edit-2 ms-1" (click)="handleEditEvent(event.id)" placement="start" ngbTooltip="Editar Evento"></i>
-                      <i *ngIf="event.ownerEvent" class="feather icon-copy ms-1" (click)="cloneEvent(event.id)" placement="start" ngbTooltip="Clonar Evento"></i>
-                      <i class="feather icon-trash ms-1" (click)="deleteEvent(event.id)" placement="start" ngbTooltip="Eliminar Evento"></i>
+                      <i *ngIf="event.ownerEvent" class="feather icon-printer" (click)="print(event.id)"
+                        placement="start" ngbTooltip="Imprimir Acreditaciones"></i>
+                      <i *ngIf="event.ownerEvent" class="feather icon-edit-2 ms-1" (click)="handleEditEvent(event.id)"
+                        placement="start" ngbTooltip="Editar Evento"></i>
+                      <i *ngIf="event.ownerEvent" class="feather icon-copy ms-1" (click)="cloneEvent(event.id)"
+                        placement="start" ngbTooltip="Clonar Evento"></i>
+                      <i class="feather icon-trash ms-1" (click)="deleteEvent(event.id)" placement="start"
+                        ngbTooltip="Eliminar Evento"></i>
                     </div>
                   </div>
                 </div>
                 <div *ngIf="!eventsByDay || eventsByDay.length == 0">
                   <div class="row">
                     <div class="col-lg-12">
-                        No tiene eventos agendados.
+                      No tiene eventos agendados.
                     </div>
                   </div>
                 </div>
@@ -85,208 +93,208 @@
 <ng-template #addEvent let-modal>
   <div class="modal-header">
     <h4 *ngIf="!eventDetail.id" id="modalTitle1" class="modal-title">Nueva Acreditación</h4>
-    <h4 *ngIf="eventDetail.id && eventDetail.ownerEvent" id="modalTitle1" class="modal-title">Actualizar Acreditación</h4>
+    <h4 *ngIf="eventDetail.id && eventDetail.ownerEvent" id="modalTitle1" class="modal-title">Actualizar Acreditación
+    </h4>
     <button type="button" class="btn-close" (click)="close(modalAddEvent)"><span
         class="visually-hidden">close</span></button>
   </div>
   <form name="calendarForm" #calendarForm="ngForm" (ngSubmit)="onSubmit(calendarForm, modalAddEvent)">
-  <div *ngIf="eventDetail.ownerEvent" id="modalBody1" class="modal-body">
+    <div *ngIf="eventDetail.ownerEvent" id="modalBody1" class="modal-body">
 
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="mb-3">
-          <label for="inputTitle" class="form-label required">Título</label>
-          <input type="text" name="title" #title="ngModel" [(ngModel)]="eventDetail.title"
-            [ngClass]="{'ng-dirty ng-invalid' : title.errors && ( title.dirty || title.touched || calendarForm.submitted) }"
-            class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="255" required>
-          <div *ngIf="title.invalid && calendarForm.submitted" class="invalid-feedback">
-            <div *ngIf="title.errors?.required">Campo es requerido
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label required">Título</label>
+            <input type="text" name="title" #title="ngModel" [(ngModel)]="eventDetail.title"
+              [ngClass]="{'ng-dirty ng-invalid' : title.errors && ( title.dirty || title.touched || calendarForm.submitted) }"
+              class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="255" required>
+            <div *ngIf="title.invalid && calendarForm.submitted" class="invalid-feedback">
+              <div *ngIf="title.errors?.required">Campo es requerido
+              </div>
+              <div *ngIf="title.errors?.minlength || title.errors?.maxlength">
+                Campo permite entre 3 y 255 caracteres</div>
             </div>
-            <div *ngIf="title.errors?.minlength || title.errors?.maxlength">
-              Campo permite entre 3 y 255 caracteres</div>
           </div>
-        </div>
-        <div class="mb-3">
-          <label for="inputTitle" class="form-label required">Descripción</label>
-          <textarea type="text" name="description" #description="ngModel" [(ngModel)]="eventDetail.description" rows="3"
-            [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || calendarForm.submitted) }"
-            class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="1000" required></textarea>
-          <div *ngIf="description.invalid && calendarForm.submitted" class="invalid-feedback">
-            <div *ngIf="description.errors?.required">Campo es requerido
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label required">Descripción</label>
+            <textarea type="text" name="description" #description="ngModel" [(ngModel)]="eventDetail.description"
+              rows="3"
+              [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || calendarForm.submitted) }"
+              class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="1000"
+              required></textarea>
+            <div *ngIf="description.invalid && calendarForm.submitted" class="invalid-feedback">
+              <div *ngIf="description.errors?.required">Campo es requerido
+              </div>
+              <div *ngIf="description.errors?.minlength || description.errors?.maxlength">
+                Campo permite entre 3 y 1000 caracteres</div>
             </div>
-            <div *ngIf="description.errors?.minlength || description.errors?.maxlength">
-              Campo permite entre 3 y 1000 caracteres</div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div *ngIf="inputError"
-        class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
-          <div [innerHtml]="inputError"></div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div *ngIf="inputError" class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+            <div [innerHtml]="inputError"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="mb-3">
-          <label for="inputTitle" class="form-label required">Fecha</label>
-          <div class="input-group">
-            <input id="inputEventDate" name="eventDate" #eventDate="ngModel" [minDate]="minDateEvent"
-              class="form-control" placeholder="yyyy-mm-dd"
-              [ngClass]="{'ng-dirty ng-invalid' : eventDate.errors && ( eventDate.dirty || eventDate.touched || calendarForm.submitted) }"
-              [(ngModel)]="eventDetail.eventDate" ngbDatepicker #dp="ngbDatepicker" required>
-            <button class="input-group-text" type="button" (click)="dp.toggle()">
-              <i class="feather icon-calendar icon-md text-muted"></i>
-            </button>
-            <div *ngIf="eventDate.invalid && calendarForm.submitted" class="invalid-feedback">
-              <div *ngIf="eventDate.errors?.required">Campo es requerido
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label required">Fecha</label>
+            <div class="input-group">
+              <input id="inputEventDate" name="eventDate" #eventDate="ngModel" [minDate]="minDateEvent"
+                class="form-control" placeholder="yyyy-mm-dd"
+                [ngClass]="{'ng-dirty ng-invalid' : eventDate.errors && ( eventDate.dirty || eventDate.touched || calendarForm.submitted) }"
+                [(ngModel)]="eventDetail.eventDate" ngbDatepicker #dp="ngbDatepicker" required>
+              <button class="input-group-text" type="button" (click)="dp.toggle()">
+                <i class="feather icon-calendar icon-md text-muted"></i>
+              </button>
+              <div *ngIf="eventDate.invalid && calendarForm.submitted" class="invalid-feedback">
+                <div *ngIf="eventDate.errors?.required">Campo es requerido
+                </div>
+                <div *ngIf="!eventDate.errors?.required">La fecha debe ser igual o superior a la de hoy
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-lg-6">
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label required">Hora Inicio</label>
+            <ngb-timepicker type="text" name="startHour" #startHour="ngModel" [(ngModel)]="eventDetail.startHour"
+              [ngClass]="{'ng-dirty ng-invalid' : startHour.errors && ( startHour.dirty || startHour.touched || calendarForm.submitted) }"
+              class="form-control" id="inputTitle" required></ngb-timepicker>
+            <div *ngIf="startHour.invalid && calendarForm.submitted" class="invalid-feedback">
+              <div *ngIf="startHour.errors?.required">Campo es requerido
               </div>
             </div>
           </div>
         </div>
-
-      </div>
-      <div class="col-lg-6">
-        <div class="mb-3">
-          <label for="inputTitle" class="form-label required">Hora Inicio</label>
-          <ngb-timepicker type="text" name="startHour" #startHour="ngModel" [(ngModel)]="eventDetail.startHour"
-            [ngClass]="{'ng-dirty ng-invalid' : startHour.errors && ( startHour.dirty || startHour.touched || calendarForm.submitted) }"
-            class="form-control" id="inputTitle" required></ngb-timepicker>
-          <div *ngIf="startHour.invalid && calendarForm.submitted" class="invalid-feedback">
-            <div *ngIf="startHour.errors?.required">Campo es requerido
+        <div class="col-lg-6">
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label required">Hora Fin</label>
+            <ngb-timepicker type="text" name="endHour" #endHour="ngModel" [(ngModel)]="eventDetail.endHour"
+              [ngClass]="{'ng-dirty ng-invalid' : endHour.errors && ( endHour.dirty || endHour.touched || calendarForm.submitted) }"
+              class="form-control" id="inputTitle" required></ngb-timepicker>
+            <div *ngIf="endHour.invalid && calendarForm.submitted" class="invalid-feedback">
+              <div *ngIf="endHour.errors?.required">Campo es requerido
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-6">
-        <div class="mb-3">
-          <label for="inputTitle" class="form-label required">Hora Fin</label>
-          <ngb-timepicker type="text" name="endHour" #endHour="ngModel" [(ngModel)]="eventDetail.endHour"
-            [ngClass]="{'ng-dirty ng-invalid' : endHour.errors && ( endHour.dirty || endHour.touched || calendarForm.submitted) }"
-            class="form-control" id="inputTitle" required></ngb-timepicker>
-          <div *ngIf="endHour.invalid && calendarForm.submitted" class="invalid-feedback">
-            <div *ngIf="endHour.errors?.required">Campo es requerido
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="mb-3">
-          <label for="inputUsers" class="form-label">Añade Invitados</label>
-          <ng-select id="inputUsers" [items]="data.users" [multiple]=true
-              [searchable]="true" [closeOnSelect]="false"
-              [virtualScroll]="true"
-              name="usersInvited" #usersInvited="ngModel"
-              bindValue="value" [searchable]="true"
-              groupBy="selectedAllGroup"
-              [selectableGroup]="true"
-              [selectableGroupAsModel]="false"
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="mb-3">
+            <label for="inputUsers" class="form-label">Añade Invitados</label>
+            <ng-select id="inputUsers" [items]="data.users" [multiple]=true [searchable]="true" [closeOnSelect]="false"
+              [virtualScroll]="true" name="usersInvited" #usersInvited="ngModel" bindValue="value" [searchable]="true"
+              groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
               [(ngModel)]="eventDetail.usersInvited">
 
-              <ng-template
-              ng-optgroup-tmp
-              let-item="item"
-              let-item$="item$"
-              let-index="index"
-            >
-              <input id="item-{{ index }}" type="checkbox" name="item1-{{ index }}" [(ngModel)]="item$.selected" />
-              Seleccionar todos
-            </ng-template>
-            <ng-template
-            ng-option-tmp
-            let-item="item"
-            let-item$="item$"
-            let-index="index"
-          >
-            <input id="item-{{ index }}" type="checkbox" name="item2-{{ index }}" [(ngModel)]="item$.selected" />
-            {{ item.label }}
-          </ng-template>
-          </ng-select>
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{ index }}" type="checkbox" name="item1-{{ index }}" [(ngModel)]="item$.selected" />
+                Seleccionar todos
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{ index }}" type="checkbox" name="item2-{{ index }}" [(ngModel)]="item$.selected" />
+                {{ item.label }}
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
       </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="mb-3">
-          <label for="inputTitle" class="form-label required">Color</label>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label required">Color</label>
 
-          <div class="mt-2 d-flex align-items-center">
-            <div *ngFor="let color of data.colors" class="form-check mb-2 ms-3 d-flex align-items-center">
-                <input type="radio" class="form-check-input"
-                    name="eventColor" [value]="color.value"
-                    [(ngModel)]="eventDetail.classNames">
+            <div class="mt-2 d-flex align-items-center">
+              <div *ngFor="let color of data.colors" class="form-check mb-2 ms-3 d-flex align-items-center">
+                <input type="radio" class="form-check-input" name="eventColor" #eventColor="ngModel"
+                  [value]="color.value" [(ngModel)]="eventDetail.classNames" required>
                 <label class="form-check-label ms-2">
                   {{color.label}}
                   <i class="mdi mdi-select-inverse" [style.color]="color.color" [style.font-size]="'20px'"></i>
-                    
                 </label>
+              </div>
             </div>
-        </div>
-        </div>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-lg-12">
-        <div class="mb-3">
-          <label for="inputTitle" class="form-label">Acreditaciones</label>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row" *ngFor="let accreditation of eventDetail.accreditationItems; let i = index">
-      <div class="col-lg-9">
-        <div class="mb-3">
-          <label for="inputAccreditationType" class="form-label required">Tipo acreditación </label>
-          <ng-select id="inputAccreditationType" [items]="data.accreditationType" [multiple]="false"
+      <div class="row">
+        <div class="col-lg-12">
+          <div *ngIf="inputColorError" class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+            <div [innerHtml]="inputColorError"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-lg-12">
+          <div class="mb-3">
+            <label for="inputTitle" class="form-label">Acreditaciones</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngFor="let accreditation of eventDetail.accreditationItems; let i = index">
+        <div class="col-lg-9">
+          <div class="mb-3">
+            <label for="inputAccreditationType" class="form-label required">Tipo acreditación </label>
+            <ng-select id="inputAccreditationType" [items]="data.accreditationType" [multiple]="false"
               [searchable]="true" [closeOnSelect]="true"
               [ngClass]="{'ng-dirty ng-invalid' : calendarForm.form.controls[accreditation.controlName]?.errors && ( calendarForm.form.controls[accreditation.controlName]?.dirty || calendarForm.form.controls[accreditation.controlName]?.touched || calendarForm.submitted) }"
-              [name]="accreditation.controlName"
-              bindValue="id" [searchable]="true"
-              [(ngModel)]="accreditation.id" required>
-          </ng-select>
-          <div *ngIf="calendarForm.form.controls[accreditation.controlName]?.invalid && calendarForm.submitted" class="invalid-feedback">
-            <div *ngIf="calendarForm.form.controls[accreditation.controlName]?.errors?.required">Campo es requerido
+              [name]="accreditation.controlName" bindValue="id" [searchable]="true" [(ngModel)]="accreditation.id"
+              required>
+            </ng-select>
+            <div *ngIf="calendarForm.form.controls[accreditation.controlName]?.invalid && calendarForm.submitted"
+              class="invalid-feedback">
+              <div *ngIf="calendarForm.form.controls[accreditation.controlName]?.errors?.required">Campo es requerido
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-2">
-        <div class="mb-3">
-          <label for="inputQuantity" class="form-label required">Cantidad</label>
-          <input type="number" [name]="accreditation.controlQuantity" [(ngModel)]="accreditation.quantity"
-            [ngClass]="{'ng-dirty ng-invalid' : calendarForm.form.controls[accreditation.controlQuantity]?.errors && ( calendarForm.form.controls[accreditation.controlQuantity]?.dirty || calendarForm.form.controls[accreditation.controlQuantity]?.touched || calendarForm.submitted) }"
-            class="form-control" id="inputQuantity" required>
-          <div *ngIf="calendarForm.form.controls[accreditation.controlQuantity]?.invalid && calendarForm.submitted" class="invalid-feedback">
-            <div *ngIf="calendarForm.form.controls[accreditation.controlQuantity]?.errors?.required">Campo es requerido
+        <div class="col-lg-2">
+          <div class="mb-3">
+            <label for="inputQuantity" class="form-label required">Cantidad</label>
+            <input type="number" [name]="accreditation.controlQuantity" [(ngModel)]="accreditation.quantity"
+              [ngClass]="{'ng-dirty ng-invalid' : calendarForm.form.controls[accreditation.controlQuantity]?.errors && ( calendarForm.form.controls[accreditation.controlQuantity]?.dirty || calendarForm.form.controls[accreditation.controlQuantity]?.touched || calendarForm.submitted) }"
+              class="form-control" id="inputQuantity" required>
+            <div *ngIf="calendarForm.form.controls[accreditation.controlQuantity]?.invalid && calendarForm.submitted"
+              class="invalid-feedback">
+              <div *ngIf="calendarForm.form.controls[accreditation.controlQuantity]?.errors?.required">Campo es
+                requerido
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-1 d-flex align-items-center">
-        <i *ngIf="(i+1) < eventDetail.accreditationItems.length" class="feather icon-trash" placement="start" ngbTooltip="Nuevo Item" (click)="deleteAccreditationItem(i)"></i>
-        <i *ngIf="(i+1) === eventDetail.accreditationItems.length" class="feather icon-plus" placement="start" ngbTooltip="Nuevo Item" (click)="addAccreditationItem()"></i>
+        <div class="col-lg-1 d-flex align-items-center">
+          <i *ngIf="(i+1) < eventDetail.accreditationItems.length" class="feather icon-trash" placement="start"
+            ngbTooltip="Nuevo Item" (click)="deleteAccreditationItem(i)"></i>
+          <i *ngIf="(i+1) === eventDetail.accreditationItems.length" class="feather icon-plus" placement="start"
+            ngbTooltip="Nuevo Item" (click)="addAccreditationItem()"></i>
+        </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="!eventDetail.ownerEvent" class="modal-body">
-    <dl>
-      <dt class="mt-1 mb-2"><i class="feather icon-info me-1"></i>Evento</dt>
-      <dd>{{eventDetail.title}}</dd>
-      <dt class="mt-1 mb-2"><i class="feather icon-info me-1"></i>Detalle</dt>
-      <dd>{{eventDetail.title}}</dd>
-      <dt class="mt-1 mb-2"> <i class="feather icon-calendar me-1"></i>Fecha</dt>
-      <dd>{{eventDetail.start | date:'yyyy-MM-dd'}} de {{eventDetail.start | date:'HH:mm'}} a {{eventDetail.end | date:'HH:mm'}}</dd>
-      <dt *ngIf="eventDetail.usersInvited && eventDetail.usersInvited.length > 0" class="mt-1 mb-2"><i class="feather icon-users me-1"></i>Invitados</dt>
-      <dd *ngFor="let email of eventDetail.usersInvited">{{email}}</dd>
-    </dl>
-  </div> 
-  <div *ngIf="eventDetail.ownerEvent" class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="close(modalAddEvent)">Cancelar</button>
-    <button type="submit" class="btn btn-primary">Guardar</button>
-  </div>
+    <div *ngIf="!eventDetail.ownerEvent" class="modal-body">
+      <dl>
+        <dt class="mt-1 mb-2"><i class="feather icon-info me-1"></i>Evento</dt>
+        <dd>{{eventDetail.title}}</dd>
+        <dt class="mt-1 mb-2"><i class="feather icon-info me-1"></i>Detalle</dt>
+        <dd>{{eventDetail.title}}</dd>
+        <dt class="mt-1 mb-2"> <i class="feather icon-calendar me-1"></i>Fecha</dt>
+        <dd>{{eventDetail.start | date:'yyyy-MM-dd'}} de {{eventDetail.start | date:'HH:mm'}} a {{eventDetail.end |
+          date:'HH:mm'}}</dd>
+        <dt *ngIf="eventDetail.usersInvited && eventDetail.usersInvited.length > 0" class="mt-1 mb-2"><i
+            class="feather icon-users me-1"></i>Invitados</dt>
+        <dd *ngFor="let email of eventDetail.usersInvited">{{email}}</dd>
+      </dl>
+    </div>
+    <div *ngIf="eventDetail.ownerEvent" class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close(modalAddEvent)">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
 
   </form>
 </ng-template>

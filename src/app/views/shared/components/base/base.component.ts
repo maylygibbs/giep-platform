@@ -33,6 +33,11 @@ export class BaseComponent {
   private fieldError: string;
 
 
+
+  /** Gestao mensajes da erro da input color*/
+  private fieldColorError: string;
+
+
   /** Gestao mensajes da erro da modal*/
   private labelError: string;
 
@@ -108,6 +113,20 @@ export class BaseComponent {
     return this;
   }
 
+
+    /**
+ * Limpe a mensagem de erro e adicione apenas uma mensagem de erro
+ * @param message Mensagem para adicionar à lista de erros
+ */
+    protected setInputColorError(message: string, clean = true): BaseComponent {
+      this.fieldColorError = message;
+  
+      if (clean) {
+        setTimeout(() => this.fieldColorError = '', 5000);
+      }
+      return this;
+    }
+
   /**
 * Limpe a mensagem de erro e adicione apenas uma mensagem de erro
 * @param message Mensagem para adicionar à lista de erros
@@ -181,6 +200,13 @@ export class BaseComponent {
   get inputError(): string {
     return this.fieldError;
   }
+
+    /**
+ * Retorne o erro atual a ser exibido
+ */
+    get inputColorError(): string {
+      return this.fieldColorError;
+    }
 
   /**
 * Retorne o erro atual a ser exibido.

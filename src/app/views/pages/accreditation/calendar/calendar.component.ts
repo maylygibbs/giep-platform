@@ -416,9 +416,14 @@ export class CalendarComponent extends BaseComponent implements OnInit {
    * @param form 
    */
   async onSubmit(form: NgForm, modalRef: NgbModalRef) {
+    console.log('form',form.value)
     if (form.valid) {
       if (this.isValidEventDate(this.eventDetail)) {
         if (this.isValidEventHours(this.eventDetail)) {
+          if(form.value.eventColor && Array.isArray(form.value.eventColor)){
+            this.setInputColorError('Indique el color del evento');
+            return;
+          }
           console.log(this.eventDetail);
           console.log('eventDetail for post',EventDetail.mapForPost(this.eventDetail));
           await this.calendarService.storeEvent(EventDetail.mapForPost(this.eventDetail), this.eventDetail.id);
@@ -432,6 +437,8 @@ export class CalendarComponent extends BaseComponent implements OnInit {
         this.setInputError(`Indique una fecha y hora igual o superior a la fecha y hora actual: ${cuerrentDate}`);
       }
 
+    }else{
+      
     }
   }
 
