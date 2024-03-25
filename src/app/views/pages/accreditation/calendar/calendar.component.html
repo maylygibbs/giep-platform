@@ -188,7 +188,7 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="mb-3">
-            <label for="inputUsers" class="form-label">Añade Invitados</label>
+            <label for="inputUsers" class="form-label">Seleccione Invitados (o carque el archivo con la lista de invitados)</label>
             <ng-select id="inputUsers" [items]="data.users" [multiple]=true [searchable]="true" [closeOnSelect]="false"
               [virtualScroll]="true" name="usersInvited" #usersInvited="ngModel" bindValue="value" [searchable]="true"
               groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
@@ -203,6 +203,43 @@
                 {{ item.label }}
               </ng-template>
             </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="mb-3">
+            <div #dropzone class="dropzone" [dropzone]="configDropZone" (error)="onUploadError($event)"
+            (success)="onUploadSuccess($event)" (addedFile)="addFile($event)"
+            (removedFile)="resetDropzoneUploads()" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3" *ngIf="resultValidateUsers">
+        <div class="col-lg-6" >
+          <div class="card" >
+            <div class="card-header">
+              <span>Usuarios Registrados en Giep</span><i class="feather icon-check ms-2"></i>
+            </div>
+            <div class="body">
+              <div class="row" *ngFor="let user of resultValidateUsers.usuariosregistrados">
+                <div class="col-lg-6 ps-4">{{user.fullname}}</div>
+                <div class="col-lg-6 ps-4">{{user.cedula}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <span>Usuarios no registrados</span><i class="feather icon-x ms-2"></i>
+              
+            </div>
+            <div class="body">
+              <div class="row" *ngFor="let user of resultValidateUsers.usuariosnoregistrados">
+                <div class="col-lg-12 ps-4">{{user}}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -422,5 +422,22 @@ async storeAccreditationType(data: AccreditationType) {
     }
   }
 
+    /**
+   * valid user before to link to event
+   * @param event 
+   */
+    async validUsers(users: any) {
+      try {
+        const resp:any = await firstValueFrom(this.post(environment.apiUrl, `/calendario/event/valid/user`,users));
+        if(resp && resp.hasOwnProperty('data')){
+          return resp.data
+        }
+        return null;
+
+      } catch (error) {
+        this.toastrService.error('Ha ocurrido un error validando lista de usuarios.');
+      }
+    }
+
 
 }

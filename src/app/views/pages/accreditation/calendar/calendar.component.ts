@@ -14,7 +14,11 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { User } from 'src/app/core/models/user';
 import esLocale from '@fullcalendar/core/locales/es';
 import { AcreditationItem } from '../../../../core/models/accreditation-item';
+import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+import { ToastrService } from 'ngx-toastr';
+import * as XLSX from 'xlsx';
 
+type AOA = any[][];
 
 @Component({
   selector: 'app-calendar',
@@ -61,17 +65,43 @@ export class CalendarComponent extends BaseComponent implements OnInit {
 
   currentUser: User;
 
-  step:number = 1;
+  step: number = 1;
 
 
   accreditations: Array<any>;
+
+  drop: any;
+  configDropZone: DropzoneConfigInterface = {
+    clickable: true,
+    maxFiles: 1,
+    maxFilesize: 1,
+    ignoreHiddenFiles: false,
+    autoProcessQueue: false,
+    uploadMultiple: true,
+    parallelUploads: 2,
+    addRemoveLinks: true,
+    dictDefaultMessage: 'Arrastra el archivo excel con la lista de invitados o haz click aquí para subirlo.',
+    dictRemoveFile: 'Eliminar',
+    autoReset: 1000,
+    errorReset: 2500,
+    cancelReset: null,
+    acceptedFiles: '.xlsx, .xls',
+    init: () => {
+      this.drop = this;
+    }
+  };
+
+  resultValidateUsers: any;
+
+  registeredUsers:any = [];
 
   constructor(private calendarService: CalendarService,
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: NgbModal
-    ) {
+    private modalService: NgbModal,
+    private toastrService: ToastrService
+  ) {
     super();
   }
 
@@ -215,7 +245,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
     this.eventDetail = new EventDetail();
     this.eventDetail.eventDate = { year: this.selectedDay.getFullYear(), month: this.selectedDay.getMonth() + 1, day: this.selectedDay.getDate() };
     this.eventDetail.classNames = 'bgcolor-orange';
-    this.eventDetail.ownerEvent = this.currentUser.email; 
+    this.eventDetail.ownerEvent = this.currentUser.email;
     this.eventDetail.accreditationRequired = true;
     this.addAccreditationItem();
     this.modalAddEvent = this.modalService.open(this.addEvent, { size: 'lg' });
@@ -272,7 +302,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
    * Event Resize hours
    * @param eventResizeInfo 
    */
-   async handleEventResize(eventResizeInfo: EventResizeStopArg){
+  async handleEventResize(eventResizeInfo: EventResizeStopArg) {
     console.log('eventResizeInfo', eventResizeInfo.event.start);
     console.log('eventResizeInfo', eventResizeInfo.event.end);
     await this.getEventById(eventResizeInfo.event.id);
@@ -396,6 +426,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
   close(modalRef: NgbModalRef) {
     this.loadCalendarByRangeDate(this.currentViewCalendar);
     this.showCardEvents = false;
+    this.resultValidateUsers = null;
     modalRef.close();
   }
 
@@ -416,16 +447,21 @@ export class CalendarComponent extends BaseComponent implements OnInit {
    * @param form 
    */
   async onSubmit(form: NgForm, modalRef: NgbModalRef) {
-    console.log('form',form.value)
+    console.log('form', form.value)
     if (form.valid) {
       if (this.isValidEventDate(this.eventDetail)) {
         if (this.isValidEventHours(this.eventDetail)) {
-          if(form.value.eventColor && Array.isArray(form.value.eventColor)){
+          if (form.value.eventColor && Array.isArray(form.value.eventColor)) {
             this.setInputColorError('Indique el color del evento');
             return;
           }
-          console.log(this.eventDetail);
-          console.log('eventDetail for post',EventDetail.mapForPost(this.eventDetail));
+
+          if(!this.eventDetail.usersInvited && (!this.resultValidateUsers || !this.resultValidateUsers.usuariosregistrados || this.resultValidateUsers.usuariosregistrados.length == 0)){
+            this.setInputColorError('Indique al menos un invitado');
+            return;
+          }
+          this.getMasiveUsers();
+          console.log('eventDetail for post', EventDetail.mapForPost(this.eventDetail));
           await this.calendarService.storeEvent(EventDetail.mapForPost(this.eventDetail), this.eventDetail.id);
           this.close(modalRef);
         } else {
@@ -437,8 +473,27 @@ export class CalendarComponent extends BaseComponent implements OnInit {
         this.setInputError(`Indique una fecha y hora igual o superior a la fecha y hora actual: ${cuerrentDate}`);
       }
 
-    }else{
-      
+    } else {
+
+    }
+  }
+
+  /**
+   * Get masive users from file
+   */
+  getMasiveUsers(){
+    if(this.resultValidateUsers && this.resultValidateUsers.usuariosregistrados && this.resultValidateUsers.usuariosregistrados.length > 0){
+      if(this.eventDetail.usersInvited && this.eventDetail.usersInvited.length > 0){
+        this.registeredUsers = this.resultValidateUsers.usuariosregistrados.filter((user:any)=> {
+          return !this.eventDetail.usersInvited.includes(user.correo);
+        });  
+        if(this.registeredUsers.length > 0){
+          const temp = this.registeredUsers.map((user)=> {return user.correo});
+          this.eventDetail.usersInvited = [...this.eventDetail.usersInvited, ...temp];
+        }       
+      }else{
+        this.eventDetail.usersInvited = this.resultValidateUsers.usuariosregistrados.map((user)=> {return user.correo});
+      }
     }
   }
 
@@ -480,20 +535,20 @@ export class CalendarComponent extends BaseComponent implements OnInit {
   /**
    * add accreditation item to event
    */
-  addAccreditationItem(){
-    if(!this.eventDetail.accreditationItems){
+  addAccreditationItem() {
+    if (!this.eventDetail.accreditationItems) {
       this.eventDetail.accreditationItems = new Array<AcreditationItem>();
-    } 
-    const indexNew = this.eventDetail.accreditationItems.length + 1;   
+    }
+    const indexNew = this.eventDetail.accreditationItems.length + 1;
     const accreditationItems = new AcreditationItem();
     accreditationItems.quantity = '1';
-    accreditationItems.controlName = 'accreditatioType'+indexNew;
-    accreditationItems.controlQuantity = 'accreditatioQuantity'+indexNew;
+    accreditationItems.controlName = 'accreditatioType' + indexNew;
+    accreditationItems.controlQuantity = 'accreditatioQuantity' + indexNew;
     this.eventDetail.accreditationItems.push(accreditationItems)
   }
 
-  deleteAccreditationItem(i:number){
-    this.eventDetail.accreditationItems.splice(i,1);
+  deleteAccreditationItem(i: number) {
+    this.eventDetail.accreditationItems.splice(i, 1);
   }
 
   /**
@@ -511,8 +566,8 @@ export class CalendarComponent extends BaseComponent implements OnInit {
   }
 
 
-  print(id:string){
-    this.router.navigate(['/accreditations/print'],{queryParams:{idEvent:id}})
+  print(id: string) {
+    this.router.navigate(['/accreditations/print'], { queryParams: { idEvent: id } })
   }
 
 
@@ -520,10 +575,99 @@ export class CalendarComponent extends BaseComponent implements OnInit {
    * 
    * @param id 
    */
-  async cloneEvent(id:string){
+  async cloneEvent(id: string) {
     await this.calendarService.cloneEvent(id);
     this.loadCalendarByRangeDate(this.currentViewCalendar);
     this.showCardEvents = false;
+  }
+
+
+  /**
+  * Handle error in upload action
+  * @param event 
+  */
+  onUploadError(event: any): void {
+    console.log('onUploadError:', event);
+    //this.disableBtnSubmit = true;
+    if (event[1] == "You can't upload files of this type.") {
+      this.toastrService.error('Documento con extensión no permitida. Sólo se permiten archivos con las siguientes extensiones: xls, xlsx')
+    }
+    if (event[1] == "File is too big (2.87MiB). Max filesize: 2MiB.") {
+      this.toastrService.error('El documento es demasiado grande. Tamaño máximo de docuemento: 10MB.')
+    }
+  }
+
+  /**
+* Handle success in upload action
+* @param event 
+*/
+  onUploadSuccess(event: any): void {
+    
+    console.log(event)
+  }
+
+  /**
+ * Handle add file action
+ * @param event 
+ */
+  addFile(event: any) {
+    this.resultValidateUsers = null;
+    let file: File = event;
+    console.log('event:', event);
+    console.log('file name:', file.name);
+    console.log('file type:', file.type);
+    const thisTemp = this;
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsBinaryString(file);
+      reader.onload = async() => {
+        /* read workbook */
+        const result: string = reader.result as string;
+        const wb: XLSX.WorkBook = XLSX.read(result, { type: 'binary' });
+
+         /* grab first sheet */
+        const wsname: string = wb.SheetNames[0];
+        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+         /* save data */
+        const data = <AOA>(XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false }));
+
+        if (data.length === 0) {
+
+          thisTemp.toastrService.error('Favor verifique, el archivo está vacío.')
+
+          return false;
+        }else{
+          console.log('data',data);
+          const users = data.map((user)=> {return user[0]})
+          thisTemp.resultValidateUsers = await thisTemp.calendarService.validUsers({users});
+          if(thisTemp.resultValidateUsers && thisTemp.resultValidateUsers.usuariosregistrados && thisTemp.resultValidateUsers.usuariosregistrados.length > 0){
+            if(thisTemp.eventDetail.usersInvited && thisTemp.eventDetail.usersInvited.length > 0){
+              thisTemp.registeredUsers = thisTemp.resultValidateUsers.usuariosregistrados.filter((user:any)=> {
+                return !thisTemp.eventDetail.usersInvited.includes(user.correo);
+              });            
+              thisTemp.resultValidateUsers.usuariosregistrados = [...thisTemp.registeredUsers];
+            }
+
+          }
+
+        }
+
+      };
+      reader.onerror = (error) => {
+        this.toastrService.error('Error al analizar lista de usuarios.');
+        console.log(error);
+      };
+    }
+  }
+
+
+  /**
+* Reset zone drag and drop
+*/
+  resetDropzoneUploads() {
+    this.resultValidateUsers = null;
+
   }
 
 
