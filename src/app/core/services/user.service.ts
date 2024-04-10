@@ -93,6 +93,24 @@ export class UserService extends HttpService {
     return user;
   }
 
+  async getStatusUser() {
+    try {
+      const resp = await firstValueFrom(this.get(environment.apiUrl, '/user/status/list'));
+      if(resp && resp['msg']){
+        return true;
+      }else{
+        return false
+      }
+    } catch (error: any) {      
+      if(error.status == 401){
+        error.status = 200;
+        return false;
+      }
+        
+    }
+    
+  }
+
   /**
    * Get observable of instruments
    */

@@ -42,9 +42,15 @@ export class LoginComponent extends BaseComponent  implements OnInit {
   async onLoggedin(form:NgForm) {        
     if (form.valid) {
       const resp = await this.authService.login(this.email, this.password);
-      if(resp instanceof User){        
-        await this.userService.getInfoUser();
-        this.router.navigate([this.returnUrl]);
+      if(resp instanceof User){ 
+        const isActive:boolean = await this.userService.getStatusUser(); 
+        if(isActive){
+          await this.userService.getInfoUser();
+          this.router.navigate([this.returnUrl]);
+        }else{
+          this.setInputError("Error autenticando el usuario");
+        }
+        
       }else{
         this.setInputError(resp);
       }

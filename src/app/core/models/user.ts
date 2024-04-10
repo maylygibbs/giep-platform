@@ -2,6 +2,9 @@ import { SelectOption } from './select-option';
 import * as moment from 'moment';
 import { MenuItem } from './menu.model';
 import { Instrument } from './instrument';
+
+import  { Instrument as EvaluationIntrument}  from './evaluation-instrument';
+
 export class User {
 
     id: string;
@@ -42,6 +45,7 @@ export class User {
     instrument:Instrument;
     freeDays:any; // range of dates
     totalFreeDays:any;
+    evaluationIntrument: EvaluationIntrument;
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');
