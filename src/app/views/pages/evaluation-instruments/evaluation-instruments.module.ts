@@ -7,6 +7,8 @@ import { InstrumentsComponent } from './components/instruments/instruments.compo
 import { InstrumentStoreComponent } from './components/instrument-store/instrument-store.component';
 import { BoxSectionBuilderComponent } from './components/box-section-builder/box-section-builder.component';
 import { BoxQuestionBuilderComponent } from './components/box-question-builder/box-question-builder.component';
+import { EvaluationsComponent } from './components/evaluations/evaluations.component';
+import { EvaluationComponent } from './components/evaluation/evaluation.component';
 
 
 @NgModule({
@@ -14,7 +16,9 @@ import { BoxQuestionBuilderComponent } from './components/box-question-builder/b
     InstrumentsComponent,
     InstrumentStoreComponent,
     BoxSectionBuilderComponent,
-    BoxQuestionBuilderComponent],
+    BoxQuestionBuilderComponent,
+    EvaluationsComponent,
+    EvaluationComponent],
   imports: [
     CommonModule,
     EvaluationInstrumentsRoutingModule,

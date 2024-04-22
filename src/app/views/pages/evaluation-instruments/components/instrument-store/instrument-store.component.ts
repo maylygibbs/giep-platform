@@ -54,7 +54,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(){
     this.route.data.subscribe((data) => {
       this.data = data;
     });
@@ -62,11 +62,9 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
       this.linkedUsers = this.instrument.users;
       this.selectedRoles = this.instrument.roles.map((rol: string) => {
         return rol;
-      });;
-      this.loadUsersByRoles();
-      this.selectedUsers = this.instrument.users.map((user: User) => {
-        return user.id;
       });
+      await this.loadUsersByRoles();
+      this.selectedUser = this.instrument.evaluator.id;
       this.defaultNavActiveId = !this.instrument.isExpired ? 1 : 2;
       this.sectionActive = 0;
     } else {

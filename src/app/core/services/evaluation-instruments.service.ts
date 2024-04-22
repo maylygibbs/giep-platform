@@ -53,10 +53,10 @@ export class EvaluationInstrumentsService extends HttpService{
   async storeInstrument(data: any) {
     try {
       if (!data.id) {
-        const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura', data));
+        const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion', data));
         this.toastrService.success('El instrumento fué creado con éxito.');
       } else {
-        const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/actualizar/${data.id}`, data));
+        const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/actualizar/${data.id}`, data));
         this.toastrService.success('El instrumento fué actualizado con éxito.');
       }
 
@@ -72,7 +72,7 @@ export class EvaluationInstrumentsService extends HttpService{
  */
   async publishInstrument(id: string, data: any) {
     try {
-      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/publicar/${id}`, data));
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/publicar/${id}`, data));
       this.toastrService.success('El instrumento fué publicado con éxito.');
     } catch (error: any) {
       console.log(error);
@@ -83,7 +83,7 @@ export class EvaluationInstrumentsService extends HttpService{
 
   async clone(id: number) {
     try {
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/clonar`));
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}/clonar`));
       this.toastrService.success('El instrumento fué copiado con éxito.');
     } catch (error: any) {
       this.toastrService.error('Ha ocurrido un error eliminando instrumento.');
@@ -93,7 +93,7 @@ export class EvaluationInstrumentsService extends HttpService{
 
   async deleteInstrument(id: number) {
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
       this.toastrService.success('El instrumento fué eliminado con éxito.');
     } catch (error: any) {
 
@@ -110,7 +110,7 @@ export class EvaluationInstrumentsService extends HttpService{
    * @returns 
    */
   async getInstrumentsPagined(filter: any): Promise<PaginationResponse> {
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/list', filter));
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion/list', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
@@ -140,8 +140,8 @@ export class EvaluationInstrumentsService extends HttpService{
    * @param id 
    * @returns 
    */
-  async getInstrumentsById(id: number): Promise<any> {
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
+  async getInstrumentsByIdForUpdate(id: number): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
     const instrument = new Instrument();
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
     instrument.id = resp.data[0].id;
@@ -216,8 +216,8 @@ export class EvaluationInstrumentsService extends HttpService{
    * @param id 
    * @returns 
    */
-  async getInstrumentsByIdForUpdate(id: number): Promise<any> {
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/encuesta/instrumentocaptura/${id}`));
+  async getInstrumentsById(id: number): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
     const instrument = new Instrument();
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
     instrument.id = resp.data[0].id;
@@ -233,12 +233,18 @@ export class EvaluationInstrumentsService extends HttpService{
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
 
+    instrument.evaluator = new User();
+    instrument.evaluator.id = resp.data[0].evaluatorUserId;
+    instrument.evaluator.firstName = resp.data[0].evaluatorFullName;
+    instrument.evaluator.email = resp.data[0].evaluatorEmail;
+
     instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales = 1 ? true:false) : false;
     if (resp.data[0].users) {
       instrument.users = resp.data[0].users.map((u: any) => {
         const user = new User();
         user.id = u.id;
         user.firstName = u.nombre;
+        user.email = u.email;
         user.answered = u.respondida == 1 ? true : false;
         user.roles = u.roles;
         return user;
@@ -247,10 +253,47 @@ export class EvaluationInstrumentsService extends HttpService{
 
     instrument.sections = resp.data[0].secciones.map((sectionItem: any) => {
 
-      const section = new Section();
+      let section = new Section();
       section.id = sectionItem.id;
       section.name = sectionItem.nombre;
       section.numberSection = sectionItem.orden;
+
+      if(instrument.users && instrument.users.length>0){
+        section.users = instrument.users.map((user)=>{
+          const userOutput = {...user} as User;
+          userOutput.questions =  sectionItem.preguntas.map((item: any) => {
+            let question = new Question();
+            question.id = item.id;
+            question.label = item.pregunta;
+            question.nameImput = `question-${item.idInput.Descripcion}-${item.id}-${user.id}-${sectionItem.id}`;
+            question.order = item.orden;
+            question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
+            question.className = item.class;
+            question.required = item.obligatorio == 1 ? true : false;
+            question.score = item.puntos;
+    
+            if (item.IdCategoria) {
+              question.categoryBy = String(item.IdCategoria.id);
+            }
+            question.isReady = true;
+            if (item.opciones && item.opciones.length) {
+              question.options = item.opciones.map((itemOption: any, index: number) => {
+                let option = new QuestionOption(itemOption.Valor, itemOption.Name);
+                option.idOption = itemOption.id;
+                option.score = itemOption.Puntos;
+                option.nameInputLabel = "optionLabel" + question.order + '' + index;
+                option.nameInputValue = "optionValue" + question.order + '' + index;
+                option.nameInputScore = "optionScore" + question.order + '' + index;
+                return option;
+              });
+            }
+    
+            return question;
+          });
+          return userOutput;
+        })
+      }
+
       section.questions = sectionItem.preguntas.map((item: any) => {
         let question = new Question();
         question.id = item.id;
@@ -283,7 +326,8 @@ export class EvaluationInstrumentsService extends HttpService{
 
       return section;
 
-    });
+    });   
+
     return instrument;
   }
 
@@ -296,7 +340,7 @@ export class EvaluationInstrumentsService extends HttpService{
    */
   async addUsersToInstrument(id: number, data: any) {
     try {
-      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/adduser`, data));
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}/adduser`, data));
       this.toastrService.success('Los usuarios se han vinculado al instrumento con exito.');
     } catch (error: any) {
       if (error.status != 500)
@@ -313,7 +357,7 @@ export class EvaluationInstrumentsService extends HttpService{
  * @returns 
  */
   async getAssignedUsers(filter: any): Promise<PaginationResponse> {
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/pagined', filter));
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion/pagined', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
@@ -339,7 +383,7 @@ export class EvaluationInstrumentsService extends HttpService{
    */
   async changeOrderOfInstrument(id: number, order: string) {
     try {
-      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/orden/${order}`));
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}/orden/${order}`));
       this.toastrService.success('El orden del instrumento fué actualizado con exito.');
     } catch (error: any) {
       if (error.status != 500)
@@ -352,7 +396,7 @@ export class EvaluationInstrumentsService extends HttpService{
    */
   async registerInitAnswarInstrument(id: string) {
     try {
-      const resp = await firstValueFrom(this.put(environment.apiUrl, `/encuesta/instrumentocaptura/${id}/iniciar`));
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}/iniciar`));
 
     } catch (error: any) {
       if (error.status != 500)
@@ -378,7 +422,7 @@ export class EvaluationInstrumentsService extends HttpService{
    */
   async storeInstrumetsResponse(data: any) {
     try {
-      const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/respuesta', data));
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/respuesta', data));
       await this.userService.getInfoUser();
       this.toastrService.success('Sus respuestas se han registrado con exito.');
     } catch (error: any) {
@@ -393,7 +437,7 @@ export class EvaluationInstrumentsService extends HttpService{
    */
   async deleteQuestion(id: string): Promise<boolean> {
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/pregunta/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/pregunta/${id}`));
       this.toastrService.success('La Pregunta fue eliminada exitosamente.');
       return true;
     } catch (error) {
@@ -408,7 +452,7 @@ export class EvaluationInstrumentsService extends HttpService{
  */
   async deleteOption(id: number): Promise<boolean> {
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/opciones/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/opciones/${id}`));
       this.toastrService.success('La Opción fue eliminada exitosamente.');
       return true;
     } catch (error) {
@@ -423,7 +467,7 @@ export class EvaluationInstrumentsService extends HttpService{
 */
   async deleteSection(id: string): Promise<boolean> {
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/encuesta/seccion/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/seccion/${id}`));
       this.toastrService.success('La Sección fue eliminada exitosamente.');
       return true;
     } catch (error) {
@@ -441,7 +485,7 @@ export class EvaluationInstrumentsService extends HttpService{
  * @returns 
  */
   async getInstrumentResultsPagined(filter: any, instrumentId: number, selectedGraphic: string,  globalsPoints: boolean): Promise<PaginationResponse> {
-    const resp = await firstValueFrom(this.post(environment.apiUrl, `/encuesta/resultados/instrumento/${instrumentId}`, filter));
+    const resp = await firstValueFrom(this.post(environment.apiUrl, `/evaluacion/resultados/instrumento/${instrumentId}`, filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
     if (resp && resp.entidades?.length > 0) {
@@ -1391,7 +1435,7 @@ export class EvaluationInstrumentsService extends HttpService{
    * @returns 
    */
   async getUsersByInstrumentPaginated(filter: any): Promise<PaginationResponse> {
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/users', filter));
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion/users', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
     paginator.data = resp.data.map((item: any) => {
@@ -1422,6 +1466,37 @@ export class EvaluationInstrumentsService extends HttpService{
 
       return resp;
     }
+
+
+  /**
+   * Check all instruments, supports pagination and filter
+   * @param filter 
+   * @returns 
+   */
+  async getInstrumentsByEvaluatorPagined(filter: any): Promise<PaginationResponse> {
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion/list/instructor', filter));
+    const paginator = new PaginationResponse(filter.page, filter.rowByPage);
+    paginator.count = resp.count;
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+    paginator.data = resp.data.map((item: any) => {
+
+      const instrument = new Instrument();
+      instrument.id = item.id;
+      instrument.name = item.nombre;
+      instrument.description = item.descripcion;
+      instrument.createAt = item.createAt;
+      instrument.expirationDate = item.fechaVigencia;
+      instrument.publicationDate = item.fechaPublicacion;
+      instrument.isEditable = item.editable == 1 ? true : false;
+      instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
+      instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
+      instrument.order = item.orden;
+      instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true:false) : false;
+      return instrument;
+    });
+
+    return paginator;
+  }    
   
 
 }

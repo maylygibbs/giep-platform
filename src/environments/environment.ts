@@ -31,6 +31,11 @@ export const environment = {
         pattern: '^[0-9]*$',
       }
     },
+    double: {
+      validations: {
+        pattern: '^[0-9\.]*$',
+      }
+    },
     alphanumeric: {
       validations: {
         pattern: '^[a-zA-Z0-9]*$',

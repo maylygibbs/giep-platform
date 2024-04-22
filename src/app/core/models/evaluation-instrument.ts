@@ -30,6 +30,7 @@ export class Instrument {
     order: number;
     createAt: Date;
     updateAt: Date;
+    evaluator: User;
 
 
     /**

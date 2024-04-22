@@ -176,7 +176,7 @@ export class Instrument {
                 })
                 Object.assign(optionOutput, { scoreBycharges: scoreBycharges });
             } else {
-                Object.assign(optionOutput, { score: parseInt(opt.score) });
+                Object.assign(optionOutput, { score: parseFloat(opt.score) });
             }
             if (opt.idOption) {
                 Object.assign(optionOutput, { id: opt.idOption });

@@ -1,4 +1,5 @@
 import { Question } from './question';
+import { User } from './user';
 
 
 export class Section {
@@ -10,8 +11,6 @@ export class Section {
     questions: Array<Question>;
     createAt:Date;
     updateAt:Date;
-
-
-
+    users:Array<User>;
 
 }

@@ -42,9 +42,9 @@ export class UserService extends HttpService {
     user.secondName = resp[0].segundoNombre;
     user.secondLastName = resp[0].segundoApellido;
     user.email = resp[0].email;
-    if(resp[0].Dependencia){
+    if (resp[0].Dependencia) {
       user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion);
-    }    
+    }
     user.position = new SelectOption(resp[0].cargo.id, resp[0].cargo.Descripcion);
     user.phones = resp[0].telefonos;
     user.birthDate = resp[0].fechaNacimiento;
@@ -58,20 +58,20 @@ export class UserService extends HttpService {
       return itemRol.rol;
     })
 
-    var datauserresorce ='';
+    var datauserresorce = '';
     var repotsAct = resp[0].roles.filter((item) => item.rol == 'ROLE_STAEXPED_REPORTS');
     console.log("TIENES PERMISOS PARA REPORTES");
     console.log(repotsAct);
 
     if (repotsAct.length != 0) {
-      datauserresorce='true';
-    }else{
-      datauserresorce='false';
+      datauserresorce = 'true';
+    } else {
+      datauserresorce = 'false';
     }
     console.log("TIENES PERMISOS PARA REPORTES fin");
     console.log(datauserresorce);
 
-    const jsonData = JSON.stringify(datauserresorce) 
+    const jsonData = JSON.stringify(datauserresorce)
     localStorage.setItem('arrayUsersRepots', jsonData)
 
     user.instrumentsPending = resp[0].instrumentosPendientes && resp[0].instrumentosPendientes.length > 0 ? resp[0].instrumentosPendientes : null;
@@ -96,19 +96,19 @@ export class UserService extends HttpService {
   async getStatusUser() {
     try {
       const resp = await firstValueFrom(this.get(environment.apiUrl, '/user/status/list'));
-      if(resp && resp['msg']){
+      if (resp && resp['msg']) {
         return true;
-      }else{
+      } else {
         return false
       }
-    } catch (error: any) {      
-      if(error.status == 401){
+    } catch (error: any) {
+      if (error.status == 401) {
         error.status = 200;
         return false;
       }
-        
+
     }
-    
+
   }
 
   /**
@@ -210,23 +210,23 @@ export class UserService extends HttpService {
     user.secondName = resp[0].segundoNombre;
     user.secondLastName = resp[0].segundoApellido;
     user.email = resp[0].email;
-    if(resp[0].Dependencia){
+    if (resp[0].Dependencia) {
       user.dependence = new SelectOption(resp[0].Dependencia.id, resp[0].Dependencia.Descripcion);
-    }    
-    if(resp[0].Gerencia){
+    }
+    if (resp[0].Gerencia) {
       user.managment = new SelectOption(resp[0].Gerencia.gerenciaId, resp[0].Gerencia.nombreGerencia);
     }
-    if(resp[0].Coordinacion){
+    if (resp[0].Coordinacion) {
       user.coordination = new SelectOption(resp[0].Coordinacion.coordinacionId, resp[0].Coordinacion.nombreCoordinacion);
     }
-   
-    
+
+
     user.position = new SelectOption(resp[0].cargo.id, resp[0].cargo.Descripcion);
     user.phones = resp[0].telefonos;
     if (resp[0].fechaNacimiento) {
       let arr = resp[0].fechaNacimiento.split('-');
-      user.birthDate = {year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2])};
-    }else{
+      user.birthDate = { year: parseInt(arr[0]), month: parseInt(arr[1]), day: parseInt(arr[2]) };
+    } else {
       const d = new Date(resp[0].fechaNacimiento);
       user.birthDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
     }
@@ -453,7 +453,7 @@ export class UserService extends HttpService {
   async getAllUsers(): Promise<Array<any>> {
     try {
       const resp = await firstValueFrom(this.get(environment.apiUrl, '/user/info/list'));
-      
+
       const users: Array<User> = resp.data.map((item: any) => {
         const user = new User();
         user.id = item.id;
@@ -470,35 +470,52 @@ export class UserService extends HttpService {
   }
 
 
-  
-    /**
-   * Query user by ci
-   * @param ci 
-   * @returns 
-   */
-    async getUserByCi(data:any){
-      let events: Array<any> = new Array<any>();
-        try {
-            const ci = data;
-            const resp = await firstValueFrom(this.get(environment.apiUrl,`/user/info/${ci}`, data));
-            const expPersonalInformation = ExpPersonalInformation.mapFromObject(resp[0]);
-            return expPersonalInformation;
-            //return resp;
-          
-        } catch (error:any) {
-          debugger
-          console.log(error);
-          if (error.status == 409) {
-            this.toastrService.error('',error.msg);
-          }
-          if (error.status != 500) {
-            this.toastrService.error('','Ha ocurrido un error. Intente más tarde.');
-          }
-          
-        }
-        
-      //return project;
+
+  /**
+ * Query user by ci
+ * @param ci 
+ * @returns 
+ */
+  async getUserByCi(data: any) {
+    let events: Array<any> = new Array<any>();
+    try {
+      const ci = data;
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/user/info/${ci}`, data));
+      const expPersonalInformation = ExpPersonalInformation.mapFromObject(resp[0]);
+      return expPersonalInformation;
+      //return resp;
+
+    } catch (error: any) {
+      debugger
+      console.log(error);
+      if (error.status == 409) {
+        this.toastrService.error('', error.msg);
+      }
+      if (error.status != 500) {
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      }
+
     }
+
+    //return project;
+  }
+
+/**
+* valid user before to link to entity
+* @param event 
+*/
+  async validUsers(users: any) {
+    try {
+      const resp: any = await firstValueFrom(this.post(environment.apiUrl, `/user/valid/user/byemail`, users));
+      if (resp && resp.hasOwnProperty('data')) {
+        return resp.data
+      }
+      return null;
+
+    } catch (error) {
+      this.toastrService.error('Ha ocurrido un error validando lista de usuarios.');
+    }
+  }
 
 }
 

@@ -1,8 +1,7 @@
 import { environment } from './../../../../../../environments/environment';
 import { Section } from './../../../../../core/models/section';
-import { Instrument } from './../../../../../core/models/instrument';
+import { Instrument } from './../../../../../core/models/evaluation-instrument';
 import { PaginationResponse } from './../../../../../core/models/pagination-response';
-import { InstrumentsService } from './../../../../../core/services/instruments.service';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
@@ -12,19 +11,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
 import { SelectOption } from '../../../../../core/models/select-option';
 import { CommonsService } from '../../../../../core/services/commons.service';
-import { ToastrService } from 'ngx-toastr';
-import { UserService } from '../../../../../core/services/user.service';
-import * as XLSX from 'xlsx';
-import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+import { EvaluationInstrumentsService } from './../../../../../core/services/evaluation-instruments.service';
 
-type AOA = any[][];
 
 @Component({
-  selector: 'app-instruments',
-  templateUrl: './instruments.component.html',
-  styleUrls: ['./instruments.component.scss']
+  selector: 'app-evaluations',
+  templateUrl: './evaluations.component.html',
+  styleUrls: ['./evaluations.component.scss']
 })
-export class InstrumentsComponent extends BaseComponent implements OnInit {
+export class EvaluationsComponent extends BaseComponent implements OnInit {
 
   step: number = 1;
   instruments: PaginationResponse;
@@ -70,37 +65,15 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   countryIdForSearchUsers:any;
   stataIdForSearchUsers:any;
   
-  resultValidateUsers: any;
+
   private $eventNavigationEnd: Subscription;
 
-  drop: any;
-  configDropZone: DropzoneConfigInterface = {
-    clickable: true,
-    maxFiles: 1,
-    maxFilesize: 1,
-    ignoreHiddenFiles: false,
-    autoProcessQueue: false,
-    uploadMultiple: true,
-    parallelUploads: 2,
-    addRemoveLinks: true,
-    dictDefaultMessage: 'Arrastra el archivo excel con la lista de usuarios o haz click aquí para subirlo.',
-    dictRemoveFile: 'Eliminar',
-    autoReset: 1000,
-    errorReset: 2500,
-    cancelReset: null,
-    acceptedFiles: '.xlsx, .xls',
-    init: () => {
-      this.drop = this;
-    }
-  };
 
-  constructor(private instrumentsService: InstrumentsService,
+  constructor(private evaluationInstrumentsService: EvaluationInstrumentsService,
     private commonsService: CommonsService,
     private route: ActivatedRoute,
     protected modalService: NgbModal,
-    private router: Router,
-    private userService: UserService,
-    private toastrService: ToastrService) {
+    private router: Router) { 
     super();
     this.route.data.subscribe((data) => {
       this.data = data;
@@ -108,7 +81,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
+    this.instruments = await this.evaluationInstrumentsService.getInstrumentsByEvaluatorPagined({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
@@ -120,14 +93,14 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     console.log('pageInfo', pageInfo);
     this.page = pageInfo;
     this.instruments = null;
-    this.instruments = await this.instrumentsService.getInstrumentsPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null });
+    this.instruments = await this.evaluationInstrumentsService.getInstrumentsByEvaluatorPagined({ page: this.page, rowByPage: environment.paginator.row_per_page, word: this.word ? this.word : null });
   }
 
   async loadPageUsers(pageInfo: any) {
     console.log('pageInfo', pageInfo);
     this.pageUser = pageInfo;
     this.assignedUsers = null;
-    this.assignedUsers = await this.instrumentsService.getAssignedUsers({ 
+    this.assignedUsers = await this.evaluationInstrumentsService.getAssignedUsers({ 
       page: this.pageUser, 
       rowByPage: environment.paginator.row_per_page, 
       word: this.wordForSearchUSers ? this.wordForSearchUSers : null,
@@ -147,16 +120,14 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   }
 
   async select(id: number) {
-    this.selectedItem = await this.instrumentsService.getInstrumentsByIdForUpdate(id);
-    console.log(this.selectedItem)
-    this.next();
+    this.router.navigate([`/evaluation-instruments/evaluation/${id}`]);
   }
 
   /**
    * clone instrument
    */
   async clone(id: number) {
-    await this.instrumentsService.clone(id);
+    await this.evaluationInstrumentsService.clone(id);
     this.loadPage(this.page);
   }
 
@@ -164,7 +135,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
  * delete instrument
  */
   async delete(id: number) {
-    await this.instrumentsService.deleteInstrument(id);
+    await this.evaluationInstrumentsService.deleteInstrument(id);
     this.loadPage(this.page);
   }
 
@@ -201,7 +172,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   }
 
   async publishIntrument(instrument: Instrument) {
-    await this.instrumentsService.publishInstrument(instrument.id, { publicar: instrument.isPublished ? 1 : 0 });
+    await this.evaluationInstrumentsService.publishInstrument(instrument.id, { publicar: instrument.isPublished ? 1 : 0 });
     this.loadPage(this.page);
   }
 
@@ -253,7 +224,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
  */
   async loadUsersByRoles() {
     this.showLoadingUsers = true;
-    this.users = await this.instrumentsService.getUsersByRoles(this.arrayToString(this.roles, '|'));
+    this.users = await this.evaluationInstrumentsService.getUsersByRoles(this.arrayToString(this.roles, '|'));
     this.showLoadingUsers = false;
   }
 
@@ -288,7 +259,6 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   closeAddUsersModal() {
     this.modalService.dismissAll();
     this.selectedUsers = null;
-    this.resultValidateUsers = null;
   }
 
 
@@ -321,7 +291,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   async addUsers(form: NgForm) {
     if (form.valid) {
 
-     await this.instrumentsService.addUsersToInstrument(this.idInstrument, {
+      await this.evaluationInstrumentsService.addUsersToInstrument(this.idInstrument, {
         users: Instrument.getUsers(this.selectedUsers),
         estadoId: this.stataId,
         paisId: this.countryId 
@@ -332,29 +302,6 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     }
   }
 
-    /**
-   * Add users to instrument
-   * @param form 
-   */
-    async addUsersMasive(form: NgForm) {
-      if (form.valid) {
-  
-        if(!this.resultValidateUsers || !this.resultValidateUsers.usuariosregistrados || this.resultValidateUsers.usuariosregistrados.length == 0){
-          this.setInputColorError('Indique al menos un usuario');
-          return;
-        }
-  
-        await this.instrumentsService.addUsersToInstrument(this.idInstrument, {
-          users: this.resultValidateUsers.usuariosregistrados.map((user)=> {return {userId: +user.id}}),
-          estadoId: this.stataId,
-          paisId: this.countryId 
-        });
-  
-        this.loadPageUsers(environment.paginator.default_page);
-  
-      }
-    }
-
   /**
    * Change order of instrument
    * @param order 
@@ -364,7 +311,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     const divError: HTMLElement = document.getElementById('order-' + id);
     if (!isNaN(Number(order))) {
       if (Number(order) > 0) {
-        await this.instrumentsService.changeOrderOfInstrument(id, order);
+        await this.evaluationInstrumentsService.changeOrderOfInstrument(id, order);
       } else {
         divError.style.display = 'inline-block';
         setTimeout(() => {
@@ -385,108 +332,6 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   prueba(event: any) {
     console.log('event', event)
   }
-
-    /**
-  * Handle error in upload action
-  * @param event 
-  */
-    onUploadError(event: any): void {
-      console.log('onUploadError:', event);
-      //this.disableBtnSubmit = true;
-      if (event[1] == "You can't upload files of this type.") {
-        this.toastrService.error('Documento con extensión no permitida. Sólo se permiten archivos con las siguientes extensiones: xls, xlsx')
-      }
-      if (event[1] == "File is too big (2.87MiB). Max filesize: 2MiB.") {
-        this.toastrService.error('El documento es demasiado grande. Tamaño máximo de docuemento: 10MB.')
-      }
-    }
-  
-    /**
-  * Handle success in upload action
-  * @param event 
-  */
-    onUploadSuccess(event: any): void {
-      
-      console.log(event)
-    }
-  
-    /**
-   * Handle add file action
-   * @param event 
-   */
-    addFile(event: any) {
-      this.resultValidateUsers = null;
-      let file: File = event;
-      console.log('event:', event);
-      console.log('file name:', file.name);
-      console.log('file type:', file.type);
-      const thisTemp = this;
-      if (file) {
-        const reader = new FileReader();
-        reader.readAsBinaryString(file);
-        reader.onload = async() => {
-          /* read workbook */
-          const result: string = reader.result as string;
-          const wb: XLSX.WorkBook = XLSX.read(result, { type: 'binary' });
-  
-           /* grab first sheet */
-          const wsname: string = wb.SheetNames[0];
-          const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-  
-           /* save data */
-          const data = <AOA>(XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false }));
-  
-          if (data.length === 0) {
-  
-            thisTemp.toastrService.error('Favor verifique, el archivo está vacío.')
-  
-            return false;
-          }else{
-            console.log('data',data);
-            const users = data.map((user)=> {return user[0]})
-            thisTemp.resultValidateUsers = await thisTemp.userService.validUsers({users});
-            if(thisTemp.resultValidateUsers && thisTemp.resultValidateUsers.usuariosregistrados && thisTemp.resultValidateUsers.usuariosregistrados.length > 0){
-
-  
-            }
-  
-          }
-  
-        };
-        reader.onerror = (error) => {
-          this.toastrService.error('Error al analizar lista de usuarios.');
-          console.log(error);
-        };
-      }
-    }
-  
-  
-    /**
-  * Reset zone drag and drop
-  */
-    resetDropzoneUploads() {
-      this.resultValidateUsers = null;
-  
-    }
-
-  /**
-   * Get masive users from file
-   */
-  /*getMasiveUsers(){
-    if(this.resultValidateUsers && this.resultValidateUsers.usuariosregistrados && this.resultValidateUsers.usuariosregistrados.length > 0){
-      if(this.eventDetail.usersInvited && this.eventDetail.usersInvited.length > 0){
-        this.registeredUsers = this.resultValidateUsers.usuariosregistrados.filter((user:any)=> {
-          return !this.eventDetail.usersInvited.includes(user.correo);
-        });  
-        if(this.registeredUsers.length > 0){
-          const temp = this.registeredUsers.map((user)=> {return user.correo});
-          this.eventDetail.usersInvited = [...this.eventDetail.usersInvited, ...temp];
-        }       
-      }else{
-        this.eventDetail.usersInvited = this.resultValidateUsers.usuariosregistrados.map((user)=> {return user.correo});
-      }
-    }
-  }    */
 
   ngOnDestroy() {
     if (this.$eventNavigationEnd) {

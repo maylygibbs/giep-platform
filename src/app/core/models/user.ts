@@ -4,6 +4,7 @@ import { MenuItem } from './menu.model';
 import { Instrument } from './instrument';
 
 import  { Instrument as EvaluationIntrument}  from './evaluation-instrument';
+import { Question } from './question';
 
 export class User {
 
@@ -46,6 +47,7 @@ export class User {
     freeDays:any; // range of dates
     totalFreeDays:any;
     evaluationIntrument: EvaluationIntrument;
+    questions: Array<Question>
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');

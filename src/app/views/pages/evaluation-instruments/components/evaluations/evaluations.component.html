@@ -1,0 +1,96 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a (click)="back(null)">Evaluaciones</a></li>
+      <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Evaluación xxx
+      </li>
+      <li *ngIf="selectedItem && selectedItem.id && selectedItem.isEditable" class="breadcrumb-item active"
+        aria-current="page">Actualizar instrumento</li>
+      <li *ngIf="selectedItem && selectedItem.id && !selectedItem.isEditable" class="breadcrumb-item active"
+        aria-current="page">Ver instrumento</li>
+    </ol>
+  </nav>
+  
+  <div *ngIf="step==1" class="row">
+    <div class="col-lg-12 col-md-12 stretch-card">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+              <div class="search-form">
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <i class="feather icon-search" (click)="search()"></i>
+                  </div>
+                  <input type="text" class="form-control" id="navbarForm" [(ngModel)]="word" (ngModelChange)="search()"
+                    placeholder="Buscar aqui...">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+              <button type="button" class="btn btn-primary btn-create-dt" (click)="create()" placement="start"
+                ngbTooltip="Crear Intrumento">
+                <i class="mdi mdi-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body card-dt">
+          <h6 class="card-title"></h6>
+          <div class="row">
+            <div class="col-lg-12" *ngIf="instruments && instruments.data">
+              <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Evaluación</th>
+                    <th>Orden</th>
+                    <th>Fecha creación</th>
+                    <th>Fecha expiración</th>
+                    <th data-priority="1">Publicado</th>
+                    <th>Fecha publicación</th>
+                    <th data-priority="1" class="text-center">Accion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let instrument of instruments.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: instruments.count }">
+                    <td>{{instrument.id}}</td>
+                    <td>{{instrument.name}}</td>
+                    <td>{{instrument.order}}</td>
+                    <td>{{instrument.createAt | date:'yyyy-MM-dd'}}</td>
+                    <td>{{instrument.expirationDate | date:'yyyy-MM-dd'}}</td>
+                    <th>
+                      <div *ngIf="!instrument.isExpired" class="form-check form-switch mb-2">
+                        {{instrument.isPublished? 'Sí' : 'No'}}
+                      </div>
+                      <div *ngIf="instrument.isExpired">
+                        <label class="form-label">Expiró</label>
+                      </div>
+                    </th>
+                    <td>{{instrument.publicationDate | date:'yyyy-MM-dd'}}</td>
+                    <td class="text-center">
+                      <i  class="feather icon-edit-3" (click)="select(instrument.id)"
+                        placement="start" ngbTooltip="Aplicar Evaluación"></i>
+
+                      <!-- *ngIf="!instrument.isExpired" <i class="feather icon-user-plus ms-1" (click)="openModalUsers(addUsersModal,instrument.id)"
+                        placement="start" ngbTooltip="Vincular Usuarios"></i>-->
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th colspan="8" class="text-right">
+                      <app-pager (onChangePage)="loadPage($event)"></app-pager>
+                    </th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+  
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+ 
