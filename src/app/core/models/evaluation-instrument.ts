@@ -42,7 +42,7 @@ export class Instrument {
         const instrumentOutput = {};
 
         Object.assign(instrumentOutput, { id: instrumentInput.id });
-        Object.assign(instrumentOutput, { questions: this.getQuestionsResponse(instrumentInput.sections) });
+        Object.assign(instrumentOutput, { users: this.getQuestionsResponse(instrumentInput.sections) });
 
         return instrumentOutput;
     }
@@ -50,30 +50,45 @@ export class Instrument {
     private static getQuestionsResponse(sections: Array<Section>) {
         const questionsOutput: any[] = [];
         sections.forEach((section: Section) => {
-            const arrayTemp = section.questions.map((question: Question) => {
-                let valueResp;
 
-                if (question.inputType.label === 'select-multiple' || question.inputType.label === 'checkbox') {
-                    valueResp = question.valueResp.map((vr) => {
-                        return { idOption: vr, text: null }
-                    })
-                } else if (question.inputType.label === 'select' || question.inputType.label === 'radio') {
-                    valueResp = [{ idOption: question.valueResp, text: null }];
-
-                } else {
-                    if (question.inputType.label == 'date') {
-                        valueResp = [{ idOption: null, text: moment().year(question.valueResp.year).month(question.valueResp.month - 1).date(question.valueResp.day).format('YYYY-MM-DD') }];
+            const arrayResponseByUser = section.users.map((user: User) => {
+                
+                const arrayTemp = user.questions.map((question: Question) => {
+                    let valueResp;
+    
+                    if (question.inputType.label === 'select-multiple' || question.inputType.label === 'checkbox') {
+                        valueResp = question.valueResp.map((vr) => {
+                            return { idOption: vr, text: null }
+                        })
+                    } else if (question.inputType.label === 'select' || question.inputType.label === 'radio') {
+                        valueResp = [{ idOption: question.valueResp, text: null }];
+    
                     } else {
-                        valueResp = [{ idOption: null, text: question.valueResp }];
-
+                        if (question.inputType.label == 'date') {
+                            valueResp = [{ idOption: null, text: moment().year(question.valueResp.year).month(question.valueResp.month - 1).date(question.valueResp.day).format('YYYY-MM-DD') }];
+                        } else {
+                            valueResp = [{ idOption: null, text: question.valueResp }];
+    
+                        }
                     }
-                }
+                    return {
+                        id: question.id,
+                        response: valueResp
+                    }
+                });
+
                 return {
-                    id: question.id,
-                    response: valueResp
+                    userId : user.id,
+                    questions: arrayTemp
                 }
+
             });
-            questionsOutput.push(...arrayTemp);
+
+
+
+
+
+            questionsOutput.push(...arrayResponseByUser);
         });
         return questionsOutput;
     }

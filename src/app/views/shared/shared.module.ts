@@ -18,6 +18,7 @@ import { BoxMessageComponent } from './components/box-message/box-message.compon
 import { BoxUtilViewsComponent } from './components/box-util-views/box-util-views.component';
 import { ModalConfirmComponent } from './components/modal-confirm/modal-confirm.component';
 import { CountdownConfig, CountdownGlobalConfig, CountdownModule } from 'ngx-countdown';
+import { FormValueChangesDirective } from './directive/form-value-changes.directive';
 
 export function countdownConfigFactory(): CountdownConfig {
   return {};
@@ -25,7 +26,7 @@ export function countdownConfigFactory(): CountdownConfig {
 
 
 @NgModule({
-  declarations: [BaseComponent, PagerComponent, MustMatchDirective, BoxInstrumentsComponent, BoxMessageComponent, BoxUtilViewsComponent, ModalConfirmComponent],
+  declarations: [BaseComponent, PagerComponent, MustMatchDirective, BoxInstrumentsComponent, BoxMessageComponent, BoxUtilViewsComponent, ModalConfirmComponent, FormValueChangesDirective],
   imports: [
     CommonModule,
     RouterModule,
@@ -59,7 +60,8 @@ export function countdownConfigFactory(): CountdownConfig {
     BoxInstrumentsComponent,
     BoxMessageComponent,
     BoxUtilViewsComponent,
-    ModalConfirmComponent
+    ModalConfirmComponent,
+    FormValueChangesDirective
   ],
   providers:[
     { provide: CountdownGlobalConfig, useFactory: countdownConfigFactory }

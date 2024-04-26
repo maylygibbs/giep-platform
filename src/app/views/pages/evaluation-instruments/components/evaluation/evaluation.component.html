@@ -4,6 +4,7 @@
     <li *ngIf="evaluation && evaluation.id" class="breadcrumb-item active" aria-current="page">Evaluación:
       {{evaluation.name}}</li>
   </ol>
+ 
 </nav>
 <div *ngIf="evaluation" class="row">
   <div class="col-lg-12 col-md-12">
@@ -22,12 +23,12 @@
           <p class="text-muted" [innerHtml]="evaluation.description ? evaluation.description : 'Breve leyenda'"></p>
         </div>
         <div class="mt-3">
-          <button class="btn btn-secondary" (click)="back(null)">Regresar</button>
-          <button class="btn btn-primary ms-2" (click)="initAnswerEvaluation()">Iniciar</button>
+          <button class="btn btn-secondary" (click)="back(null)">Regresar</button>          
+          <button #initBtn class="btn btn-primary ms-2" (click)="initAnswerEvaluation()">{{formsaved ? 'Continuar': 'Iniciar'}}</button>
         </div>
       </div>
       <!--Body-->
-      <div class="card-body" [hidden]="!show">
+      <div [hidden]="!show" class="card-body">
         <form name="evaluationForm" #evaluationForm="ngForm" (ngSubmit)="onSubmit(evaluationForm)" class="forms-sample">
           <section *ngFor="let section of evaluation.sections; let i = index;">
             <div class="row" [hidden]="sectionActive != i">
@@ -60,7 +61,7 @@
                                   <input type="text" [name]="question.nameImput" [(ngModel)]="question.valueResp"
                                     [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
                                     class="form-control" id="textInput-{{question.id}}" autocomplete="off" minlength="1"
-                                    maxlength="150" [required]="question.required">
+                                    maxlength="150" [required]="question.required" (blur)="autoSave(evaluationForm)">
                                   <div
                                     *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
                                     class="invalid-feedback">
@@ -75,7 +76,7 @@
                                   <input type="text" email [name]="question.nameImput" [(ngModel)]="question.valueResp"
                                     [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
                                     class="form-control" id="emailInput-{{question.id}}" autocomplete="off"
-                                    minlength="1" maxlength="50" [required]="question.required">
+                                    minlength="1" maxlength="50" [required]="question.required" (blur)="autoSave(evaluationForm)">
                                   <div
                                     *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
                                     class="invalid-feedback">
@@ -95,7 +96,7 @@
                                     [pattern]="environment.form.number.validations.pattern"
                                     [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
                                     class="form-control" id="numberInput-{{question.id}}" autocomplete="off"
-                                    minlength="1" maxlength="20" [required]="question.required">
+                                    minlength="1" maxlength="20" [required]="question.required" (blur)="autoSave(evaluationForm)">
                                   <div
                                     *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
                                     class="invalid-feedback">
@@ -114,7 +115,7 @@
                                   <textarea [name]="question.nameImput" [(ngModel)]="question.valueResp" row="3"
                                     [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
                                     class="form-control" id="textareaInput-{{question.id}}" autocomplete="off"
-                                    minlength="1" maxlength="2000" [required]="question.required"></textarea>
+                                    minlength="1" maxlength="2000" [required]="question.required" (blur)="autoSave(evaluationForm)"></textarea>
                                   <div
                                     *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
                                     class="invalid-feedback">
@@ -132,7 +133,7 @@
                                       placeholder="yyyy-mm-dd"
                                       [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
                                       [(ngModel)]="question.valueResp" ngbDatepicker #dp="ngbDatepicker"
-                                      [required]="question.required">
+                                      [required]="question.required" (change)="autoSave(evaluationForm)">
                                     <button class="input-group-text" type="button" (click)="dp.toggle()">
                                       <i class="feather icon-calendar icon-md text-muted"></i>
                                     </button>
@@ -145,14 +146,10 @@
                                       </div>
                                     </div>
                                   </div>
-
-                                </div>
-                                
+                                </div>                                
                                 <div *ngIf="question.inputType.label =='select'" class="mb-3">
-                                  <label for="textInput-{{question.id}}" class="form-label"
-                                  [ngClass]="{'required': question.required}">{{i+1}}.- {{question.label}}</label>
                                   <ng-select id="selectInput-{{question.id}}" [name]="question.nameImput"
-                                    [(ngModel)]="question.valueResp"
+                                    [(ngModel)]="question.valueResp" (change)="autoSave(evaluationForm)"
                                     [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
                                     [searchable]="false" [required]="question.required">
                                     <ng-option *ngFor="let option of question.options"
@@ -172,7 +169,7 @@
                                   <ng-select id="selectInput-{{question.id}}" [name]="question.nameImput"
                                     [multiple]="true" [(ngModel)]="question.valueResp"
                                     [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
-                                    [searchable]="false" [required]="question.required">
+                                    [searchable]="false" [required]="question.required" (change)="autoSave(evaluationForm)">
                                     <ng-option *ngFor="let option of question.options"
                                       [value]="option.value">{{option.label}}</ng-option>
                                   </ng-select>
@@ -191,7 +188,7 @@
                                     <div class="form-check mb-2" *ngFor="let option of question.options">
                                       <input type="radio" class="form-check-input" [name]="question.nameImput"
                                         [value]="option.value" [(ngModel)]="question.valueResp"
-                                        [required]="question.required">
+                                        [required]="question.required" (change)="autoSave(evaluationForm)">
                                       <label class="form-check-label" for="radioInput-{{question.id}}">
                                         {{option.label}}
                                       </label>
@@ -212,7 +209,7 @@
                                       <input type="checkbox" class="form-check-input" [name]="question.nameImput"
                                         [value]="option.value" [(ngModel)]="question.valueRespCheckBox[i]"
                                         (change)="onChangeCheckbox($event, question, option.value)"
-                                        [required]="question.required">
+                                        [required]="question.required" (change)="autoSave(evaluationForm)">
                                       <label class="form-check-label" for="checkInput-{{question.id}}">
                                         {{option.label}}
                                       </label>
@@ -240,7 +237,7 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right mt-3">
                 <button type="button" *ngIf="i > 0" class="btn btn-primary" (click)="backSection()">Atras</button>
                 <button type="button" *ngIf="i < (evaluation.sections.length-1)" class="btn btn-primary ms-2 me-2"
-                  (click)="nextSection()">Siguiente</button>
+                  (click)="nextSection(evaluationForm)">Siguiente</button>
                 <button type="submit" [disabled]="submitted" *ngIf="i == (evaluation.sections.length-1)"
                   class="btn btn-primary ms-2 me-2">Guardar</button>
               </div>
