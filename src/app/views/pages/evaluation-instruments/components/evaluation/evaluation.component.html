@@ -40,14 +40,14 @@
                         <h6 class="card-title mb-5">{{section.name}}</h6>
                       </div>
                     </div>
-
+                    <!--(100/section.questions.length)  +'%'-->
                     <table class="table table-striped">
                       <thead>
                         <tr>
                           <th>Usuario</th>
                           <th *ngFor="let question of section.questions;let i = index;">
-                            <label for="textInput-{{question.id}}" class="form-label"
-                              [ngClass]="{'required': question.required}">{{i+1}}.- {{question.label}}</label>
+                            <p 
+                              [ngClass]="{'required': question.required}">{{i+1}}.- {{question.label}}</p>
                           </th>
                         </tr>
                       </thead>

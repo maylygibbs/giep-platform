@@ -71,6 +71,8 @@
                     <td class="text-center">
                       <i  class="feather icon-edit-3" (click)="select(instrument.id)"
                         placement="start" ngbTooltip="Aplicar Evaluación"></i>
+                     <!-- <i *ngIf="!instrument.users || instrument.users.length == 0"  class="feather icon-info" 
+                        placement="start" ngbTooltip="No hay usuarios vinculados a la evaluación"></i>-->
 
                       <!-- *ngIf="!instrument.isExpired" <i class="feather icon-user-plus ms-1" (click)="openModalUsers(addUsersModal,instrument.id)"
                         placement="start" ngbTooltip="Vincular Usuarios"></i>-->

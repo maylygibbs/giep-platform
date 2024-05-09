@@ -128,7 +128,7 @@ export class InstrumentsService extends HttpService {
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
       instrument.order = item.orden;
-      instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true:false) : false;
+      instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales == 1 ? true:false) : false;
       instrument.path = '/capture-instruments/results';
       return instrument;
     });
@@ -234,7 +234,7 @@ export class InstrumentsService extends HttpService {
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
 
-    instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales = 1 ? true:false) : false;
+    instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales == 1 ? true:false) : false;
     if (resp.data[0].users) {
       instrument.users = resp.data[0].users.map((u: any) => {
         const user = new User();

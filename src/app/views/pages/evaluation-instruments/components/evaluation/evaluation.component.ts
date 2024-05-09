@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, AfterViewInit, Component, ElementRef, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { EvaluationInstrumentsService } from '../../../../../core/services/evaluation-instruments.service';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -129,10 +129,16 @@ export class EvaluationComponent extends BaseComponent implements OnInit{
  */
   async onSubmit(form: NgForm) {
     if (form.valid) {
-      console.log('evaluation',this.evaluation)
+      this.submitted = true;
       console.log('evaluation',Instrument.mapForPostResponse(this.evaluation))
-      this.toastrService.success('La evaluación ha sido registrada satisfactoriamente.');
+      await this.evaluationInstrumentsService.storeUsersEvaluationResponse(Instrument.mapForPostResponse(this.evaluation));
+      setTimeout(() => {
+        this.back(null);
+        this.submitted = false;
+      }, 500);
     } 
   }
+
+
 
 }

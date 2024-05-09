@@ -261,3 +261,9 @@ p.badge{
   align-items: center;
   justify-content: center;
 }
+
+
+/* fix of table*/
+.table th , td {
+  white-space: break-spaces !important
+}

@@ -136,7 +136,7 @@ export class EvaluationInstrumentsService extends HttpService{
   }
 
   /**
-   * get pending instruments to answer (final user)
+   * get instruments for update
    * @param id 
    * @returns 
    */
@@ -154,8 +154,15 @@ export class EvaluationInstrumentsService extends HttpService{
     instrument.expirationDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
     instrument.isEditable = resp.data[0].editable == 1 ? true : false;
     instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
+    instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales == 1 ? true:false) : false;
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
     instrument.roles = resp.data[0].roles;
+
+    instrument.evaluator = new User();
+    instrument.evaluator.id = resp.data[0].evaluatorUserId;
+    instrument.evaluator.firstName = resp.data[0].evaluatorFullName;
+    instrument.evaluator.email = resp.data[0].evaluatorEmail;
+
     if (resp.data[0].users) {
       instrument.users = resp.data[0].users.map((u) => {
         const user = new User();
@@ -184,11 +191,13 @@ export class EvaluationInstrumentsService extends HttpService{
         question.score = item.puntos;
         question.isReady = true;
         if (item.opciones && item.opciones.length) {
-          question.options = item.opciones.map((itemOption: any) => {
-            const option = new QuestionOption(itemOption.id, itemOption.Name);
-            option.nameInputLabel = "optionLabel" + question.order;
-            option.nameInputValue = "optionValue" + question.order;
-            option.nameInputScore = "optionScore" + question.order;
+          question.options = item.opciones.map((itemOption: any, index: number) => {
+            let option = new QuestionOption(itemOption.Valor, itemOption.Name);
+            option.idOption = itemOption.id;
+            option.score = itemOption.Puntos;
+            option.nameInputLabel = "optionLabel" + question.order + '' + index;
+            option.nameInputValue = "optionValue" + question.order + '' + index;
+            option.nameInputScore = "optionScore" + question.order + '' + index;
             return option;
           });
         }
@@ -211,11 +220,12 @@ export class EvaluationInstrumentsService extends HttpService{
     return instrument;
   }
 
+
   /**
-   * get instruments for update
+   * get pending instruments to answer (final user)
    * @param id 
    * @returns 
-   */
+   */  
   async getInstrumentsById(id: number): Promise<any> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
     const instrument = new Instrument();
@@ -238,7 +248,7 @@ export class EvaluationInstrumentsService extends HttpService{
     instrument.evaluator.firstName = resp.data[0].evaluatorFullName;
     instrument.evaluator.email = resp.data[0].evaluatorEmail;
 
-    instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales = 1 ? true:false) : false;
+    instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales == 1 ? true:false) : false;
     if (resp.data[0].users) {
       instrument.users = resp.data[0].users.map((u: any) => {
         const user = new User();
@@ -278,12 +288,10 @@ export class EvaluationInstrumentsService extends HttpService{
             question.isReady = true;
             if (item.opciones && item.opciones.length) {
               question.options = item.opciones.map((itemOption: any, index: number) => {
-                let option = new QuestionOption(itemOption.Valor, itemOption.Name);
-                option.idOption = itemOption.id;
-                option.score = itemOption.Puntos;
-                option.nameInputLabel = "optionLabel" + question.order + '' + index;
-                option.nameInputValue = "optionValue" + question.order + '' + index;
-                option.nameInputScore = "optionScore" + question.order + '' + index;
+                let option = new QuestionOption(itemOption.id, itemOption.Name);
+                option.nameInputLabel = "optionLabel" + question.order;
+                option.nameInputValue = "optionValue" + question.order;
+                option.nameInputScore = "optionScore" + question.order;
                 return option;
               });
             }
@@ -1491,12 +1499,29 @@ export class EvaluationInstrumentsService extends HttpService{
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
       instrument.order = item.orden;
-      instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true:false) : false;
+      instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales == 1 ? true:false) : false;
+
+      instrument.users = Array.isArray(item.users) && item.users.length > 0 ? item.users : null;
+
       return instrument;
     });
 
     return paginator;
-  }    
+  }   
+  
+    /**
+   * stores user responses
+   * @param data 
+   */
+    async storeUsersEvaluationResponse(data: any) {
+      try {
+        const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/respuesta', data));
+        this.toastrService.success('La evaluación ha sido registrada satisfactoriamente.');
+      } catch (error: any) {
+        if (error.status != 500)
+          this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      }
+    }
   
 
 }
