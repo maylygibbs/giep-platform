@@ -16,7 +16,7 @@ export class TemporaryStorageService {
 
 	// I remove the data associated with the given key.
 	public remove( key: string ) : void {
-		localStorage.remove( key );
+		localStorage.removeItem( key );
 	}
 
 	// I store the given value with the given key.

@@ -133,6 +133,7 @@ export class EvaluationComponent extends BaseComponent implements OnInit{
       console.log('evaluation',Instrument.mapForPostResponse(this.evaluation))
       await this.evaluationInstrumentsService.storeUsersEvaluationResponse(Instrument.mapForPostResponse(this.evaluation));
       setTimeout(() => {
+        this,this.temporaryStorageService.remove(`evaluation${this.evaluation.id}`);
         this.back(null);
         this.submitted = false;
       }, 500);

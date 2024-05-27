@@ -21,6 +21,8 @@ export class EventDetail {
     accreditationRequired:boolean;
     accreditationItems:Array<AcreditationItem>;
     urlImg:string;
+    instrumentCapId:number;
+    instrumentEvaId:number;
 
 
 
@@ -35,6 +37,12 @@ export class EventDetail {
         Object.assign(eventOut, {acreditacion: eventDetail.accreditationRequired ? 1 : 0});
         if(eventDetail.accreditationRequired){
             Object.assign(eventOut, {accreditationItems: eventDetail.accreditationItems.map((item:AcreditationItem)=>{ return {id:item.id, quantity: item.quantity}})});
+        }
+        if(eventDetail.instrumentCapId){
+            Object.assign(eventOut, {instrumentCapId: eventDetail.instrumentCapId});
+        }
+        if(eventDetail.instrumentEvaId){
+            Object.assign(eventOut, {instrumentEvaId: eventDetail.instrumentEvaId});
         }
         return eventOut;
     }

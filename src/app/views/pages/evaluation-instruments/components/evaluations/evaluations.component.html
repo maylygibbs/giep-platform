@@ -69,13 +69,11 @@
                     </th>
                     <td>{{instrument.publicationDate | date:'yyyy-MM-dd'}}</td>
                     <td class="text-center">
-                      <i  class="feather icon-edit-3" (click)="select(instrument.id)"
+                      <i *ngIf="instrument.userIfEvaluating > 0; else apply"  class="feather icon-edit-3" (click)="select(instrument.id)"
                         placement="start" ngbTooltip="Aplicar Evaluación"></i>
-                     <!-- <i *ngIf="!instrument.users || instrument.users.length == 0"  class="feather icon-info" 
-                        placement="start" ngbTooltip="No hay usuarios vinculados a la evaluación"></i>-->
-
-                      <!-- *ngIf="!instrument.isExpired" <i class="feather icon-user-plus ms-1" (click)="openModalUsers(addUsersModal,instrument.id)"
-                        placement="start" ngbTooltip="Vincular Usuarios"></i>-->
+                        <ng-template #apply>
+                          <i class="feather icon-check">Evaluación aplicada</i>
+                        </ng-template>
                     </td>
                   </tr>
                 </tbody>

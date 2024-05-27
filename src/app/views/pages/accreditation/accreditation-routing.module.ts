@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccreditationComponent } from './accreditation.component';
 import { CalendarComponent } from './calendar/calendar.component';
-import { CommonsListColorsCalendarResolver, CommonsListUsersEmailsResolver, CommonsListAccreditationTypeResolver } from '../../../core/resolvers/commons.resolver';
+import { CommonsListColorsCalendarResolver, CommonsListUsersEmailsResolver, CommonsListAccreditationTypeResolver, CommonsListInstrumentEvaResolver, CommonsListInstrumentCapResolver } from '../../../core/resolvers/commons.resolver';
 import { PrintAccreditationComponent } from './print-accreditation/print-accreditation.component';
 import { ScanqrComponent } from './scanqr/scanqr.component';
 import { AccreditationDetailComponent } from './accreditation-detail/accreditation-detail.component';
@@ -23,7 +23,9 @@ const routes: Routes = [  {
       resolve:{
         colors: CommonsListColorsCalendarResolver,
         users: CommonsListUsersEmailsResolver,
-        accreditationType: CommonsListAccreditationTypeResolver
+        accreditationType: CommonsListAccreditationTypeResolver,
+        instrumentCaplist: CommonsListInstrumentCapResolver,
+        instrumentEvalist: CommonsListInstrumentEvaResolver
       }
     },
     {

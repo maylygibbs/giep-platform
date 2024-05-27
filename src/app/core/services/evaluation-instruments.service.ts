@@ -189,6 +189,9 @@ export class EvaluationInstrumentsService extends HttpService{
         question.className = item.class;
         question.required = item.obligatorio == 1 ? true : false;
         question.score = item.puntos;
+        if (item.IdCategoria) {
+          question.categoryBy = String(item.IdCategoria.id);
+        }
         question.isReady = true;
         if (item.opciones && item.opciones.length) {
           question.options = item.opciones.map((itemOption: any, index: number) => {
@@ -250,15 +253,19 @@ export class EvaluationInstrumentsService extends HttpService{
 
     instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales == 1 ? true:false) : false;
     if (resp.data[0].users) {
-      instrument.users = resp.data[0].users.map((u: any) => {
-        const user = new User();
-        user.id = u.id;
-        user.firstName = u.nombre;
-        user.email = u.email;
-        user.answered = u.respondida == 1 ? true : false;
-        user.roles = u.roles;
-        return user;
-      })
+      const usersIfEvaluating = resp.data[0].users.filter((user:any)=>user.respondida==0);
+      if(usersIfEvaluating.length > 0){
+        instrument.users = usersIfEvaluating.map((u: any) => {
+          const user = new User();
+          user.id = u.id;
+          user.firstName = u.nombre;
+          user.email = u.email;
+          user.answered = u.respondida == 1 ? true : false;
+          user.roles = u.roles;
+          return user;
+        })
+      }
+
     }
 
     instrument.sections = resp.data[0].secciones.map((sectionItem: any) => {
@@ -1500,7 +1507,7 @@ export class EvaluationInstrumentsService extends HttpService{
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
       instrument.order = item.orden;
       instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales == 1 ? true:false) : false;
-
+      instrument.userIfEvaluating = item.userIfEvaluating;
       instrument.users = Array.isArray(item.users) && item.users.length > 0 ? item.users : null;
 
       return instrument;

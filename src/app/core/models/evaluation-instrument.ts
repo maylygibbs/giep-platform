@@ -31,6 +31,7 @@ export class Instrument {
     createAt: Date;
     updateAt: Date;
     evaluator: User;
+    userIfEvaluating:number;
 
 
     /**
@@ -108,7 +109,7 @@ export class Instrument {
         if (instrumentInput.id) {
             Object.assign(instrumentOutput, { id: instrumentInput.id });
         }
-        debugger
+        
         Object.assign(instrumentOutput, { name: instrumentInput.name });
         Object.assign(instrumentOutput, { dutation: parseInt(instrumentInput.dutation) });
         Object.assign(instrumentOutput, { unitType: { id: parseInt(instrumentInput.unitType.value), label: instrumentInput.unitType.label } });

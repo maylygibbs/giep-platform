@@ -263,6 +263,29 @@ export class CommonsListDepartmentsResolver implements Resolve<any> {
 }
 
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListInstrumentCapResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllInstrumentsCapActive();
+  }
+}
+
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListInstrumentEvaResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllInstrumentsEvaActive();
+  }
+}
+
+
 
 
 
