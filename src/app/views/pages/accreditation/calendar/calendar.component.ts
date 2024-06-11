@@ -447,7 +447,6 @@ export class CalendarComponent extends BaseComponent implements OnInit {
    * @param form 
    */
   async onSubmit(form: NgForm, modalRef: NgbModalRef) {
-    console.log('form', form.value)
     if (form.valid) {
       if (this.isValidEventDate(this.eventDetail)) {
         if (this.isValidEventHours(this.eventDetail)) {

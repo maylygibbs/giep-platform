@@ -172,7 +172,7 @@
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentRole.errors && ( instrumentRole.dirty || instrumentRole.touched || instrumentForm.submitted) }"
                                                         bindLabel="label" bindValue="value" [(ngModel)]="selectedRoles"
                                                         (add)="onAddRole()" (remove)="onRemoveRole($event)"
-                                                        (clear)="onRemoveAllRole()" required>
+                                                        required>
                                                     </ng-select>
                                                     <div *ngIf="instrumentRole.invalid && instrumentForm.submitted"
                                                         class="invalid-feedback">
@@ -191,8 +191,7 @@
                                                         name="instrumentEvaluatorUser" #instrumentEvaluatorUser="ngModel"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentEvaluatorUser.errors && ( instrumentEvaluatorUser.dirty || instrumentEvaluatorUser.touched || instrumentForm.submitted) }"
                                                         bindLabel="fullName" bindValue="id" [(ngModel)]="selectedUser" [loading]="showLoading"
-                                                        (remove)="canRemoveUser($event)"
-                                                        (clear)="cannotRemoveAllUser()" required>
+                                                        required>
                                                         <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
                                                             <input id="item-{{index}}" type="checkbox" name="itemgroup1-{{index}}"
                                                               [ngModel]="item$.selected" />

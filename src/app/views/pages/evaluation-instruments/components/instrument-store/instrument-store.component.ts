@@ -215,19 +215,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
    * @param event 
    */
   async onRemoveRole(event: any) {
-    console.log(event)
-    if (this.instrument.id) {
-      if (!this.canRemoveRol(event.label)) {
-        this.selectedRoles.push(event.label);
-        this.selectedRoles = [...this.selectedRoles];
-
-        this.toastrService.warning(`No es posible remover el rol ${event.label}. Existen usuarios bajo este rol que ya respondieron el instrumento.`)
-      } else {
-        await this.removeUsersSelected();
-      }
-    } else {
-      await this.removeUsersSelected();
-    }
+    await this.removeUsersSelected();
   }
 
 
@@ -368,23 +356,25 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
       this.users = null;
     }
     const arrayTemp = [];
-    this.selectedUsers?.forEach((id: number) => {
-      this.users?.forEach((user: User) => {
 
-        if (id == parseInt(user.id)) {
-          arrayTemp.push(id);
+    if(this.selectedUser){
+      this.users?.forEach((user: User) => {
+        if (this.selectedUser == parseInt(user.id)) {
+          arrayTemp.push(this.selectedUser);
         }
       })
-    });
+
+    }
+
     console.log('arrayTemp', arrayTemp)
     console.log('users', this.users)
-    console.log('selectedUsers', this.selectedUsers)
+    console.log('selectedUser', this.selectedUser)
     if (arrayTemp.length == 0) {
-      this.selectedUsers = null;
+      this.selectedUser = null;
     } else {
       debugger
-      this.selectedUsers = [];
-      this.selectedUsers = [...arrayTemp];
+      this.selectedUser = null;
+      this.selectedUser = arrayTemp[0];
     }
   }
 
@@ -404,6 +394,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
    * @param form 
    */
   async onSubmit(form: NgForm) {
+    
     if (form.valid) {
 
       if (!this.instrument.id || (this.instrument.id && this.instrument.isEditable)) {
@@ -419,7 +410,7 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
               isComplete = false;
             }
           })
-
+          
           if (isComplete == true) {
             this.show = false;
             this.sectionActive = 0;
@@ -441,9 +432,10 @@ export class InstrumentStoreComponent extends BaseComponent implements OnInit {
         this.show = false;
         this.sectionActive = 0;
         console.log('users', this.selectedUsers)
-        console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedRoles, this.selectedUsers));
+        console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
+        console.log('user', this.selectedUser)
         this.submitted = true;
-        await this.evaluationInstrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, this.selectedUsers));
+        await this.evaluationInstrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
         this.onBack.emit(null);
         this.submitted = false;
 
