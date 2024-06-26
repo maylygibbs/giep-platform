@@ -765,5 +765,35 @@ async getAllRolesList(): Promise<Array<SelectOption>> {
 
 }
 
+  /**
+  * Get all instruments capture active
+  * @returns 
+  */
+  async getAllInstrumentsCapActive(): Promise<Array<SelectOption>> {
+
+    let list: Array<SelectOption> = new Array<SelectOption>();
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/list/allpublicado'));
+    list = resp.data.map((item: any) => {
+      const selectOption = new SelectOption(item.id, item.nombre);
+      return selectOption;
+    });
+    return list;
+  }
+
+    /**
+  * Get all instruments evaluation active
+  * @returns 
+  */
+    async getAllInstrumentsEvaActive(): Promise<Array<SelectOption>> {
+
+      let list: Array<SelectOption> = new Array<SelectOption>();
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion/list/allpublicados'));
+      list = resp.data.map((item: any) => {
+        const selectOption = new SelectOption(item.id, item.nombre);
+        return selectOption;
+      });
+      return list;
+    }
+
 
 }

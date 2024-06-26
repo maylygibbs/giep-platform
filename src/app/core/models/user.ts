@@ -3,6 +3,10 @@ import * as moment from 'moment';
 import { MenuItem } from './menu.model';
 import { Instrument } from './instrument';
 import { Company } from './company';
+
+import  { Instrument as EvaluationIntrument}  from './evaluation-instrument';
+import { Question } from './question';
+
 export class User {
 
     id: string;
@@ -44,6 +48,8 @@ export class User {
     freeDays:any; // range of dates
     totalFreeDays:any;
     company: Company;
+    evaluationIntrument: EvaluationIntrument;
+    questions: Array<Question>
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');

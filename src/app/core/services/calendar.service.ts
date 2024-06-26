@@ -238,7 +238,7 @@ export class CalendarService extends HttpService {
 
         return {
           id: item.id,
-          title: item.title,
+          title: `C${item.id}-${item.title}`,
           start: item.start,
           end: item.end,
           classNames: classNames,
@@ -408,6 +408,36 @@ async storeAccreditationType(data: AccreditationType) {
 
   }
 }
+
+  /**
+   * Clone event
+   * @param event 
+   */
+  async cloneEvent(id: any) {
+    try {
+      await firstValueFrom(this.get(environment.apiUrl, `/calendario/${id}/clonar`));
+      this.toastrService.success('El evento fué clonado con éxito.');
+    } catch (error) {
+      this.toastrService.error('Ha ocurrido un error clonando evento.');
+    }
+  }
+
+    /**
+   * valid user before to link to event
+   * @param event 
+   */
+    async validUsers(users: any) {
+      try {
+        const resp:any = await firstValueFrom(this.post(environment.apiUrl, `/calendario/event/valid/user`,users));
+        if(resp && resp.hasOwnProperty('data')){
+          return resp.data
+        }
+        return null;
+
+      } catch (error) {
+        this.toastrService.error('Ha ocurrido un error validando lista de usuarios.');
+      }
+    }
 
 
 }

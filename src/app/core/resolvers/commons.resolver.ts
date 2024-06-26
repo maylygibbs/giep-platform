@@ -4,7 +4,6 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot
 } from '@angular/router';
-import { Observable, of } from 'rxjs';
 import { CommonsService } from '../services/commons.service';
 import { UserService } from '../services/user.service';
 
@@ -270,6 +269,32 @@ export class CommonsListRolesAllCompaniesResolver implements Resolve<any> {
   constructor(private commonsService: CommonsService){}
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
     return this.commonsService.getAllRolesList();
+  }
+
+}
+
+
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class CommonsListInstrumentCapResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllInstrumentsCapActive();
+  }
+}
+
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListInstrumentEvaResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllInstrumentsEvaActive();
   }
 }
 

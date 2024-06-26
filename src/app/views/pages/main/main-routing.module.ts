@@ -95,6 +95,10 @@ const routes: Routes = [
         path: 'accreditations',
         loadChildren: () => import('../accreditation/accreditation.module').then(m => m.AccreditationModule),
       },
+      {
+        path: 'evaluation-instruments',
+        loadChildren: () => import('../evaluation-instruments/evaluation-instruments.module').then(m => m.EvaluationInstrumentsModule),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

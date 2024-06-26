@@ -104,7 +104,7 @@
                                     <div class="mb-3">
                                         <label for="inputOptionScore" class="form-label required">Puntos</label>
                                         <input type="text" [name]="option.nameInputScore" [(ngModel)]="option.score"
-                                            [pattern]="environment.form.number.validations.pattern" maxlength="11"
+                                            [pattern]="environment.form.double.validations.pattern" maxlength="11"
                                             class="form-control" required>
                                         <div *ngIf="questionForm.form.controls[option.nameInputScore]?.invalid && questionForm.submitted"
                                             class="invalid-feedback">

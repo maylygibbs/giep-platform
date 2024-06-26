@@ -20,6 +20,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError(err => {
                 if (err.status === 401) {
+                    if(err.error && err.error['msg'] && err.error['msg'] == 'Usuario Inactivo'){
+                        return throwError(err); 
+                    }
                     Swal.fire('Su sesión expiró','','error').then(()=>{
                         this.authService.logout();
                         this.router.navigate(['/auth/login']);
