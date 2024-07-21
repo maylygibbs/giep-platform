@@ -63,6 +63,7 @@
                   <td class="text-center">
                     <i class="feather icon-edit-2" (click)="select(user.id)" placement="start" ngbTooltip="Editar Usuario"></i>
                     <i class="feather icon-trash ms-1" (click)="delete(user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
+                    <i class="feather icon-key ms-1" (click)="openModalChangePass(changePassModal,user.id)" placement="start" ngbTooltip="Eliminar Usuario"></i>
                   </td>
                 </tr>
               </tbody>
@@ -132,3 +133,44 @@
 <div *ngIf="step==2">
   <app-user-store [user]="selectedItem" (onBack)="back($event)"></app-user-store>
 </div>
+<ng-template #changePassModal let-modal>
+  <div class="modal-header">
+    <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+  </div>
+  <form name="changePassForm" #changePassForm="ngForm" (ngSubmit)="changePass(changePassForm)">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="row px-5">
+            <!-- VINCULAR USUARIOS  -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <label for="inputPass" class="form-label required">Nueva Contraseña</label>
+                  <div class="input-group mb-3">
+                    
+                    <input [type]="showPassword ? 'text' : 'password'" name="password" #password="ngModel" [(ngModel)]="user.password"
+                    [ngClass]="{'ng-dirty ng-invalid' : password.errors && ( password.dirty || password.touched || changePassForm.submitted) }"
+                        class="form-control" id="inputPass" autocomplete="off" minlength="3" maxlength="50" required>
+                    <div *ngIf="password.invalid && changePassForm.submitted" class="invalid-feedback">
+                        <div *ngIf="password.errors?.required">Campo es requerido
+                        </div>                        
+                    </div> 
+                    <button class="input-group-text" type="button" (click)="showPassword = !showPassword">
+                      <i class="feather" [ngClass]="{'icon-eye-off':showPassword, 'icon-eye':!showPassword}"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+      <button type="submit" class="btn btn-secondary">Guardar</button>
+    </div>
+  </form>
+</ng-template>

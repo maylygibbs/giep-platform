@@ -50,6 +50,7 @@ export class User {
     company: Company;
     evaluationIntrument: EvaluationIntrument;
     questions: Array<Question>
+    password: string;
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');
