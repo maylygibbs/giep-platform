@@ -1424,6 +1424,18 @@ export class InstrumentsService extends HttpService {
       return resp;
     }
   
-
+    /**
+     * Delete users from instrument
+     * @param data 
+     */
+    async usersDelete(data:any){
+      try {
+        const resp = await firstValueFrom(this.post(environment.apiUrl, '/encuesta/instrumentocaptura/desvincularusers', data));
+        this.toastrService.success('Los usuarios han sido eliminados con éxito.');
+      } catch (error: any) {
+        if (error.status != 500)
+          this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      }
+    }
 
 }
