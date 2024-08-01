@@ -333,6 +333,21 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     console.log('event', event)
   }
 
+  /**
+   * delete user
+   * @param instrument 
+   * @param id 
+   */
+  async userDelete(id){
+    const data = {
+      idinstrumento: this.idInstrument,
+      users: [id]
+    }
+    await this.evaluationInstrumentsService.usersDelete(data);
+    this.pageUser = 1;
+    this.loadPageUsers(this.pageUser);
+  }
+
   ngOnDestroy() {
     if (this.$eventNavigationEnd) {
       this.$eventNavigationEnd.unsubscribe()

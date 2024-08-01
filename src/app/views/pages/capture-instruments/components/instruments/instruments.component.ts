@@ -28,7 +28,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   step: number = 1;
   instruments: PaginationResponse;
-  assignedUsers : PaginationResponse;
+  assignedUsers: PaginationResponse;
 
   loadingIndicator = true;
   reorderable = true;
@@ -44,7 +44,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
 
   selectedItem: Instrument;
   word: string;
-  wordForSearchUSers:string;
+  wordForSearchUSers: string;
   action: string;
 
   environment = environment;
@@ -67,9 +67,9 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   instrumentsRequest: NodeJS.Timeout;
   usersRequest: NodeJS.Timeout;
 
-  countryIdForSearchUsers:any;
-  stataIdForSearchUsers:any;
-  
+  countryIdForSearchUsers: any;
+  stataIdForSearchUsers: any;
+
   resultValidateUsers: any;
   private $eventNavigationEnd: Subscription;
 
@@ -127,13 +127,13 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     console.log('pageInfo', pageInfo);
     this.pageUser = pageInfo;
     this.assignedUsers = null;
-    this.assignedUsers = await this.instrumentsService.getAssignedUsers({ 
-      page: this.pageUser, 
-      rowByPage: environment.paginator.row_per_page, 
+    this.assignedUsers = await this.instrumentsService.getAssignedUsers({
+      page: this.pageUser,
+      rowByPage: environment.paginator.row_per_page,
       word: this.wordForSearchUSers ? this.wordForSearchUSers : null,
-      paisId : this.countryIdForSearchUsers ?  this.countryIdForSearchUsers: null,
+      paisId: this.countryIdForSearchUsers ? this.countryIdForSearchUsers : null,
       estadoId: this.stataIdForSearchUsers ? this.stataIdForSearchUsers : null,
-      idInstrumento:this.idInstrument  
+      idInstrumento: this.idInstrument
     });
   }
 
@@ -190,7 +190,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     }, 300);
   }
 
-  searchForSearchUsers(){
+  searchForSearchUsers() {
     if (this.usersRequest) {
       clearTimeout(this.usersRequest);
       this.usersRequest = null;
@@ -304,7 +304,7 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     this.showLoadingCountriesForSearchUsers = true;
     this.stataIdForSearchUsers = null;
     this.statesForSearchUsers = null;
-    this.statesForSearchUsers = this.countryIdForSearchUsers ?  await this.commonsService.getAllStates(this.countryIdForSearchUsers) : null
+    this.statesForSearchUsers = this.countryIdForSearchUsers ? await this.commonsService.getAllStates(this.countryIdForSearchUsers) : null
     this.loadPageUsers(this.pageUser);
     this.showLoadingCountriesForSearchUsers = false;
   }
@@ -321,10 +321,10 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
   async addUsers(form: NgForm) {
     if (form.valid) {
 
-     await this.instrumentsService.addUsersToInstrument(this.idInstrument, {
+      await this.instrumentsService.addUsersToInstrument(this.idInstrument, {
         users: Instrument.getUsers(this.selectedUsers),
         estadoId: this.stataId,
-        paisId: this.countryId 
+        paisId: this.countryId
       });
 
       this.loadPageUsers(environment.paginator.default_page);
@@ -332,28 +332,28 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     }
   }
 
-    /**
-   * Add users to instrument
-   * @param form 
-   */
-    async addUsersMasive(form: NgForm) {
-      if (form.valid) {
-  
-        if(!this.resultValidateUsers || !this.resultValidateUsers.usuariosregistrados || this.resultValidateUsers.usuariosregistrados.length == 0){
-          this.setInputColorError('Indique al menos un usuario');
-          return;
-        }
-  
-        await this.instrumentsService.addUsersToInstrument(this.idInstrument, {
-          users: this.resultValidateUsers.usuariosregistrados.map((user)=> {return {userId: +user.id}}),
-          estadoId: this.stataId,
-          paisId: this.countryId 
-        });
-  
-        this.loadPageUsers(environment.paginator.default_page);
-  
+  /**
+ * Add users to instrument
+ * @param form 
+ */
+  async addUsersMasive(form: NgForm) {
+    if (form.valid) {
+
+      if (!this.resultValidateUsers || !this.resultValidateUsers.usuariosregistrados || this.resultValidateUsers.usuariosregistrados.length == 0) {
+        this.setInputColorError('Indique al menos un usuario');
+        return;
       }
+
+      await this.instrumentsService.addUsersToInstrument(this.idInstrument, {
+        users: this.resultValidateUsers.usuariosregistrados.map((user) => { return { userId: +user.id } }),
+        estadoId: this.stataId,
+        paisId: this.countryId
+      });
+
+      this.loadPageUsers(environment.paginator.default_page);
+
     }
+  }
 
   /**
    * Change order of instrument
@@ -386,107 +386,107 @@ export class InstrumentsComponent extends BaseComponent implements OnInit {
     console.log('event', event)
   }
 
-    /**
-  * Handle error in upload action
-  * @param event 
-  */
-    onUploadError(event: any): void {
-      console.log('onUploadError:', event);
-      //this.disableBtnSubmit = true;
-      if (event[1] == "You can't upload files of this type.") {
-        this.toastrService.error('Documento con extensión no permitida. Sólo se permiten archivos con las siguientes extensiones: xls, xlsx')
-      }
-      if (event[1] == "File is too big (2.87MiB). Max filesize: 2MiB.") {
-        this.toastrService.error('El documento es demasiado grande. Tamaño máximo de docuemento: 10MB.')
-      }
+  /**
+* Handle error in upload action
+* @param event 
+*/
+  onUploadError(event: any): void {
+    console.log('onUploadError:', event);
+    //this.disableBtnSubmit = true;
+    if (event[1] == "You can't upload files of this type.") {
+      this.toastrService.error('Documento con extensión no permitida. Sólo se permiten archivos con las siguientes extensiones: xls, xlsx')
     }
-  
-    /**
-  * Handle success in upload action
-  * @param event 
-  */
-    onUploadSuccess(event: any): void {
-      
-      console.log(event)
+    if (event[1] == "File is too big (2.87MiB). Max filesize: 2MiB.") {
+      this.toastrService.error('El documento es demasiado grande. Tamaño máximo de docuemento: 10MB.')
     }
-  
-    /**
-   * Handle add file action
-   * @param event 
-   */
-    addFile(event: any) {
-      this.resultValidateUsers = null;
-      let file: File = event;
-      console.log('event:', event);
-      console.log('file name:', file.name);
-      console.log('file type:', file.type);
-      const thisTemp = this;
-      if (file) {
-        const reader = new FileReader();
-        reader.readAsBinaryString(file);
-        reader.onload = async() => {
-          /* read workbook */
-          const result: string = reader.result as string;
-          const wb: XLSX.WorkBook = XLSX.read(result, { type: 'binary' });
-  
-           /* grab first sheet */
-          const wsname: string = wb.SheetNames[0];
-          const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-  
-           /* save data */
-          const data = <AOA>(XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false }));
-  
-          if (data.length === 0) {
-  
-            thisTemp.toastrService.error('Favor verifique, el archivo está vacío.')
-  
-            return false;
-          }else{
-            console.log('data',data);
-            const users = data.map((user)=> {return user[0]})
-            thisTemp.resultValidateUsers = await thisTemp.userService.validUsers({users});
-            if(thisTemp.resultValidateUsers && thisTemp.resultValidateUsers.usuariosregistrados && thisTemp.resultValidateUsers.usuariosregistrados.length > 0){
-
-  
-            }
-  
-          }
-  
-        };
-        reader.onerror = (error) => {
-          this.toastrService.error('Error al analizar lista de usuarios.');
-          console.log(error);
-        };
-      }
-    }
-  
-  
-    /**
-  * Reset zone drag and drop
-  */
-    resetDropzoneUploads() {
-      this.resultValidateUsers = null;
-  
-    }
+  }
 
   /**
-   * Get masive users from file
-   */
-  /*getMasiveUsers(){
-    if(this.resultValidateUsers && this.resultValidateUsers.usuariosregistrados && this.resultValidateUsers.usuariosregistrados.length > 0){
-      if(this.eventDetail.usersInvited && this.eventDetail.usersInvited.length > 0){
-        this.registeredUsers = this.resultValidateUsers.usuariosregistrados.filter((user:any)=> {
-          return !this.eventDetail.usersInvited.includes(user.correo);
-        });  
-        if(this.registeredUsers.length > 0){
-          const temp = this.registeredUsers.map((user)=> {return user.correo});
-          this.eventDetail.usersInvited = [...this.eventDetail.usersInvited, ...temp];
-        }       
-      }else{
-        this.eventDetail.usersInvited = this.resultValidateUsers.usuariosregistrados.map((user)=> {return user.correo});
-      }
+* Handle success in upload action
+* @param event 
+*/
+  onUploadSuccess(event: any): void {
+
+    console.log(event)
+  }
+
+  /**
+ * Handle add file action
+ * @param event 
+ */
+  addFile(event: any) {
+    this.resultValidateUsers = null;
+    let file: File = event;
+    console.log('event:', event);
+    console.log('file name:', file.name);
+    console.log('file type:', file.type);
+    const thisTemp = this;
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsBinaryString(file);
+      reader.onload = async () => {
+        /* read workbook */
+        const result: string = reader.result as string;
+        const wb: XLSX.WorkBook = XLSX.read(result, { type: 'binary' });
+
+        /* grab first sheet */
+        const wsname: string = wb.SheetNames[0];
+        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+        /* save data */
+        const data = <AOA>(XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false }));
+
+        if (data.length === 0) {
+
+          thisTemp.toastrService.error('Favor verifique, el archivo está vacío.')
+
+          return false;
+        } else {
+          console.log('data', data);
+          const users = data.map((user) => { return user[0] })
+          thisTemp.resultValidateUsers = await thisTemp.userService.validUsers({ users });
+          if (thisTemp.resultValidateUsers && thisTemp.resultValidateUsers.usuariosregistrados && thisTemp.resultValidateUsers.usuariosregistrados.length > 0) {
+
+
+          }
+
+        }
+
+      };
+      reader.onerror = (error) => {
+        this.toastrService.error('Error al analizar lista de usuarios.');
+        console.log(error);
+      };
     }
-  }    */
+  }
+
+
+  /**
+* Reset zone drag and drop
+*/
+  resetDropzoneUploads() {
+    this.resultValidateUsers = null;
+
+  }
+
+
+
+  /**
+* delete user
+* @param instrument 
+* @param id 
+*/
+  async userDelete(id) {
+    console.log('user', id)
+    console.log('this.idInstrument', this.idInstrument)
+    const data = {
+      idinstrumento: this.idInstrument,
+      users: [id]
+    }
+    await this.instrumentsService.usersDelete(data);
+    this.pageUser = 1;
+    this.loadPageUsers(this.pageUser);
+  }
 
   ngOnDestroy() {
     if (this.$eventNavigationEnd) {

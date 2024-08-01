@@ -267,6 +267,7 @@
                         <th>Usuario</th>
                         <th>Email</th>
                         <th>Respondió</th>
+                        <th>Acción</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -275,11 +276,16 @@
                         <td>{{user.firstName}}</td>
                         <td>{{user.email}}</td>
                         <td>{{user.answered ? 'Sí':'No'}}</td>
+                        <td>
+                          <i *ngIf="!user.answered" class="feather icon-trash ms-1"
+                          (click)="userDelete(user.id)" placement="start"
+                          ngbTooltip="Desvincular usuario"></i>                        
+                        </td>
                       </tr>
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th colspan="3" class="text-right">
+                        <th colspan="4" class="text-right">
                           <app-pager [idPaginator]="'server1'" (onChangePage)="loadPageUsers($event)"></app-pager>
                         </th>
                       </tr>
@@ -440,19 +446,26 @@
                         <th>Usuario</th>
                         <th>Email</th>
                         <th>Respondió</th>
+                        <th>Acción</th>
                       </tr>
                     </thead>
                     <tbody>
+                      {{assignedUsers.data|json}}
                       <tr
                         *ngFor="let user of assignedUsers.data | paginate: { id: 'server1', itemsPerPage: environment.paginator.row_per_page, currentPage: pageUser, totalItems: assignedUsers.count }">
                         <td>{{user.firstName}}</td>
                         <td>{{user.email}}</td>
                         <td>{{user.answered ? 'Sí':'No'}}</td>
+                        <td>
+                          <i *ngIf="!user.answered" class="feather icon-trash ms-1"
+                          (click)="userDelete(user.id)" placement="start"
+                          ngbTooltip="Desvincular usuario"></i>                        
+                        </td>
                       </tr>
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th colspan="3" class="text-right">
+                        <th colspan="4" class="text-right">
                           <app-pager [idPaginator]="'server1'" (onChangePage)="loadPageUsers($event)"></app-pager>
                         </th>
                       </tr>

@@ -517,6 +517,27 @@ export class UserService extends HttpService {
     }
   }
 
+
+  /**
+ * Change user password
+ * @param data 
+ * @returns 
+ */
+  async changePass(data: any): Promise<any> {
+    try {
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/changePasswordTem', data));
+      this.toastrService.success('', 'La contraseña fué cambiada con éxito.');
+      return true;
+    } catch (error: any) {
+      console.log(error)
+      if (error.status != 500) {
+        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      }
+      return false;
+    }
+
+  }  
+
 }
 
 

@@ -2,12 +2,14 @@ import { environment } from './../../../../../../environments/environment';
 import { PaginationResponse } from './../../../../../core/models/pagination-response';
 import { User } from './../../../../../core/models/user';
 import { UserService } from './../../../../../core/services/user.service';
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BaseComponent } from '../../../../../views/shared/components/base/base.component';
 import { filter, Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgForm } from '@angular/forms';
 
 
 
@@ -45,10 +47,14 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
   usersRequest: NodeJS.Timeout;
 
+  user: User;
+  showPassword:boolean = false;
+
 
   constructor(private userService: UserService,
     private router: Router,
-    private toastrService: ToastrService) {
+    private toastrService: ToastrService,
+    protected modalService: NgbModal) {
     super();
   }
 
@@ -161,6 +167,34 @@ export class UsersComponent extends BaseComponent implements OnInit {
    */
   changeView(change: boolean) {
     this.defaultView = change;
+  }
+
+  /**Open modal */
+  openModalChangePass(modalRef: TemplateRef<any>, userId:string){
+    this.user = new User();
+    this.user.id = userId;
+    this.modalService.open(modalRef, {}).result.then((result) => {
+      console.log("Modal closed" + this.user);
+      console.log("result" + result);
+    }).catch((res) => { });
+  }
+
+  /**
+   * Close modal
+   */
+  closeModal(){
+    this.modalService.dismissAll();
+  }
+  /**
+   * Change password
+   * @param form 
+   */
+  async changePass(form:NgForm){
+    if(form.valid){
+      await  this.userService.changePass({id:+this.user.id, password: this.user.password })
+      this.closeModal();
+    }
+
   }
 
 
