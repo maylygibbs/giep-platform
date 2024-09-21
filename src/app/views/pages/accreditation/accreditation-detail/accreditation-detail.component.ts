@@ -11,14 +11,14 @@ import { Router } from '@angular/router';
 export class AccreditationDetailComponent implements OnInit {
 
   data:any
-  eventDetail: EventDetail;
+  events: Array<EventDetail>;
 
   constructor(private calendarService: CalendarService, private router: Router) { }
 
   async ngOnInit() {
     this.data = history.state.infoQR;
     if(this.data){
-      await this.getEventById(this.data.idEvent, this.data.userId);
+      await this.getEventByIds(this.data.idEvent, this.data.userId);
     }else{
       this.router.navigate(['/accreditations/scanqr'])
     }
@@ -30,14 +30,14 @@ export class AccreditationDetailComponent implements OnInit {
    * Get event detail by id
    * @param id 
    */
-    async getEventById(idEvent: string, userId:string) {
-      this.eventDetail = await this.calendarService.getUserAccreditationDetail(idEvent, userId);
-      console.log('eventDetail', this.eventDetail)
+    async getEventByIds(idEvent: string, userId:string) {
+      this.events = await this.calendarService.getAllUserAccreditationDetail(idEvent, userId);
+      console.log('events', this.events)
     }
 
     async consumeAccreditationItem(idAccreditationItem:string){
       await this.calendarService.consumeAccreditationItem(idAccreditationItem);
-      await this.getEventById(this.data.idEvent, this.data.userId);   
+      await this.getEventByIds(this.data.idEvent, this.data.userId);   
     }
 
 }

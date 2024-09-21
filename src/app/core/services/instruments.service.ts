@@ -271,7 +271,17 @@ export class InstrumentsService extends HttpService {
           question.options = item.opciones.map((itemOption: any, index: number) => {
             let option = new QuestionOption(itemOption.Valor, itemOption.Name);
             option.idOption = itemOption.id;
-            option.score = itemOption.Puntos;
+            option.score = itemOption.Puntos ? itemOption.Puntos : 0;
+            if(itemOption.scoreByCharge && !instrument.globalsPoints){
+              option.scoreByCharges = itemOption.scoreByCharge.map((itemScore:any, index:number)=>{
+                return {
+                  id: itemScore.id_cargo,
+                  score: itemScore.score,
+                  label: itemScore.label,
+                  nameControlScore: 'controlScoreCharge-'+index
+                }
+              })
+            }
             option.nameInputLabel = "optionLabel" + question.order + '' + index;
             option.nameInputValue = "optionValue" + question.order + '' + index;
             option.nameInputScore = "optionScore" + question.order + '' + index;
@@ -1420,7 +1430,6 @@ export class InstrumentsService extends HttpService {
  */
     async resultDownload(filter: any, instrumentId: number): Promise<Blob> {
       const resp = await firstValueFrom(this.post(environment.apiUrl, `/encuesta/descarga/resultados/instrumento/${instrumentId}`, filter, { responseType: 'blob' }));
-
       return resp;
     }
   

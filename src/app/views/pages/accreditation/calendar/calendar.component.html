@@ -44,7 +44,8 @@
       <div *ngIf="showCardEvents" class="col-lg-3 col-md-3 col-sm-12">
         <div class="card card-dt">
           <div class="card-header d-flex justify-content-between">
-            <h6 class="card-title">{{selectedDay| date:'yyyy-MM-dd'}}</h6>
+            <h6 *ngIf="selectedDay" class="card-title">{{(selectedDay| date:'yyyy-MM-dd')}}</h6>
+            <h6 *ngIf="selectedRangeDays" class="card-title">{{'Desde '+(selectedRangeDays.start| date:'yyyy-MM-dd')+' hasta '+(selectedRangeDays.end| date:'yyyy-MM-dd')}}</h6>
             <i class="feather icon-x" (click)="closeCardEventByDay()"></i>
           </div>
           <div class="card-body card-list">
@@ -52,19 +53,31 @@
               <div>
                 <div class="d-flex justify-content-between">
                   <h6 class="mb-2 text-muted">Eventos</h6>
-                  <i class="feather icon-plus" placement="start" ngbTooltip="Nuevo Evento"
+                  
+                  <i [hidden]="selectedRangeDays" class="feather icon-plus" placement="start" ngbTooltip="Nuevo Evento"
                     (click)="handleNewEvent()"></i>
                 </div>
-
-                <div *ngFor="let event of eventsByDay" class='fc-event' [ngClass]="event.classNames">
+                <div *ngIf="eventsByDay && eventsByDay.length > 0" class="d-flex justify-content-between">
+                  <div class="form-check mb-2"> 
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="isSelectedAll"  (change)="selectAllEvents($event)">
+                    <label>Todos</label>
+                  </div>
+                  <i *ngIf="eventsToGenerateAcreditations.length > 0" class="feather icon-printer" 
+                        placement="start" ngbTooltip="Imprimir Acreditaciones" (click)="print()"></i>
+                </div>
+                <div *ngFor="let event of eventsByDay;let i = index;" class='fc-event' [ngClass]="event.classNames">
                   <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-1 align-items-center">
+                      <div class="form-check mb-2">
+                        <input type="checkbox" [(ngModel)]="event.selected" (change)="selectEvent($event,event)" class="form-check-input" id="check-{{i}}">
+                      </div>
+                    </div>
+                    <div class="col-lg-7">
                       <span>{{'C'+event.id}}-{{event.title}}</span><br>
-                      <span>{{event.startHour}} - {{event.endHour}}</span>
+                      <span>{{event.startHour}} - {{event.endHour}}</span> <br>
+                      <span *ngIf="selectedRangeDays" class="mt-2 text-muted">{{event.startStr}}</span>
                     </div>
                     <div class="col-lg-4  d-flex align-items-center justify-content-end">
-                      <i *ngIf="event.ownerEvent" class="feather icon-printer" (click)="print(event.id)"
-                        placement="start" ngbTooltip="Imprimir Acreditaciones"></i>
                       <i *ngIf="event.ownerEvent" class="feather icon-edit-2 ms-1" (click)="handleEditEvent(event.id)"
                         placement="start" ngbTooltip="Editar Evento"></i>
                       <i *ngIf="event.ownerEvent" class="feather icon-copy ms-1" (click)="cloneEvent(event.id)"

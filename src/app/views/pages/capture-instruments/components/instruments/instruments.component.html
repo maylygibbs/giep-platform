@@ -450,7 +450,6 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {{assignedUsers.data|json}}
                       <tr
                         *ngFor="let user of assignedUsers.data | paginate: { id: 'server1', itemsPerPage: environment.paginator.row_per_page, currentPage: pageUser, totalItems: assignedUsers.count }">
                         <td>{{user.firstName}}</td>

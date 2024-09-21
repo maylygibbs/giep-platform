@@ -15,7 +15,8 @@ export class PrintAccreditationComponent implements OnInit {
 
   idEvent
   accreditations: Array<any>;
-  eventDetail: EventDetail;
+  info: any;//informacion de eventos a imprimir, usuarios invitados y usuarios acreditados.
+  urlImg:any; //arte
   drop: any;
   config: DropzoneConfigInterface = {
     clickable: true,
@@ -69,7 +70,7 @@ export class PrintAccreditationComponent implements OnInit {
     this.appearance.qrSize = 85;
     this.qrColorValue = '#000000';
     this.qrSizeValue = 85;
-    await this.getEventById(this.idEvent);
+    await this.getEventsByIds(this.idEvent);
   
   }
 
@@ -78,21 +79,22 @@ export class PrintAccreditationComponent implements OnInit {
    */
   async generateAccreditations(){  
     if(this.selectedUsersAccredited && this.selectedUsersAccredited.length>0) 
-    this.accreditations = this.eventDetail.usersAccredited.filter((user)=>{
-      return this.selectedUsersAccredited.includes(user.userId);
+    this.accreditations = this.info.calendarUsers.filter((user:any)=>{
+      return this.selectedUsersAccredited.includes(user.email);
     });
     else{
-      this.accreditations = this.eventDetail.usersAccredited;
+      this.accreditations = this.info.calendarUsers;
     }
+    console.log('this.accreditations',this.accreditations)
   }
 
   /**
-   * Get event detail by id
+   * Get events by ids
    * @param id 
    */
-  async getEventById(id: string) {
-    this.eventDetail = await this.calendarService.getEventByIdWithAccreditation(id);
-    console.log('eventDetail', this.eventDetail)
+  async getEventsByIds(id: string) {
+    this.info = await this.calendarService.getEventsByIdsWithAccreditation(id);
+    console.log('info', this.info)
   }
 
   printDiv(divID) {
@@ -158,7 +160,7 @@ export class PrintAccreditationComponent implements OnInit {
       reader.onload = () => {
         const result: string = reader.result as string;
         if (result.includes(',')) {
-          this.eventDetail.urlImg = result;
+          this.urlImg = result;
         }
 
       };
@@ -173,7 +175,7 @@ export class PrintAccreditationComponent implements OnInit {
 */
   resetDropzoneUploads() { 
     this.accreditations = null;
-    this.eventDetail.urlImg = null;
+    this.urlImg = null;
     
   }
 
@@ -200,14 +202,14 @@ export class PrintAccreditationComponent implements OnInit {
     }, 300);
   }
 
-  onChangeSelectUsera(){
+  onChangeSelectUsers(){
     if(this.accreditations){
       if(this.selectedUsersAccredited && this.selectedUsersAccredited.length>0) 
-        this.accreditations = this.eventDetail.usersAccredited.filter((user)=>{
+        this.accreditations = this.info.usersAccredited.filter((user)=>{
           return this.selectedUsersAccredited.includes(user.userId);
         });
       else{
-        this.accreditations = this.eventDetail.usersAccredited;
+        this.accreditations = this.info.usersAccredited;
       }
     }
 

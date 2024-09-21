@@ -9,6 +9,7 @@ export class EventDetail {
     title:string;
     eventDate: any;
     start:string;
+    startStr:string;
     end:string;
     startHour:any;
     endHour:any;
@@ -23,6 +24,7 @@ export class EventDetail {
     urlImg:string;
     instrumentCapId:number;
     instrumentEvaId:number;
+    selected:boolean;
 
 
 

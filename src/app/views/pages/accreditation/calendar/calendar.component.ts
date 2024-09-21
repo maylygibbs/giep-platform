@@ -57,6 +57,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
   calendarApi: Calendar;
 
   selectedDay: Date;
+  selectedRangeDays: any;
   showCardEvents: boolean = false;
 
   eventDetail: EventDetail;
@@ -67,6 +68,8 @@ export class CalendarComponent extends BaseComponent implements OnInit {
 
   step: number = 1;
 
+  eventsToGenerateAcreditations: Array<any>=[];
+  isSelectedAll:boolean = false;
 
   accreditations: Array<any>;
 
@@ -200,11 +203,14 @@ export class CalendarComponent extends BaseComponent implements OnInit {
       selectable: true,
       selectMirror: true,
       dayMaxEvents: true,
-      dateClick: (info) => {
-        this.showCardEventsByDay(info.date);
-        console.log(info)
-
+      selectOverlap: true,
+      dateClick: (dateClickInfo) => {
+        console.log(dateClickInfo.jsEvent)
+        this.isSelectedAll=false;
+        this.eventsToGenerateAcreditations=[];
+        this.showCardEventsByDay(dateClickInfo.date);
       },
+      select: this.handleDateSelect.bind(this),
       drop: (infoDrop) => { //cuando el evento es dropped dentro del calendario
         let currentDate = new Date();
         currentDate = moment(currentDate).startOf('date').toDate();
@@ -314,6 +320,21 @@ export class CalendarComponent extends BaseComponent implements OnInit {
     }
   }
 
+  handleDateSelect(dateSelectInfo:any){
+    console.log('dateSelectInfo',dateSelectInfo)
+    let {start, end} = dateSelectInfo;
+    start = moment(start).format('YYYY-MM-DD')
+    end = moment(end).subtract(1, 'minutes').format('YYYY-MM-DD');
+    console.log('start', start)
+    console.log('end', end)
+    if(start != end){
+      this.isSelectedAll=false;
+      this.eventsToGenerateAcreditations=[];
+      this.showCardEventsByRangeDay({start, end});
+    }
+    
+  }
+
   /**
    * Load events by range
    * @param viewType 
@@ -361,7 +382,9 @@ export class CalendarComponent extends BaseComponent implements OnInit {
    * @param day 
    */
   async showCardEventsByDay(day: Date) {
+    console.log('showCardEventsByDay')
     this.selectedDay = day;
+    this.selectedRangeDays = null;
     const startDate = moment(day).startOf('hour').format('YYYY-MM-DD') + ` ${this.startHour}`;
     const endDate = moment(day).endOf('hour').format('YYYY-MM-DD') + ` ${this.endHour}`;
     const resp = await this.calendarService.getEventsWithAccreditations(startDate, endDate);
@@ -372,12 +395,32 @@ export class CalendarComponent extends BaseComponent implements OnInit {
     }, 150);
   }
 
+    /**
+   * load events betweens startDate and endDate
+   * @param rangeDate 
+   */
+    async showCardEventsByRangeDay(rangeDate:any) {
+      console.log('showCardEventsByRangeDay')
+      this.selectedRangeDays = rangeDate;
+      this.selectedDay = null;
+      const startDate = moment(rangeDate.start).startOf('hour').format('YYYY-MM-DD') + ` ${this.startHour}`;
+      const endDate = moment(rangeDate.end).endOf('hour').format('YYYY-MM-DD') + ` ${this.endHour}`;
+      const resp = await this.calendarService.getEventsWithAccreditations(startDate, endDate);
+      this.eventsByDay = resp.eventsDetail;
+      this.showCardEvents = true;
+      setTimeout(() => {
+        this.calendarApi.render();
+      }, 150);
+    }
+
   /**
    * close card with list od events
   */
-  closeCardEventByDay() {
+  closeCardEventByDay() {  
     this.eventsByDay = null;
     this.showCardEvents = false;
+    this.isSelectedAll=false;
+    this.eventsToGenerateAcreditations=[];
     setTimeout(() => {
       this.calendarApi.render();
     }, 150);
@@ -565,8 +608,9 @@ export class CalendarComponent extends BaseComponent implements OnInit {
   }
 
 
-  print(id: string) {
-    this.router.navigate(['/accreditations/print'], { queryParams: { idEvent: id } })
+  print() {
+    const idEvent = this.eventsToGenerateAcreditations.map((event:EventDetail)=> event.id).join('|');
+    this.router.navigate(['/accreditations/print'], { queryParams: { idEvent } })
   }
 
 
@@ -666,6 +710,39 @@ export class CalendarComponent extends BaseComponent implements OnInit {
 */
   resetDropzoneUploads() {
     this.resultValidateUsers = null;
+  }
+
+  /**
+   * Selecciona todos los eventos del card list event
+   * @param event 
+   */
+  selectAllEvents(eventInput){
+    if(eventInput.target.checked){
+      this.eventsToGenerateAcreditations = this.eventsByDay.map((event)=>{event.selected = true; return event;});      
+    }else{
+      this.eventsByDay.forEach((event)=>{event.selected = false; return event;});
+      this.eventsToGenerateAcreditations = [];
+    }
+    this.isSelectedAll =  this.eventsToGenerateAcreditations.length == this.eventsByDay.length;
+    console.log('eventsToGenerateAcreditations',this.eventsToGenerateAcreditations)
+  }
+
+  /**
+   * Selecciona un evento candidato para generar las acreditaciones
+   * @param eventInput 
+   * @param selectedEvent 
+   */
+  selectEvent(eventInput, selectedEvent:EventDetail){
+
+    if(eventInput.target.checked){
+      if(!this.eventsToGenerateAcreditations.find((event)=>{event.id == selectedEvent.id })){
+        this.eventsToGenerateAcreditations.push(selectedEvent);
+      }
+    }else{
+      this.eventsToGenerateAcreditations = this.eventsByDay.filter((event)=>event.selected == true)
+    }
+    this.isSelectedAll =  this.eventsToGenerateAcreditations.length == this.eventsByDay.length;
+    console.log('eventsToGenerateAcreditations',this.eventsToGenerateAcreditations)
 
   }
 

@@ -304,11 +304,18 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           const user = await this.userService.getInfoUser();
           this.authService.updateUserSource(user);
           this.document.body.classList.remove('settings-open');
-          console.log('url', this.location.path())
-          this.router.navigateByUrl(this.location.path());
+          this.reloadCurrentRoute(this.location.path())
+          
         }
       }     
     }
+  }
+
+  reloadCurrentRoute(path:string) {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigateByUrl(path);
+    });
   }
 
   ngOnDestroy(){

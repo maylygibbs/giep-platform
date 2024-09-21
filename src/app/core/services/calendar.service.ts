@@ -216,6 +216,64 @@ export class CalendarService extends HttpService {
   }
 
 
+  /**
+   * Get events by ids
+   */
+    async getEventsByIdsWithAccreditation(ids: string): Promise<EventDetail> {
+      const currentUser = this.authService.currentUser;
+      let events: Array<EventDetail>;
+      let calendarUsers: Array<any>;
+      let usersInvited: Array<any>;
+      let usersAccredited: Array<any>;
+      const idsArray = ids.split("|")
+      try {
+        const resp = await firstValueFrom(this.post(environment.apiUrl, `/calendario/event/print/acreditacion`,{ids}));
+
+        let currentDate = moment(new Date()).startOf('date');
+        events = resp.events?.map((item: any) => {
+  
+          const eventPast = moment(item.end).isBefore(currentDate);
+          const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
+          const eventDetail = new EventDetail();
+          eventDetail.id = item.id;
+          eventDetail.title = item.title;
+          eventDetail.start = item.start;
+          eventDetail.end = item.end;
+          eventDetail.description = item.description;
+          const d = new Date(item.start);
+          eventDetail.eventDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+          eventDetail.startHour = { hour: parseInt(moment(item.start).format('HH')), minute: parseInt(moment(item.start).format('mm')), second: 0 };
+          eventDetail.endHour = { hour: parseInt(moment(item.end).format('HH')), minute: parseInt(moment(item.end).format('mm')), second: 0 };
+          eventDetail.classNames = classNames;
+          eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
+          eventDetail.accreditationRequired = item.acreditacion == 1 ? true : false;
+          eventDetail.startStr = moment(item.start).locale('es').format("dddd, MMMM D YYYY");
+  
+          return eventDetail;
+  
+        });
+        calendarUsers = resp.calendarUsers.map((item: any) => {
+          return item;
+        });
+        usersInvited = resp.calendarUsers.map((item: any) => {
+          return item.email;
+        });
+
+        usersAccredited = resp.calendarUsers?.map((user) => {
+  
+          Object.assign(user, { dataQr: JSON.stringify({ idEvent: user.events.map((event:any)=>event.id).join('|'), userId: user.userId }) });
+          Object.assign(user, { fullName: `${user.primer_nombre} ${user.primer_apellido} (${user.email})` });
+          return user;
+        });
+
+        return this.resolveWith({events, calendarUsers, usersInvited, usersAccredited});
+      } catch (error) {
+        this.toastrService.error('Ha ocurrido un error cargando los eventos.');
+        return this.resolveWith({events, calendarUsers, usersInvited, usersAccredited});
+      }
+    }
+
+
 
   /**
  * Get events by range
@@ -255,6 +313,7 @@ export class CalendarService extends HttpService {
         eventDetail.id = item.id;
         eventDetail.title = item.title;
         eventDetail.start = item.start;
+        eventDetail.startStr = moment(item.start).locale('es').format("dddd, MMMM D YYYY");
         eventDetail.end = item.end;
         eventDetail.description = item.description;
 
@@ -262,7 +321,7 @@ export class CalendarService extends HttpService {
         eventDetail.endHour = moment(item.end).format('HH:mm');
         eventDetail.classNames = classNames;
         eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
-
+        eventDetail.selected = false;
         return eventDetail;
 
       });
@@ -339,6 +398,63 @@ export class CalendarService extends HttpService {
       return eventDetail;
     }
   }
+
+
+  /**
+   * Get user accreditation detail
+   * @param id 
+   * @returns 
+   */
+  async getAllUserAccreditationDetail(idEvent: string, userId: string): Promise<Array<EventDetail>> {
+    const currentUser = this.authService.currentUser;
+    let eventsDetail: Array<EventDetail>;
+    let eventDetail: EventDetail;
+    try {
+      const resp = await firstValueFrom(this.post(environment.apiUrl, `/calendario/event/getone/acreditacionevent`,{ids:idEvent, userId}));
+      let currentDate = moment(new Date()).startOf('date');
+      eventsDetail = resp.data?.map((item: any) => {
+
+        const eventPast = moment(item.end).isBefore(currentDate);
+        const classNames = eventPast ? ['event-font', 'event-past'] : item.classNames;
+        const eventDetail = new EventDetail();
+        eventDetail.id = item.id;
+        eventDetail.title = item.title;
+        eventDetail.start = item.start;
+        eventDetail.end = item.end;
+        eventDetail.description = item.description;
+        const d = new Date(item.start);
+        eventDetail.eventDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+        eventDetail.startHour = { hour: parseInt(moment(item.start).format('HH')), minute: parseInt(moment(item.start).format('mm')), second: 0 };
+        eventDetail.endHour = { hour: parseInt(moment(item.end).format('HH')), minute: parseInt(moment(item.end).format('mm')), second: 0 };
+        eventDetail.classNames = classNames;
+        eventDetail.userInvited = item.calendarUsers;
+
+
+        eventDetail.ownerEvent = item.ownerEvent === currentUser.email ? item.ownerEvent : null;
+        eventDetail.accreditationRequired = item.acreditacion == 1 ? true : false;
+        
+        if (eventDetail.userInvited && eventDetail.userInvited && eventDetail.userInvited.accreditationItems && eventDetail.userInvited.accreditationItems.length > 0) {
+          eventDetail.accreditationItems = eventDetail.userInvited.accreditationItems.map((accItem: any, index: number) => {
+            const acreditationItem = new AcreditationItem();
+            acreditationItem.idAccreditationItem = accItem.Id;
+            acreditationItem.id = accItem.idTipo;
+            acreditationItem.name = accItem.description;
+            acreditationItem.quantity = accItem.Cantidad ? accItem.Cantidad : 1;
+            acreditationItem.used = accItem.Usado == 1 ? true : false;
+            return acreditationItem;
+          })
+        };
+
+        return eventDetail;
+
+      });
+     
+      return eventsDetail;
+    } catch (error) {
+      this.toastrService.error('Ha ocurrido un error cargando el evento.');
+      return eventsDetail;
+    }
+  }  
 
   /**
  * Get user accreditation detail
