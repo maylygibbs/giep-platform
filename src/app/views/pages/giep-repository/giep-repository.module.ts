@@ -9,6 +9,7 @@ import { DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { SharedModule } from '../../shared/shared.module';
 import { DndDirective } from './directives/dnd.directive';
+import { DigitizedDocumentsComponent } from './components/digitized-documents/digitized-documents.component';
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
   url: 'https://httpbin.org/post',
@@ -27,7 +28,8 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
 @NgModule({
   declarations: [
     DocumentsComponent,
-    DndDirective
+    DndDirective,
+    DigitizedDocumentsComponent
   ],
   imports: [
     CommonModule,
