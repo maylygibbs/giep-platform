@@ -36,6 +36,16 @@ export const environment = {
         pattern: '^[a-zA-Z0-9]*$',
       }
     },
+    alphanumeric_guion: {
+      validations: {
+        pattern: '^[a-zA-Z0-9\-]*$',
+      }
+    },
+    number_guion: {
+      validations: {
+        pattern: '^[0-9\-]*$',
+      }
+    },
     role_pattern:{
       validations: {
         pattern: '(ROLE)[A-Z\_]+',
