@@ -42,6 +42,16 @@ export const environment = {
         pattern: '^[a-zA-Z0-9]*$',
       }
     },
+    alphanumeric_guion: {
+      validations: {
+        pattern: '^[a-zA-Z0-9\-]*$',
+      }
+    },
+    number_guion: {
+      validations: {
+        pattern: '^[0-9\-]*$',
+      }
+    },
     role_pattern:{
       validations: {
         pattern: '(ROLE)[A-Z\_]+',
@@ -61,14 +71,23 @@ export const environment = {
     handle_error_blackList:[
       '/login_check',
       '/recovery-password',
-      '/changepassword'
+      '/changepassword',
+      'security/login'
     ],
     handler_auth_whiteList:[
       '/recovery-password',
       '/changepassword'
     ]
-  }
+  },
+  superset: {
+        url:"https://psuperset.pafar.com.ve/api/v1/",
+        username: "admin",
+        first_name: "admin",
+        last_name: "analytic",
+        password: "pafarco1"
+    }
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

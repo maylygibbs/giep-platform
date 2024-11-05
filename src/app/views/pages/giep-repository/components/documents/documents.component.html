@@ -58,9 +58,9 @@
                   <td>{{doc.sizeStr}}</td>
                   <td><p class="badge" [ngClass]="{'bg-gray':doc.state.value == '1', 'bg-info':doc.state.value == '2', 'bg-success':doc.state.value == '3', 'bg-black':doc.state.value == '4', 'bg-danger':doc.state.value == '5'}">{{doc.state.label}}</p></td>
                   <td>
-                    <span *ngIf="doc.isBloqued" placement="start"
+                    <span *ngIf="doc.isBloqued && doc.bloquedBy" placement="start"
                       [ngbTooltip]="'Por: '+doc.bloquedBy.firstName">Sí</span>
-                    <span *ngIf="!doc.isBloqued">No</span>
+                    <span *ngIf="!doc.isBloqued">No</span></td>
                   <td>{{doc.creationDate | date:'yyyy-MM-dd'}}</td>
                   <td class="text-center">
                     <i class="feather icon-eye" (click)="select(doc.id, fileDetailModal)" placement="start"

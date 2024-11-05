@@ -26,5 +26,36 @@ export class DocumentGiep {
     history: Array<any>;
     isBloqued: boolean;
     bloquedBy: User;
+    //datos control de archivo
+    status: SelectOption;
+    almacen: SelectOption;
+    almacenType: SelectOption;
+    location1: SelectOption;
+    location2: SelectOption;
+    location3: SelectOption;
+    nivelUnidad: SelectOption;
+    estructuraOrganizativa: SelectOption;
+    region: SelectOption;
+    pais:SelectOption;
+    estado: SelectOption;
+    ciudad: SelectOption;
+    gerencia: SelectOption;
+    asunto: string;
+    fechaFinConservacion:any;
+    tieneArchivoFisico:SelectOption;
+    justificacion:string;
+    numExpediente:string;
+    fechaDocumento:any;
+    cantidadCaja: number;
+    cantidadEstuche: number;
+    usuarioEntrega: number;
+    contenidoCaja: SelectOption;
+    folios:string;
+    numCaja:number;
+    numEstuche:string;
+    fechaExtremaInicio:any;
+    fechaExtramaFin:any;
+    serie: SelectOption;
+    subSerie: SelectOption;
  
 }

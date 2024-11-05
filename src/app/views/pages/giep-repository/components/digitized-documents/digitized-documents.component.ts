@@ -7,11 +7,14 @@ import { PaginationResponse } from '../../../../../core/models/pagination-respon
 import { DocumentGiep } from '../../../../../core/models/document';
 import { DocumentService } from '../../../../../core/services/document.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
 import * as saveAs from 'file-saver';
 import { InstrumentsService } from '../../../../../core/services/instruments.service';
 import { ToastrService } from 'ngx-toastr';
+import { SelectOption } from 'src/app/core/models/select-option';
+import * as moment from 'moment';
+import { pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
 
 @Component({
   selector: 'app-digitized-documents',
@@ -79,7 +82,33 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
 
   data: any;
 
-  stateId:number;
+  stateId: number;
+
+  defaultNavActiveId = 1;
+
+  stateList: any;
+  direccionAlmacenList: any;
+  tipoAlamacen: any;
+  ubicacionList: any;
+  nivelUnidadList: any;
+  estructuraOrganizativaList: any;
+  regionList: any;
+  paisList: any;
+  estadoList: any;
+  ciudadList: any;
+  gerenciasList: any;
+  tieneArchivoDigitalList: any;
+  contenidoCajaList: any;
+  serieList: any;
+  subSerieList: any;
+  showLoadingTipoAlmacen: boolean = false;
+  showLoadingEstructuraList: boolean = false;
+  showLoadingEstadoList: boolean = false;
+  showLoadingCiudadList: boolean = false;
+  showLoadingSubSerieList: boolean = false;
+  maxDate: NgbDateStruct;
+
+  urlPdf: string;
 
   constructor(private documentService: DocumentService,
     private instrumentsService: InstrumentsService,
@@ -91,16 +120,34 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     this.route.data.subscribe((data) => {
       this.data = data;
     });
+    this.maxDate = this.getDateToStructure(new Date());
+    pdfDefaultOptions.assetsFolder = 'bleeding-edge';
   }
 
   async ngOnInit() {
-
+    this.step = 1;
+    this.loadAllList();
     this.documents = await this.documentService.getDigitalizedDocumentsPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
       this.loadPage(environment.paginator.default_page);
     });
+  }
+
+
+
+  async loadAllList() {
+    this.stateList = await this.documentService.getStateList();
+    this.direccionAlmacenList = await this.documentService.getDireccionAlmacenList();
+    this.ubicacionList = await this.documentService.getUbicacionList();
+    this.nivelUnidadList = await this.documentService.getNivelUnidadList();
+    this.regionList = await this.documentService.getRegionList();
+    this.paisList = await this.documentService.getPaisList();
+    this.gerenciasList = await this.documentService.getGerenciasList();
+    this.tieneArchivoDigitalList = await this.documentService.getTieneArchivoDigitalList();
+    this.contenidoCajaList = await this.documentService.getContenidoCajaList();
+    this.serieList = await this.documentService.getSerieList();
   }
 
   /**
@@ -232,7 +279,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
   back(item: any) {
     this.selectedItem = item;
     this.step--;
-    //this.loadPage(this.page);
+    this.loadPage(this.page);
   }
 
   /**
@@ -279,9 +326,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
   openZoneDragDropFiles(event: any, modalRef?: TemplateRef<any>) {
     this.doc = new DocumentGiep();
     this.disableBtnSubmit = true;
-    this.modalService.open(modalRef, { size: 'lg', windowClass: 'modal-file' }).result.then((result) => {
-      console.log("Modal closed" + result);
-    }).catch((res) => { });
+    this.step++;
   }
 
   /**
@@ -314,7 +359,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
    */
   async onFilesUpload(form: NgForm) {
 
-    debugger
+
     if (form.valid) {
       console.log('dataFile onFilesUpload: ', this.dataFile);
 
@@ -323,30 +368,74 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
         const formData = new FormData();
         let hashtag: Array<string> = null
         if (!this.fileContent) {
-          hashtag = this.doc.hashtag.map((item: any) => {
+          hashtag = this.dataFile.hashtag.map((item: any) => {
             return item.value.trim().toLowerCase();
           })
         }
 
         formData.append("archivo", this.fileToUpload);
 
-        formData.append("titulo", !this.fileContent ? this.doc.title : null);
-        formData.append("descripcion_archivo", !this.fileContent ? this.doc.description : null);
+        formData.append("titulo", !this.fileContent ? this.dataFile.title : null);
+        formData.append("descripcion_archivo", !this.fileContent ? this.dataFile.description : null);
         formData.append("hashtag", !this.fileContent ? JSON.stringify(hashtag) : null);
-        formData.append("publico", !this.fileContent ? (this.doc.isPublic ? '1' : '0') : null);
-        formData.append("users", !this.fileContent ? (this.doc.isPublic ? JSON.stringify(this.selectedUsers) : null) : null);
+        formData.append("publico", !this.fileContent ? (this.dataFile.isPublic ? '1' : '0') : null);
+        formData.append("users", !this.fileContent ? (this.dataFile.isPublic ? JSON.stringify(this.selectedUsers) : null) : null);
 
-        formData.append("comentarios", !this.fileContent ? null : this.doc.comments);
+        formData.append("comentarios", !this.fileContent ? null : this.dataFile.comments);
         formData.append("nemotecnico", !this.fileContent ? null : this.dataFile.orig_head);
         formData.append("nombre_original", this.dataFile.fileName);
         formData.append("tamano", this.dataFile.fileSize);
 
 
+        formData.append("folios", this.dataFile.folios); 
+        formData.append("num_dela_caja", this.dataFile.numCaja);
+        formData.append("num_dela_estuches", this.dataFile.numEstuche);
+        formData.append("Fecha_extrema_inicio", this.getDateStructureToDate(this.dataFile.fechaExtremaInicio)); 
+        formData.append("Fecha_extrema_fin", this.getDateStructureToDate(this.dataFile.fechaExtremaFin));
+
+        formData.append("id_tipo_almacen", this.dataFile.almacenType.value);
+        formData.append("idubica1", this.dataFile.location1.value);
+        formData.append("idubica2", this.dataFile.location2.value);
+        formData.append("idubica3", this.dataFile.location3.value);
+
+        formData.append("idregion", this.dataFile.region.value);
+
+        formData.append("codigo_serie_subserie", this.dataFile.subSerie); //Cual es la definicion?
+        formData.append("id_status_tipoestado", this.dataFile.status.value);
+
+        formData.append("id_pais", this.dataFile.pais.value);
+        formData.append("id_estado", this.dataFile.estado.value);
+        formData.append("id_ciudad", this.dataFile.ciudad.value);
+
+        formData.append("id_estructura_organizativa", this.dataFile.estructuraOrganizativa.value);
+
+        formData.append("asuntos", this.dataFile.asuntos);
+        formData.append("fecha_fin_conservac", this.getDateStructureToDate(this.dataFile.fechaFinConservacion));
+        formData.append("sw_archivo_fisico", this.dataFile.tieneArchivoFisico.value);
+        formData.append("argumento_justificacion", this.dataFile.justificacion);
+
+        formData.append("num_expediente", this.dataFile.numExpediente);
+
+        formData.append("fecha_documento", this.getDateStructureToDate(this.dataFile.fechaDocumento));
+        formData.append("cantidad_caja", this.dataFile.cantidadCaja);
+        formData.append("cantidad_estuche", this.dataFile.cantidadEstuche);
+        formData.append("id_user_entrega", this.dataFile.usuarioEntrega);
+        formData.append("idcontenido_caja", this.dataFile.contenidoCaja.value);
+
+        console.log('this.dataFile', this.dataFile);
+
+        const values: { [key: string]: any } = {};
+
+        formData.forEach((value, key) => {
+          values[key] = value;
+        });
+
+        console.log('FormData', values);
 
         const upload = await this.documentService.uploadDigitalizedFile(formData);
         if (upload) {
           this.loadPage(environment.paginator.default_page);
-          this.closeModal();
+          this.back(null);
 
         }
 
@@ -427,13 +516,94 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
 
   /** Process change state document **/
   async onProcessStageSubmit(form: NgForm, doc: DocumentGiep) {
-      if(form.valid){
-       await this.documentService.documentChangeState(parseInt(doc.id), this.stateId, doc.comments);
-       this.closeModal();
-       this.loadPage(this.page);
+    if (form.valid) {
+      await this.documentService.documentChangeState(parseInt(doc.id), this.stateId, doc.comments);
+      this.closeModal();
+      this.loadPage(this.page);
     }
   }
 
+  /**
+   * Get tipo de almace dado el id de Almacen
+   */
+  async getTipoAlmacent() {
+    this.showLoadingTipoAlmacen = true;
+    this.tipoAlamacen = await this.documentService.getTipoAlmacenList(this.dataFile.almacen.value);
+    this.showLoadingTipoAlmacen = false;
+  }
+
+
+  /**
+ * Get estructura organizativa dado el nivel
+ */
+  async getEstructuraOrganizativaList() {
+    this.showLoadingEstructuraList = true;
+    console.log('his.dataFile.nivelunidad', this.dataFile.nivelUnidad)
+    this.estructuraOrganizativaList = await this.documentService.getEstructuraOrganizativaList(this.dataFile.nivelUnidad.value);
+    this.showLoadingEstructuraList = false;
+  }
+
+
+  /**
+* Get estados
+*/
+  async getEstadoList() {
+    this.showLoadingEstadoList = true;
+    console.log('his.dataFile.pais', this.dataFile.pais)
+    this.estadoList = await this.documentService.getEstadosList(this.dataFile.pais.value);
+    this.showLoadingEstadoList = false;
+  }
+
+
+  /**
+* Get ciudades
+*/
+  async getCiudadList() {
+    this.showLoadingCiudadList = true;
+    console.log('his.dataFile.estado', this.dataFile.estado)
+    this.ciudadList = await this.documentService.getCiudadList(this.dataFile.estado.value);
+    this.showLoadingCiudadList = false;
+  }
+
+  /**
+* Get series
+*/
+  async getSubSerieList() {
+    this.showLoadingSubSerieList = true;
+    this.subSerieList = await this.documentService.getSubSerieList(this.dataFile.serie.value);
+    this.showLoadingSubSerieList = false;
+  }
+
+
+
+  /**
+   * convert date to ngb estructure
+   * @param moment 
+   */
+  getDateToStructure(date: Date) {
+    const dateMoment = date ? moment(date) : moment();
+    return { year: dateMoment.year(), month: dateMoment.month() + 1, day: dateMoment.date() };
+  }
+
+  /**
+ * * convert ngb estructure to date to
+ * @param moment 
+ */
+  getDateStructureToDate(structure: any) {
+    return moment(structure).format('YYYY-MM-DD')
+  }
+
+
+  /**
+   * Viwer PDF
+   */
+  openDocument(modalRef: TemplateRef<any>, url: string) {
+    this.urlPdf = url;
+    this.modalService.open(modalRef, { size: 'sm', windowClass: 'modal-file' }).result.then((result) => {
+      console.log("Modal closed" + result);
+    }).catch((res) => { });
+    //this.step = 3;
+  }
 
   ngOnDestroy() {
     if (this.$eventNavigationEnd) {

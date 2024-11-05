@@ -10,6 +10,7 @@ import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { SharedModule } from '../../shared/shared.module';
 import { DndDirective } from './directives/dnd.directive';
 import { DigitizedDocumentsComponent } from './components/digitized-documents/digitized-documents.component';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
   url: 'https://httpbin.org/post',
@@ -36,6 +37,7 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     SharedModule,
     GiepRepositoryRoutingModule,
     DropzoneModule, // Ngx-dropzone-wrapper
+    NgxExtendedPdfViewerModule
   ],
   providers: [
     {

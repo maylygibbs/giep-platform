@@ -7,6 +7,7 @@ import { PrintAccreditationComponent } from './print-accreditation/print-accredi
 import { ScanqrComponent } from './scanqr/scanqr.component';
 import { AccreditationDetailComponent } from './accreditation-detail/accreditation-detail.component';
 import { AccreditationstypesComponent } from './accreditationstypes/accreditationstypes.component';
+import { AttendanceReportComponent } from './attendance-report/attendance-report.component';
 
 const routes: Routes = [  {
   path: '',
@@ -43,6 +44,10 @@ const routes: Routes = [  {
     {
       path: 'types',
       component: AccreditationstypesComponent,
+    },
+    {
+      path: 'report',
+      component: AttendanceReportComponent
     }
   ]
 }];

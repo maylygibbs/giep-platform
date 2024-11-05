@@ -19,6 +19,7 @@ import { AccreditationDetailComponent } from './accreditation-detail/accreditati
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { AccreditationstypesComponent } from './accreditationstypes/accreditationstypes.component';
 import { AccreditationtypeStoreComponent } from './accreditationtype-store/accreditationtype-store.component';
+import { AttendanceReportComponent } from './attendance-report/attendance-report.component';
 
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -48,7 +49,8 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     ScanqrComponent,
     AccreditationDetailComponent,
     AccreditationstypesComponent,
-    AccreditationtypeStoreComponent
+    AccreditationtypeStoreComponent,
+    AttendanceReportComponent
   ],
   imports: [
     CommonModule,
