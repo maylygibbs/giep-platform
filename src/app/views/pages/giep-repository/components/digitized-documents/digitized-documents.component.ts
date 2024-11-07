@@ -263,7 +263,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
    * @param modalRef 
    */
   async select(id: string, modalRef?: TemplateRef<any>) {
-    this.selectedItem = await this.documentService.getDigitalizedDocumentById(id);
+    this.selectedItem = await this.documentService.getDigitalizedDocumentByIdDetalle(id);
     this.openInfoModal(modalRef);
   }
 
@@ -390,7 +390,9 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
         formData.append("folios", this.dataFile.folios); 
         formData.append("num_dela_caja", this.dataFile.numCaja);
         formData.append("num_dela_estuches", this.dataFile.numEstuche);
+        console.log('this.dataFile.fechaExtremaInicio',this.dataFile.fechaExtremaInicio);
         formData.append("Fecha_extrema_inicio", this.getDateStructureToDate(this.dataFile.fechaExtremaInicio)); 
+        console.log('this.dataFile.fechaExtremaFin',this.dataFile.fechaExtremaFin);
         formData.append("Fecha_extrema_fin", this.getDateStructureToDate(this.dataFile.fechaExtremaFin));
 
         formData.append("id_tipo_almacen", this.dataFile.almacenType.value);
@@ -400,7 +402,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
 
         formData.append("idregion", this.dataFile.region.value);
 
-        formData.append("codigo_serie_subserie", this.dataFile.subSerie); //Cual es la definicion?
+        formData.append("codigo_serie_subserie", this.dataFile.subSerie.value);
         formData.append("id_status_tipoestado", this.dataFile.status.value);
 
         formData.append("id_pais", this.dataFile.pais.value);
@@ -410,12 +412,13 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
         formData.append("id_estructura_organizativa", this.dataFile.estructuraOrganizativa.value);
 
         formData.append("asuntos", this.dataFile.asuntos);
+        console.log('this.dataFile.fechaFinConservacion',this.dataFile.fechaFinConservacion);
         formData.append("fecha_fin_conservac", this.getDateStructureToDate(this.dataFile.fechaFinConservacion));
         formData.append("sw_archivo_fisico", this.dataFile.tieneArchivoFisico.value);
         formData.append("argumento_justificacion", this.dataFile.justificacion);
 
         formData.append("num_expediente", this.dataFile.numExpediente);
-
+        console.log('this.dataFile.fechaDocumento',this.dataFile.fechaDocumento);
         formData.append("fecha_documento", this.getDateStructureToDate(this.dataFile.fechaDocumento));
         formData.append("cantidad_caja", this.dataFile.cantidadCaja);
         formData.append("cantidad_estuche", this.dataFile.cantidadEstuche);
@@ -590,7 +593,10 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
  * @param moment 
  */
   getDateStructureToDate(structure: any) {
-    return moment(structure).format('YYYY-MM-DD')
+    const year = structure.year;
+    const month = structure.month <= 9 ? `0${structure.month}` : structure.month;
+    const day = structure.day <= 9 ? `0${structure.day}` : structure.day;
+    return   `${year}-${month}-${day}`;
   }
 
 

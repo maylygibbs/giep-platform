@@ -40,7 +40,7 @@ export class DocumentGiep {
     estado: SelectOption;
     ciudad: SelectOption;
     gerencia: SelectOption;
-    asunto: string;
+    asuntos: string;
     fechaFinConservacion:any;
     tieneArchivoFisico:SelectOption;
     justificacion:string;
@@ -54,7 +54,7 @@ export class DocumentGiep {
     numCaja:number;
     numEstuche:string;
     fechaExtremaInicio:any;
-    fechaExtramaFin:any;
+    fechaExtremaFin:any;
     serie: SelectOption;
     subSerie: SelectOption;
  

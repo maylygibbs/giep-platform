@@ -68,7 +68,9 @@
                   <td class="text-center">
                     <i class="feather icon-eye" placement="start" (click)="select(doc.id, fileDetailModal)"
                         ngbTooltip="Ver Información"></i>
-                    <i class="feather icon-external-link ms-1" placement="start" (click)="openDocument(fileViewerModal,doc.url)"
+                    <a [href]="doc.url" target="_blank"><i class="feather icon-external-link ms-1" placement="start"
+                        ngbTooltip="Abrir Documento"></i></a>
+                    <i hidden class="feather icon-external-link ms-1" placement="start" (click)="openDocument(fileViewerModal,doc.url)"
                           ngbTooltip="Abrir Documento"></i>
                     <i hidden class="feather icon-edit-2 ms-1" (click)="select(doc.id, fileDetailModal)" placement="start"
                       ngbTooltip="Editar Documento"></i>
@@ -131,13 +133,13 @@
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Tamaño:</label>
                       <p class="text-muted">{{doc.sizeStr}}</p>
                     </div>
-                    <div class="mt-2">
+                    <div hidden class="mt-2">
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado:</label>
                       <p class="badge ms-1"
                         [ngClass]="{'bg-gray':doc.state.value == '1', 'bg-info':doc.state.value == '2', 'bg-success':doc.state.value == '3', 'bg-black':doc.state.value == '4', 'bg-danger':doc.state.value == '5'}">
                         {{doc.state.label}}</p>
                     </div>
-                    <div class="mt-2">
+                    <div hidden class="mt-2">
                       <label class="tx-11 fw-bolder mb-0 text-uppercase">Bloqueado:</label>
 
                       <p *ngIf="doc.isBloqued" placement="start" [ngbTooltip]="'Por: '+doc.bloquedBy.firstName">Sí</p>
@@ -152,12 +154,13 @@
                         ngbTooltip="Editar Documento"></i>
                       <i class="feather icon-eye" (click)="select(doc.id, fileDetailModal)" placement="start"
                         ngbTooltip="Ver Documento"></i>
-                      <i *ngIf="!doc.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(doc.id)"
+                      <a [href]="doc.url" target="_blank"><i class="feather icon-external-link ms-1" placement="start"
+                          ngbTooltip="Abrir Documento"></i></a>
+                      <i hidden *ngIf="!doc.isBloqued" class="feather icon-download-cloud ms-1" (click)="pull(doc.id)"
                         placement="start" ngbTooltip="Pull Documento"></i>
-                      <i *ngIf="doc.isBloqued && doc.state.value == '1'" class="feather icon-unlock ms-1"
-                        (click)="documentUnlock(doc.id)" placement="start" ngbTooltip="Desbloquear Documento"></i>
-                      {{doc.state.value}}
-                      <i *ngIf="doc.state.value !=='4' && doc.state.value !=='3' && doc.state.value !=='5'"
+                      <i hidden *ngIf="doc.isBloqued && doc.state.value == '1'" class="feather icon-unlock ms-1"
+                        (click)="documentUnlock(doc.id)" placement="start" ngbTooltip="Desbloquear Documento"></i>                      
+                      <i hidden *ngIf="doc.state.value !=='4' && doc.state.value !=='3' && doc.state.value !=='5'"
                         class="feather icon-trash ms-1" (click)="delete(doc.id)" placement="start"
                         ngbTooltip="Eliminar Documento"></i>
                     </div>
@@ -458,10 +461,10 @@
                       <label for="inputBirthDate" class="form-label required">Fecha Fin Conservación</label>
                       <div class="input-group">
                         <input id="inputFechaFinConservacion" name="fechaFinConservacion"
-                          #fechaFinConservacion="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}" [maxDate]="maxDate"
+                          #fechaFinConservacion="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}"
                           class="form-control" placeholder="yyyy-mm-dd"
                           [ngClass]="{'ng-dirty ng-invalid' : fechaFinConservacion.errors && ( fechaFinConservacion.dirty || fechaFinConservacion.touched || fileForm.submitted) }"
-                          [(ngModel)]="dataFile.fechaFinConservacion" ngbDatepicker #dp="ngbDatepicker" required>
+                          [(ngModel)]="dataFile.fechaFinConservacion" ngbDatepicker #dp="ngbDatepicker" required readonly>
                         <button class="input-group-text" type="button" (click)="dp.toggle()">
                           <i class="feather icon-calendar icon-md text-muted"></i>
                         </button>
@@ -494,13 +497,13 @@
                       <label for="inputNumExpediente" class="form-label required">Número Expediente</label>
                       <input type="text" name="numExpediente" #numExpediente="ngModel" [(ngModel)]="dataFile.numExpediente"
                         [ngClass]="{'ng-dirty ng-invalid' : numExpediente.errors && ( numExpediente.dirty || numExpediente.touched || fileForm.submitted) }"
-                        class="form-control" id="inputNumExpediente" autocomplete="off" minlength="3" maxlength="50"
+                        class="form-control" id="inputNumExpediente" autocomplete="off" minlength="1" maxlength="50"
                         required [pattern]="environment.form.alphanumeric_guion.validations.pattern">
                       <div *ngIf="numExpediente.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="numExpediente.errors?.required">Campo es requerido
                         </div>
                         <div *ngIf="numExpediente.errors?.minlength || numExpediente.errors?.maxlength">
-                          Campo permite entre 3 y 50 caracteres</div>
+                          Campo permite entre 1 y 50 caracteres</div>
                         <div *ngIf="numExpediente.errors?.pattern">
                           Campo sólo permite números, letras y solo guión</div>
                       </div>
@@ -514,7 +517,7 @@
                         <input id="inputFechaDocumento" name="fechaDocumento" #fechaDocumento="ngModel"
                           [minDate]="{year: 1930 , month: 9, day: 1}" [maxDate]="maxDate" class="form-control" placeholder="yyyy-mm-dd"
                           [ngClass]="{'ng-dirty ng-invalid' : fechaDocumento.errors && ( fechaDocumento.dirty || fechaDocumento.touched || fileForm.submitted) }"
-                          [(ngModel)]="dataFile.fechaDocumento" ngbDatepicker #dp1="ngbDatepicker" required>
+                          [(ngModel)]="dataFile.fechaDocumento" ngbDatepicker #dp1="ngbDatepicker" required readonly>
                         <button class="input-group-text" type="button" (click)="dp1.toggle()">
                           <i class="feather icon-calendar icon-md text-muted"></i>
                         </button>
@@ -590,13 +593,13 @@
                       <label for="inputFolios" class="form-label required">Folios</label>
                       <input type="text" name="folios" #folios="ngModel" [(ngModel)]="dataFile.folios"
                         [ngClass]="{'ng-dirty ng-invalid' : folios.errors && ( folios.dirty || folios.touched || fileForm.submitted) }"
-                        class="form-control" id="inputFolios" autocomplete="off" minlength="3" maxlength="20"
+                        class="form-control" id="inputFolios" autocomplete="off" minlength="1" maxlength="20"
                         required [pattern]="environment.form.number_guion.validations.pattern">
                       <div *ngIf="folios.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="folios.errors?.required">Campo es requerido
                         </div>
                         <div *ngIf="folios.errors?.minlength || folios.errors?.maxlength">
-                          Campo permite entre 3 y 20 caracteres</div>
+                          Campo permite entre 1 y 20 caracteres</div>
                         <div *ngIf="folios.errors?.pattern">
                           Campo sólo permite números y guión</div>
                       </div>
@@ -621,13 +624,13 @@
                       <label for="inputnumEstuche" class="form-label required">Número del estuche</label>
                       <input type="text" name="numEstuche" #numEstuche="ngModel" [(ngModel)]="dataFile.numEstuche"
                         [ngClass]="{'ng-dirty ng-invalid' : numEstuche.errors && ( numEstuche.dirty || numEstuche.touched || fileForm.submitted) }"
-                        class="form-control" id="inputnumEstuche" autocomplete="off" minlength="3" maxlength="20"
+                        class="form-control" id="inputnumEstuche" autocomplete="off" minlength="1" maxlength="20"
                         required [pattern]="environment.form.number_guion.validations.pattern">
                       <div *ngIf="numEstuche.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="numEstuche.errors?.required">Campo es requerido
                         </div>
                         <div *ngIf="numEstuche.errors?.minlength || numEstuche.errors?.maxlength">
-                          Campo permite entre 3 y 20 caracteres</div>
+                          Campo permite entre 1 y 20 caracteres</div>
                         <div *ngIf="folios.errors?.pattern">
                           Campo sólo permite números y guión</div>
                       </div>
@@ -639,9 +642,9 @@
                       <label for="inputfechaExtremaInicio" class="form-label required">Fecha Extrema Inicio</label>
                       <div class="input-group">
                         <input id="inputfechaExtremaInicio" name="fechaExtremaInicio" #fechaExtremaInicio="ngModel"
-                          [minDate]="{year: 1930 , month: 9, day: 1}" [maxDate]="maxDate" class="form-control" placeholder="yyyy-mm-dd"
+                          [minDate]="{year: 1930 , month: 9, day: 1}"  class="form-control" placeholder="yyyy-mm-dd"
                           [ngClass]="{'ng-dirty ng-invalid' : fechaExtremaInicio.errors && ( fechaExtremaInicio.dirty || fechaExtremaInicio.touched || fileForm.submitted) }"
-                          [(ngModel)]="dataFile.fechaExtremaInicio" ngbDatepicker #dp2="ngbDatepicker" required>
+                          [(ngModel)]="dataFile.fechaExtremaInicio" ngbDatepicker #dp2="ngbDatepicker" required readonly>
                         <button class="input-group-text" type="button" (click)="dp2.toggle()">
                           <i class="feather icon-calendar icon-md text-muted"></i>
                         </button>
@@ -655,17 +658,17 @@
 
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
-                      <label for="inputfechaExtramaFin" class="form-label required">Fecha Extrema Fin</label>
+                      <label for="inputfechaExtremaFin" class="form-label required">Fecha Extrema Fin</label>
                       <div class="input-group">
-                        <input id="inputfechaExtramaFin" name="fechaExtramaFin" #fechaExtramaFin="ngModel"
-                          [minDate]="{year: 1930 , month: 9, day: 1}" [maxDate]="maxDate" class="form-control" placeholder="yyyy-mm-dd"
-                          [ngClass]="{'ng-dirty ng-invalid' : fechaExtramaFin.errors && ( fechaExtramaFin.dirty || fechaExtramaFin.touched || fileForm.submitted) }"
-                          [(ngModel)]="dataFile.fechaExtramaFin" ngbDatepicker #dp3="ngbDatepicker" required>
+                        <input id="inputfechaExtremaFin" name="fechaExtremaFin" #fechaExtremaFin="ngModel"
+                          [minDate]="{year: 1930 , month: 9, day: 1}" class="form-control" placeholder="yyyy-mm-dd"
+                          [ngClass]="{'ng-dirty ng-invalid' : fechaExtremaFin.errors && ( fechaExtremaFin.dirty || fechaExtremaFin.touched || fileForm.submitted) }"
+                          [(ngModel)]="dataFile.fechaExtremaFin" ngbDatepicker #dp3="ngbDatepicker" required readonly>
                         <button class="input-group-text" type="button" (click)="dp3.toggle()">
                           <i class="feather icon-calendar icon-md text-muted"></i>
                         </button>
-                        <div *ngIf="fechaExtramaFin.invalid && fileForm.submitted" class="invalid-feedback">
-                          <div *ngIf="fechaExtramaFin.errors?.required">Campo es requerido
+                        <div *ngIf="fechaExtremaFin.invalid && fileForm.submitted" class="invalid-feedback">
+                          <div *ngIf="fechaExtremaFin.errors?.required">Campo es requerido
                           </div>
                         </div>
                       </div>
@@ -705,14 +708,14 @@
                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="mb-3">
                       <label for="inputDescription" class="form-label required">Asuntos</label>
-                      <textarea name="asunto" #asunto="ngModel" [(ngModel)]="dataFile.asunto" row="3" class="form-control"
+                      <textarea name="asunto" #asunto="ngModel" [(ngModel)]="dataFile.asuntos" row="3" class="form-control"
                         [ngClass]="{'ng-dirty ng-invalid' : asunto.errors && ( asunto.dirty || asunto.touched || fileForm.submitted) }"
-                        id="inputDescription" required minlength="3" maxlength="1000"></textarea>
+                        id="inputDescription" required minlength="1" maxlength="1000"></textarea>
                       <div *ngIf="asunto.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="asunto.errors?.required">Campo es requerido
                         </div>
                         <div *ngIf="asunto.errors?.minlength || asunto.errors?.maxlength">
-                          Campo permite entre 3 y 1000 caracteres</div>
+                          Campo permite entre 1 y 1000 caracteres</div>
                       </div>
                     </div>
                   </div>
@@ -723,12 +726,12 @@
                       <textarea name="justificacion" #justificacion="ngModel" [(ngModel)]="dataFile.justificacion" row="3"
                         class="form-control"
                         [ngClass]="{'ng-dirty ng-invalid' : justificacion.errors && ( justificacion.dirty || justificacion.touched || fileForm.submitted) }"
-                        id="inputJustificacion" required minlength="3" maxlength="1000"></textarea>
+                        id="inputJustificacion" required minlength="1" maxlength="1000"></textarea>
                       <div *ngIf="justificacion.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="justificacion.errors?.required">Campo es requerido
                         </div>
                         <div *ngIf="justificacion.errors?.minlength || justificacion.errors?.maxlength">
-                          Campo permite entre 3 y 1000 caracteres</div>
+                          Campo permite entre 1 y 1000 caracteres</div>
                       </div>
                     </div>
                   </div>
@@ -776,69 +779,172 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
                   <label class="tx-11 fw-bolder mb-0 text-uppercase">Id</label>
                   <p class="text-muted">{{selectedItem.id}}</p>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
                   <label class="tx-11 fw-bolder mb-0 text-uppercase">Título</label>
                   <p class="text-muted">{{selectedItem.title}}</p>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
                   <label class="tx-11 fw-bolder mb-0 text-uppercase">Nombre Original</label>
                   <p class="text-muted">{{selectedItem.originalName}}</p>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
                   <label class="tx-11 fw-bolder mb-0 text-uppercase">Tamaño</label>
                   <p class="text-muted">{{selectedItem.sizeStr}}</p>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
-                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Tipo</label>
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Extensión</label>
                   <p class="text-muted">{{selectedItem.ext}}</p>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="mt-3">
-                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado</label>
-                  <p class="badge ms-1"
-                    [ngClass]="{'bg-gray':selectedItem.state.value == '1', 'bg-info':selectedItem.state.value == '2', 'bg-success':selectedItem.state.value == '3', 'bg-black':selectedItem.state.value == '4', 'bg-danger':selectedItem.state.value == '5'}">
-                    {{selectedItem.state.label}}</p>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="mt-3">
-                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Bloqueado</label>
-                  <p *ngIf="selectedItem.isBloqued && selectedItem.bloquedBy" placement="start"
-                    [ngbTooltip]="'Por: '+selectedItem.bloquedBy.firstName">Sí</p>
-                  <p *ngIf="!selectedItem.isBloqued">No</p>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
                   <label class="tx-11 fw-bolder mb-0 text-uppercase">Etiquetas</label>
                   <p class="text-muted">{{selectedItem.hashtag}}</p>
                 </div>
               </div>
-              <div hidden class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
-                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Público</label>
-                  <p class="text-muted">{{selectedItem.isPublic ? 'Sí':'No'}}</p>
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Número de Expediente</label>
+                  <p class="text-muted">{{selectedItem.numExpediente}}</p>
                 </div>
               </div>
-              <div hidden *ngIf="selectedItem.isPublic" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="mt-3">
-                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Colaboradores</label>
-                  <p *ngFor="let user of selectedItem.usersView" class="text-muted">{{user.fullName +'
-                    ('+user.email+')'}}</p>
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Fecha fin conservación</label>
+                  <p class="text-muted">{{selectedItem.fechaFinConservacion ? (selectedItem.fechaFinConservacion | date:'yyyy-MM-dd') : 'No indica'}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Tiene archivo físico</label>
+                  <p class="text-muted">{{selectedItem.tieneArchivoFisico.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Tiene archivo físico</label>
+                  <p class="text-muted">{{selectedItem.tieneArchivoFisico.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Fecha Documento</label>
+                  <p class="text-muted">{{selectedItem.fechaDocumento ? (selectedItem.fechaDocumento | date:'yyyy-MM-dd') : 'No indica'}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Fecha documento</label>
+                  <p class="text-muted">{{selectedItem.fechaDocumento ? (selectedItem.fechaDocumento | date:'yyyy-MM-dd') : 'No indica'}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Tipo almacen</label>
+                  <p class="text-muted">{{selectedItem.almacenType.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Ubicación 1</label>
+                  <p class="text-muted">{{selectedItem.location1.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Ubicación 2</label>
+                  <p class="text-muted">{{selectedItem.location2.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Ubicación 3</label>
+                  <p class="text-muted">{{selectedItem.location3.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Región</label>
+                  <p class="text-muted">{{selectedItem.region.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Serie</label>
+                  <p class="text-muted">{{selectedItem.serie.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Sub serie</label>
+                  <p class="text-muted">{{selectedItem.subSerie.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Estado</label>
+                  <p class="text-muted">{{selectedItem.estado.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Cantidad de cajas</label>
+                  <p class="text-muted">{{selectedItem.cantidadCaja}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Cantidad de estuches</label>
+                  <p class="text-muted">{{selectedItem.cantidadEstuche}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Usuario entrega</label>
+                  <p class="text-muted">{{selectedItem.usuarioEntrega}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Contenido caja</label>
+                  <p class="text-muted">{{selectedItem.contenidoCaja.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Nivel Unidad</label>
+                  <p class="text-muted">{{selectedItem.nivelUnidad.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Estructura organizativa</label>
+                  <p class="text-muted">{{selectedItem.estructuraOrganizativa.label}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Asuntos</label>
+                  <p class="text-muted">{{selectedItem.asuntos}}</p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="mt-3">
+                  <label class="tx-11 fw-bolder mb-0 text-uppercase">Justificación</label>
+                  <p class="text-muted">{{selectedItem.justificacion}}</p>
                 </div>
               </div>
             </div>
@@ -894,7 +1000,18 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
   </div>
   <div class="modal-file modal-body">
-    <ngx-extended-pdf-viewer *ngIf="urlPdf" [src]="urlPdf" [useBrowserLocale]="true" height="80vh" [textLayer]="true"></ngx-extended-pdf-viewer>
+    <ngx-extended-pdf-viewer *ngIf="urlPdf" [src]="urlPdf"   [httpHeaders]="{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'es-US,es;q=0.9,es-419;q=0.8,en;q=0.7',
+      'Connection': 'keep-alive',
+      'Host': 'bofficegiepstagemulte.pafar.com.ve',
+      'Sec-Fetch-Dest': 'empty',
+      'Sec-Fetch-Mode': 'cors',
+      'Sec-Fetch-Site': 'cross-site',      
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': 'Linux'
+    }" [useBrowserLocale]="true" height="80vh" [textLayer]="true"></ngx-extended-pdf-viewer>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="closeModal()">Cerrar</button>

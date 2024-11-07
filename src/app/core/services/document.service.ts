@@ -387,7 +387,7 @@ export class DocumentService extends HttpService {
     let listDoc: Array<DocumentGiep>;
     let doc: DocumentGiep = null;
     try {
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigital/${id}`));
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigital/${id}`));      
       if (resp.count == 1) {
         const user = this.authService.currentUser;
         listDoc = resp.data.map((item: any) => {
@@ -462,6 +462,95 @@ export class DocumentService extends HttpService {
       return doc;
     }
   }
+
+
+ /**
+ * Query document info by id
+ * @param id 
+ * @returns 
+ */
+ async getDigitalizedDocumentByIdDetalle(id: string): Promise<DocumentGiep> {
+  let listDoc: Array<DocumentGiep>;
+  let doc: DocumentGiep = null;
+  try {
+
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/controlarchivodigital/listid/${id}`));
+    console.log('detalle', resp)
+      const user = this.authService.currentUser;
+      listDoc = resp.data.map((item: any) => {
+        const docOutput = new DocumentGiep();
+        docOutput.id = item.id;
+        docOutput.title = item.titulo;
+        docOutput.sizeStr = this.commonsService.formatBytes(item.tamano);
+        docOutput.originalName = item.nombre_original;
+        docOutput.isPublic = item.publico == '1' ? true : false;
+        docOutput.description = item.descripcion_archivo;
+        docOutput.state = new SelectOption(item.idestado, item.nombre_status);
+        docOutput.creationDate = item.fecha_actividad_registro;
+        docOutput.ext = item.tipo_extensiones;
+        if (item.hashtag) {
+          docOutput.hashtag = JSON.parse(item.hashtag);
+        }
+        docOutput.url = this.environment.apiAuth + item.url_alojamiento
+        docOutput.folios = item.folios;
+        docOutput.numCaja = item.num_dela_caja;
+        docOutput.numEstuche = item.num_dela_estuches;
+        docOutput.fechaExtremaInicio = item.fecha_extrema_inicio.date;
+        docOutput.fechaExtremaFin = item.fecha_extrema_fin.date;
+
+        //control archivo
+        docOutput.asuntos = item.id_control_archivo_digital.Asuntos;
+        docOutput.numExpediente = item.id_control_archivo_digital['num expediente'];
+        docOutput.justificacion = item.id_control_archivo_digital['argumento justificacion'];
+        docOutput.fechaFinConservacion = item.id_control_archivo_digital['fecha fin conservac'].date;
+        docOutput.tieneArchivoFisico = new SelectOption(item.id_control_archivo_digital['sw archivo fisico'], item.id_control_archivo_digital['sw archivo fisico'] == 0 ? 'Sí' : 'No');
+        docOutput.fechaDocumento = item.id_control_archivo_digital.fecha_documento.date;
+        docOutput.almacenType = new SelectOption(item.id_control_archivo_digital.id_tipo_almacen, item.id_control_archivo_digital['nombre almacen']);
+
+        docOutput.location1 = new SelectOption(item.id_control_archivo_digital['id_ubicacion 1'] , item.id_control_archivo_digital['ubicacion 1']);
+        docOutput.location2 = new SelectOption(item.id_control_archivo_digital['id_ubicacion 2'] , item.id_control_archivo_digital['ubicacion 2']);
+        docOutput.location3 = new SelectOption(item.id_control_archivo_digital['id_ubicacion 3'] , item.id_control_archivo_digital['ubicacion 3']);  
+
+        docOutput.region = new SelectOption(item.id_control_archivo_digital.id_region, item.id_control_archivo_digital.region);
+
+        docOutput.serie = new SelectOption(item.id_control_archivo_digital.id_serie, item.id_control_archivo_digital.serie);
+
+        docOutput.subSerie = new SelectOption(item.id_control_archivo_digital.id_subserie, item.id_control_archivo_digital['sub serie']);
+
+        docOutput.estado = new SelectOption(item.id_control_archivo_digital.id_statustipoestado,item.id_control_archivo_digital['nombre status']);
+
+        docOutput.cantidadCaja = item.id_control_archivo_digital['cantidad caja'];
+
+        docOutput.cantidadEstuche = item.id_control_archivo_digital['cantidad estuche'];
+
+        docOutput.usuarioEntrega = item.id_control_archivo_digital['id usuario entrega'] ;
+
+        docOutput.contenidoCaja = new SelectOption(item.id_control_archivo_digital['id_estuche'],item.id_control_archivo_digital['nombre estuche']);
+
+        docOutput.nivelUnidad = new SelectOption(item.id_control_archivo_digital['id_padre_estructuraorganizativa'], item.id_control_archivo_digital['padre estructura organizativa']);
+
+        docOutput.estructuraOrganizativa = new SelectOption(item.id_control_archivo_digital['id_estructuraorganizativa'], item.id_control_archivo_digital['estructura organizativa']);
+
+        return docOutput;
+
+      });
+      doc = listDoc[0];
+
+
+  } catch (error: any) {
+    console.log(error)
+    if (error.status) {
+      this.toastrService.error(error.error.error);
+    } else {
+      this.toastrService.error('Ha ocurrido un error consultando el detalle del documento.');
+    }
+  } finally {
+    return doc;
+  }
+}
+
+
+
 
   /**
    * Retorna lista de valores de estados
