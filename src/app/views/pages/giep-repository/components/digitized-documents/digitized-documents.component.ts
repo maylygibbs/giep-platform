@@ -108,7 +108,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
   showLoadingSubSerieList: boolean = false;
   maxDate: NgbDateStruct;
 
-  urlPdf: string;
+  urlPdf: any;
 
   constructor(private documentService: DocumentService,
     private instrumentsService: InstrumentsService,
@@ -603,8 +603,8 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
   /**
    * Viwer PDF
    */
-  openDocument(modalRef: TemplateRef<any>, url: string) {
-    this.urlPdf = url;
+ async openDocument(modalRef: TemplateRef<any>, url: string) {
+    this.urlPdf = await this.documentService.getBinaryDoc('assets/4-20241102043159.pdf');
     this.modalService.open(modalRef, { size: 'sm', windowClass: 'modal-file' }).result.then((result) => {
       console.log("Modal closed" + result);
     }).catch((res) => { });

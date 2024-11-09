@@ -68,9 +68,9 @@
                   <td class="text-center">
                     <i class="feather icon-eye" placement="start" (click)="select(doc.id, fileDetailModal)"
                         ngbTooltip="Ver Información"></i>
-                    <a [href]="doc.url" target="_blank"><i class="feather icon-external-link ms-1" placement="start"
+                    <a hidden [href]="doc.url" target="_blank"><i class="feather icon-external-link ms-1" placement="start"
                         ngbTooltip="Abrir Documento"></i></a>
-                    <i hidden class="feather icon-external-link ms-1" placement="start" (click)="openDocument(fileViewerModal,doc.url)"
+                    <i  class="feather icon-external-link ms-1" placement="start" (click)="openDocument(fileViewerModal,doc.url)"
                           ngbTooltip="Abrir Documento"></i>
                     <i hidden class="feather icon-edit-2 ms-1" (click)="select(doc.id, fileDetailModal)" placement="start"
                       ngbTooltip="Editar Documento"></i>
@@ -1000,18 +1000,7 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
   </div>
   <div class="modal-file modal-body">
-    <ngx-extended-pdf-viewer *ngIf="urlPdf" [src]="urlPdf"   [httpHeaders]="{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
-      'Accept': '*/*',
-      'Accept-Encoding': 'gzip, deflate, br, zstd',
-      'Accept-Language': 'es-US,es;q=0.9,es-419;q=0.8,en;q=0.7',
-      'Connection': 'keep-alive',
-      'Host': 'bofficegiepstagemulte.pafar.com.ve',
-      'Sec-Fetch-Dest': 'empty',
-      'Sec-Fetch-Mode': 'cors',
-      'Sec-Fetch-Site': 'cross-site',      
-      'sec-ch-ua-mobile': '?0',
-      'sec-ch-ua-platform': 'Linux'
-    }" [useBrowserLocale]="true" height="80vh" [textLayer]="true"></ngx-extended-pdf-viewer>
+    <ngx-extended-pdf-viewer *ngIf="urlPdf" [src]="urlPdf" [useBrowserLocale]="true" height="80vh" [textLayer]="true"></ngx-extended-pdf-viewer>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="closeModal()">Cerrar</button>

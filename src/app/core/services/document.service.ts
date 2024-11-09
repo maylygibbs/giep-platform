@@ -1,7 +1,7 @@
 import { PaginationResponse } from '../models/pagination-response';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { User } from '../models/user';
@@ -500,36 +500,40 @@ export class DocumentService extends HttpService {
 
         //control archivo
         docOutput.asuntos = item.id_control_archivo_digital.Asuntos;
-        docOutput.numExpediente = item.id_control_archivo_digital['num expediente'];
-        docOutput.justificacion = item.id_control_archivo_digital['argumento justificacion'];
-        docOutput.fechaFinConservacion = item.id_control_archivo_digital['fecha fin conservac'].date;
-        docOutput.tieneArchivoFisico = new SelectOption(item.id_control_archivo_digital['sw archivo fisico'], item.id_control_archivo_digital['sw archivo fisico'] == 0 ? 'Sí' : 'No');
+        docOutput.numExpediente = item.id_control_archivo_digital['num_expediente'];
+        docOutput.justificacion = item.id_control_archivo_digital['argumento_justificacion'];
+        docOutput.fechaFinConservacion = item.id_control_archivo_digital['fecha_fin_conservac'].date;
+        docOutput.tieneArchivoFisico = new SelectOption(item.id_control_archivo_digital['sw_archivo_fisico'], item.id_control_archivo_digital['sw_archivo_fisico'] == 0 ? 'Sí' : 'No');
         docOutput.fechaDocumento = item.id_control_archivo_digital.fecha_documento.date;
-        docOutput.almacenType = new SelectOption(item.id_control_archivo_digital.id_tipo_almacen, item.id_control_archivo_digital['nombre almacen']);
+        docOutput.almacenType = new SelectOption(item.id_control_archivo_digital.id_tipo_almacen, item.id_control_archivo_digital['nombre_almacen']);
 
-        docOutput.location1 = new SelectOption(item.id_control_archivo_digital['id_ubicacion 1'] , item.id_control_archivo_digital['ubicacion 1']);
-        docOutput.location2 = new SelectOption(item.id_control_archivo_digital['id_ubicacion 2'] , item.id_control_archivo_digital['ubicacion 2']);
-        docOutput.location3 = new SelectOption(item.id_control_archivo_digital['id_ubicacion 3'] , item.id_control_archivo_digital['ubicacion 3']);  
+        docOutput.location1 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_1'] , item.id_control_archivo_digital['ubicacion_1']);
+        docOutput.location2 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_2'] , item.id_control_archivo_digital['ubicacion_2']);
+        docOutput.location3 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_3'] , item.id_control_archivo_digital['ubicacion_3']);  
 
         docOutput.region = new SelectOption(item.id_control_archivo_digital.id_region, item.id_control_archivo_digital.region);
 
+        docOutput.pais = new SelectOption(item.id_control_archivo_digital.id_Pais, item.id_control_archivo_digital.Pais);
+        docOutput.estado = new SelectOption(item.id_control_archivo_digital.id_Estado, item.id_control_archivo_digital.Estado);
+        docOutput.ciudad = new SelectOption(item.id_control_archivo_digital.id_ciudad, item.id_control_archivo_digital.Ciudad);
+
         docOutput.serie = new SelectOption(item.id_control_archivo_digital.id_serie, item.id_control_archivo_digital.serie);
 
-        docOutput.subSerie = new SelectOption(item.id_control_archivo_digital.id_subserie, item.id_control_archivo_digital['sub serie']);
+        docOutput.subSerie = new SelectOption(item.id_control_archivo_digital.id_subserie, item.id_control_archivo_digital['sub_serie']);
 
-        docOutput.estado = new SelectOption(item.id_control_archivo_digital.id_statustipoestado,item.id_control_archivo_digital['nombre status']);
+        docOutput.estado = new SelectOption(item.id_control_archivo_digital.id_statustipoestado,item.id_control_archivo_digital['nombre_status']);
 
-        docOutput.cantidadCaja = item.id_control_archivo_digital['cantidad caja'];
+        docOutput.cantidadCaja = item.id_control_archivo_digital['cantidad_caja'];
 
-        docOutput.cantidadEstuche = item.id_control_archivo_digital['cantidad estuche'];
+        docOutput.cantidadEstuche = item.id_control_archivo_digital['cantidad_estuche'];
 
-        docOutput.usuarioEntrega = item.id_control_archivo_digital['id usuario entrega'] ;
+        docOutput.usuarioEntrega = item.id_control_archivo_digital['id_usuario_entrega'] ;  //"Nombres": "Jaime Leonardo", "Apellidos": "Padron Farias",
 
-        docOutput.contenidoCaja = new SelectOption(item.id_control_archivo_digital['id_estuche'],item.id_control_archivo_digital['nombre estuche']);
+        docOutput.contenidoCaja = new SelectOption(item.id_control_archivo_digital['id_estuche'],item.id_control_archivo_digital['nombre_estuche']);
 
-        docOutput.nivelUnidad = new SelectOption(item.id_control_archivo_digital['id_padre_estructuraorganizativa'], item.id_control_archivo_digital['padre estructura organizativa']);
+        docOutput.nivelUnidad = new SelectOption(item.id_control_archivo_digital['id_padre_estructuraorganizativa'], item.id_control_archivo_digital['padre_estructura_organizativa']);
 
-        docOutput.estructuraOrganizativa = new SelectOption(item.id_control_archivo_digital['id_estructuraorganizativa'], item.id_control_archivo_digital['estructura organizativa']);
+        docOutput.estructuraOrganizativa = new SelectOption(item.id_control_archivo_digital['id_estructuraorganizativa'], item.id_control_archivo_digital['estructura_organizativa']);
 
         return docOutput;
 
@@ -767,6 +771,15 @@ export class DocumentService extends HttpService {
     } else {
       return null;
     }
+  }
+
+  async getBinaryDoc(url): Promise<any>{
+    return await firstValueFrom(this.http.get(url, {
+      responseType: 'blob', // importante para obtener el binario
+      headers: new HttpHeaders({
+        'Content-Type': 'application/pdf', // opcional, puedes omitirlo        
+      }),
+    }));
   }
 
 }
