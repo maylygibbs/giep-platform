@@ -223,6 +223,7 @@
         <div class="col-lg-12">
           <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId" class="nav-tabs">
             <li [ngbNavItem]="1">
+              <!-- DATOS BASICOS DEL DOCUMENTO  -->
               <a ngbNavLink>Datos Básicos</a>
               <ng-template ngbNavContent>
                 <div class="row">
@@ -283,84 +284,259 @@
                 </div>
               </ng-template>
             </li>
+
+             <!-- DATOS DE CONTROL DE ARCHIVOS Y UBICACION  -->
+
+
+
             <li [ngbNavItem]="2">
               <a ngbNavLink>Datos Control de Archivos</a>
               <ng-template ngbNavContent>
                 <div class="row">
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputEstatus" class="form-label required">Estatus</label>
-                      <ng-select id="inputEstatus" [items]="stateList" name="status" #status="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : status.errors && ( status.dirty || status.touched || fileForm.submitted) }"
-                        [searchable]="false" [(ngModel)]="dataFile.status" required>
-                      </ng-select>
-                      <div *ngIf="status.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="status.errors?.required">Campo es requerido
-                        </div>
+                <!--Ubicación del Almacen / Unidad de Archivo-->
+                  <div class="col-12 mb-3">
+                    <h5>Ubicación del Almacen / Unidad de Archivo</h5>
+                  </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputtieneArchivoFisico" class="form-label required">Tiene Archivo Físico?</label>
+                    <ng-select id="inputtieneArchivoFisico" [items]="tieneArchivoDigitalList"
+                      name="tieneArchivoFisico" #tieneArchivoFisico="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : tieneArchivoFisico.errors && ( tieneArchivoFisico.dirty || tieneArchivoFisico.touched || fileForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="dataFile.tieneArchivoFisico" required>
+                    </ng-select>
+                    <div *ngIf="tieneArchivoFisico.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="tieneArchivoFisico.errors?.required">Campo es requerido
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputAlmacen" class="form-label required">Almacen</label>
-                      <ng-select id="inputAlmacen" [items]="direccionAlmacenList" name="almacen" #almacen="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : almacen.errors && ( almacen.dirty || almacen.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.almacen" required (change)="getTipoAlmacent()">
-                      </ng-select>
-                      <div *ngIf="almacen.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="almacen.errors?.required">Campo es requerido
-                        </div>
+                </div>
+
+
+
+
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputPais" class="form-label required">País</label>
+                    <ng-select id="inputPais" [items]="paisList" name="pais" #pais="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : pais.errors && ( pais.dirty || pais.touched || fileForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="dataFile.pais" required (change)="getEstadoList()">
+                    </ng-select>
+                    <div *ngIf="pais.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="pais.errors?.required">Campo es requerido
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputAlmacenType" class="form-label required">Tipo Almacen</label>
-                      <ng-select id="inputAlmacenType" [items]="tipoAlamacen" name="almacenType" #almacenType="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : almacenType.errors && ( almacenType.dirty || almacenType.touched || fileForm.submitted) }"
-                        [searchable]="true" [loading]="showLoadingTipoAlmacen" [(ngModel)]="dataFile.almacenType" required >
-                      </ng-select>
-                      <div *ngIf="almacenType.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="almacenType.errors?.required">Campo es requerido
-                        </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputEstado" class="form-label required">Estado</label>
+                    <ng-select id="inputEstado" [items]="estadoList" name="estado" #estado="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : estado.errors && ( estado.dirty || estado.touched || fileForm.submitted) }"
+                      [searchable]="true" [loading]="showLoadingEstadoList" [(ngModel)]="dataFile.estado" required (change)="getCiudadList()">
+                    </ng-select>
+                    <div *ngIf="estado.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="estado.errors?.required">Campo es requerido
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputLocatio1" class="form-label required">Ubicación 1</label>
-                      <ng-select id="inputLocatio1" [items]="ubicacionList" name="location1" #location1="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : location1.errors && ( location1.dirty || location1.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.location1" required>
-                      </ng-select>
-                      <div *ngIf="location1.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="location1.errors?.required">Campo es requerido
-                        </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputCiudad" class="form-label required">Ciudad</label>
+                    <ng-select id="inputCiudad" [items]="ciudadList" name="ciudad" #ciudad="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : ciudad.errors && ( ciudad.dirty || ciudad.touched || fileForm.submitted) }"
+                      [searchable]="true" [loading]="showLoadingCiudadList" [(ngModel)]="dataFile.ciudad" required>
+                    </ng-select>
+                    <div *ngIf="ciudad.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="ciudad.errors?.required">Campo es requerido
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputLocatio2" class="form-label required">Ubicación 2</label>
-                      <ng-select id="inputLocatio2" [items]="ubicacionList" name="location2" #location2="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : location2.errors && ( location2.dirty || location2.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.location2" required>
-                      </ng-select>
-                      <div *ngIf="location2.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="location2.errors?.required">Campo es requerido
-                        </div>
+                </div>
+
+
+                <!--Ubicación Fisica en el Archivo Central-->
+                <div class="col-12 mb-3">
+                  <h5>Ubicación Fisica en el Archivo Central</h5>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputAlmacen" class="form-label required">Almacen</label>
+                    <ng-select id="inputAlmacen" [items]="direccionAlmacenList" name="almacen" #almacen="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : almacen.errors && ( almacen.dirty || almacen.touched || fileForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="dataFile.almacen" required (change)="getTipoAlmacent()">
+                    </ng-select>
+                    <div *ngIf="almacen.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="almacen.errors?.required">Campo es requerido
                       </div>
                     </div>
                   </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputAlmacenType" class="form-label required">Tipo Almacen</label>
+                    <ng-select id="inputAlmacenType" [items]="tipoAlamacen" name="almacenType" #almacenType="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : almacenType.errors && ( almacenType.dirty || almacenType.touched || fileForm.submitted) }"
+                      [searchable]="true" [loading]="showLoadingTipoAlmacen" [(ngModel)]="dataFile.almacenType" required >
+                    </ng-select>
+                    <div *ngIf="almacenType.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="almacenType.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputLocatio1" class="form-label required">Ubicación 1</label>
+                    <ng-select id="inputLocatio1" [items]="ubicacionList" name="location1" #location1="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : location1.errors && ( location1.dirty || location1.touched || fileForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="dataFile.location1" required>
+                    </ng-select>
+                    <div *ngIf="location1.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="location1.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputLocatio2" class="form-label required">Ubicación 2</label>
+                    <ng-select id="inputLocatio2" [items]="ubicacionList" name="location2" #location2="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : location2.errors && ( location2.dirty || location2.touched || fileForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="dataFile.location2" required>
+                    </ng-select>
+                    <div *ngIf="location2.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="location2.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputLocatio3" class="form-label required">Ubicación 3</label>
+                    <ng-select id="inputLocatio3" [items]="ubicacionList" name="location3" #location3="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : location3.errors && ( location3.dirty || location3.touched || fileForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="dataFile.location3" required>
+                    </ng-select>
+                    <div *ngIf="location3.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="location3.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--   Datos Unidad que entrego Documentos o Materiales  -->
+                <div class="col-12 mb-3">
+                  <h5>Datos Unidad que entrego Documentos o Materiales</h5>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputNivelUnidad" class="form-label required">Nivel Unidad</label>
+                    <ng-select id="inputNivelUnidad" [items]="nivelUnidadList" name="nivelUnidad"
+                      #nivelUnidad="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : nivelUnidad.errors && ( nivelUnidad.dirty || nivelUnidad.touched || fileForm.submitted) }"
+                      [searchable]="true" [(ngModel)]="dataFile.nivelUnidad" required (change)="getEstructuraOrganizativaList()">
+                    </ng-select>
+                    <div *ngIf="nivelUnidad.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="nivelUnidad.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputEstructuraOrganizativa" class="form-label required">Estructura
+                      Organizativa</label>
+                    <ng-select id="inputEstructuraOrganizativa" [items]="estructuraOrganizativaList"
+                      name="estructuraOrganizativa" #estructuraOrganizativa="ngModel"
+                      [ngClass]="{'ng-dirty ng-invalid' : estructuraOrganizativa.errors && ( estructuraOrganizativa.dirty || estructuraOrganizativa.touched || fileForm.submitted) }"
+                      [searchable]="true" [loading]="showLoadingEstructuraList" [(ngModel)]="dataFile.estructuraOrganizativa" required>
+                    </ng-select>
+                    <div *ngIf="estructuraOrganizativa.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="estructuraOrganizativa.errors?.required">Campo es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="mb-3">
+                    <label for="inputUsuarioEntrega" class="form-label required">Ususario Entrega</label>
+                    <ng-select id="inputUsers" [items]="data.users" [multiple]="false" [searchable]="true"
+                    [closeOnSelect]="false" [virtualScroll]="true" name="usuarioEntrega" #usuarioEntrega="ngModel"
+                    [ngClass]="{'ng-dirty ng-invalid' : usuarioEntrega.errors && ( usuarioEntrega.dirty || usuarioEntrega.touched || fileForm.submitted) }"
+                    bindLabel="fullName" bindValue="id" [(ngModel)]="dataFile.usuarioEntrega" [loading]="showLoading" required>
+      
+                  </ng-select>
+                  <div *ngIf="usuarioEntrega.invalid && fileForm.submitted" class="invalid-feedback">
+                    <div *ngIf="usuarioEntrega.errors?.required">Campo es requerido
+                    </div>
+                  </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+                 <!-- Detalle del Material Recibido en Archivo Central -->
+                 <div class="col-12 mb-3">
+                 <h5>Detalle del Material Recibido en Archivo Central</h5>
+                </div>
+
+                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <!--TODO: AJUSTAR A SELECT -->
+                  <div class="mb-3">
+                    <label for="inputNumExpediente" class="form-label required">Estado de Conservación ?????????</label>
+                    <input type="text" name="numExpediente" #numExpediente="ngModel" [(ngModel)]="dataFile.numExpediente"
+                      [ngClass]="{'ng-dirty ng-invalid' : numExpediente.errors && ( numExpediente.dirty || numExpediente.touched || fileForm.submitted) }"
+                      class="form-control" id="inputNumExpediente" autocomplete="off" minlength="1" maxlength="50"
+                      required [pattern]="environment.form.alphanumeric_guion.validations.pattern">
+                    <div *ngIf="numExpediente.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="numExpediente.errors?.required">Campo es requerido
+                      </div>
+                      <div *ngIf="numExpediente.errors?.minlength || numExpediente.errors?.maxlength">
+                        Campo permite entre 1 y 50 caracteres</div>
+                      <div *ngIf="numExpediente.errors?.pattern">
+                        Campo sólo permite números, letras y solo guión</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <!--TODO: AJUSTAR A SELECT -->
+                  <div class="mb-3">
+                    <label for="inputNumExpediente" class="form-label required">Tipo de Material Recibido ????????</label>
+                    <input type="text" name="numExpediente" #numExpediente="ngModel" [(ngModel)]="dataFile.numExpediente"
+                      [ngClass]="{'ng-dirty ng-invalid' : numExpediente.errors && ( numExpediente.dirty || numExpediente.touched || fileForm.submitted) }"
+                      class="form-control" id="inputNumExpediente" autocomplete="off" minlength="1" maxlength="50"
+                      required [pattern]="environment.form.alphanumeric_guion.validations.pattern">
+                    <div *ngIf="numExpediente.invalid && fileForm.submitted" class="invalid-feedback">
+                      <div *ngIf="numExpediente.errors?.required">Campo es requerido
+                      </div>
+                      <div *ngIf="numExpediente.errors?.minlength || numExpediente.errors?.maxlength">
+                        Campo permite entre 1 y 50 caracteres</div>
+                      <div *ngIf="numExpediente.errors?.pattern">
+                        Campo sólo permite números, letras y solo guión</div>
+                    </div>
+                  </div>
+                </div>                  
+
+
+
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
-                      <label for="inputLocatio3" class="form-label required">Ubicación 3</label>
-                      <ng-select id="inputLocatio3" [items]="ubicacionList" name="location3" #location3="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : location3.errors && ( location3.dirty || location3.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.location3" required>
+                      <label for="inputtcontenidoCaja" class="form-label required">Contenido de la Caja</label>
+                      <ng-select id="inputtcontenidoCaja" [items]="contenidoCajaList" name="contenidoCaja"
+                        #contenidoCaja="ngModel"
+                        [ngClass]="{'ng-dirty ng-invalid' : contenidoCaja.errors && ( contenidoCaja.dirty || contenidoCaja.touched || fileForm.submitted) }"
+                        [searchable]="true" [(ngModel)]="dataFile.contenidoCaja" required>
                       </ng-select>
-                      <div *ngIf="location3.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="location3.errors?.required">Campo es requerido
+                      <div *ngIf="contenidoCaja.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="contenidoCaja.errors?.required">Campo es requerido
                         </div>
                       </div>
                     </div>
@@ -368,14 +544,13 @@
 
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
-                      <label for="inputNivelUnidad" class="form-label required">Nivel Unidad</label>
-                      <ng-select id="inputNivelUnidad" [items]="nivelUnidadList" name="nivelUnidad"
-                        #nivelUnidad="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : nivelUnidad.errors && ( nivelUnidad.dirty || nivelUnidad.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.nivelUnidad" required (change)="getEstructuraOrganizativaList()">
-                      </ng-select>
-                      <div *ngIf="nivelUnidad.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="nivelUnidad.errors?.required">Campo es requerido
+                      <label for="inputCantidadEstuche" class="form-label required">Cantidad del Contenido</label>
+                      <input type="number" name="cantidadEstuche" #cantidadEstuche="ngModel"
+                        [(ngModel)]="dataFile.cantidadEstuche"
+                        [ngClass]="{'ng-dirty ng-invalid' : cantidadEstuche.errors && ( cantidadEstuche.dirty || cantidadEstuche.touched || fileForm.submitted) }"
+                        class="form-control" id="inputCantidadEstuche" autocomplete="off" required>
+                      <div *ngIf="cantidadEstuche.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="cantidadEstuche.errors?.required">Campo es requerido
                         </div>
                       </div>
                     </div>
@@ -383,114 +558,52 @@
 
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
-                      <label for="inputEstructuraOrganizativa" class="form-label required">Estructura
-                        Organizativa</label>
-                      <ng-select id="inputEstructuraOrganizativa" [items]="estructuraOrganizativaList"
-                        name="estructuraOrganizativa" #estructuraOrganizativa="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : estructuraOrganizativa.errors && ( estructuraOrganizativa.dirty || estructuraOrganizativa.touched || fileForm.submitted) }"
-                        [searchable]="true" [loading]="showLoadingEstructuraList" [(ngModel)]="dataFile.estructuraOrganizativa" required>
-                      </ng-select>
-                      <div *ngIf="estructuraOrganizativa.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="estructuraOrganizativa.errors?.required">Campo es requerido
+                      <label for="inputNumCaja" class="form-label required">Número de la caja (Se puede cambiar el label a: Identificador de la caja????)</label>
+                      <input type="number" name="numCaja" #numCaja="ngModel" [(ngModel)]="dataFile.numCaja"
+                        [ngClass]="{'ng-dirty ng-invalid' : numCaja.errors && ( numCaja.dirty || numCaja.touched || fileForm.submitted) }"
+                        class="form-control" id="inputNumCaja" autocomplete="off" required>
+                      <div *ngIf="numCaja.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="numCaja.errors?.required">Campo es requerido
                         </div>
                       </div>
                     </div>
                   </div>
 
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <!--Ajustar, es un campo number para indicar la cantidad de estuches que tiene la caja-->
                     <div class="mb-3">
-                      <label for="inputRegion" class="form-label required">Región</label>
-                      <ng-select id="inputRegion" [items]="regionList" name="region" #region="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : region.errors && ( region.dirty || region.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.region" required>
-                      </ng-select>
-                      <div *ngIf="region.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="region.errors?.required">Campo es requerido
+                      <label for="inputnumEstuche" class="form-label required">Números de estuches</label>
+                      <input type="text" name="numEstuche" #numEstuche="ngModel" [(ngModel)]="dataFile.numEstuche"
+                        [ngClass]="{'ng-dirty ng-invalid' : numEstuche.errors && ( numEstuche.dirty || numEstuche.touched || fileForm.submitted) }"
+                        class="form-control" id="inputnumEstuche" autocomplete="off" minlength="1" maxlength="20"
+                        required [pattern]="environment.form.number_guion.validations.pattern">
+                      <div *ngIf="numEstuche.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="numEstuche.errors?.required">Campo es requerido
                         </div>
+                        <div *ngIf="numEstuche.errors?.minlength || numEstuche.errors?.maxlength">
+                          Campo permite entre 1 y 20 caracteres</div>
+                        <div *ngIf="folios.errors?.pattern">
+                          Campo sólo permite números y guión</div>
                       </div>
                     </div>
-                  </div>
-
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  </div>  
+                  
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><!--TODO: AJUSTAR A SELECT SI / NO-->
                     <div class="mb-3">
-                      <label for="inputPais" class="form-label required">País</label>
-                      <ng-select id="inputPais" [items]="paisList" name="pais" #pais="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : pais.errors && ( pais.dirty || pais.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.pais" required (change)="getEstadoList()">
-                      </ng-select>
-                      <div *ngIf="pais.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="pais.errors?.required">Campo es requerido
+                      <label for="inputNumExpediente" class="form-label required">Expediente Documental?</label> 
+                      <input type="text" name="numExpediente" #numExpediente="ngModel" [(ngModel)]="dataFile.numExpediente"
+                        [ngClass]="{'ng-dirty ng-invalid' : numExpediente.errors && ( numExpediente.dirty || numExpediente.touched || fileForm.submitted) }"
+                        class="form-control" id="inputNumExpediente" autocomplete="off" minlength="1" maxlength="50"
+                        required [pattern]="environment.form.alphanumeric_guion.validations.pattern">
+                      <div *ngIf="numExpediente.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="numExpediente.errors?.required">Campo es requerido
                         </div>
+                        <div *ngIf="numExpediente.errors?.minlength || numExpediente.errors?.maxlength">
+                          Campo permite entre 1 y 50 caracteres</div>
+                        <div *ngIf="numExpediente.errors?.pattern">
+                          Campo sólo permite números, letras y solo guión</div>
                       </div>
                     </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputEstado" class="form-label required">Estado</label>
-                      <ng-select id="inputEstado" [items]="estadoList" name="estado" #estado="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : estado.errors && ( estado.dirty || estado.touched || fileForm.submitted) }"
-                        [searchable]="true" [loading]="showLoadingEstadoList" [(ngModel)]="dataFile.estado" required (change)="getCiudadList()">
-                      </ng-select>
-                      <div *ngIf="estado.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="estado.errors?.required">Campo es requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputCiudad" class="form-label required">Ciudad</label>
-                      <ng-select id="inputCiudad" [items]="ciudadList" name="ciudad" #ciudad="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : ciudad.errors && ( ciudad.dirty || ciudad.touched || fileForm.submitted) }"
-                        [searchable]="true" [loading]="showLoadingCiudadList" [(ngModel)]="dataFile.ciudad" required>
-                      </ng-select>
-                      <div *ngIf="ciudad.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="ciudad.errors?.required">Campo es requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputBirthDate" class="form-label required">Fecha Fin Conservación</label>
-                      <div class="input-group">
-                        <input id="inputFechaFinConservacion" name="fechaFinConservacion"
-                          #fechaFinConservacion="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}"
-                          class="form-control" placeholder="yyyy-mm-dd"
-                          [ngClass]="{'ng-dirty ng-invalid' : fechaFinConservacion.errors && ( fechaFinConservacion.dirty || fechaFinConservacion.touched || fileForm.submitted) }"
-                          [(ngModel)]="dataFile.fechaFinConservacion" ngbDatepicker #dp="ngbDatepicker" required readonly>
-                        <button class="input-group-text" type="button" (click)="dp.toggle()">
-                          <i class="feather icon-calendar icon-md text-muted"></i>
-                        </button>
-                        <div *ngIf="fechaFinConservacion.invalid && fileForm.submitted" class="invalid-feedback">
-                          <div *ngIf="fechaFinConservacion.errors?.required">Campo es requerido
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputtieneArchivoFisico" class="form-label required">Tiene Archivo Físico</label>
-                      <ng-select id="inputtieneArchivoFisico" [items]="tieneArchivoDigitalList"
-                        name="tieneArchivoFisico" #tieneArchivoFisico="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : tieneArchivoFisico.errors && ( tieneArchivoFisico.dirty || tieneArchivoFisico.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.tieneArchivoFisico" required>
-                      </ng-select>
-                      <div *ngIf="tieneArchivoFisico.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="tieneArchivoFisico.errors?.required">Campo es requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  </div>             
 
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
@@ -510,132 +623,23 @@
                     </div>
                   </div>
 
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><!--TODO: AJUSTAR A SELECT SI / NO-->
                     <div class="mb-3">
-                      <label for="inputFechaDocumento" class="form-label required">Fecha Documento</label>
-                      <div class="input-group">
-                        <input id="inputFechaDocumento" name="fechaDocumento" #fechaDocumento="ngModel"
-                          [minDate]="{year: 1930 , month: 9, day: 1}" [maxDate]="maxDate" class="form-control" placeholder="yyyy-mm-dd"
-                          [ngClass]="{'ng-dirty ng-invalid' : fechaDocumento.errors && ( fechaDocumento.dirty || fechaDocumento.touched || fileForm.submitted) }"
-                          [(ngModel)]="dataFile.fechaDocumento" ngbDatepicker #dp1="ngbDatepicker" required readonly>
-                        <button class="input-group-text" type="button" (click)="dp1.toggle()">
-                          <i class="feather icon-calendar icon-md text-muted"></i>
-                        </button>
-                        <div *ngIf="fechaDocumento.invalid && fileForm.submitted" class="invalid-feedback">
-                          <div *ngIf="fechaDocumento.errors?.required">Campo es requerido
-                          </div>
+                      <label for="inputNumExpediente" class="form-label required">Tiene Fechas Extremas?</label> 
+                      <input type="text" name="numExpediente" #numExpediente="ngModel" [(ngModel)]="dataFile.numExpediente"
+                        [ngClass]="{'ng-dirty ng-invalid' : numExpediente.errors && ( numExpediente.dirty || numExpediente.touched || fileForm.submitted) }"
+                        class="form-control" id="inputNumExpediente" autocomplete="off" minlength="1" maxlength="50"
+                        required [pattern]="environment.form.alphanumeric_guion.validations.pattern">
+                      <div *ngIf="numExpediente.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="numExpediente.errors?.required">Campo es requerido
                         </div>
+                        <div *ngIf="numExpediente.errors?.minlength || numExpediente.errors?.maxlength">
+                          Campo permite entre 1 y 50 caracteres</div>
+                        <div *ngIf="numExpediente.errors?.pattern">
+                          Campo sólo permite números, letras y solo guión</div>
                       </div>
                     </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputCantidadCaja" class="form-label required">Cantidad Caja</label>
-                      <input type="number" name="cantidadCaja" #cantidadCaja="ngModel" [(ngModel)]="dataFile.cantidadCaja"
-                        [ngClass]="{'ng-dirty ng-invalid' : cantidadCaja.errors && ( cantidadCaja.dirty || cantidadCaja.touched || fileForm.submitted) }"
-                        class="form-control" id="inputCantidadCaja" autocomplete="off" required>
-                      <div *ngIf="cantidadCaja.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="cantidadCaja.errors?.required">Campo es requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputCantidadEstuche" class="form-label required">Cantidad Contenido</label>
-                      <input type="number" name="cantidadEstuche" #cantidadEstuche="ngModel"
-                        [(ngModel)]="dataFile.cantidadEstuche"
-                        [ngClass]="{'ng-dirty ng-invalid' : cantidadEstuche.errors && ( cantidadEstuche.dirty || cantidadEstuche.touched || fileForm.submitted) }"
-                        class="form-control" id="inputCantidadEstuche" autocomplete="off" required>
-                      <div *ngIf="cantidadEstuche.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="cantidadEstuche.errors?.required">Campo es requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputUsuarioEntrega" class="form-label required">Ususario Entrega</label>
-                      <ng-select id="inputUsers" [items]="data.users" [multiple]="false" [searchable]="true"
-                      [closeOnSelect]="false" [virtualScroll]="true" name="usuarioEntrega" #usuarioEntrega="ngModel"
-                      [ngClass]="{'ng-dirty ng-invalid' : usuarioEntrega.errors && ( usuarioEntrega.dirty || usuarioEntrega.touched || fileForm.submitted) }"
-                      bindLabel="fullName" bindValue="id" [(ngModel)]="dataFile.usuarioEntrega" [loading]="showLoading" required>
-        
-                    </ng-select>
-                    <div *ngIf="usuarioEntrega.invalid && fileForm.submitted" class="invalid-feedback">
-                      <div *ngIf="usuarioEntrega.errors?.required">Campo es requerido
-                      </div>
-                    </div>
-                    </div>
-                  </div>
-
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputtcontenidoCaja" class="form-label required">Contenido Caja</label>
-                      <ng-select id="inputtcontenidoCaja" [items]="contenidoCajaList" name="contenidoCaja"
-                        #contenidoCaja="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : contenidoCaja.errors && ( contenidoCaja.dirty || contenidoCaja.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.contenidoCaja" required>
-                      </ng-select>
-                      <div *ngIf="contenidoCaja.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="contenidoCaja.errors?.required">Campo es requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputFolios" class="form-label required">Folios</label>
-                      <input type="text" name="folios" #folios="ngModel" [(ngModel)]="dataFile.folios"
-                        [ngClass]="{'ng-dirty ng-invalid' : folios.errors && ( folios.dirty || folios.touched || fileForm.submitted) }"
-                        class="form-control" id="inputFolios" autocomplete="off" minlength="1" maxlength="20"
-                        required [pattern]="environment.form.number_guion.validations.pattern">
-                      <div *ngIf="folios.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="folios.errors?.required">Campo es requerido
-                        </div>
-                        <div *ngIf="folios.errors?.minlength || folios.errors?.maxlength">
-                          Campo permite entre 1 y 20 caracteres</div>
-                        <div *ngIf="folios.errors?.pattern">
-                          Campo sólo permite números y guión</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputNumCaja" class="form-label required">Número de la caja</label>
-                      <input type="number" name="numCaja" #numCaja="ngModel" [(ngModel)]="dataFile.numCaja"
-                        [ngClass]="{'ng-dirty ng-invalid' : numCaja.errors && ( numCaja.dirty || numCaja.touched || fileForm.submitted) }"
-                        class="form-control" id="inputNumCaja" autocomplete="off" required>
-                      <div *ngIf="numCaja.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="numCaja.errors?.required">Campo es requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="mb-3">
-                      <label for="inputnumEstuche" class="form-label required">Número del estuche</label>
-                      <input type="text" name="numEstuche" #numEstuche="ngModel" [(ngModel)]="dataFile.numEstuche"
-                        [ngClass]="{'ng-dirty ng-invalid' : numEstuche.errors && ( numEstuche.dirty || numEstuche.touched || fileForm.submitted) }"
-                        class="form-control" id="inputnumEstuche" autocomplete="off" minlength="1" maxlength="20"
-                        required [pattern]="environment.form.number_guion.validations.pattern">
-                      <div *ngIf="numEstuche.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="numEstuche.errors?.required">Campo es requerido
-                        </div>
-                        <div *ngIf="numEstuche.errors?.minlength || numEstuche.errors?.maxlength">
-                          Campo permite entre 1 y 20 caracteres</div>
-                        <div *ngIf="folios.errors?.pattern">
-                          Campo sólo permite números y guión</div>
-                      </div>
-                    </div>
-                  </div>
+                  </div> 
 
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
@@ -675,6 +679,44 @@
                     </div>
                   </div>
 
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                      <label for="inputFechaDocumento" class="form-label required">Fecha Original del Documento</label>
+                      <div class="input-group">
+                        <input id="inputFechaDocumento" name="fechaDocumento" #fechaDocumento="ngModel"
+                          [minDate]="{year: 1930 , month: 9, day: 1}" [maxDate]="maxDate" class="form-control" placeholder="yyyy-mm-dd"
+                          [ngClass]="{'ng-dirty ng-invalid' : fechaDocumento.errors && ( fechaDocumento.dirty || fechaDocumento.touched || fileForm.submitted) }"
+                          [(ngModel)]="dataFile.fechaDocumento" ngbDatepicker #dp1="ngbDatepicker" required readonly>
+                        <button class="input-group-text" type="button" (click)="dp1.toggle()">
+                          <i class="feather icon-calendar icon-md text-muted"></i>
+                        </button>
+                        <div *ngIf="fechaDocumento.invalid && fileForm.submitted" class="invalid-feedback">
+                          <div *ngIf="fechaDocumento.errors?.required">Campo es requerido
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                      <label for="inputBirthDate" class="form-label required">Fecha Fin Conservación</label>
+                      <div class="input-group">
+                        <input id="inputFechaFinConservacion" name="fechaFinConservacion"
+                          #fechaFinConservacion="ngModel" [minDate]="{year: 1930 , month: 9, day: 1}"
+                          class="form-control" placeholder="yyyy-mm-dd"
+                          [ngClass]="{'ng-dirty ng-invalid' : fechaFinConservacion.errors && ( fechaFinConservacion.dirty || fechaFinConservacion.touched || fileForm.submitted) }"
+                          [(ngModel)]="dataFile.fechaFinConservacion" ngbDatepicker #dp="ngbDatepicker" required readonly>
+                        <button class="input-group-text" type="button" (click)="dp.toggle()">
+                          <i class="feather icon-calendar icon-md text-muted"></i>
+                        </button>
+                        <div *ngIf="fechaFinConservacion.invalid && fileForm.submitted" class="invalid-feedback">
+                          <div *ngIf="fechaFinConservacion.errors?.required">Campo es requerido
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
@@ -704,6 +746,25 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                      <label for="inputFolios" class="form-label required">Folios</label>
+                      <input type="text" name="folios" #folios="ngModel" [(ngModel)]="dataFile.folios"
+                        [ngClass]="{'ng-dirty ng-invalid' : folios.errors && ( folios.dirty || folios.touched || fileForm.submitted) }"
+                        class="form-control" id="inputFolios" autocomplete="off" minlength="1" maxlength="20"
+                        required [pattern]="environment.form.number_guion.validations.pattern">
+                      <div *ngIf="folios.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="folios.errors?.required">Campo es requerido
+                        </div>
+                        <div *ngIf="folios.errors?.minlength || folios.errors?.maxlength">
+                          Campo permite entre 1 y 20 caracteres</div>
+                        <div *ngIf="folios.errors?.pattern">
+                          Campo sólo permite números y guión</div>
+                      </div>
+                    </div>
+                  </div>
+
 
                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="mb-3">
@@ -735,6 +796,30 @@
                       </div>
                     </div>
                   </div>
+
+
+
+
+
+
+                  <div hidden class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                      <label for="inputCantidadCaja" class="form-label required">Cantidad Caja</label>
+                      <input type="number" name="cantidadCaja" #cantidadCaja="ngModel" [(ngModel)]="dataFile.cantidadCaja"
+                        [ngClass]="{'ng-dirty ng-invalid' : cantidadCaja.errors && ( cantidadCaja.dirty || cantidadCaja.touched || fileForm.submitted) }"
+                        class="form-control" id="inputCantidadCaja" autocomplete="off" required>
+                      <div *ngIf="cantidadCaja.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="cantidadCaja.errors?.required">Campo es requerido
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+
+
 
                 </div>
                 <div class="modal-footer">
