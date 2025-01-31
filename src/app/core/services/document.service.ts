@@ -387,7 +387,7 @@ export class DocumentService extends HttpService {
     let listDoc: Array<DocumentGiep>;
     let doc: DocumentGiep = null;
     try {
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigital/${id}`));      
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigital/${id}`));
       if (resp.count == 1) {
         const user = this.authService.currentUser;
         listDoc = resp.data.map((item: any) => {
@@ -464,18 +464,18 @@ export class DocumentService extends HttpService {
   }
 
 
- /**
- * Query document info by id
- * @param id 
- * @returns 
- */
- async getDigitalizedDocumentByIdDetalle(id: string): Promise<DocumentGiep> {
-  let listDoc: Array<DocumentGiep>;
-  let doc: DocumentGiep = null;
-  try {
+  /**
+  * Query document info by id
+  * @param id 
+  * @returns 
+  */
+  async getDigitalizedDocumentByIdDetalle(id: string): Promise<DocumentGiep> {
+    let listDoc: Array<DocumentGiep>;
+    let doc: DocumentGiep = null;
+    try {
 
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/controlarchivodigital/listid/${id}`));
-    console.log('detalle', resp)
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/controlarchivodigital/listid/${id}`));
+      console.log('detalle', resp)
       const user = this.authService.currentUser;
       listDoc = resp.data.map((item: any) => {
         const docOutput = new DocumentGiep();
@@ -507,9 +507,9 @@ export class DocumentService extends HttpService {
         docOutput.fechaDocumento = item.id_control_archivo_digital.fecha_documento.date;
         docOutput.almacenType = new SelectOption(item.id_control_archivo_digital.id_tipo_almacen, item.id_control_archivo_digital['nombre_almacen']);
 
-        docOutput.location1 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_1'] , item.id_control_archivo_digital['ubicacion_1']);
-        docOutput.location2 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_2'] , item.id_control_archivo_digital['ubicacion_2']);
-        docOutput.location3 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_3'] , item.id_control_archivo_digital['ubicacion_3']);  
+        docOutput.location1 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_1'], item.id_control_archivo_digital['ubicacion_1']);
+        docOutput.location2 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_2'], item.id_control_archivo_digital['ubicacion_2']);
+        docOutput.location3 = new SelectOption(item.id_control_archivo_digital['id_ubicacion_3'], item.id_control_archivo_digital['ubicacion_3']);
 
         docOutput.region = new SelectOption(item.id_control_archivo_digital.id_region, item.id_control_archivo_digital.region);
 
@@ -521,15 +521,15 @@ export class DocumentService extends HttpService {
 
         docOutput.subSerie = new SelectOption(item.id_control_archivo_digital.id_subserie, item.id_control_archivo_digital['sub_serie']);
 
-        docOutput.estado = new SelectOption(item.id_control_archivo_digital.id_statustipoestado,item.id_control_archivo_digital['nombre_status']);
+        docOutput.estado = new SelectOption(item.id_control_archivo_digital.id_statustipoestado, item.id_control_archivo_digital['nombre_status']);
 
         docOutput.cantidadCaja = item.id_control_archivo_digital['cantidad_caja'];
 
         docOutput.cantidadEstuche = item.id_control_archivo_digital['cantidad_estuche'];
 
-        docOutput.usuarioEntrega = item.id_control_archivo_digital['id_usuario_entrega'] ;  //"Nombres": "Jaime Leonardo", "Apellidos": "Padron Farias",
+        docOutput.usuarioEntrega = item.id_control_archivo_digital['id_usuario_entrega'];  //"Nombres": "Jaime Leonardo", "Apellidos": "Padron Farias",
 
-        docOutput.contenidoCaja = new SelectOption(item.id_control_archivo_digital['id_estuche'],item.id_control_archivo_digital['nombre_estuche']);
+        docOutput.contenidoCaja = new SelectOption(item.id_control_archivo_digital['id_estuche'], item.id_control_archivo_digital['nombre_estuche']);
 
         docOutput.nivelUnidad = new SelectOption(item.id_control_archivo_digital['id_padre_estructuraorganizativa'], item.id_control_archivo_digital['padre_estructura_organizativa']);
 
@@ -541,17 +541,17 @@ export class DocumentService extends HttpService {
       doc = listDoc[0];
 
 
-  } catch (error: any) {
-    console.log(error)
-    if (error.status) {
-      this.toastrService.error(error.error.error);
-    } else {
-      this.toastrService.error('Ha ocurrido un error consultando el detalle del documento.');
+    } catch (error: any) {
+      console.log(error)
+      if (error.status) {
+        this.toastrService.error(error.error.error);
+      } else {
+        this.toastrService.error('Ha ocurrido un error consultando el detalle del documento.');
+      }
+    } finally {
+      return doc;
     }
-  } finally {
-    return doc;
   }
-}
 
 
 
@@ -761,7 +761,7 @@ export class DocumentService extends HttpService {
   /**
 * Retorna listado de serie
 */
-  async getSubSerieList(serieId:any): Promise<any> {
+  async getSubSerieList(serieId: any): Promise<any> {
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigitalsubserie/listid/${serieId}`));
     console.log('serieList', resp);
     if (resp && resp.data) {
@@ -773,7 +773,56 @@ export class DocumentService extends HttpService {
     }
   }
 
-  async getBinaryDoc(url): Promise<any>{
+  /**
+   * Estado conservacion list
+   * @returns 
+   */
+  async getEstadoConservacionList(): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigital/estadoconservacionmaterial/list`));
+    console.log('EstadoConservacionList', resp);
+    if (resp && resp.data) {
+      return resp.data.map((item) => {
+        return new SelectOption(item.id, item.nombreconservacion);
+      });
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Tipo material list
+   * @returns 
+   */
+  async getTipoMaterialList(): Promise<any> {
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigital/materialrecibido/list`));
+    console.log('TipoMaterialList', resp);
+    if (resp && resp.data) {
+      return resp.data.map((item) => {
+        return new SelectOption(item.id, item.nombrematerial);
+      });
+    } else {
+      return null;
+    }
+  }
+
+
+  /**
+* Retorna listado de si/no del campo expediente documental
+*/
+  async getExpendienteDocumentalList(): Promise<any> {
+    return this.resolveWith([new SelectOption('1', 'Sí'), new SelectOption('0', 'No')]);
+  }
+
+
+    /**
+* Retorna listado de si/no del campo tiene fechas extremas
+*/
+async getTieneFechasExtremaslList(): Promise<any> {
+  return this.resolveWith([new SelectOption('1', 'Sí'), new SelectOption('0', 'No')]);
+}
+
+
+  async getBinaryDoc(url): Promise<any> {
     return await firstValueFrom(this.http.get(url, {
       responseType: 'blob', // importante para obtener el binario
       headers: new HttpHeaders({
@@ -781,6 +830,10 @@ export class DocumentService extends HttpService {
       }),
     }));
   }
+
+
+
+
 
 }
 

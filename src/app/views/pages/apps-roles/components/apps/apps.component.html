@@ -40,8 +40,9 @@
                                     <th>Id</th>
                                     <th>Widget / Menú</th>
                                     <th>Ícono</th>
-                                    <th>Roles</th>
+                                    <th>Dirección de menú</th>
                                     <th>Tipo</th>
+                                    <th>Roles permitidos</th>                                    
                                     <th>Estado</th>
                                     <th data-priority="1" class="text-center">Accion</th>
                                 </tr>
@@ -52,9 +53,10 @@
                                     <td>{{app.id}}</td>
                                     <td>{{app.label}}</td>
                                     <td *ngIf="app.icon"><i [class]="app.icon"></i></td>
-                                    <td *ngIf="!app.icon">NA</td>
-                                    <td>{{app.roles}}</td>
+                                    <td>{{app.acestors}}</td>
                                     <td>{{app.type}}</td>
+                                    <td *ngIf="!app.icon">NA</td>
+                                    <td>{{app.roles}}</td>                                    
                                     <td>{{app.status?.label}}</td>
                                     <td class="text-center">
                                         <i class="feather icon-edit-2" (click)="select(app.id)" placement="start"
@@ -66,7 +68,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="7" class="text-right">
+                                    <th colspan="8" class="text-right">
                                         <app-pager (onChangePage)="loadPage($event)"></app-pager>
                                     </th>
                                 </tr>

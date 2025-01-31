@@ -39,13 +39,14 @@ export class AppsService extends HttpService {
       app.parent =  resp.padre ? new SelectOption(resp.padre.id, resp.padre.Descripcion) : new SelectOption();
       app.type = item.tipoComponente;
       app.icon = item.icono;
+      app.acestors = item.Ancestros ? item.Ancestros : 'NA';
       app.children = item.hijos?.map((item: any) => {
         const child = new Apps();
         child.id = item.id;
         child.label = item.MenuHijo;
       });
       app.roles = item.roles?.map((item: any) => {
-        return `${item.rol} ( ${item.empresa})`;
+        return `${item.rol}`;
       });
       return app;
     });

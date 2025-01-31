@@ -15,6 +15,7 @@ export class Apps {
     path:string;
     position:string;
     authoritations: Array<string>;
+    acestors:any;
 
     public static mapForPost(app: Apps) {
         let appMap: any = {};

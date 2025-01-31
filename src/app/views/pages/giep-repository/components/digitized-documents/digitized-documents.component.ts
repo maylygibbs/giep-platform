@@ -101,12 +101,19 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
   contenidoCajaList: any;
   serieList: any;
   subSerieList: any;
+  estadoConservacionList: any;
+  expendienteDocumentalList: any;
+  tipoMateriaRecibidoList: any;
+  tieneFechasExtremaslList: any;
   showLoadingTipoAlmacen: boolean = false;
   showLoadingEstructuraList: boolean = false;
   showLoadingEstadoList: boolean = false;
   showLoadingCiudadList: boolean = false;
   showLoadingSubSerieList: boolean = false;
   maxDate: NgbDateStruct;
+  haveFisicFile: boolean = true;
+  haveExpedienteDocumental: boolean = true;
+  haveFechasExtremas: boolean = true;
 
   urlPdf: any;
 
@@ -124,10 +131,11 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     pdfDefaultOptions.assetsFolder = 'bleeding-edge';
   }
 
-  async ngOnInit() {
+  async ngOnInit() {    
     this.step = 1;
     this.loadAllList();
     this.documents = await this.documentService.getDigitalizedDocumentsPaginated({ page: environment.paginator.default_page, rowByPage: environment.paginator.row_per_page, word: null });
+    
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.step = 1;
@@ -138,6 +146,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
 
 
   async loadAllList() {
+    
     this.stateList = await this.documentService.getStateList();
     this.direccionAlmacenList = await this.documentService.getDireccionAlmacenList();
     this.ubicacionList = await this.documentService.getUbicacionList();
@@ -146,8 +155,28 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     this.paisList = await this.documentService.getPaisList();
     this.gerenciasList = await this.documentService.getGerenciasList();
     this.tieneArchivoDigitalList = await this.documentService.getTieneArchivoDigitalList();
+    this.tipoMateriaRecibidoList = await this.documentService.getTipoMaterialList();
     this.contenidoCajaList = await this.documentService.getContenidoCajaList();
     this.serieList = await this.documentService.getSerieList();
+    this.estadoConservacionList = await this.documentService.getEstadoConservacionList();
+    this.expendienteDocumentalList = await this.documentService.getExpendienteDocumentalList();
+    this.tieneFechasExtremaslList = await this.documentService.getTieneFechasExtremaslList();
+
+    this.init();
+
+  }
+
+  init(){  
+    this.haveFisicFile = true;
+    this.haveExpedienteDocumental = true;
+    this.haveFechasExtremas = true;  
+    if (!this.dataFile) {
+      this.dataFile = {};
+    }
+    Object.assign(this.dataFile, { tieneArchivoFisico: new SelectOption('0','Sí')});
+    Object.assign(this.dataFile, { expedienteDocumental: new SelectOption('1','Sí')});
+    Object.assign(this.dataFile, { tieneFechasExtremas: new SelectOption('1','Sí')});
+    
   }
 
   /**
@@ -192,6 +221,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
       const dataFile = { file: file.name };
       if (this.fileContent) {
         Object.assign(dataFile, { orig_head: this.fileContent })
+        
       }
       console.log('onUploadSuccess:', dataFile);
     }
@@ -279,6 +309,9 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
   back(item: any) {
     this.selectedItem = item;
     this.step--;
+    this.defaultNavActiveId = 1;
+    this.dataFile = null;
+    this.loadAllList();
     this.loadPage(this.page);
   }
 
@@ -359,8 +392,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
    */
   async onFilesUpload(form: NgForm) {
 
-
-    if (form.valid) {
+    if (this.isFormValid(form)) {
       console.log('dataFile onFilesUpload: ', this.dataFile);
 
       if (this.fileToUpload) {
@@ -387,43 +419,42 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
         formData.append("tamano", this.dataFile.fileSize);
 
 
-        formData.append("folios", this.dataFile.folios); 
-        formData.append("num_dela_caja", this.dataFile.numCaja);
-        formData.append("num_dela_estuches", this.dataFile.numEstuche);
-        console.log('this.dataFile.fechaExtremaInicio',this.dataFile.fechaExtremaInicio);
-        formData.append("Fecha_extrema_inicio", this.getDateStructureToDate(this.dataFile.fechaExtremaInicio)); 
-        console.log('this.dataFile.fechaExtremaFin',this.dataFile.fechaExtremaFin);
-        formData.append("Fecha_extrema_fin", this.getDateStructureToDate(this.dataFile.fechaExtremaFin));
-
-        formData.append("id_tipo_almacen", this.dataFile.almacenType.value);
-        formData.append("idubica1", this.dataFile.location1.value);
-        formData.append("idubica2", this.dataFile.location2.value);
-        formData.append("idubica3", this.dataFile.location3.value);
-
-        formData.append("idregion", this.dataFile.region.value);
-
-        formData.append("codigo_serie_subserie", this.dataFile.subSerie.value);
-        formData.append("id_status_tipoestado", this.dataFile.status.value);
-
         formData.append("id_pais", this.dataFile.pais.value);
         formData.append("id_estado", this.dataFile.estado.value);
         formData.append("id_ciudad", this.dataFile.ciudad.value);
 
-        formData.append("id_estructura_organizativa", this.dataFile.estructuraOrganizativa.value);
 
-        formData.append("asuntos", this.dataFile.asuntos);
-        console.log('this.dataFile.fechaFinConservacion',this.dataFile.fechaFinConservacion);
-        formData.append("fecha_fin_conservac", this.getDateStructureToDate(this.dataFile.fechaFinConservacion));
         formData.append("sw_archivo_fisico", this.dataFile.tieneArchivoFisico.value);
-        formData.append("argumento_justificacion", this.dataFile.justificacion);
+        formData.append("id_tipo_almacen", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.almacenType.value : null);
+        formData.append("idubica1", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.location1.value : null);
+        formData.append("idubica2", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.location2.value : null);
+        formData.append("idubica3", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.location3.value : null);
 
-        formData.append("num_expediente", this.dataFile.numExpediente);
-        console.log('this.dataFile.fechaDocumento',this.dataFile.fechaDocumento);
-        formData.append("fecha_documento", this.getDateStructureToDate(this.dataFile.fechaDocumento));
-        formData.append("cantidad_caja", this.dataFile.cantidadCaja);
-        formData.append("cantidad_estuche", this.dataFile.cantidadEstuche);
+
+        formData.append("id_estructura_organizativa", this.dataFile.estructuraOrganizativa.value);
         formData.append("id_user_entrega", this.dataFile.usuarioEntrega);
+
+        formData.append("idestadoconservacion", this.dataFile.estadoConservacion.value);
+        formData.append("idmaterialrecibido", this.dataFile.tipoMaterial.value);
         formData.append("idcontenido_caja", this.dataFile.contenidoCaja.value);
+        formData.append("num_dela_caja", this.dataFile.numCaja);
+        formData.append("num_dela_estuches", this.dataFile.numEstuche);
+
+
+        formData.append("num_expediente", this.dataFile.expedienteDocumental.value == '1' ? this.dataFile.numExpediente : null);
+        formData.append("Fecha_extrema_inicio", this.dataFile.tieneFechasExtremas.value == '1' ? this.getDateStructureToDate(this.dataFile.fechaExtremaInicio) : null); 
+        formData.append("Fecha_extrema_fin", this.dataFile.tieneFechasExtremas.value == '1' ? this.getDateStructureToDate(this.dataFile.fechaExtremaFin) : null);
+        formData.append("fecha_documento", this.dataFile.tieneFechasExtremas.value == '0' ? this.getDateStructureToDate(this.dataFile.fechaDocumento) : null);
+        formData.append("fecha_fin_conservac", this.getDateStructureToDate(this.dataFile.fechaFinConservacion));
+        formData.append("codigo_serie_subserie", this.dataFile.subSerie.value);
+
+
+
+        formData.append("folios", this.dataFile.folios); 
+        formData.append("asuntos", this.dataFile.asuntos);        
+        formData.append("argumento_justificacion", this.dataFile.justificacion);        
+        formData.append("cantidad_caja", '1');        
+        formData.append("id_status_tipoestado", '1');
 
         console.log('this.dataFile', this.dataFile);
 
@@ -442,7 +473,12 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
 
         }
 
+      }else{
+        this.toastrService.warning('Suba el documentos digitalizado.');
       }
+    }else{
+      this.toastrService.warning('Complete los datos del documento. Los campos marcados con asteriscos son obligatorio.');
+      
     }
   }
 
@@ -577,6 +613,13 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     this.showLoadingSubSerieList = false;
   }
 
+  /**
+   * EstadoConservacionList
+   */
+  async getEstadoConservacionList() {
+    this.subSerieList = await this.documentService.getEstadoConservacionList();
+  }
+
 
 
   /**
@@ -609,6 +652,68 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
       console.log("Modal closed" + result);
     }).catch((res) => { });
     //this.step = 3;
+  }
+
+
+  setHaveFisicFile(){
+    this.haveFisicFile = this.dataFile.tieneArchivoFisico.value == '0' ? true : false;
+    if(!this.haveFisicFile){
+      this.dataFile.almacen = null;
+      this.dataFile.almacenType = null;
+      this.dataFile.location1 = null;
+      this.dataFile.location2 = null;
+      this.dataFile.location3 = null;
+    }
+  }
+
+  clearHaveFisicFile(){
+    this.haveFisicFile = false;
+    this.dataFile.almacen = null;
+    this.dataFile.almacenType = null;
+    this.dataFile.location1 = null;
+    this.dataFile.location2 = null;
+    this.dataFile.location3 = null;
+  }
+
+  setHaveExpedienteDocumental(){
+    this.haveExpedienteDocumental = this.dataFile.expedienteDocumental.value == '1' ? true : false;
+    if(!this.haveExpedienteDocumental){
+      this.dataFile.numExpediente = null;
+    }
+  }
+
+  clearHaveExpedienteDocumental(){
+    this.haveExpedienteDocumental = false;
+    this.dataFile.numExpediente = null;
+  }
+
+  setHaveFechasExtremas(){
+    this.haveFechasExtremas = this.dataFile.tieneFechasExtremas.value == '1' ? true : false;
+    this.dataFile.fechaExtremaInicio = null;
+    this.dataFile.fechaExtremaFin = null;
+    this.dataFile.fechaDocumento = null;
+  }
+
+  clearHaveFechasExtremas(){
+    this.haveFechasExtremas = false;
+    this.dataFile.fechaExtremaInicio = null;
+    this.dataFile.fechaExtremaFin = null;
+    this.dataFile.fechaDocumento = null;
+
+  }
+
+  isFormValid(form: NgForm){
+    if(form.valid){
+      if(this.dataFile){
+       return this.dataFile.pais && (this.dataFile.tieneArchivoFisico && this.dataFile.tieneArchivoFisico.value == '1' || (this.dataFile.tieneArchivoFisico && this.dataFile.tieneArchivoFisico.value == '0' && this.dataFile.almacen)) &&
+        (this.dataFile.nivelUnidad && this.dataFile.estructuraOrganizativa && this.dataFile.usuarioEntrega && this.dataFile.estadoConservacion && this.dataFile.tipoMaterial);
+      }else{
+        return false;
+      }
+    }else {
+      return false;
+    }
+
   }
 
   ngOnDestroy() {
