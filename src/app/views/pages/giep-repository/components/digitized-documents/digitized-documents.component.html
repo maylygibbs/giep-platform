@@ -232,12 +232,12 @@
                       <label for="inputTitle" class="form-label required">Título</label>
                       <input type="text" name="titulo" #titulo="ngModel" [(ngModel)]="dataFile.title"
                         [ngClass]="{'ng-dirty ng-invalid' : titulo.errors && ( titulo.dirty || titulo.touched || fileForm.submitted) }"
-                        class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="50" required>
+                        class="form-control" id="inputTitle" autocomplete="off" minlength="3" maxlength="255" required>
                       <div *ngIf="titulo.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="titulo.errors?.required">Campo es requerido
                         </div>
                         <div *ngIf="titulo.errors?.minlength || titulo.errors?.maxlength">
-                          Campo permite entre 3 y 100 caracteres</div>
+                          Campo permite entre 3 y 255 caracteres</div>
                       </div>
                     </div>
                   </div>
@@ -266,12 +266,12 @@
                       <textarea name="description" #description="ngModel" [(ngModel)]="dataFile.description" row="3"
                         class="form-control"
                         [ngClass]="{'ng-dirty ng-invalid' : description.errors && ( description.dirty || description.touched || fileForm.submitted) }"
-                        id="inputDescription" required minlength="3" maxlength="1000"></textarea>
+                        id="inputDescription" required minlength="3" maxlength="2000"></textarea>
                       <div *ngIf="description.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="description.errors?.required">Campo es requerido
                         </div>
                         <div *ngIf="description.errors?.minlength || description.errors?.maxlength">
-                          Campo permite entre 3 y 1000 caracteres</div>
+                          Campo permite entre 3 y 2000 caracteres</div>
                       </div>
                     </div>
                   </div>
@@ -427,6 +427,19 @@
                       </div>
                     </div>
                   </div>
+                  <div *ngIf="haveFisicFile" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="mb-3">
+                      <label for="inputLocatio4" class="form-label required">Ubicación 4</label>
+                      <ng-select id="inputLocatio4" [items]="ubicacionList" name="location4" #location4="ngModel"
+                        [ngClass]="{'ng-dirty ng-invalid' : location4.errors && ( location4.dirty || location4.touched || fileForm.submitted) }"
+                        [searchable]="true" [(ngModel)]="dataFile.location4" [required]="haveFisicFile">
+                      </ng-select>
+                      <div *ngIf="location4.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="location4.errors?.required">Campo es requerido
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" (click)="defaultNavActiveId=2">Atras</button>
@@ -526,7 +539,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div *ngIf="haveFisicFile" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
                       <label for="inputtcontenidoCaja" class="form-label required">Contenido de la Caja</label>
                       <ng-select id="inputtcontenidoCaja" [items]="contenidoCajaList" name="contenidoCaja"
@@ -541,29 +554,33 @@
                     </div>
                   </div>
   
-                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                 <div *ngIf="haveFisicFile" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
                       <label for="inputNumCaja" class="form-label required">Identificador de la caja</label>
-                      <input type="number" name="numCaja" #numCaja="ngModel" [(ngModel)]="dataFile.numCaja"
+                      <input type="text" name="numCaja" #numCaja="ngModel" [(ngModel)]="dataFile.numCaja"
                         [ngClass]="{'ng-dirty ng-invalid' : numCaja.errors && ( numCaja.dirty || numCaja.touched || fileForm.submitted) }"
-                        class="form-control" id="inputNumCaja" autocomplete="off" required>
+                        class="form-control" id="inputNumCaja" minlength="3" maxlength="100" required>
                       <div *ngIf="numCaja.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="numCaja.errors?.required">Campo es requerido
                         </div>
+                        <div *ngIf="numCaja.errors?.minlength || numCaja.errors?.maxlength">
+                          Campo permite entre 3 y 100</div>
                       </div>
                     </div>
                   </div>
   
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div *ngIf="haveFisicFile" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <!--Ajustar, es un campo number para indicar la cantidad de estuches que tiene la caja-->
                     <div class="mb-3">
                       <label for="inputnumEstuche" class="form-label required">Números de estuches</label>
                       <input type="number" name="numEstuche" #numEstuche="ngModel" [(ngModel)]="dataFile.numEstuche"
                         [ngClass]="{'ng-dirty ng-invalid' : numEstuche.errors && ( numEstuche.dirty || numEstuche.touched || fileForm.submitted) }"
-                        class="form-control" id="inputnumEstuche" autocomplete="off" required min="1">
+                        class="form-control" id="inputnumEstuche" required min="1" max="3000000000">
                       <div *ngIf="numEstuche.invalid && fileForm.submitted" class="invalid-feedback">
                         <div *ngIf="numEstuche.errors?.required">Campo es requerido
                         </div>
+                        <div *ngIf="numEstuche.errors?.min || numEstuche.errors?.max">
+                          Campo permite entre 1 y 3000000000</div>
                       </div>
                     </div>
                   </div>

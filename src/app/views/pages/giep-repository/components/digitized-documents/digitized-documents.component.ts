@@ -429,6 +429,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
         formData.append("idubica1", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.location1.value : null);
         formData.append("idubica2", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.location2.value : null);
         formData.append("idubica3", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.location3.value : null);
+        formData.append("idubica4", this.dataFile.tieneArchivoFisico.value == '0' ? this.dataFile.location4.value : null);
 
 
         formData.append("id_estructura_organizativa", this.dataFile.estructuraOrganizativa.value);
@@ -436,7 +437,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
 
         formData.append("idestadoconservacion", this.dataFile.estadoConservacion.value);
         formData.append("idmaterialrecibido", this.dataFile.tipoMaterial.value);
-        formData.append("idcontenido_caja", this.dataFile.contenidoCaja.value);
+        formData.append("idcontenido_caja", this.dataFile.contenidoCaja ? this.dataFile.contenidoCaja.value : null);
         formData.append("num_dela_caja", this.dataFile.numCaja);
         formData.append("num_dela_estuches", this.dataFile.numEstuche);
 
@@ -663,6 +664,9 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
       this.dataFile.location1 = null;
       this.dataFile.location2 = null;
       this.dataFile.location3 = null;
+      this.dataFile.contenidoCaja = null;
+      this.dataFile.numCaja = null;
+      this.dataFile.numEstuche = null;
     }
   }
 
@@ -673,6 +677,9 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     this.dataFile.location1 = null;
     this.dataFile.location2 = null;
     this.dataFile.location3 = null;
+    this.dataFile.contenidoCaja = null;
+    this.dataFile.numCaja = null;
+    this.dataFile.numEstuche = null;
   }
 
   setHaveExpedienteDocumental(){
