@@ -9,6 +9,11 @@ import { BoxSectionBuilderComponent } from './components/box-section-builder/box
 import { BoxQuestionBuilderComponent } from './components/box-question-builder/box-question-builder.component';
 import { EvaluationsComponent } from './components/evaluations/evaluations.component';
 import { EvaluationComponent } from './components/evaluation/evaluation.component';
+import { Evaluations360Component } from './components/evaluations360/evaluations360.component';
+import { Evaluation360Component } from './components/evaluation360/evaluation360.component';
+import { Instruments360Component } from './components/instruments360/instruments360.component';
+import { Instrument360StoreComponent } from './components/instrument360-store/instrument360-store.component';
+
 
 
 @NgModule({
@@ -18,7 +23,11 @@ import { EvaluationComponent } from './components/evaluation/evaluation.componen
     BoxSectionBuilderComponent,
     BoxQuestionBuilderComponent,
     EvaluationsComponent,
-    EvaluationComponent],
+    EvaluationComponent,
+    Evaluations360Component,
+    Evaluation360Component,
+    Instruments360Component,
+    Instrument360StoreComponent],
   imports: [
     CommonModule,
     EvaluationInstrumentsRoutingModule,

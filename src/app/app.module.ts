@@ -29,6 +29,8 @@ import { environment } from 'src/environments/environment';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es-VE';
 import { NgxPermissionsModule } from 'ngx-permissions';
+
+
 registerLocaleData(localeEs);
 
 FullCalendarModule.registerPlugins([
@@ -43,7 +45,7 @@ const config: SocketIoConfig = { url: environment.wsserver, options: {} };
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorPageComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,

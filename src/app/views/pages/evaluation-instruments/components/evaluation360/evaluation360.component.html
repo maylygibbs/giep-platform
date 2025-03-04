@@ -1,0 +1,251 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a (click)="back(null)">Evaluaciones</a></li>
+      <li *ngIf="evaluation && evaluation.id" class="breadcrumb-item active" aria-current="page">Evaluación:
+        {{evaluation.name}}</li>
+    </ol>
+   
+  </nav>
+  <div *ngIf="evaluation" class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="card">
+        <!--Header-->
+        <div class="card-header">
+          <div class="mt-3">
+            <h5>Lea con detenimiento.</h5>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 fw-bolder mb-0 text-uppercase">Instrumento de Evaluación</label>
+            <p class="text-muted">{{evaluation.name}}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 fw-bolder mb-0 text-uppercase">Descripción</label>
+            <p class="text-muted" [innerHtml]="evaluation.description ? evaluation.description : 'Breve leyenda'"></p>
+          </div>
+          <div class="mt-3">
+            <button class="btn btn-secondary" (click)="back(null)">Regresar</button>          
+            <button #initBtn class="btn btn-primary ms-2" (click)="initAnswerEvaluation()">{{formsaved ? 'Continuar': 'Iniciar'}}</button>
+          </div>
+        </div>
+        <!--Body-->
+        <div [hidden]="!show" class="card-body">
+          <form name="evaluationForm" #evaluationForm="ngForm" (ngSubmit)="onSubmit(evaluationForm)" class="forms-sample">
+            <section *ngFor="let section of evaluation.sections; let i = index;">
+              <div class="row" [hidden]="sectionActive != i">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row" *ngIf="section.name">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <h6 class="card-title mb-5">{{section.name}}</h6>
+                        </div>
+                      </div>
+                      <!--(100/section.questions.length)  +'%'-->
+                      <table *ngIf="section.users && section.users.length>0" class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Usuario</th>
+                            <th *ngFor="let question of section.questions;let i = index;">
+                              <p 
+                                [ngClass]="{'required': question.required}">{{i+1}}.- {{question.label}}</p>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let user of section.users">
+                            <td>{{user.email}}</td>
+                            <td *ngFor="let question of user.questions;let i = index;">
+                              <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                  <div *ngIf="question.inputType.label =='text'" class="mb-3">
+                                    <input type="text" [name]="question.nameImput" [(ngModel)]="question.valueResp"
+                                      [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
+                                      class="form-control" id="textInput-{{question.id}}" autocomplete="off" minlength="1"
+                                      maxlength="150" [required]="question.required" (blur)="autoSave(evaluationForm)">
+                                    <div
+                                      *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                      class="invalid-feedback">
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                        Campo es
+                                        requerido
+                                      </div>
+                                    </div>
+  
+                                  </div>
+                                  <div *ngIf="question.inputType.label =='email'" class="mb-3">
+                                    <input type="text" email [name]="question.nameImput" [(ngModel)]="question.valueResp"
+                                      [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
+                                      class="form-control" id="emailInput-{{question.id}}" autocomplete="off"
+                                      minlength="1" maxlength="50" [required]="question.required" (blur)="autoSave(evaluationForm)">
+                                    <div
+                                      *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                      class="invalid-feedback">
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                        Campo es
+                                        requerido
+                                      </div>
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.email">Email
+                                        no es
+                                        válido
+                                      </div>
+                                    </div>
+  
+                                  </div>
+                                  <div *ngIf="question.inputType.label =='number'" class="mb-3">
+                                    <input type="text" [name]="question.nameImput" [(ngModel)]="question.valueResp"
+                                      [pattern]="environment.form.number.validations.pattern"
+                                      [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
+                                      class="form-control" id="numberInput-{{question.id}}" autocomplete="off"
+                                      minlength="1" maxlength="20" [required]="question.required" (blur)="autoSave(evaluationForm)">
+                                    <div
+                                      *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                      class="invalid-feedback">
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                        Campo es
+                                        requerido
+                                      </div>
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.pattern">Campo
+                                        sole
+                                        permite números
+                                      </div>
+                                    </div>
+  
+                                  </div>
+                                  <div *ngIf="question.inputType.label =='textarea'" class="mb-3">
+                                    <textarea [name]="question.nameImput" [(ngModel)]="question.valueResp" row="3"
+                                      [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
+                                      class="form-control" id="textareaInput-{{question.id}}" autocomplete="off"
+                                      minlength="1" maxlength="2000" [required]="question.required" (blur)="autoSave(evaluationForm)"></textarea>
+                                    <div
+                                      *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                      class="invalid-feedback">
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                        Campo es
+                                        requerido
+                                      </div>
+                                    </div>
+  
+                                  </div>
+                                  <div *ngIf="question.inputType.label =='date'" class="mb-3">
+                                    <div class="input-group">
+                                      <input id="dateInput-{{question.id}}" [name]="question.nameImput"
+                                        [minDate]="{year: 1930 , month: 9, day: 1}" class="form-control"
+                                        placeholder="yyyy-mm-dd"
+                                        [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
+                                        [(ngModel)]="question.valueResp" ngbDatepicker #dp="ngbDatepicker"
+                                        [required]="question.required" (change)="autoSave(evaluationForm)">
+                                      <button class="input-group-text" type="button" (click)="dp.toggle()">
+                                        <i class="feather icon-calendar icon-md text-muted"></i>
+                                      </button>
+                                      <div
+                                        *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                        class="invalid-feedback">
+                                        <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                          Campo es
+                                          requerido
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>                                
+                                  <div *ngIf="question.inputType.label =='select'" class="mb-3">
+                                    <ng-select id="selectInput-{{question.id}}" [name]="question.nameImput"
+                                      [(ngModel)]="question.valueResp" (change)="autoSave(evaluationForm)"
+                                      [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
+                                      [searchable]="false" [required]="question.required">
+                                      <ng-option *ngFor="let option of question.options"
+                                        [value]="option.value">{{option.label}}</ng-option>
+                                    </ng-select>
+                                    <div
+                                      *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                      class="invalid-feedback">
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                        Campo es
+                                        requerido
+                                      </div>
+                                    </div>
+  
+                                  </div>
+                                  <div *ngIf="question.inputType.label =='select-multiple'" class="mb-3">
+                                    <ng-select id="selectInput-{{question.id}}" [name]="question.nameImput"
+                                      [multiple]="true" [(ngModel)]="question.valueResp"
+                                      [ngClass]="{'ng-dirty ng-invalid' : evaluationForm.form.controls[question.nameImput]?.errors && ( evaluationForm.form.controls[question.nameImput]?.dirty || evaluationForm.form.controls[question.nameImput]?.touched || evaluationForm.submitted) }"
+                                      [searchable]="false" [required]="question.required" (change)="autoSave(evaluationForm)">
+                                      <ng-option *ngFor="let option of question.options"
+                                        [value]="option.value">{{option.label}}</ng-option>
+                                    </ng-select>
+                                    <div
+                                      *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                      class="invalid-feedback">
+                                      <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                        Campo es
+                                        requerido
+                                      </div>
+                                    </div>
+  
+                                  </div>
+                                  <div *ngIf="question.inputType.label =='radio'" class="mb-3">
+                                    <div class="mt-2">
+                                      <div class="form-check mb-2" *ngFor="let option of question.options">
+                                        <input type="radio" class="form-check-input" [name]="question.nameImput"
+                                          [value]="option.value" [(ngModel)]="question.valueResp"
+                                          [required]="question.required" (change)="autoSave(evaluationForm)">
+                                        <label class="form-check-label" for="radioInput-{{question.id}}">
+                                          {{option.label}}
+                                        </label>
+                                      </div>
+                                      <div
+                                        *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                        class="invalid-feedback">
+                                        <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                          Campo es
+                                          requerido
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div *ngIf="question.inputType.label =='checkbox'" class="mb-3">
+                                    <div class="mt-2">
+                                      <div class="form-check mb-2" *ngFor="let option of question.options; let i = index">
+                                        <input type="checkbox" class="form-check-input" [name]="question.nameImput"
+                                          [value]="option.value" [(ngModel)]="question.valueRespCheckBox[i]"
+                                          (change)="onChangeCheckbox($event, question, option.value)"
+                                          [required]="question.required" (change)="autoSave(evaluationForm)">
+                                        <label class="form-check-label" for="checkInput-{{question.id}}">
+                                          {{option.label}}
+                                        </label>
+                                      </div>
+                                      <div
+                                        *ngIf="evaluationForm.form.controls[question.nameImput]?.invalid && evaluationForm.submitted"
+                                        class="invalid-feedback">
+                                        <div *ngIf="evaluationForm.form.controls[question.nameImput]?.errors?.required">
+                                          Campo es
+                                          requerido
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+  
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right mt-3">
+                  <button type="button" *ngIf="i > 0" class="btn btn-primary" (click)="backSection()">Atras</button>
+                  <button type="button" *ngIf="i < (evaluation.sections.length-1)" class="btn btn-primary ms-2 me-2"
+                    (click)="nextSection(evaluationForm)">Siguiente</button>
+                  <button type="submit" [disabled]="submitted" *ngIf="i == (evaluation.sections.length-1)"
+                    class="btn btn-primary ms-2 me-2">Guardar</button>
+                </div>
+              </div>
+  
+            </section>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
