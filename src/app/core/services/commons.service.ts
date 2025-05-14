@@ -795,5 +795,57 @@ async getAllRolesList(): Promise<Array<SelectOption>> {
       return list;
     }
 
+    /**Evaluation and instrument 360 */
+
+    /**
+    * Get all evaluations360  intuments type
+    * @returns 
+    */
+    async getAllEvaluations360IntumentsType(): Promise<Array<SelectOption>> {
+
+      let list: Array<SelectOption> = new Array<SelectOption>();
+      const resp = await firstValueFrom(this.get(environment.apiUrl, '/instrumento360/tipo/list/all'));
+      list = resp.data.map((item: any) => {
+        const selectOption = new SelectOption(item.id, item.nombre);
+        return selectOption;
+      });
+      return list;
+    }
+
+     /**
+    * Get all categories 360
+    * @returns 
+    */
+      async getAllCategories360(): Promise<Array<SelectOption>> {
+
+        let categories: Array<SelectOption> = new Array<SelectOption>();
+        const resp = await firstValueFrom(this.get(environment.apiUrl, '/instrumento360/competencia/list/all'));
+        categories = resp.data.map((item: any) => {
+          const option = new SelectOption(item.id, item.nombre);          
+          return option;
+        });
+        return categories;
+      }
+
+     async getAllUnits360(): Promise<Array<SelectOption>> {
+
+        let units: Array<SelectOption> = new Array<SelectOption>();
+        const resp = await firstValueFrom(this.get(environment.apiUrl, '/estructuraorganizativa/list'));
+        units = resp.data.map((item: any) => {
+          return new SelectOption(item.id, item.estructuraorganizativa);
+        });
+        console.log('units', units);
+        return units;
+      }
+
+      async getAllDomainLevels360(): Promise<Array<SelectOption>> {
+
+        let domainLevels: Array<SelectOption> = new Array<SelectOption>();
+        const resp = await firstValueFrom(this.get(environment.apiUrl, '/instrumento360/dominio/list/all'));
+        domainLevels = resp.data.map((item: any) => {
+          return new SelectOption(item.id, item.nombre);
+        });
+        return domainLevels;
+      }
 
 }

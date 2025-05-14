@@ -11,7 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
 import { SelectOption } from '../../../../../core/models/select-option';
 import { CommonsService } from '../../../../../core/services/commons.service';
-import { EvaluationInstrumentsService } from './../../../../../core/services/evaluation-instruments.service';
+import { Evaluation360InstrumentsService } from './../../../../../core/services/evaluation360-instruments.service';
 
 
 @Component({
@@ -68,7 +68,7 @@ export class Instruments360Component extends BaseComponent implements OnInit  {
 
   private $eventNavigationEnd: Subscription;
 
-  constructor(private evaluationInstrumentsService: EvaluationInstrumentsService,
+  constructor(private evaluationInstrumentsService: Evaluation360InstrumentsService,
     private commonsService: CommonsService,
     private route: ActivatedRoute,
     protected modalService: NgbModal,

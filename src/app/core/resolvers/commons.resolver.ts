@@ -301,6 +301,52 @@ export class CommonsListInstrumentEvaResolver implements Resolve<any> {
 
 
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListInstrumentEva360TypesResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllEvaluations360IntumentsType();
+  }
+}
+
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListCompetencies360Resolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllCategories360();
+  }
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListUnits360Resolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllUnits360();
+  }
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListDomainLevels360Resolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllDomainLevels360();
+  }
+}
+
+
+
 
 
 

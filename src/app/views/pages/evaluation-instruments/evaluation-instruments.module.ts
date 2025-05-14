@@ -13,7 +13,10 @@ import { Evaluations360Component } from './components/evaluations360/evaluations
 import { Evaluation360Component } from './components/evaluation360/evaluation360.component';
 import { Instruments360Component } from './components/instruments360/instruments360.component';
 import { Instrument360StoreComponent } from './components/instrument360-store/instrument360-store.component';
-
+import { EvaluationCategoriesComponent } from './components/categories/categories.component';
+import { EvaluationCategoryStoreComponent } from './components/category-store/category-store.component';
+import { CompetenciesUnitChargeDomainComponent } from './components/competencies-unit-charge-domain/competencies-unit-charge-domain.component';
+import { CompetenciesUnitChargeDomainStoreComponent } from './components/competencies-unit-charge-domain-store/competencies-unit-charge-domain-store.component';
 
 
 @NgModule({
@@ -27,7 +30,12 @@ import { Instrument360StoreComponent } from './components/instrument360-store/in
     Evaluations360Component,
     Evaluation360Component,
     Instruments360Component,
-    Instrument360StoreComponent],
+    Instrument360StoreComponent,
+    EvaluationCategoriesComponent,
+    EvaluationCategoryStoreComponent,
+    CompetenciesUnitChargeDomainComponent,
+    CompetenciesUnitChargeDomainStoreComponent
+  ],
   imports: [
     CommonModule,
     EvaluationInstrumentsRoutingModule,

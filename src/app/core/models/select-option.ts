@@ -1,4 +1,3 @@
-
 /**
  * SelectOption model
  */
@@ -19,6 +18,8 @@ export class SelectOption{
   public weights: Array<any>; // escalas por niveles
   public globalsPoints:boolean;
   public haveScales:boolean;
+  public type: any;// Cardinal, Digital, Técnica
+  public description: string;
 
 
   /**
