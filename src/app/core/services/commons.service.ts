@@ -705,6 +705,20 @@ export class CommonsService extends HttpService {
 
   }
 
+    /**
+  * Return list charges type
+  * @returns 
+  */
+    async getAllChargesTypeWithScaleAndWeighing(): Promise<Array<SelectOption>> {
+
+      const resp = await firstValueFrom(this.get(environment.apiUrl, '/cargotipo/1'));
+      console.log('resp cargos tipo 1', resp);
+      return resp.data.map((item: any) => {
+        return new SelectOption(item.id, item.descripcion);
+      })
+  
+    }
+
 
   /**
 * Return list charges type

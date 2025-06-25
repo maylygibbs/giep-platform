@@ -55,7 +55,7 @@
                     <td>{{item.priority}}</td>
                     <td class="text-center">
                       <i class="feather icon-edit-2" (click)="select(item.id)" placement="start" ngbTooltip="Editar Relación"></i>
-                      <i class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar Relación" (click)="delete(item.id)"></i>
+                      <i hidden class="feather icon-trash ms-1" placement="start" ngbTooltip="Eliminar Relación" (click)="delete(item.id)"></i>
                     </td>
                   </tr>
                 </tbody>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { InstrumentsComponent } from './components/instruments/instruments.component';
-import { CommonsListCategoyTypeResolver, CommonsListChargesResolver, CommonsListCompetencies360Resolver, CommonsListCountriesResolver, CommonsListDomainLevels360Resolver, CommonsListInputTypeResolver, CommonsListInstrumentEva360TypesResolver, CommonsListInstrumentsResolver, CommonsListLevelsResolver, CommonsListRolesResolver, CommonsListUnits360Resolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
+import { CommonsListCategoyTypeResolver, CommonsListChargesResolver, CommonsListChargesTiposResolver, CommonsListCompetencies360Resolver, CommonsListCountriesResolver, CommonsListDomainLevels360Resolver, CommonsListInputTypeResolver, CommonsListInstrumentEva360TypesResolver, CommonsListInstrumentsResolver, CommonsListLevelsResolver, CommonsListRolesResolver, CommonsListUnits360Resolver, CommonsListUnitsTypeResolver } from './../../../core/resolvers/commons.resolver';
 import { EvaluationsComponent } from './components/evaluations/evaluations.component';
 import { EvaluationComponent } from './components/evaluation/evaluation.component';
 import { Evaluations360Component } from './components/evaluations360/evaluations360.component';
@@ -58,7 +58,7 @@ const routes: Routes = [
     resolve:{
       roles: CommonsListRolesResolver,
       units: CommonsListUnitsTypeResolver,
-      categories: CommonsListCategoyTypeResolver,
+      categories: CommonsListCompetencies360Resolver,
       inputTypes: CommonsListInputTypeResolver,
       countries: CommonsListCountriesResolver,
       charges: CommonsListChargesResolver, 
@@ -74,7 +74,7 @@ const routes: Routes = [
     resolve:{
       roles: CommonsListRolesResolver,
       units: CommonsListUnitsTypeResolver,
-      categories: CommonsListCategoyTypeResolver,
+      categories: CommonsListCompetencies360Resolver,
       inputTypes: CommonsListInputTypeResolver,
       countries: CommonsListCountriesResolver,
       charges: CommonsListChargesResolver      
@@ -91,15 +91,15 @@ const routes: Routes = [
     path: 'categories',
     component: EvaluationCategoriesComponent,
     data: {
-      title: 'Categorías de Evaluación'
+      title: 'Tipos de competencias de Evaluación'
     },
     resolve:{
-      charges: CommonsListChargesResolver,
+      charges: CommonsListChargesTiposResolver,
       levels: CommonsListLevelsResolver
     }
   },
   {
-    path: 'competencies360',
+    path: 'competencies360',//competencia-unidad-nuvel
     component: CompetenciesUnitChargeDomainComponent,
     data: {
       title: 'Competencias por Unidad, Cargo y Dominio'
@@ -107,7 +107,7 @@ const routes: Routes = [
     resolve:{
       competencies: CommonsListCompetencies360Resolver, //las categorias 360
       units: CommonsListUnits360Resolver,
-      charges: CommonsListChargesResolver,
+      charges: CommonsListChargesTiposResolver,
       domainLevels: CommonsListDomainLevels360Resolver
     }
   }

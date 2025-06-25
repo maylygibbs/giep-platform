@@ -4,9 +4,9 @@
       <li *ngIf="selectedItem && !selectedItem.id" class="breadcrumb-item active" aria-current="page">Nuevo instrumento
       </li>
       <li *ngIf="selectedItem && selectedItem.id && selectedItem.isEditable" class="breadcrumb-item active"
-        aria-current="page">Actualizar instrumento 360</li>
+        aria-current="page">Actualizar instrumento</li>
       <li *ngIf="selectedItem && selectedItem.id && !selectedItem.isEditable" class="breadcrumb-item active"
-        aria-current="page">Ver instrumento 360</li>
+        aria-current="page">Ver instrumento</li>
     </ol>
   </nav>
   
@@ -110,7 +110,7 @@
     </div>
   </div>
   <div *ngIf="step==2">
-    <app-instrument-store [instrument]="selectedItem" (onBack)="back($event)"></app-instrument-store>
+    <app-instrument360-store [instrument]="selectedItem" (onBack)="back($event)"></app-instrument360-store>
   </div>
   
   <ng-template #confirmModal let-modal>

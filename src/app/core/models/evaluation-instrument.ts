@@ -32,7 +32,7 @@ export class Instrument {
     updateAt: Date;
     evaluator: User;
     userIfEvaluating:number;
-
+    instrumentType: SelectOption;
 
     /**
      * Process for post response of user
@@ -123,7 +123,9 @@ export class Instrument {
         if (!instrumentInput.id || (instrumentInput.id && instrumentInput.isEditable)) {
             Object.assign(instrumentOutput, { sections: this.getSections(instrumentInput.sections) });
         }
-
+        if(instrumentInput.instrumentType){ //solo aplica para instrumento 360
+            Object.assign(instrumentOutput, { instrumentType: +instrumentInput.instrumentType.value });
+        }
 
         return instrumentOutput;
     }

@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SelectOption } from 'src/app/core/models/select-option';
 import { EvaluationInstrumentsService } from './../../../../../core/services/evaluation-instruments.service';
+import { Evaluation360InstrumentsService } from 'src/app/core/services/evaluation360-instruments.service';
 
 
 @Component({
@@ -51,7 +52,7 @@ export class Instrument360StoreComponent extends BaseComponent implements OnInit
 
   constructor(private route: ActivatedRoute,
     private toastrService: ToastrService,
-    private evaluationInstrumentsService: EvaluationInstrumentsService) {
+    private evaluationInstrumentsService: Evaluation360InstrumentsService) {
     super();
   }
 
@@ -69,8 +70,9 @@ export class Instrument360StoreComponent extends BaseComponent implements OnInit
       this.defaultNavActiveId = !this.instrument.isExpired ? 1 : 2;
       this.sectionActive = 0;
     } else {
-      this.instrument.questionsByCategory = false;
+      this.instrument.questionsByCategory = true;
       this.instrument.globalsPoints = true;
+      this.instrument.instrumentType = new SelectOption();
       this.defaultNavActiveId = 1;
     }
 
@@ -395,7 +397,7 @@ export class Instrument360StoreComponent extends BaseComponent implements OnInit
    * @param form 
    */
   async onSubmit(form: NgForm) {
-    
+    console.log('instrumento before validate', Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
     if (form.valid) {
 
       if (!this.instrument.id || (this.instrument.id && this.instrument.isEditable)) {
@@ -436,8 +438,8 @@ export class Instrument360StoreComponent extends BaseComponent implements OnInit
         console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
         console.log('user', this.selectedUser)
         this.submitted = true;
-        await this.evaluationInstrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
-        this.onBack.emit(null);
+        //await this.evaluationInstrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
+        //this.onBack.emit(null);
         this.submitted = false;
 
       }

@@ -56,7 +56,7 @@ export class Evaluation360InstrumentsService extends HttpService{
   async storeInstrument(data: any) {
     try {
       if (!data.id) {
-        const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion', data));
+        const resp = await firstValueFrom(this.post(environment.apiUrl, '/instrumento360', data));
         this.toastrService.success('El instrumento fué creado con éxito.');
       } else {
         const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/actualizar/${data.id}`, data));
@@ -75,7 +75,7 @@ export class Evaluation360InstrumentsService extends HttpService{
  */
   async publishInstrument(id: string, data: any) {
     try {
-      const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/publicar/${id}`, data));
+      const resp = await firstValueFrom(this.put(environment.apiUrl, `/instrumento360/publicar/${id}`, data));
       this.toastrService.success('El instrumento fué publicado con éxito.');
     } catch (error: any) {
       console.log(error);
@@ -113,7 +113,7 @@ export class Evaluation360InstrumentsService extends HttpService{
    * @returns 
    */
   async getInstrumentsPagined(filter: any): Promise<PaginationResponse> {
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion/list', filter));
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/instrumento360/pagined', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
@@ -144,14 +144,15 @@ export class Evaluation360InstrumentsService extends HttpService{
    * @returns 
    */
   async getInstrumentsByIdForUpdate(id: number): Promise<any> {
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/instrumento360/${id}`));
     const instrument = new Instrument();
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
     instrument.id = resp.data[0].id;
     instrument.name = resp.data[0].nombre;
     instrument.description = resp.data[0].descripcion;
     instrument.dutation = resp.data[0].duracion;
-    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id, resp.data[0].idTipoUnidad.Descripcion);
+    instrument.unitType = new SelectOption(resp.data[0].tipounidad.id, resp.data[0].tipounidad.Descripcion);
+    instrument.instrumentType = new SelectOption(resp.data[0].tipoInstrumento.id, resp.data[0].tipoInstrumento.Descripcion);
     instrument.path = resp.data[0].path;
     const d = new Date(resp.data[0].fechaVigencia);
     instrument.expirationDate = { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
@@ -159,7 +160,7 @@ export class Evaluation360InstrumentsService extends HttpService{
     instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
     instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales == 1 ? true:false) : false;
     instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
-    instrument.roles = resp.data[0].roles;
+    instrument.roles = resp.data[0].roles || [];
 
     instrument.evaluator = new User();
     instrument.evaluator.id = resp.data[0].evaluatorUserId;
@@ -195,6 +196,9 @@ export class Evaluation360InstrumentsService extends HttpService{
         if (item.IdCategoria) {
           question.categoryBy = String(item.IdCategoria.id);
         }
+        if(item.Competencia360 && item.Competencia360.id){
+          question.categoryBy = String(item.Competencia360.id);
+        }
         question.isReady = true;
         if (item.opciones && item.opciones.length) {
           question.options = item.opciones.map((itemOption: any, index: number) => {
@@ -228,7 +232,7 @@ export class Evaluation360InstrumentsService extends HttpService{
 
 
   /**
-   * get pending instruments to answer (final user)
+   * get pending instruments to answer (final user) renderizacion
    * @param id 
    * @returns 
    */  
@@ -453,7 +457,7 @@ export class Evaluation360InstrumentsService extends HttpService{
    * Delete question
    * @param id 
    */
-  async deleteQuestion(id: string): Promise<boolean> {
+  async deleteQuestion(id: string): Promise<boolean> { //TODO: 2025-06-24 integrar con nuevo endpoint
     try {
       const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/pregunta/${id}`));
       this.toastrService.success('La Pregunta fue eliminada exitosamente.');
@@ -468,7 +472,7 @@ export class Evaluation360InstrumentsService extends HttpService{
  * Delete option
  * @param id 
  */
-  async deleteOption(id: number): Promise<boolean> {
+  async deleteOption(id: number): Promise<boolean> { //TODO: 2025-06-24 integrar con nuevo endpoint
     try {
       const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/opciones/${id}`));
       this.toastrService.success('La Opción fue eliminada exitosamente.');
@@ -483,7 +487,7 @@ export class Evaluation360InstrumentsService extends HttpService{
 * Delete option
 * @param id 
 */
-  async deleteSection(id: string): Promise<boolean> {
+  async deleteSection(id: string): Promise<boolean> {//TODO: 2025-06-24 integrar con nuevo endpoint
     try {
       const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/seccion/${id}`));
       this.toastrService.success('La Sección fue eliminada exitosamente.');
@@ -1308,13 +1312,14 @@ export class Evaluation360InstrumentsService extends HttpService{
 */
   async storeCategory(data: SelectOption) {
     try {
+      console.log('data >>>', data);
       let body = { 
         nombre: data.label.toUpperCase(),
         tipo: data.type ? data.type.value : null,
         descripcion: data.description,
         escalaPonderacion: data.flag ? 1 : 0,
         escalas: data.flag ? data.scales.map((item)=> {return {idCargo:parseFloat(item.id), escala:parseFloat(item.scaleNumber)}}) : null,
-        //ponderaciones: data.flag ? data.weights.map((item)=> {return {idNivel:parseFloat(item.id), ponderacion:parseFloat(item.weighingNumber)}}) : null
+        ponderaciones: data.flag ? data.weights.map((item)=> {return {idNivel:parseFloat(item.id), ponderacion:parseFloat(item.weighingNumber)}}) : null
       }
       console.log('body', body);
       if (data.id) {
@@ -1582,8 +1587,13 @@ export class Evaluation360InstrumentsService extends HttpService{
         competencyUnit.charge = new SelectOption(resp[0].cargo.id, resp[0].cargo.label);
         competencyUnit.domainLevel = new SelectOption(resp[0].dominio.id, resp[0].dominio.label);
         competencyUnit.competency = new SelectOption(resp[0].competencia.id, resp[0].competencia.label);
-        competencyUnit.unit = new SelectOption(resp[0].unidad.id, resp[0].unidad.label);
-        competencyUnit.priority = resp[0].prioridad;
+        competencyUnit.priority = resp[0].prioridad;        
+        competencyUnit.niveles = resp[0].niveles && resp[0].niveles.length > 0 ? resp[0].niveles.map((item:any)=> {
+          return new SelectOption(item.id, item.label);
+        }) : [];
+        if(competencyUnit.niveles.length > 0){
+          competencyUnit.nivel1 = new SelectOption(competencyUnit.niveles[0].value, competencyUnit.niveles[0].label);
+        }
         return competencyUnit;
     }
 
@@ -1592,30 +1602,48 @@ export class Evaluation360InstrumentsService extends HttpService{
         return;
     }
 
-    async storeCompetencyUnit(competencyUnit: CompetencyUnit) {
+    async storeCompetencyUnit(competencyUnit: CompetencyUnit, estructuraNiveles: any) {
 
-        console.log('competencyUnit >>>>>>>>', competencyUnit);      
+        let unidad = +competencyUnit.unit;
+        if(estructuraNiveles && estructuraNiveles.length > 0){
+          unidad = estructuraNiveles[estructuraNiveles.length - 1].idSeleccionado;
+        }
         try {
           let body = {};
+          debugger
           if (competencyUnit.id) {
             const id = competencyUnit.id;
+            let domain;
+            if (typeof competencyUnit.domainLevel === 'string' && !isNaN(competencyUnit.domainLevel)) {
+              console.log('Es un número en forma de string');
+              domain = +competencyUnit.domainLevel;
+          } else {
+              console.log('No es un número en forma de string');
+              domain = +competencyUnit.domainLevel.value;
+          }
             body = {
               "cargo": +competencyUnit.charge.value,
-              "dominio": +competencyUnit.domainLevel.value,
+              "dominio": +competencyUnit.domainLevel,
               "competencia": +competencyUnit.competency.value,
-              "unidad": +competencyUnit.unit,
+              "unidad": +unidad,
               "prioridad": +competencyUnit.priority
+
             }
-            console.log('body', body);
+            console.log('body >>>>>>', body);
             await firstValueFrom(this.put(environment.apiUrl, `/instrumento360/competencia/cargo/unidad/${id}`, body));
             this.toastrService.success('Competencia 360 actualizada con exito.');
           } else {
+            
             body = {
-              "cargo": +competencyUnit.charge,
-              "dominio": +competencyUnit.domainLevel,
               "competencia": +competencyUnit.competency,
-              "unidad": +competencyUnit.unit,
-              "prioridad": +competencyUnit.priority
+              "unidad": +unidad,
+              "cargosNivelDominioPrioridad": competencyUnit.chargesDomainLevelPriority && competencyUnit.chargesDomainLevelPriority.length > 0 ? competencyUnit.chargesDomainLevelPriority.map((item: any) => {
+                return {
+                  "cargoId": +item.charge.value,
+                  "dominioId": +item.domainLevel,
+                  "prioridad": +item.priority
+                }
+              }) : []
             }
             console.log('body', body);
             await firstValueFrom(this.post(environment.apiUrl, '/instrumento360/competencia/cargo/unidad', body));

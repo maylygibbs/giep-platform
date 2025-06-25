@@ -637,7 +637,7 @@ export class DocumentService extends HttpService {
  * Retorna listado de Estructura Organizativa
  */
   async getEstructuraOrganizativaList(nivelUnidadId): Promise<any> {
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/archivodigitalestructuraorganizativa/listid/${nivelUnidadId}`));
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/estructuraorganizativa/listid/${nivelUnidadId}`));
     console.log('EstructuraOrganizativaList', resp)
     if (resp && resp.data) {
       return resp.data.map((item) => {

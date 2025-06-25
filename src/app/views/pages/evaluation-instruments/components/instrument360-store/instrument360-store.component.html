@@ -122,7 +122,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                            <div hidden class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputBirthDate" class="form-label required">¿Puntaje 
                                                         Generalizado?</label><i
@@ -143,7 +143,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                            <div hidden class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputBirthDate" class="form-label required">¿Agrupar
                                                         preguntas por categorías?</label>
@@ -163,7 +163,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div hidden class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputRoles" class="form-label required">Roles</label>
                                                     <ng-select id="inputRoles" [items]="data.roles" [multiple]="true"
@@ -171,8 +171,7 @@
                                                         name="instrumentRole" #instrumentRole="ngModel"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentRole.errors && ( instrumentRole.dirty || instrumentRole.touched || instrumentForm.submitted) }"
                                                         bindLabel="label" bindValue="value" [(ngModel)]="selectedRoles"
-                                                        (add)="onAddRole()" (remove)="onRemoveRole($event)"
-                                                        required>
+                                                        (add)="onAddRole()" (remove)="onRemoveRole($event)">
                                                     </ng-select>
                                                     <div *ngIf="instrumentRole.invalid && instrumentForm.submitted"
                                                         class="invalid-feedback">
@@ -181,7 +180,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div hidden class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                 <div class="mb-3">
                                                     <label for="inputEvaluatorUser" class="form-label required">Usuario Evaluador</label>
                                                     <ng-select id="inputEvaluatorUser" [items]="users" [multiple]="false"
@@ -190,8 +189,7 @@
                                                         [closeOnSelect]="true"
                                                         name="instrumentEvaluatorUser" #instrumentEvaluatorUser="ngModel"
                                                         [ngClass]="{'ng-dirty ng-invalid' : instrumentEvaluatorUser.errors && ( instrumentEvaluatorUser.dirty || instrumentEvaluatorUser.touched || instrumentForm.submitted) }"
-                                                        bindLabel="fullName" bindValue="id" [(ngModel)]="selectedUser" [loading]="showLoading"
-                                                        required>
+                                                        bindLabel="fullName" bindValue="id" [(ngModel)]="selectedUser" [loading]="showLoading">
                                                         <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
                                                             <input id="item-{{index}}" type="checkbox" name="itemgroup1-{{index}}"
                                                               [ngModel]="item$.selected" />
@@ -205,6 +203,24 @@
                                                    <div *ngIf="instrumentEvaluatorUser.invalid && instrumentForm.submitted"
                                                         class="invalid-feedback">
                                                         <div *ngIf="instrumentEvaluatorUser.errors?.required">Campo es requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="mb-3">
+                                                    <label for="inputInstrumentType" class="form-label required">Tipo de Evaluación</label>
+                                                    <ng-select id="inputInstrumentType" [items]="data.instruments360Type" [multiple]="false"
+                                                        [searchable]="true" [closeOnSelect]="true"
+                                                        name="instrumentType" #instrumentType="ngModel"
+                                                        [ngClass]="{'ng-dirty ng-invalid' : instrumentType.errors && ( instrumentType.dirty || instrumentType.touched || instrumentForm.submitted) }"
+                                                        bindLabel="label" bindValue="value" [(ngModel)]="instrument.instrumentType.value"
+                                                        (add)="onAddRole()" (remove)="onRemoveRole($event)" required>
+                                                    </ng-select>
+                                                    <div *ngIf="instrumentType.invalid && instrumentForm.submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="instrumentType.errors?.required">Campo es requerido
                                                         </div>
                                                     </div>
                                                 </div>

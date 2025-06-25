@@ -345,6 +345,16 @@ export class CommonsListDomainLevels360Resolver implements Resolve<any> {
   }
 }
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListChargesTiposResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllChargesTypeWithScaleAndWeighing();
+  }
+}
+
 
 
 
