@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   name_system: 'GIEP',
-  ttl: 28800000,
+  ttl: 86400000,
   //apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
   apiAuth: 'https://bofficegiepstage.pafar.com.ve/public',
   apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api', 

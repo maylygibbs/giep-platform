@@ -59,7 +59,7 @@ export class Evaluation360InstrumentsService extends HttpService{
         const resp = await firstValueFrom(this.post(environment.apiUrl, '/instrumento360', data));
         this.toastrService.success('El instrumento fué creado con éxito.');
       } else {
-        const resp = await firstValueFrom(this.put(environment.apiUrl, `/evaluacion/instrumentoevaluacion/actualizar/${data.id}`, data));
+        const resp = await firstValueFrom(this.put(environment.apiUrl, `/instrumento360/actualizar/${data.id}`, data));
         this.toastrService.success('El instrumento fué actualizado con éxito.');
       }
 
@@ -86,7 +86,7 @@ export class Evaluation360InstrumentsService extends HttpService{
 
   async clone(id: number) {
     try {
-      const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}/clonar`));
+      const resp = await firstValueFrom(this.get(environment.apiUrl, `/instrumento360/${id}/clonar`));
       this.toastrService.success('El instrumento fué copiado con éxito.');
     } catch (error: any) {
       this.toastrService.error('Ha ocurrido un error eliminando instrumento.');
@@ -96,7 +96,7 @@ export class Evaluation360InstrumentsService extends HttpService{
 
   async deleteInstrument(id: number) {
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/instrumento360/${id}`));
       this.toastrService.success('El instrumento fué eliminado con éxito.');
     } catch (error: any) {
 
@@ -457,9 +457,9 @@ export class Evaluation360InstrumentsService extends HttpService{
    * Delete question
    * @param id 
    */
-  async deleteQuestion(id: string): Promise<boolean> { //TODO: 2025-06-24 integrar con nuevo endpoint
+  async deleteQuestion(id: string): Promise<boolean> { 
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/pregunta/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/instrumento360/pregunta/${id}`));
       this.toastrService.success('La Pregunta fue eliminada exitosamente.');
       return true;
     } catch (error) {
@@ -474,7 +474,7 @@ export class Evaluation360InstrumentsService extends HttpService{
  */
   async deleteOption(id: number): Promise<boolean> { //TODO: 2025-06-24 integrar con nuevo endpoint
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/opciones/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/instrumento360/opcion/${id}`));
       this.toastrService.success('La Opción fue eliminada exitosamente.');
       return true;
     } catch (error) {
@@ -487,9 +487,9 @@ export class Evaluation360InstrumentsService extends HttpService{
 * Delete option
 * @param id 
 */
-  async deleteSection(id: string): Promise<boolean> {//TODO: 2025-06-24 integrar con nuevo endpoint
+  async deleteSection(id: string): Promise<boolean> {
     try {
-      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/evaluacion/seccion/${id}`));
+      const resp = await firstValueFrom(this.delete(environment.apiUrl, `/instrumento360/seccion/${id}`));
       this.toastrService.success('La Sección fue eliminada exitosamente.');
       return true;
     } catch (error) {

@@ -438,8 +438,8 @@ export class Instrument360StoreComponent extends BaseComponent implements OnInit
         console.log('instrumento', Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
         console.log('user', this.selectedUser)
         this.submitted = true;
-        //await this.evaluationInstrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
-        //this.onBack.emit(null);
+        await this.evaluationInstrumentsService.storeInstrument(Instrument.mapForPost(this.instrument, this.selectedRoles, [this.selectedUser]));
+        this.onBack.emit(null);
         this.submitted = false;
 
       }

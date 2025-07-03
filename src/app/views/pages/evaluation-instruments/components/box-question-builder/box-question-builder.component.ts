@@ -9,6 +9,7 @@ import { BaseComponent } from '../../../../../views/shared/components/base/base.
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EvaluationInstrumentsService } from '../../../../../core/services/evaluation-instruments.service';
+import { Evaluation360InstrumentsService } from '../../../../../core/services/evaluation360-instruments.service';
 
 @Component({
   selector: 'app-box-question-builder',
@@ -39,6 +40,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
 
   constructor(private commonsService: CommonsService,
     private evaluationInstrumentsService: EvaluationInstrumentsService,
+    private evaluationInstrumentsService360: Evaluation360InstrumentsService, //Eliminar, mientras para pruebas
     private route: ActivatedRoute,
     protected modalService: NgbModal) {
     super();
@@ -115,7 +117,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
   async deleteOption(option: QuestionOption) {
     let result: boolean = true;
     if (option.idOption) {
-      result = await this.evaluationInstrumentsService.deleteOption(option.idOption);
+      result = await this.evaluationInstrumentsService360.deleteOption(option.idOption);
     }
     if (result) {
       this.question.options = this.question.options.filter((item) => item.nameInputLabel != option.nameInputLabel);

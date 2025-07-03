@@ -2,6 +2,7 @@ import { Section } from './../../../../../core/models/section';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Question } from './../../../../../core/models/question';
 import { EvaluationInstrumentsService } from '../../../../../core/services/evaluation-instruments.service';
+import { Evaluation360InstrumentsService } from '../../../../../core/services/evaluation360-instruments.service';
 
 @Component({
   selector: 'app-box-section-builder',
@@ -22,7 +23,9 @@ export class BoxSectionBuilderComponent implements OnInit {
   @Output()
   onDeleteSection: EventEmitter<Section> = new EventEmitter<Section>();
 
-  constructor(private evaluationInstrumentsService: EvaluationInstrumentsService) { }
+  constructor(private evaluationInstrumentsService: EvaluationInstrumentsService,
+  private evaluationInstrumentsService360: Evaluation360InstrumentsService, //Eliminar, mientras para pruebas
+  ) { }
 
   ngOnInit(): void {
   }
@@ -46,7 +49,7 @@ export class BoxSectionBuilderComponent implements OnInit {
   async deleteQuestion(question: Question) {
     let result: boolean=true;
     if(question.id){
-      result = await this.evaluationInstrumentsService.deleteQuestion(question.id);
+      result = await this.evaluationInstrumentsService360.deleteQuestion(question.id);
     }
     if (result) {
       this.section.questions = this.section.questions.filter((item) => item.order != question.order);
