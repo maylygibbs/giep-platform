@@ -530,9 +530,8 @@ export class InstrumentsService extends HttpService {
         const categories = item.resultado.map((itemData: any) => {
           return itemData.label;
         });
-
         if(!globalsPoints){
-          if(item.resultado){
+          if(item.resultado && item.resultado.length > 0){
             result.quantityUsers = item.resultado[0].cantidadPersonas
           }
         }

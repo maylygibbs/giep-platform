@@ -1610,21 +1610,29 @@ export class Evaluation360InstrumentsService extends HttpService{
         }
         try {
           let body = {};
-          debugger
           if (competencyUnit.id) {
             const id = competencyUnit.id;
             let domain;
+            let competency
             if (typeof competencyUnit.domainLevel === 'string' && !isNaN(competencyUnit.domainLevel)) {
-              console.log('Es un número en forma de string');
-              domain = +competencyUnit.domainLevel;
-          } else {
-              console.log('No es un número en forma de string');
-              domain = +competencyUnit.domainLevel.value;
-          }
+                console.log('Es un número en forma de string');
+                domain = +competencyUnit.domainLevel;
+            } else {
+                console.log('No es un número en forma de string');
+                domain = +competencyUnit.domainLevel.value;
+            }
+            if (typeof competencyUnit.competency === 'number' && !isNaN(competencyUnit.competency)) {
+                console.log('Es un número en forma de string');
+                competency = +competencyUnit.competency;
+            } else {
+                console.log('No es un número en forma de string');
+                competency = +competencyUnit.competency.value;
+            }
+
             body = {
               "cargo": +competencyUnit.charge.value,
-              "dominio": +competencyUnit.domainLevel,
-              "competencia": +competencyUnit.competency.value,
+              "dominio": domain,
+              "competencia": competency,
               "unidad": +unidad,
               "prioridad": +competencyUnit.priority
 

@@ -11,7 +11,7 @@
                                 <ng-select
                                     [items]="data.competencies"
                                     [clearable]="false"
-                                    [searchable]="false"
+                                    [searchable]="true"
                                     name="competency"
                                     #competency="ngModel"
                                     [(ngModel)]="competencyUnit.competency"
@@ -71,7 +71,7 @@
                                     <ng-select
                                         [items]="data.charges"
                                         [clearable]="false"
-                                        [searchable]="false"
+                                        [searchable]="true"
                                         name="charge"   
                                         #charge="ngModel"
                                         [(ngModel)]="competencyUnit.charge"
@@ -89,7 +89,7 @@
                                     <ng-select
                                         [items]="data.domainLevels"
                                         [clearable]="false"
-                                        [searchable]="false"
+                                        [searchable]="true"
                                         name="domainLevel"  
                                         #domainLevel="ngModel"
                                         [(ngModel)]="competencyUnit.domainLevel"
@@ -133,7 +133,7 @@
                                                     <ng-select
                                                         [items]="data.domainLevels"
                                                         [clearable]="false"
-                                                        [searchable]="false"
+                                                        [searchable]="true"
                                                         [(ngModel)]="competencyUnit.chargesDomainLevelPriority[i].domainLevel"
                                                         name="domainLevel-{{i}}"
                                                         bindLabel="label"

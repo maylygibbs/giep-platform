@@ -79,7 +79,7 @@ export class CompetenciesUnitChargeDomainStoreComponent extends BaseComponent im
         });
       } else {
         // Para el último nivel, solo agregar el ID seleccionado
-        debugger
+        
         if(nivelSeleccionado){
           this.estructuraNiveles.push({
             idSeleccionado: +nivelSeleccionado.value,
