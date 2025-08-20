@@ -99,6 +99,10 @@ const routes: Routes = [
         path: 'evaluation-instruments',
         loadChildren: () => import('../evaluation-instruments/evaluation-instruments.module').then(m => m.EvaluationInstrumentsModule),
       },
+      {
+        path: 'evaluation-instruments-360',
+        loadChildren: () => import('../evaluation-instruments-360/evaluation-instruments-360.module').then(m => m.EvaluationInstruments360Module),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

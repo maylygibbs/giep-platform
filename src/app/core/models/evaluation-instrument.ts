@@ -84,18 +84,65 @@ export class Instrument {
                 }
 
             });
-
-
-
-
-
             questionsOutput.push(...arrayResponseByUser);
         });
         return questionsOutput;
     }
 
 
-    /* */
+    /**
+     * Process for post response of user
+     * @param instrumentInput 
+     * @returns 
+     */
+    public static mapForPostResponseByUser(user: User, idInstrument360: number) {
+        const instrumentOutput = {};
+
+        Object.assign(instrumentOutput, { id: idInstrument360 });
+        Object.assign(instrumentOutput, { userId: user.id });
+        Object.assign(instrumentOutput, { competenciesResponse: this.getQuestionsResponseByUser(user.sections) });
+
+        return instrumentOutput;
+    }
+
+
+    /**
+     * Get questions response by user of instrument 360
+     * @param sections 
+     * @returns 
+     */
+    private static getQuestionsResponseByUser(sections: Array<Section>) {
+        const questionsOutput: any[] = [];
+        sections.forEach((section: Section) => {
+
+            const arrayTemp = section.questions.map((question: Question) => {
+                let valueResp;
+
+                if (question.inputType.label === 'select-multiple' || question.inputType.label === 'checkbox') {
+                    valueResp = question.valueResp.map((vr) => {
+                        return { idOption: vr, text: null }
+                    })
+                } else if (question.inputType.label === 'select' || question.inputType.label === 'radio') {
+                    valueResp = [{ idOption: question.valueResp, text: null }];
+
+                } else {
+                    if (question.inputType.label == 'date') {
+                        valueResp = [{ idOption: null, text: moment().year(question.valueResp.year).month(question.valueResp.month - 1).date(question.valueResp.day).format('YYYY-MM-DD') }];
+                    } else {
+                        valueResp = [{ idOption: null, text: question.valueResp }];
+
+                    }
+                }
+                return {
+                    id: question.id,
+                    response: valueResp
+                }
+            });
+
+            questionsOutput.push(...arrayTemp);
+        });
+        return questionsOutput;
+    }
 
 
     /**

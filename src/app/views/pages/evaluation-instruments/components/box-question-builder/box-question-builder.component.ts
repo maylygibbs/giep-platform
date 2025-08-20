@@ -40,7 +40,6 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
 
   constructor(private commonsService: CommonsService,
     private evaluationInstrumentsService: EvaluationInstrumentsService,
-    private evaluationInstrumentsService360: Evaluation360InstrumentsService, //Eliminar, mientras para pruebas
     private route: ActivatedRoute,
     protected modalService: NgbModal) {
     super();
@@ -117,7 +116,7 @@ export class BoxQuestionBuilderComponent extends BaseComponent implements OnInit
   async deleteOption(option: QuestionOption) {
     let result: boolean = true;
     if (option.idOption) {
-      result = await this.evaluationInstrumentsService360.deleteOption(option.idOption);
+      result = await this.evaluationInstrumentsService.deleteOption(option.idOption);
     }
     if (result) {
       this.question.options = this.question.options.filter((item) => item.nameInputLabel != option.nameInputLabel);

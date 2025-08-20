@@ -6,6 +6,7 @@ import { Company } from './company';
 
 import  { Instrument as EvaluationIntrument}  from './evaluation-instrument';
 import { Question } from './question';
+import { Section } from './section';
 
 export class User {
 
@@ -51,6 +52,7 @@ export class User {
     evaluationIntrument: EvaluationIntrument;
     questions: Array<Question>
     password: string;
+    sections: Array<Section>;
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');

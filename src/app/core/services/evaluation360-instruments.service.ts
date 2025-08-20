@@ -236,8 +236,319 @@ export class Evaluation360InstrumentsService extends HttpService{
    * @param id 
    * @returns 
    */  
-  async getInstrumentsById(id: number): Promise<any> {
-    const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
+  async getInstrumentsById(id: number): Promise<any> { // TODO: CAMBIAR RUTA DE ENDPOINT
+    //const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
+
+    const resp = { "data": [{
+            "id": "4",
+            "nombre": "Instrumento de evaluacion prueba 25/07/2025",
+            "descripcion": "Instrumento de evaluacion prueba 25/07/2025",
+            "idTipoUnidad": {
+                "id": "2",
+                "Descripcion": "minuto"
+            },
+            "unidad": null,
+            "createAt": "25/07/2025",
+            "createBy": "sirjcbg1@hotmail.com",
+            "updateAt": "25/07/2025",
+            "updateBy": "sirjcbg1@hotmail.com",
+            "path": null,
+            "fechaPublicacion": "2025-07-25",
+            "fechaVigencia": "2025-08-31",
+            "editable": 0,
+            "roles": [
+                "ROLE_ADMINISTRADOR",
+                "ROLE_REGULAR",
+                "ROLE_SUPER_ADMINISTRADOR"
+            ],
+            "users": [
+                {
+                    "id": 67,
+                    "nombre": "Jaime Padron",
+                    "email": "jlpadron@pafar.net",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_ADMINISTRADOR",
+                        "ROLE_REGULAR"
+                    ]
+                },
+                {
+                    "id": 2260,
+                    "nombre": "Luis Baez",
+                    "email": "baezgregoric@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_SUPER_ADMINISTRADOR",
+                        "ROLE_ADMINISTRADOR",
+                        "ROLE_STAEXPED",
+                        "ROLE_STAEXPED_REPORTS",
+                        "ROLE_OPERADOR_MULTIEMPRESA"
+                    ]
+                },
+                {
+                    "id": 3117,
+                    "nombre": "Borrar 2 Borrar 2",
+                    "email": "borrar2@test.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_ADMINISTRADOR"
+                    ]
+                },
+                {
+                    "id": 48,
+                    "nombre": "Mayly Gibbs",
+                    "email": "maylygibbs807@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_SUPER_ADMINISTRADOR"
+                    ]
+                },
+                {
+                    "id": 231,
+                    "nombre": "Alberto Uzcategui",
+                    "email": "albertor.uovalles@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_REGULAR"
+                    ]
+                },
+                {
+                    "id": 239,
+                    "nombre": "Luis Rivas",
+                    "email": "luis.vargas@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_REGULAR"
+                    ]
+                },
+                {
+                    "id": 247,
+                    "nombre": "luis carapaica",
+                    "email": "lcarapaica@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_SUPER_ADMINISTRADOR",
+                        "ROLE_REGULAR"
+                    ]
+                },
+                {
+                    "id": 248,
+                    "nombre": "Jess Salazar",
+                    "email": "jesussalazar70@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_REGULAR"
+                    ]
+                },
+                {
+                    "id": 250,
+                    "nombre": "Thaly Farias",
+                    "email": "thalyf@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_REGULAR"
+                    ]
+                },
+                {
+                    "id": 251,
+                    "nombre": "Sasa Muchacho",
+                    "email": "sasamuchacho@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_REGULAR"
+                    ]
+                },
+                {
+                    "id": 252,
+                    "nombre": "Carmen Bracho",
+                    "email": "carmenelenabracho@gmail.com",
+                    "respondida": 0,
+                    "roles": [
+                        "ROLE_REGULAR"
+                    ]
+                }
+            ],
+            "secciones": [
+                {
+                    "id": 4,
+                    "nombre": "Pagina 1",
+                    "orden": 1,
+                    "preguntas": [
+                        {
+                            "id": 4,
+                            "pregunta": "Comunicacion",
+                            "orden": 1,
+                            "idInput": {
+                                "id": 1,
+                                "Descripcion": "select"
+                            },
+                            "class": null,
+                            "obligatorio": 1,
+                            "puntos": "1",
+                            "IdCategoria": null,
+                            "idEvaluacion": {
+                                "id": 4,
+                                "Descripcion": "Instrumento de evaluacion prueba 25/07/2025"
+                            },
+                            "createAt": "25/07/2025",
+                            "createBy": null,
+                            "updateAt": null,
+                            "updateBy": null,
+                            "opciones": [
+                                {
+                                    "id": 12,
+                                    "Name": "Malo",
+                                    "Puntos": 1,
+                                    "Valor": "1",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 13,
+                                    "Name": "Regular",
+                                    "Puntos": 2,
+                                    "Valor": "2",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 14,
+                                    "Name": "Bueno",
+                                    "Puntos": 3,
+                                    "Valor": "3",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 15,
+                                    "Name": "Excelente",
+                                    "Puntos": 4,
+                                    "Valor": "4",
+                                    "Correcto": 1
+                                }
+                            ],
+                            "respuestas": {}
+                        },
+                        {
+                            "id": 5,
+                            "pregunta": "Internalidad",
+                            "orden": 2,
+                            "idInput": {
+                                "id": 1,
+                                "Descripcion": "select"
+                            },
+                            "class": null,
+                            "obligatorio": 1,
+                            "puntos": "2",
+                            "IdCategoria": null,
+                            "idEvaluacion": {
+                                "id": 4,
+                                "Descripcion": "Instrumento de evaluacion prueba 25/07/2025"
+                            },
+                            "createAt": "25/07/2025",
+                            "createBy": null,
+                            "updateAt": null,
+                            "updateBy": null,
+                            "opciones": [
+                                {
+                                    "id": 16,
+                                    "Name": "Malo",
+                                    "Puntos": 1,
+                                    "Valor": "1",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 17,
+                                    "Name": "Regular",
+                                    "Puntos": 2,
+                                    "Valor": "2",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 18,
+                                    "Name": "Bueno",
+                                    "Puntos": 3,
+                                    "Valor": "3",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 19,
+                                    "Name": "Excelente",
+                                    "Puntos": 4,
+                                    "Valor": "4",
+                                    "Correcto": 1
+                                }
+                            ],
+                            "respuestas": {}
+                        },
+                        {
+                            "id": 6,
+                            "pregunta": "Orientacion hacia el vliente",
+                            "orden": 3,
+                            "idInput": {
+                                "id": 1,
+                                "Descripcion": "select"
+                            },
+                            "class": null,
+                            "obligatorio": 1,
+                            "puntos": "1",
+                            "IdCategoria": null,
+                            "idEvaluacion": {
+                                "id": 4,
+                                "Descripcion": "Instrumento de evaluacion prueba 25/07/2025"
+                            },
+                            "createAt": "25/07/2025",
+                            "createBy": null,
+                            "updateAt": null,
+                            "updateBy": null,
+                            "opciones": [
+                                {
+                                    "id": 20,
+                                    "Name": "Malo",
+                                    "Puntos": 1,
+                                    "Valor": "1",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 21,
+                                    "Name": "Regular",
+                                    "Puntos": 2,
+                                    "Valor": "2",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 22,
+                                    "Name": "Bueno",
+                                    "Puntos": 3,
+                                    "Valor": "3",
+                                    "Correcto": 1
+                                },
+                                {
+                                    "id": 23,
+                                    "Name": "Excelente",
+                                    "Puntos": 4,
+                                    "Valor": "4",
+                                    "Correcto": 1
+                                }
+                            ],
+                            "respuestas": {}
+                        }
+                    ]
+                }
+            ],
+            "publicar": 1,
+            "duracion": "20",
+            "userIfEvaluating": null,
+            "questionsByCategory": 1,
+            "statusId": {
+                "id": 1,
+                "Descripcion": "Activo"
+            },
+            "orden": null,
+            "puntosGlobales": 1,
+            "evaluatorUserId": "1",
+            "evaluatorFullName": "Juan Carlos Blanco",
+            "evaluatorEmail": "sirjcbg1@hotmail.com"
+        }
+    ]
+};
     const instrument = new Instrument();
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
     instrument.id = resp.data[0].id;
@@ -275,80 +586,50 @@ export class Evaluation360InstrumentsService extends HttpService{
 
     }
 
-    instrument.sections = resp.data[0].secciones.map((sectionItem: any) => {
+    if(instrument.users && instrument.users.length>0){
 
-      let section = new Section();
-      section.id = sectionItem.id;
-      section.name = sectionItem.nombre;
-      section.numberSection = sectionItem.orden;
+      instrument.users.forEach((user: User)=>{
 
-      if(instrument.users && instrument.users.length>0){
-        section.users = instrument.users.map((user)=>{
-          const userOutput = {...user} as User;
-          userOutput.questions =  sectionItem.preguntas.map((item: any) => {
-            let question = new Question();
-            question.id = item.id;
-            question.label = item.pregunta;
-            question.nameImput = `question-${item.idInput.Descripcion}-${item.id}-${user.id}-${sectionItem.id}`;
-            question.order = item.orden;
-            question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
-            question.className = item.class;
-            question.required = item.obligatorio == 1 ? true : false;
-            question.score = item.puntos;
-    
-            if (item.IdCategoria) {
-              question.categoryBy = String(item.IdCategoria.id);
-            }
-            question.isReady = true;
-            if (item.opciones && item.opciones.length) {
-              question.options = item.opciones.map((itemOption: any, index: number) => {
-                let option = new QuestionOption(itemOption.id, itemOption.Name);
-                option.nameInputLabel = "optionLabel" + question.order;
-                option.nameInputValue = "optionValue" + question.order;
-                option.nameInputScore = "optionScore" + question.order;
-                return option;
-              });
-            }
-    
-            return question;
-          });
-          return userOutput;
-        })
-      }
+        user.sections = resp.data[0].secciones.map((sectionItem: any) => {
+                let section = new Section();
+                section.id = sectionItem.id;
+                section.name = sectionItem.nombre;
+                section.numberSection = sectionItem.orden;
 
-      section.questions = sectionItem.preguntas.map((item: any) => {
-        let question = new Question();
-        question.id = item.id;
-        question.label = item.pregunta;
-        question.nameImput = 'question-' + item.idInput.Descripcion + '-' + item.id;
-        question.order = item.orden;
-        question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
-        question.className = item.class;
-        question.required = item.obligatorio == 1 ? true : false;
-        question.score = item.puntos;
+                section.questions = sectionItem.preguntas.map((item: any) => {
+                    let question = new Question();
+                    question.id = item.id;
+                    question.label = item.pregunta;
+                    question.nameImput = `question-${item.idInput.Descripcion}-${item.id}-${user.id}-${sectionItem.id}`;
+                    question.order = item.orden;
+                    question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
+                    question.className = item.class;
+                    question.required = item.obligatorio == 1 ? true : false;
+                    question.score = item.puntos;
+            
+                    if (item.IdCategoria) {
+                      question.categoryBy = String(item.IdCategoria.id);
+                    }
+                    question.isReady = true;
+                    if (item.opciones && item.opciones.length) {
+                      question.options = item.opciones.map((itemOption: any, index: number) => {
+                        let option = new QuestionOption(itemOption.id, itemOption.Name);
+                        option.nameInputLabel = `optionLabel-${question.order}-${question.id }-${user.id}-${sectionItem.id}`;
+                        option.nameInputValue = `optionValue-${question.order}-${question.id }-${user.id}-${sectionItem.id}`;
+                        option.nameInputScore = `optionScore-${question.order}-${question.id }-${user.id}-${sectionItem.id}`;
+                        return option;
+                      });
+                    }
+            
+                    return question;
+                });
 
-        if (item.IdCategoria) {
-          question.categoryBy = String(item.IdCategoria.id);
-        }
-        question.isReady = true;
-        if (item.opciones && item.opciones.length) {
-          question.options = item.opciones.map((itemOption: any, index: number) => {
-            let option = new QuestionOption(itemOption.Valor, itemOption.Name);
-            option.idOption = itemOption.id;
-            option.score = itemOption.Puntos;
-            option.nameInputLabel = "optionLabel" + question.order + '' + index;
-            option.nameInputValue = "optionValue" + question.order + '' + index;
-            option.nameInputScore = "optionScore" + question.order + '' + index;
-            return option;
-          });
-        }
 
-        return question;
+                return section;
+        });
       });
-
-      return section;
-
-    });   
+    }
+ 
 
     return instrument;
   }
@@ -1501,7 +1782,7 @@ export class Evaluation360InstrumentsService extends HttpService{
    * @returns 
    */
   async getInstrumentsByEvaluatorPagined(filter: any): Promise<PaginationResponse> {
-    const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/instrumentoevaluacion/list/instructor', filter));
+    const resp = await firstValueFrom(this.post(environment.apiUrl, '/instrumento360/pagined1', filter));
     const paginator = new PaginationResponse(filter.page, filter.rowByPage);
     paginator.count = resp.count;
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
@@ -1517,7 +1798,7 @@ export class Evaluation360InstrumentsService extends HttpService{
       instrument.isEditable = item.editable == 1 ? true : false;
       instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
       instrument.isPublished = item.publicar && item.publicar == 1 ? true : false;
-      instrument.order = item.orden;
+      instrument.instrumentType = new SelectOption(item.tipoInstrumento.id, item.tipoInstrumento.Nombre);
       instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales == 1 ? true:false) : false;
       instrument.userIfEvaluating = item.userIfEvaluating;
       instrument.users = Array.isArray(item.users) && item.users.length > 0 ? item.users : null;
