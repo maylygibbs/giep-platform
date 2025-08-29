@@ -237,9 +237,9 @@ export class Evaluation360InstrumentsService extends HttpService{
    * @returns 
    */  
   async getInstrumentsById(id: number): Promise<any> { // TODO: CAMBIAR RUTA DE ENDPOINT
-    //const resp = await firstValueFrom(this.get(environment.apiUrl, `/evaluacion/instrumentoevaluacion/${id}`));
+    const resp = await firstValueFrom(this.get(environment.apiUrl, `/instrumento360evaluacion/${id}`));
 
-    const resp = { "data": [{
+    /*const resp = { "data": [{
             "id": "4",
             "nombre": "Instrumento de evaluacion prueba 25/07/2025",
             "descripcion": "Instrumento de evaluacion prueba 25/07/2025",
@@ -548,7 +548,8 @@ export class Evaluation360InstrumentsService extends HttpService{
             "evaluatorEmail": "sirjcbg1@hotmail.com"
         }
     ]
-};
+    };*/
+
     const instrument = new Instrument();
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
     instrument.id = resp.data[0].id;
@@ -575,7 +576,7 @@ export class Evaluation360InstrumentsService extends HttpService{
       if(usersIfEvaluating.length > 0){
         instrument.users = usersIfEvaluating.map((u: any) => {
           const user = new User();
-          user.id = u.id;
+          user.id = u.usuarioId;
           user.firstName = u.nombre;
           user.email = u.email;
           user.answered = u.respondida == 1 ? true : false;
@@ -628,8 +629,7 @@ export class Evaluation360InstrumentsService extends HttpService{
                 return section;
         });
       });
-    }
- 
+    } 
 
     return instrument;
   }
@@ -1950,4 +1950,20 @@ export class Evaluation360InstrumentsService extends HttpService{
     
         }
     }
+
+    /**
+     * Delete users from instrument
+     * @param data 
+     */
+    async linkUserToInstrument(data:any){
+      try {
+        const resp = await firstValueFrom(this.post(environment.apiUrl, '/instrumento360/asignar/usuarios', data));
+        this.toastrService.success('El usuario ha sido vinculado con éxito.');
+      } catch (error: any) {
+        if (error.status != 500)
+          this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+      }
+    }
+
+
 }

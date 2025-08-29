@@ -119,7 +119,7 @@ export class Evaluations360Component extends BaseComponent implements OnInit  {
     this.next();
   }
 
-  async select(id: number) {
+  async select(id: number) {    
     this.router.navigate([`/evaluation-instruments-360/users_to_evaluate/${id}`]);
   }
 

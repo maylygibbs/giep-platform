@@ -37,7 +37,7 @@ export class UsersToEvaluateComponent extends BaseComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ngOnInit() {    
     this.evaluation = await this.evaluationInstrumentsService.getInstrumentsById(this.id);
     console.log('evaluation', this.evaluation);
     this.$eventNavigationEnd = this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)
@@ -59,11 +59,20 @@ export class UsersToEvaluateComponent extends BaseComponent implements OnInit {
     this.router.navigate([`/evaluation-instruments-360/evaluations360/`]);
   }
 
+  /**
+   * 
+   * @param user User to evaluate
+   * Link the user to the evaluation instrument and go to the next step
+   */
   evaluateUser(user: any) {
+    debugger
     this.userSelected = user;  
     this.evaluationSelected = this.evaluation;
-    this.nextStep();
-
+    const data = {userId: this.userSelected.id, instrumentoId: this.evaluationSelected.id}
+    const resp = this.evaluationInstrumentsService.linkUserToInstrument(data);
+    if (resp) {
+      this.nextStep();
+    }    
   }
 
 }
