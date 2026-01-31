@@ -132,6 +132,9 @@ export class Evaluation360InstrumentsService extends HttpService{
       instrument.order = item.orden;
       instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales = 1 ? true:false) : false;
       instrument.path = '/capture-instruments/results';
+      if(item.tipoInstrumento){
+        instrument.instrumentType = new SelectOption(item.tipoInstrumento.id, item.tipoInstrumento.Nombre);
+      }
       return instrument;
     });
 
@@ -239,341 +242,36 @@ export class Evaluation360InstrumentsService extends HttpService{
   async getInstrumentsById(id: number): Promise<any> { // TODO: CAMBIAR RUTA DE ENDPOINT
     const resp = await firstValueFrom(this.get(environment.apiUrl, `/instrumento360evaluacion/${id}`));
 
-    /*const resp = { "data": [{
-            "id": "4",
-            "nombre": "Instrumento de evaluacion prueba 25/07/2025",
-            "descripcion": "Instrumento de evaluacion prueba 25/07/2025",
-            "idTipoUnidad": {
-                "id": "2",
-                "Descripcion": "minuto"
-            },
-            "unidad": null,
-            "createAt": "25/07/2025",
-            "createBy": "sirjcbg1@hotmail.com",
-            "updateAt": "25/07/2025",
-            "updateBy": "sirjcbg1@hotmail.com",
-            "path": null,
-            "fechaPublicacion": "2025-07-25",
-            "fechaVigencia": "2025-08-31",
-            "editable": 0,
-            "roles": [
-                "ROLE_ADMINISTRADOR",
-                "ROLE_REGULAR",
-                "ROLE_SUPER_ADMINISTRADOR"
-            ],
-            "users": [
-                {
-                    "id": 67,
-                    "nombre": "Jaime Padron",
-                    "email": "jlpadron@pafar.net",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_ADMINISTRADOR",
-                        "ROLE_REGULAR"
-                    ]
-                },
-                {
-                    "id": 2260,
-                    "nombre": "Luis Baez",
-                    "email": "baezgregoric@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_SUPER_ADMINISTRADOR",
-                        "ROLE_ADMINISTRADOR",
-                        "ROLE_STAEXPED",
-                        "ROLE_STAEXPED_REPORTS",
-                        "ROLE_OPERADOR_MULTIEMPRESA"
-                    ]
-                },
-                {
-                    "id": 3117,
-                    "nombre": "Borrar 2 Borrar 2",
-                    "email": "borrar2@test.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_ADMINISTRADOR"
-                    ]
-                },
-                {
-                    "id": 48,
-                    "nombre": "Mayly Gibbs",
-                    "email": "maylygibbs807@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_SUPER_ADMINISTRADOR"
-                    ]
-                },
-                {
-                    "id": 231,
-                    "nombre": "Alberto Uzcategui",
-                    "email": "albertor.uovalles@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_REGULAR"
-                    ]
-                },
-                {
-                    "id": 239,
-                    "nombre": "Luis Rivas",
-                    "email": "luis.vargas@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_REGULAR"
-                    ]
-                },
-                {
-                    "id": 247,
-                    "nombre": "luis carapaica",
-                    "email": "lcarapaica@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_SUPER_ADMINISTRADOR",
-                        "ROLE_REGULAR"
-                    ]
-                },
-                {
-                    "id": 248,
-                    "nombre": "Jess Salazar",
-                    "email": "jesussalazar70@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_REGULAR"
-                    ]
-                },
-                {
-                    "id": 250,
-                    "nombre": "Thaly Farias",
-                    "email": "thalyf@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_REGULAR"
-                    ]
-                },
-                {
-                    "id": 251,
-                    "nombre": "Sasa Muchacho",
-                    "email": "sasamuchacho@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_REGULAR"
-                    ]
-                },
-                {
-                    "id": 252,
-                    "nombre": "Carmen Bracho",
-                    "email": "carmenelenabracho@gmail.com",
-                    "respondida": 0,
-                    "roles": [
-                        "ROLE_REGULAR"
-                    ]
-                }
-            ],
-            "secciones": [
-                {
-                    "id": 4,
-                    "nombre": "Pagina 1",
-                    "orden": 1,
-                    "preguntas": [
-                        {
-                            "id": 4,
-                            "pregunta": "Comunicacion",
-                            "orden": 1,
-                            "idInput": {
-                                "id": 1,
-                                "Descripcion": "select"
-                            },
-                            "class": null,
-                            "obligatorio": 1,
-                            "puntos": "1",
-                            "IdCategoria": null,
-                            "idEvaluacion": {
-                                "id": 4,
-                                "Descripcion": "Instrumento de evaluacion prueba 25/07/2025"
-                            },
-                            "createAt": "25/07/2025",
-                            "createBy": null,
-                            "updateAt": null,
-                            "updateBy": null,
-                            "opciones": [
-                                {
-                                    "id": 12,
-                                    "Name": "Malo",
-                                    "Puntos": 1,
-                                    "Valor": "1",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 13,
-                                    "Name": "Regular",
-                                    "Puntos": 2,
-                                    "Valor": "2",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 14,
-                                    "Name": "Bueno",
-                                    "Puntos": 3,
-                                    "Valor": "3",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 15,
-                                    "Name": "Excelente",
-                                    "Puntos": 4,
-                                    "Valor": "4",
-                                    "Correcto": 1
-                                }
-                            ],
-                            "respuestas": {}
-                        },
-                        {
-                            "id": 5,
-                            "pregunta": "Internalidad",
-                            "orden": 2,
-                            "idInput": {
-                                "id": 1,
-                                "Descripcion": "select"
-                            },
-                            "class": null,
-                            "obligatorio": 1,
-                            "puntos": "2",
-                            "IdCategoria": null,
-                            "idEvaluacion": {
-                                "id": 4,
-                                "Descripcion": "Instrumento de evaluacion prueba 25/07/2025"
-                            },
-                            "createAt": "25/07/2025",
-                            "createBy": null,
-                            "updateAt": null,
-                            "updateBy": null,
-                            "opciones": [
-                                {
-                                    "id": 16,
-                                    "Name": "Malo",
-                                    "Puntos": 1,
-                                    "Valor": "1",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 17,
-                                    "Name": "Regular",
-                                    "Puntos": 2,
-                                    "Valor": "2",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 18,
-                                    "Name": "Bueno",
-                                    "Puntos": 3,
-                                    "Valor": "3",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 19,
-                                    "Name": "Excelente",
-                                    "Puntos": 4,
-                                    "Valor": "4",
-                                    "Correcto": 1
-                                }
-                            ],
-                            "respuestas": {}
-                        },
-                        {
-                            "id": 6,
-                            "pregunta": "Orientacion hacia el vliente",
-                            "orden": 3,
-                            "idInput": {
-                                "id": 1,
-                                "Descripcion": "select"
-                            },
-                            "class": null,
-                            "obligatorio": 1,
-                            "puntos": "1",
-                            "IdCategoria": null,
-                            "idEvaluacion": {
-                                "id": 4,
-                                "Descripcion": "Instrumento de evaluacion prueba 25/07/2025"
-                            },
-                            "createAt": "25/07/2025",
-                            "createBy": null,
-                            "updateAt": null,
-                            "updateBy": null,
-                            "opciones": [
-                                {
-                                    "id": 20,
-                                    "Name": "Malo",
-                                    "Puntos": 1,
-                                    "Valor": "1",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 21,
-                                    "Name": "Regular",
-                                    "Puntos": 2,
-                                    "Valor": "2",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 22,
-                                    "Name": "Bueno",
-                                    "Puntos": 3,
-                                    "Valor": "3",
-                                    "Correcto": 1
-                                },
-                                {
-                                    "id": 23,
-                                    "Name": "Excelente",
-                                    "Puntos": 4,
-                                    "Valor": "4",
-                                    "Correcto": 1
-                                }
-                            ],
-                            "respuestas": {}
-                        }
-                    ]
-                }
-            ],
-            "publicar": 1,
-            "duracion": "20",
-            "userIfEvaluating": null,
-            "questionsByCategory": 1,
-            "statusId": {
-                "id": 1,
-                "Descripcion": "Activo"
-            },
-            "orden": null,
-            "puntosGlobales": 1,
-            "evaluatorUserId": "1",
-            "evaluatorFullName": "Juan Carlos Blanco",
-            "evaluatorEmail": "sirjcbg1@hotmail.com"
-        }
-    ]
-    };*/
+    if (!resp?.data || !Array.isArray(resp.data) || resp.data.length === 0) {
+      this.toastrService.error('', 'No se encontró el instrumento de evaluación.');
+      throw new Error('Instrumento no encontrado');
+    }
 
+    const data = resp.data[0];
     const instrument = new Instrument();
     const currentDate = moment(new Date()).format('YYYY-MM-DD');
-    instrument.id = resp.data[0].id;
-    instrument.name = resp.data[0].nombre;
-    instrument.description = resp.data[0].descripcion;
-    instrument.dutation = resp.data[0].duracion;
-    instrument.unitType = new SelectOption(resp.data[0].idTipoUnidad.id, resp.data[0].idTipoUnidad.Descripcion);
-    instrument.path = resp.data[0].path;
-    const d = moment(resp.data[0].fechaVigencia).toDate();
+    instrument.id = data.id;
+    instrument.name = data.nombre;
+    instrument.description = data.descripcion;
+    instrument.dutation = data.duracion;
+    instrument.unitType = new SelectOption(data.idTipoUnidad?.id, data.idTipoUnidad?.Descripcion);
+    instrument.path = data.path;
+    const d = moment(data.fechaVigencia).toDate();
     instrument.expirationDate = { year: d.getFullYear(), month: (d.getMonth() + 1), day: d.getDate() };
-    instrument.isEditable = resp.data[0].editable == 1 ? true : false;
+    instrument.isEditable = data.editable == 1 ? true : false;
     instrument.isExpired = moment(instrument.expirationDate).isBefore(moment(currentDate));
-    instrument.questionsByCategory = resp.data[0].questionsByCategory == 1 ? true : false;
-    instrument.roles = resp.data[0].roles;
+    instrument.questionsByCategory = data.questionsByCategory == 1 ? true : false;
+    instrument.roles = data.roles;
 
     instrument.evaluator = new User();
-    instrument.evaluator.id = resp.data[0].evaluatorUserId;
-    instrument.evaluator.firstName = resp.data[0].evaluatorFullName;
-    instrument.evaluator.email = resp.data[0].evaluatorEmail;
+    instrument.evaluator.id = data.evaluatorUserId;
+    instrument.evaluator.firstName = data.evaluatorFullName;
+    instrument.evaluator.email = data.evaluatorEmail;
 
-    instrument.globalsPoints = resp.data[0].puntosGlobales ? (resp.data[0].puntosGlobales == 1 ? true:false) : false;
-    if (resp.data[0].users) {
-      const usersIfEvaluating = resp.data[0].users.filter((user:any)=>user.respondida==0);
-      if(usersIfEvaluating.length > 0){
+    instrument.globalsPoints = data.puntosGlobales ? (data.puntosGlobales == 1 ? true : false) : false;
+    if (data.users) {
+      const usersIfEvaluating = data.users.filter((user: any) => user.respondida == 0);
+      if (usersIfEvaluating.length > 0) {
         instrument.users = usersIfEvaluating.map((u: any) => {
           const user = new User();
           user.id = u.usuarioId;
@@ -582,59 +280,78 @@ export class Evaluation360InstrumentsService extends HttpService{
           user.answered = u.respondida == 1 ? true : false;
           user.roles = u.roles;
           return user;
-        })
-      }
-
-    }
-
-    if(instrument.users && instrument.users.length>0){
-
-      instrument.users.forEach((user: User)=>{
-
-        user.sections = resp.data[0].secciones.map((sectionItem: any) => {
-                let section = new Section();
-                section.id = sectionItem.id;
-                section.name = sectionItem.nombre;
-                section.numberSection = sectionItem.orden;
-
-                section.questions = sectionItem.preguntas.map((item: any) => {
-                    let question = new Question();
-                    question.id = item.id;
-                    question.label = item.pregunta;
-                    question.nameImput = `question-${item.idInput.Descripcion}-${item.id}-${user.id}-${sectionItem.id}`;
-                    question.order = item.orden;
-                    question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
-                    question.className = item.class;
-                    question.required = item.obligatorio == 1 ? true : false;
-                    question.score = item.puntos;
-            
-                    if (item.IdCategoria) {
-                      question.categoryBy = String(item.IdCategoria.id);
-                    }
-                    question.isReady = true;
-                    if (item.opciones && item.opciones.length) {
-                      question.options = item.opciones.map((itemOption: any, index: number) => {
-                        let option = new QuestionOption(itemOption.id, itemOption.Name);
-                        option.nameInputLabel = `optionLabel-${question.order}-${question.id }-${user.id}-${sectionItem.id}`;
-                        option.nameInputValue = `optionValue-${question.order}-${question.id }-${user.id}-${sectionItem.id}`;
-                        option.nameInputScore = `optionScore-${question.order}-${question.id }-${user.id}-${sectionItem.id}`;
-                        return option;
-                      });
-                    }
-            
-                    return question;
-                });
-
-
-                return section;
         });
-      });
-    } 
+      }
+    }
 
     return instrument;
   }
 
+  /**
+   * Get sections for instrument by user
+   * @param userId 
+   * @param instrumentoId 
+   * @returns Sections mapped to frontend model (name, questions with label, inputType, options)
+   */
+  async getInstrumentSections(userId: number, instrumentoId: number): Promise<Section[]> {
+    try {
+      const payload = {
+        userId: userId,
+        instrumentoId: instrumentoId
+      };
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/instrumento360/secciones', payload));
+      const rawSecciones = resp && resp.secciones ? resp.secciones : [];
+      return rawSecciones.map((sectionItem: any) => {
+        const section = new Section();
+        section.id = sectionItem.id != null ? String(sectionItem.id) : sectionItem.id;
+        section.name = sectionItem.nombre != null ? sectionItem.nombre : (sectionItem.name || '');
+        section.numberSection = sectionItem.orden != null ? +sectionItem.orden : (sectionItem.numberSection ?? 0);
+        section.questions = (sectionItem.preguntas || []).map((item: any) => {
+          const question = new Question();
+          question.id = item.id != null ? String(item.id) : item.id;
+          question.label = item.pregunta != null ? item.pregunta : (item.label || '');
+          
+          const inputDesc = item.idInput?.Descripcion ?? item.inputType?.label ?? 'text';
+          const inputId = item.idInput?.id ?? item.inputType?.value ?? item.inputType?.id;
 
+          question.nameImput = `question-${item.idInput.Descripcion}-${item.id}-${userId}-${sectionItem.id}`;
+          question.order = item.orden != null ? item.orden : (item.order ?? 0);
+          question.inputType = new SelectOption(item.idInput.id, item.idInput.Descripcion);
+          question.className = item.class;
+          question.required = item.obligatorio == 1 ? true : false;
+          question.score = item.puntos;
+          if (item.IdCategoria) question.categoryBy = String(item.IdCategoria.id);
+          if (item.Competencia360 && item.Competencia360?.id) {
+            question.description = item.Competencia360.Descripcion2;
+            question.categoryBy = String(item.Competencia360.id);
+          }
+            
+          question.isReady = true;
+          if (item.opciones && item.opciones.length) {
+            question.options = item.opciones.map((itemOption: any, index: number) => {
+              let option = new QuestionOption(itemOption.id, itemOption.Name);
+              option.nameInputLabel = `optionLabel-${question.order}-${question.id }-${userId}-${sectionItem.id}`;
+              option.nameInputValue = `optionValue-${question.order}-${question.id }-${userId}-${sectionItem.id}`;
+              option.nameInputScore = `optionScore-${question.order}-${question.id }-${userId}-${sectionItem.id}`;
+              return option;
+            });
+          }
+          return question;
+        });
+        if (section.questions && section.questions.length > 0) {
+          section.questions = this.shuffleArray(section.questions);
+        }
+        return section;
+      });
+
+    } catch (error: any) {
+      console.log(error);
+      if (error.status != 500) {
+        this.toastrService.error('', 'Ha ocurrido un error obteniendo las secciones. Intente más tarde.');
+      }
+      throw error;
+    }
+  }
 
   /**
    * Add user to Instrument
@@ -1802,7 +1519,9 @@ export class Evaluation360InstrumentsService extends HttpService{
       instrument.globalsPoints = item.puntosGlobales ? (item.puntosGlobales == 1 ? true:false) : false;
       instrument.userIfEvaluating = item.userIfEvaluating;
       instrument.users = Array.isArray(item.users) && item.users.length > 0 ? item.users : null;
-
+      if(item.tipoInstrumento){
+        instrument.instrumentType = new SelectOption(item.tipoInstrumento.id, item.tipoInstrumento.Nombre);
+      }
       return instrument;
     });
 
@@ -1955,10 +1674,12 @@ export class Evaluation360InstrumentsService extends HttpService{
      * Delete users from instrument
      * @param data 
      */
-    async linkUserToInstrument(data:any){
+    async linkUserToInstrument(data:any): Promise<any> {
       try {
         const resp = await firstValueFrom(this.post(environment.apiUrl, '/instrumento360/asignar/usuarios', data));
         this.toastrService.success('El usuario ha sido vinculado con éxito.');
+        console.log('resp', resp);
+        return resp;
       } catch (error: any) {
         if (error.status != 500)
           this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');

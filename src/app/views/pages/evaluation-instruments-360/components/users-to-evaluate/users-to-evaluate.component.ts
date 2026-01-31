@@ -64,15 +64,23 @@ export class UsersToEvaluateComponent extends BaseComponent implements OnInit {
    * @param user User to evaluate
    * Link the user to the evaluation instrument and go to the next step
    */
-  evaluateUser(user: any) {
-    debugger
-    this.userSelected = user;  
+ async evaluateUser(user: any) {
+    this.userSelected = user;
     this.evaluationSelected = this.evaluation;
-    const data = {userId: this.userSelected.id, instrumentoId: this.evaluationSelected.id}
-    const resp = this.evaluationInstrumentsService.linkUserToInstrument(data);
-    if (resp) {
+    const data = { userId: this.userSelected.id, instrumentoId: this.evaluationSelected.id };
+    const resp = await this.evaluationInstrumentsService.linkUserToInstrument(data);
+    console.log('resp', resp);
+    if (resp && resp.id) {
+      const sections = await this.evaluationInstrumentsService.getInstrumentSections(+this.userSelected.id, +this.evaluationSelected.id);
+      this.evaluationSelected.users?.forEach((u) => {
+        if (+u.id === +this.userSelected.id) {
+          u.sections = sections;
+        }
+      });
+      this.userSelected.sections = sections;
+      console.log('sections', sections);
       this.nextStep();
-    }    
+    }
   }
 
 }

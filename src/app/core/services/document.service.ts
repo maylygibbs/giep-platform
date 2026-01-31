@@ -495,12 +495,16 @@ export class DocumentService extends HttpService {
         docOutput.folios = item.folios;
         docOutput.numCaja = item.num_dela_caja;
         docOutput.numEstuche = item.num_dela_estuches;
-        docOutput.fechaExtremaInicio = item.fecha_extrema_inicio.date;
-        docOutput.fechaExtremaFin = item.fecha_extrema_fin.date;
+        if(item.fecha_extrema_inicio) {
+          docOutput.fechaExtremaInicio = item.fecha_extrema_inicio.date;
+        }
+        if(item.fecha_extrema_fin) {
+          docOutput.fechaExtremaFin = item.fecha_extrema_fin.date;
+        }
 
         //control archivo
         docOutput.asuntos = item.id_control_archivo_digital.Asuntos;
-        docOutput.numExpediente = item.id_control_archivo_digital['num_expediente'];
+        docOutput.numExpediente = item.id_control_archivo_digital['num_expediente'] || "No aplica";
         docOutput.justificacion = item.id_control_archivo_digital['argumento_justificacion'];
         docOutput.fechaFinConservacion = item.id_control_archivo_digital['fecha_fin_conservac'].date;
         docOutput.tieneArchivoFisico = new SelectOption(item.id_control_archivo_digital['sw_archivo_fisico'], item.id_control_archivo_digital['sw_archivo_fisico'] == 0 ? 'Sí' : 'No');
@@ -525,7 +529,7 @@ export class DocumentService extends HttpService {
 
         docOutput.cantidadCaja = item.id_control_archivo_digital['cantidad_caja'];
 
-        docOutput.cantidadEstuche = item.id_control_archivo_digital['cantidad_estuche'];
+        docOutput.cantidadEstuche = item.id_control_archivo_digital['cantidad_estuche']; //TODO: REVISAR CON BACKEND
 
         docOutput.usuarioEntrega = item.id_control_archivo_digital['id_usuario_entrega'];  //"Nombres": "Jaime Leonardo", "Apellidos": "Padron Farias",
 
@@ -540,7 +544,7 @@ export class DocumentService extends HttpService {
       });
       doc = listDoc[0];
 
-
+      console.log('doc >>>>>>>>>>>>', doc);
     } catch (error: any) {
       console.log(error)
       if (error.status) {

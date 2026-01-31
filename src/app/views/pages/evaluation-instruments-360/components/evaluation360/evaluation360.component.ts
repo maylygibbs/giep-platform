@@ -77,7 +77,8 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
     // Agregar la sección de objetivos al usuario
     this.addObjetivosSection();
     
-    //this.formsaved = this.temporaryStorageService.get(`evaluation${this.evaluation.id}`);
+    this.formsaved = this.temporaryStorageService.get(`evaluation${this.evaluation.id}`);
+    console.log('this.formsaved',this.formsaved)
   }
 
   /**

@@ -92,6 +92,9 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
   ubicacionList: any;
   nivelUnidadList: any;
   estructuraOrganizativaList: any;
+
+  // Niveles dinámicos de estructura organizativa
+  estructuraNiveles: Array<{ idSeleccionado: any, opciones: SelectOption[] }> = [];
   regionList: any;
   paisList: any;
   estadoList: any;
@@ -176,7 +179,8 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     Object.assign(this.dataFile, { tieneArchivoFisico: new SelectOption('0','Sí')});
     Object.assign(this.dataFile, { expedienteDocumental: new SelectOption('1','Sí')});
     Object.assign(this.dataFile, { tieneFechasExtremas: new SelectOption('1','Sí')});
-    
+    // Inicializar estructuraNiveles
+    this.estructuraNiveles = [];
   }
 
   /**
@@ -285,6 +289,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     this.documentStatus = false;
     this.dataFile = null;
     this.fileContent = null;
+    this.estructuraNiveles = [];
   }
 
   /**
@@ -294,6 +299,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
    */
   async select(id: string, modalRef?: TemplateRef<any>) {
     this.selectedItem = await this.documentService.getDigitalizedDocumentByIdDetalle(id);
+    console.log('selectedItem >>>>>>>>>>>>', this.selectedItem);
     this.openInfoModal(modalRef);
   }
 
@@ -574,13 +580,49 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
 
 
   /**
- * Get estructura organizativa dado el nivel
- */
-  async getEstructuraOrganizativaList() {
+   * Evento change de Unidad (primer select - Nivel 1)
+   */
+  async onUnidadChange(id: any, nivel: number) {
+    // Eliminar niveles hijos si existen
+    this.estructuraNiveles = this.estructuraNiveles.slice(0, nivel);
     this.showLoadingEstructuraList = true;
-    console.log('his.dataFile.nivelunidad', this.dataFile.nivelUnidad)
-    this.estructuraOrganizativaList = await this.documentService.getEstructuraOrganizativaList(this.dataFile.nivelUnidad.value);
+    const listado = await this.documentService.getEstructuraOrganizativaList(id);
     this.showLoadingEstructuraList = false;
+    if (listado && listado.length > 0) {
+      this.estructuraNiveles.push({ idSeleccionado: null, opciones: listado });
+    }
+    // Actualizar estructuraOrganizativa con el nivel 1 seleccionado
+    if (id) {
+      const encontrado = this.data.units?.find((op: SelectOption) => op.id === id);
+      if (encontrado) {
+        this.dataFile.estructuraOrganizativa = encontrado;
+      }
+    }
+  }
+
+  /**
+   * Evento change de cualquier select recursivo (Nivel 2, 3, etc.)
+   */
+  async onEstructuraChange(id: number, nivel: number) {
+    // Actualizar estructuraOrganizativa con el nivel seleccionado antes de eliminar niveles hijos
+    if (id) {
+      // Buscar en el nivel actual (antes de modificar el array)
+      const nivelActual = this.estructuraNiveles[nivel];
+      if (nivelActual) {
+        const encontrado = nivelActual.opciones.find(op => op.id === id);
+        if (encontrado) {
+          this.dataFile.estructuraOrganizativa = encontrado;
+        }
+      }
+    }
+    // Eliminar niveles hijos si existen
+    this.estructuraNiveles = this.estructuraNiveles.slice(0, nivel + 1);
+    this.showLoadingEstructuraList = true;
+    const listado = await this.documentService.getEstructuraOrganizativaList(id);
+    this.showLoadingEstructuraList = false;
+    if (listado && listado.length > 0) {
+      this.estructuraNiveles.push({ idSeleccionado: null, opciones: listado });
+    }
   }
 
 
@@ -713,7 +755,7 @@ export class DigitizedDocumentsComponent extends BaseComponent implements OnInit
     if(form.valid){
       if(this.dataFile){
        return this.dataFile.pais && (this.dataFile.tieneArchivoFisico && this.dataFile.tieneArchivoFisico.value == '1' || (this.dataFile.tieneArchivoFisico && this.dataFile.tieneArchivoFisico.value == '0' && this.dataFile.almacen)) &&
-        (this.dataFile.nivelUnidad && this.dataFile.estructuraOrganizativa && this.dataFile.usuarioEntrega && this.dataFile.estadoConservacion && this.dataFile.tipoMaterial);
+        (this.dataFile.estructuraOrganizativaNivel1 && this.dataFile.estructuraOrganizativa && this.dataFile.usuarioEntrega && this.dataFile.estadoConservacion && this.dataFile.tipoMaterial);
       }else{
         return false;
       }

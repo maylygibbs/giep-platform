@@ -356,6 +356,17 @@ export class CommonsListChargesTiposResolver implements Resolve<any> {
 }
 
 
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonsListUnitsListResolver implements Resolve<any> {
+  constructor(private commonsService: CommonsService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    return this.commonsService.getAllUnits360();
+  }
+}
+
+
 
 
 

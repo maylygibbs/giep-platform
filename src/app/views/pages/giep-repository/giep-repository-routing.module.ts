@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CommonsListUsersResolver } from '../../../core/resolvers/commons.resolver';
+import { CommonsListUnitsListResolver, CommonsListUsersResolver } from '../../../core/resolvers/commons.resolver';
 import { DocumentsComponent } from './components/documents/documents.component';
 import { DigitizedDocumentsComponent } from './components/digitized-documents/digitized-documents.component';
 
@@ -22,7 +22,8 @@ const routes: Routes = [
       title: 'Documentos Digitalizados - GIEp',
     },
     resolve:{
-      users: CommonsListUsersResolver
+      users: CommonsListUsersResolver,
+      units: CommonsListUnitsListResolver
     }
   },
 ];

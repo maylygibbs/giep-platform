@@ -41,8 +41,6 @@
                   <th>Nombre original</th>
                   <th>Extensión</th>
                   <th>Tamaño</th>
-                  <!--<th>Estado</th>
-                  <th>Bloqueado</th>-->
                   <th>Fecha creación</th>
                   <th data-priority="1" class="text-center">Accion</th>
                 </tr>
@@ -55,15 +53,6 @@
                   <td>{{doc.originalName}}</td>
                   <td>{{doc.ext}}</td>
                   <td>{{doc.sizeStr}}</td>
-                  <!--<td>
-                    <p class="badge"
-                      [ngClass]="{'bg-gray':doc.state.value == '1', 'bg-info':doc.state.value == '2', 'bg-success':doc.state.value == '3', 'bg-black':doc.state.value == '4', 'bg-danger':doc.state.value == '5'}">
-                      {{doc.state.label}}</p>
-                  </td>
-                  <td>
-                    <span *ngIf="doc.isBloqued && doc.bloquedBy" placement="start"
-                      [ngbTooltip]="'Por: '+doc.bloquedBy.firstName">Sí</span>
-                    <span *ngIf="!doc.isBloqued">No</span></td> -->
                   <td>{{doc.creationDate | date:'yyyy-MM-dd'}}</td>
                   <td class="text-center">
                     <i class="feather icon-eye" placement="start" (click)="select(doc.id, fileDetailModal)"
@@ -454,34 +443,39 @@
                 <div class="row">
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
-                      <label for="inputNivelUnidad" class="form-label required">Nivel Unidad</label>
-                      <ng-select id="inputNivelUnidad" [items]="nivelUnidadList" name="nivelUnidad" #nivelUnidad="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : nivelUnidad.errors && ( nivelUnidad.dirty || nivelUnidad.touched || fileForm.submitted) }"
-                        [searchable]="true" [(ngModel)]="dataFile.nivelUnidad" required
-                        (change)="getEstructuraOrganizativaList()">
+                      <label for="inputEstructuraOrganizativaNivel1" class="form-label required">Estructura Organizativa Nivel 1</label>
+                      <ng-select id="inputEstructuraOrganizativaNivel1" [items]="data.units" name="estructuraOrganizativaNivel1" #estructuraOrganizativaNivel1="ngModel"
+                        [ngClass]="{'ng-dirty ng-invalid' : estructuraOrganizativaNivel1.errors && ( estructuraOrganizativaNivel1.dirty || estructuraOrganizativaNivel1.touched || fileForm.submitted) }"
+                        [searchable]="true" [clearable]="false" bindLabel="label" bindValue="id"
+                        [(ngModel)]="dataFile.estructuraOrganizativaNivel1" required
+                        (change)="onUnidadChange(dataFile.estructuraOrganizativaNivel1, 0)">
                       </ng-select>
-                      <div *ngIf="nivelUnidad.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="nivelUnidad.errors?.required">Campo es requerido
+                      <div *ngIf="estructuraOrganizativaNivel1.invalid && fileForm.submitted" class="invalid-feedback">
+                        <div *ngIf="estructuraOrganizativaNivel1.errors?.required">Campo es requerido
                         </div>
                       </div>
                     </div>
                   </div>  
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngFor="let nivel of estructuraNiveles; let i = index">
                     <div class="mb-3">
-                      <label for="inputEstructuraOrganizativa" class="form-label required">Estructura
-                        Organizativa</label>
-                      <ng-select id="inputEstructuraOrganizativa" [items]="estructuraOrganizativaList"
-                        name="estructuraOrganizativa" #estructuraOrganizativa="ngModel"
-                        [ngClass]="{'ng-dirty ng-invalid' : estructuraOrganizativa.errors && ( estructuraOrganizativa.dirty || estructuraOrganizativa.touched || fileForm.submitted) }"
-                        [searchable]="true" [loading]="showLoadingEstructuraList"
-                        [(ngModel)]="dataFile.estructuraOrganizativa" required>
+                      <label class="form-label">Estructura Organizativa Nivel {{i+2}}</label>
+                      <ng-select
+                        [items]="nivel.opciones"
+                        [clearable]="false"
+                        [searchable]="true"
+                        [(ngModel)]="estructuraNiveles[i].idSeleccionado"
+                        bindLabel="label"
+                        bindValue="id"
+                        name="estructuraNivel-{{i}}"
+                        (change)="onEstructuraChange(estructuraNiveles[i].idSeleccionado, i)"
+                        placeholder="Seleccione una opción...">
                       </ng-select>
-                      <div *ngIf="estructuraOrganizativa.invalid && fileForm.submitted" class="invalid-feedback">
-                        <div *ngIf="estructuraOrganizativa.errors?.required">Campo es requerido
-                        </div>
-                      </div>
                     </div>
-                  </div>  
+                  </div>
+                </div>
+                <div class="row">
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="mb-3">
                       <label for="inputUsuarioEntrega" class="form-label required">Entregado por</label>

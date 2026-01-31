@@ -134,6 +134,10 @@
                                 {{qIndex + 1}}.- {{question.label}}
                                 <span *ngIf="question.required" class="text-danger">*</span>
                               </label>
+                              <p *ngIf="question.description" class="text-muted small fw-normal mb-2 mt-1 d-flex align-items-start">
+                                <i class="fe fe-info me-2 mt-1 flex-shrink-0" aria-hidden="true"></i>
+                                <span [innerHtml]="question.description"></span>
+                              </p>
                               
                               <!-- Input de texto -->
                               <div *ngIf="question.inputType.label =='text'" class="mb-3">

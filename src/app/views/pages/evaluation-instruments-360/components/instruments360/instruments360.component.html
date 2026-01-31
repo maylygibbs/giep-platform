@@ -43,7 +43,8 @@
                   <tr>
                     <th>Id</th>
                     <th>Instrumento</th>
-                    <th>Orden</th>
+                    <th>Tipo</th>
+                    <th hidden>Orden</th>
                     <th>Fecha creación</th>
                     <th>Fecha expiración</th>
                     <th data-priority="1">Publicado</th>
@@ -56,7 +57,8 @@
                     *ngFor="let instrument of instruments.data | paginate: { id: 'server', itemsPerPage: environment.paginator.row_per_page, currentPage: page, totalItems: instruments.count }">
                     <td>{{instrument.id}}</td>
                     <td>{{instrument.name}}</td>
-                    <td>
+                    <td>{{instrument.instrumentType?.label}}</td>
+                    <td hidden>
                       <input type="text" name="inputName-{{instrument.id}}" [(ngModel)]="instrument.order"
                         (keyup.enter)="onChangeInputOrder(instrument.order, instrument.id)"
                         style="width: 40px;text-align: center;">

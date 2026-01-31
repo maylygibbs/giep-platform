@@ -4,6 +4,7 @@ export class Question {
 
     id: string;
     label: string;
+    description: string;
     nameImput:string;
     order:number;
     inputType:SelectOption;
