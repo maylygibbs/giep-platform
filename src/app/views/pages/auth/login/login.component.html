@@ -1,16 +1,21 @@
-<div class="row w-100 mx-0 auth-page">
+<div class="row w-100 mx-0 auth-page login-modern">
   <div class="col-md-8 col-xl-6 mx-auto">
-    <div class="card">
-      <div class="row">
-        <div class="col-md-4 pe-md-0">
+    <div class="card login-card">
+      <div class="row g-0">
+        <div class="col-md-5 pe-md-0 auth-side-col">
           <div class="auth-side-wrapper" [ngStyle]="{ 'background-image': 'url(/assets/images/app_pafar_2.png)' }">
-
+            <div class="auth-side-overlay"></div>
+            <div class="auth-side-pattern"></div>
           </div>
         </div>
-        <div class="col-md-8 ps-md-0">
-
+        <div class="col-md-7 ps-md-0">
           <div class="auth-form-wrapper px-4 py-5">
-            <a routerLink="." class="nobleui-logo d-block mb-2">GIE<span>p</span></a>
+            <a routerLink="." class="login-logo d-block mb-3">
+              <span class="login-logo-char" style="animation-delay: 0s">G</span>
+              <span class="login-logo-char" style="animation-delay: 0.2s">I</span>
+              <span class="login-logo-char" style="animation-delay: 0.4s">E</span>
+              <span class="login-logo-char login-logo-accent" style="animation-delay: 0.6s">p</span>
+            </a>
             <h5 class="text-muted fw-normal mb-4">Bienvenido!</h5>
             <div *ngIf="inputError"
             class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
@@ -20,7 +25,7 @@
               class="forms-sample">
               <div class="form-group mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input name="emailInput" #emailInput="ngModel" [(ngModel)]="email" type="text" class="form-control"
+                <input name="emailInput" #emailInput="ngModel" [(ngModel)]="email" type="text" class="form-control login-input"
                 [ngClass]="{'ng-dirty ng-invalid' : emailInput.errors && ( emailInput.dirty || emailInput.touched || loginForm.submitted) }"
                   id="exampleInputEmail1" placeholder="Email" email required>
                 <div *ngIf="emailInput.invalid && loginForm.submitted" class="invalid-feedback">
@@ -33,7 +38,7 @@
                 <div class="input-group">
                   <input name="passwordInput" #passwordInput="ngModel" [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'"
                   [ngClass]="{'ng-dirty ng-invalid' : passwordInput.errors && ( passwordInput.dirty || passwordInput.touched || loginForm.submitted) }"
-                    class="form-control" placeholder="Password" required>
+                    class="form-control login-input" placeholder="Password" required>
                   <div *ngIf="passwordInput.invalid && loginForm.submitted" class="invalid-feedback">
                     <div *ngIf="passwordInput.errors?.required">Campo requerido
                     </div>
@@ -51,13 +56,13 @@
                 </label>
               </div>-->
               <div>
-                <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0">Iniciar sesión</button>
+                <button type="submit" class="btn btn-login me-2 mb-2 mb-md-0">Iniciar sesión</button>
                 <!--<button type="button" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
                   <i class="feather icon-twitter btn-icon-prepend"></i>
                   Login with twitter
                 </button>-->
               </div> 
-              <a routerLink="/auth/recover-pass" class="d-block mt-3 text-muted">¿Olvidaste tú password?</a>
+              <a routerLink="/auth/recover-pass" class="d-block mt-4 text-muted">¿Olvidaste tú password?</a>
             </form>
           </div>
         </div>

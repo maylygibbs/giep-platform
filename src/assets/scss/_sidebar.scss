@@ -31,8 +31,22 @@
       visibility: visible;
       -webkit-transition: opacity .5s ease;
       transition: opacity .5s ease;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.03em;
       img {
         height: 26px;
+      }
+    }
+    .sidebar-logo {
+      display: inline-flex;
+      align-items: center;
+      .sidebar-logo-char {
+        color: $body-color;
+        &.sidebar-logo-accent {
+          color: $primary;
+        }
       }
     }
     .sidebar-toggler {
@@ -478,6 +492,12 @@
       border-right: 1px solid rgba($border-color, .1);
       .sidebar-brand {
         color: $light;
+      }
+      .sidebar-logo .sidebar-logo-char {
+        color: $light;
+        &.sidebar-logo-accent {
+          color: $primary;
+        }
       }
       .sidebar-toggler {
         span {

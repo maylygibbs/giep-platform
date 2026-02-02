@@ -1,1 +1,48 @@
 // Write your custom css/scss here
+
+// btn-primary: estilos del login con texto blanco
+.btn-primary {
+  background: linear-gradient(135deg, $primary 0%, darken($primary, 5%) 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 1.5rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  box-shadow: 0 4px 14px 0 rgba($primary, 0.4) !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    color: #fff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px 0 rgba($primary, 0.45) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// btn-secondary: misma forma que btn-primary, mismo color de fondo y letra
+.btn-secondary {
+  background: linear-gradient(135deg, $secondary 0%, darken($secondary, 5%) 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 1.5rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  box-shadow: 0 4px 14px 0 rgba($secondary, 0.4) !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    color: #fff !important;
+    background: linear-gradient(135deg, darken($secondary, 3%) 0%, darken($secondary, 8%) 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px 0 rgba($secondary, 0.45) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
