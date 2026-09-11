@@ -73,7 +73,8 @@
                                            [(ngModel)]="objetivo.descripcion"
                                            class="form-control" 
                                            placeholder="Describa el objetivo"
-                                           required>
+                                           required
+                                           (blur)="autoSave(evaluationForm)">
                                   </div>
                                   
                                   <!-- Campo Peso -->
@@ -88,7 +89,8 @@
                                            placeholder="0-100"
                                            min="0" 
                                            max="100" 
-                                           required>
+                                           required
+                                           (blur)="autoSave(evaluationForm)">
                                   </div>
                                   
                                   <!-- Campo Rango -->
@@ -100,12 +102,13 @@
                                               [(ngModel)]="objetivo.rango"
                                               [searchable]="false" 
                                               required
-                                              placeholder="Seleccione rango">
-                                      <ng-option value="1">1 - Muy Bajo</ng-option>
-                                      <ng-option value="2">2 - Bajo</ng-option>
-                                      <ng-option value="3">3 - Regular</ng-option>
-                                      <ng-option value="4">4 - Alto</ng-option>
-                                      <ng-option value="5">5 - Muy Alto</ng-option>
+                                              placeholder="Seleccione rango"
+                                              (change)="autoSave(evaluationForm)">
+                                      <ng-option [value]="1">1 - Muy Bajo</ng-option>
+                                      <ng-option [value]="2">2 - Bajo</ng-option>
+                                      <ng-option [value]="3">3 - Regular</ng-option>
+                                      <ng-option [value]="4">4 - Alto</ng-option>
+                                      <ng-option [value]="5">5 - Muy Alto</ng-option>
                                     </ng-select>
                                   </div>
                                 </div>

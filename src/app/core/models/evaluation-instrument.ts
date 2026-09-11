@@ -91,16 +91,26 @@ export class Instrument {
 
 
     /**
-     * Process for post response of user
-     * @param instrumentInput 
-     * @returns 
+     * Payload POST /api/instrumento360/respuesta
+     * { id, userId, questions[] }
+     * ODIS/objetivos: pendiente — no se envían aún.
      */
     public static mapForPostResponseByUser(user: User, idInstrument360: number) {
-        const instrumentOutput = {};
+        const instrumentOutput: any = {
+            id: idInstrument360,
+            userId: user.id,
+            questions: this.getQuestionsResponseByUser(user.sections),
+        };
 
-        Object.assign(instrumentOutput, { id: idInstrument360 });
-        Object.assign(instrumentOutput, { userId: user.id });
-        Object.assign(instrumentOutput, { competenciesResponse: this.getQuestionsResponseByUser(user.sections) });
+        // TODO ODIS: reactivar cuando se implemente persistencia de objetivos
+        // const objetivos = (user as any).objetivos;
+        // if (objetivos && Array.isArray(objetivos) && objetivos.length > 0) {
+        //     instrumentOutput.objetivos = objetivos.map((o: any) => ({
+        //         descripcion: o.descripcion,
+        //         peso: o.peso != null ? Number(o.peso) : null,
+        //         rango: o.rango != null ? Number(o.rango) : null,
+        //     }));
+        // }
 
         return instrumentOutput;
     }
@@ -113,28 +123,43 @@ export class Instrument {
      */
     private static getQuestionsResponseByUser(sections: Array<Section>) {
         const questionsOutput: any[] = [];
+        if (!sections) {
+            return questionsOutput;
+        }
         sections.forEach((section: Section) => {
+            if (!section || (section as any).id === 'objetivos-section' || !section.questions) {
+                return;
+            }
 
-            const arrayTemp = section.questions.map((question: Question) => {
+            const arrayTemp = section.questions
+                .filter((question: Question) => question && question.valueResp !== undefined && question.valueResp !== null && question.valueResp !== '')
+                .map((question: Question) => {
+                const typeLabel = (question.inputType?.label || '').toString().toLowerCase().trim();
                 let valueResp;
 
-                if (question.inputType.label === 'select-multiple' || question.inputType.label === 'checkbox') {
-                    valueResp = question.valueResp.map((vr) => {
-                        return { idOption: vr, text: null }
-                    })
-                } else if (question.inputType.label === 'select' || question.inputType.label === 'radio') {
-                    valueResp = [{ idOption: question.valueResp, text: null }];
-
-                } else {
-                    if (question.inputType.label == 'date') {
-                        valueResp = [{ idOption: null, text: moment().year(question.valueResp.year).month(question.valueResp.month - 1).date(question.valueResp.day).format('YYYY-MM-DD') }];
+                // select / select-multiple / radio / checkbox → idOption (ID de opciones_evaluacion_360)
+                if (typeLabel === 'select-multiple' || typeLabel === 'checkbox') {
+                    const values = Array.isArray(question.valueResp) ? question.valueResp : [question.valueResp];
+                    valueResp = values
+                        .filter((vr) => vr !== undefined && vr !== null && vr !== '')
+                        .map((vr) => ({ idOption: Number(vr), text: null }));
+                } else if (typeLabel === 'select' || typeLabel === 'radio') {
+                    valueResp = [{ idOption: Number(question.valueResp), text: null }];
+                } else if (question.options && question.options.length > 0) {
+                    // Fallback: pregunta con opciones (p.ej. escala Likert) aunque el label no sea exacto
+                    if (Array.isArray(question.valueResp)) {
+                        valueResp = question.valueResp.map((vr) => ({ idOption: Number(vr), text: null }));
                     } else {
-                        valueResp = [{ idOption: null, text: question.valueResp }];
-
+                        valueResp = [{ idOption: Number(question.valueResp), text: null }];
                     }
+                } else if (typeLabel === 'date') {
+                    valueResp = [{ idOption: null, text: moment().year(question.valueResp.year).month(question.valueResp.month - 1).date(question.valueResp.day).format('YYYY-MM-DD') }];
+                } else {
+                    valueResp = [{ idOption: null, text: question.valueResp }];
                 }
+
                 return {
-                    id: question.id,
+                    id: Number(question.id),
                     response: valueResp
                 }
             });

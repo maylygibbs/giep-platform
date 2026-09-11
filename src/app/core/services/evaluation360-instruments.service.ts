@@ -1535,16 +1535,23 @@ export class Evaluation360InstrumentsService extends HttpService{
   }   
   
     /**
-   * stores user responses
-   * @param data 
+   * Guarda respuestas de evaluación 360 (usuario evaluado).
+   * POST /api/instrumento360/respuesta
+   * @returns true si el backend respondió OK
    */
-    async storeUsersEvaluationResponse(data: any) {
+    async storeUsersEvaluationResponse(data: any): Promise<boolean> {
       try {
-        const resp = await firstValueFrom(this.post(environment.apiUrl, '/evaluacion/respuesta', data));
-        this.toastrService.success('La evaluación ha sido registrada satisfactoriamente.');
+        await firstValueFrom(this.post(environment.apiUrl, '/instrumento360/respuesta', data));
+        this.toastrService.success('La evaluación 360 ha sido registrada satisfactoriamente.');
+        return true;
       } catch (error: any) {
-        if (error.status != 500)
-          this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
+        const msg = error?.error?.msg || error?.msg || 'Ha ocurrido un error. Intente más tarde.';
+        if (error?.status != 500) {
+          this.toastrService.error('', msg);
+        } else {
+          this.toastrService.error('', 'Error del servidor al guardar la evaluación 360.');
+        }
+        return false;
       }
     }
 

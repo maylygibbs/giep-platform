@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { EvaluationInstrumentsService } from '../../../../../core/services/evaluation-instruments.service';
 import { BaseComponent } from '../../../../shared/components/base/base.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Instrument } from '../../../../../core/models/evaluation-instrument';
@@ -17,6 +16,12 @@ interface Objetivo {
   rango: number | null;
 }
 
+interface Evaluation360Draft {
+  sectionActive: number;
+  objetivos: Objetivo[];
+  answers: { [questionId: string]: any };
+}
+
 @Component({
   selector: 'app-evaluation360',
   templateUrl: './evaluation360.component.html',
@@ -25,7 +30,7 @@ interface Objetivo {
 export class Evaluation360Component extends BaseComponent implements OnInit {
 
   @Input() user: User;
-  @Input()evaluation: Instrument;
+  @Input() evaluation: Instrument;
 
   @ViewChild('evaluationForm',{static: false}) evaluationForm: NgForm;
 
@@ -36,7 +41,7 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
   sectionActive: number = 0;
   environment = environment;
   submitted: boolean = false;
-  formsaved:any;
+  formsaved: Evaluation360Draft | null = null;
   objetivos: Objetivo[] = [];
 
   constructor(
@@ -54,6 +59,10 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
     })
   }
 
+  /** Clave localStorage: instrumento + usuario evaluado */
+  private getDraftKey(): string {
+    return `evaluation360_${this.evaluation?.id}_${this.user?.id}`;
+  }
 
   async ngOnInit() {
     // Si no tenemos el usuario como input, lo obtenemos del almacenamiento temporal
@@ -77,25 +86,48 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
     // Agregar la sección de objetivos al usuario
     this.addObjetivosSection();
     
-    this.formsaved = this.temporaryStorageService.get(`evaluation${this.evaluation.id}`);
-    console.log('this.formsaved',this.formsaved)
+    this.formsaved = await this.temporaryStorageService.get(this.getDraftKey());
+    console.log('this.formsaved', this.formsaved);
   }
 
   /**
  * Prepare init answere
  */
   initAnswerEvaluation() {
-    this.show = true;    
-    if(this.formsaved){
-      this.pathFormValue(this.formsaved);
+    this.show = true;
+    if (this.formsaved) {
+      // Esperar a que el form exista en el DOM
+      setTimeout(() => this.restoreDraft(this.formsaved), 0);
     }
   }
 
-  pathFormValue(formsaved:any){
-    console.log('evaluationForm', this.evaluationForm);
-    Object.entries(formsaved).forEach(([key, value]) => {
-      this.evaluationForm.controls[key].setValue(value);
-    });
+  private restoreDraft(draft: Evaluation360Draft) {
+    if (!draft) {
+      return;
+    }
+    if (draft.objetivos && draft.objetivos.length > 0) {
+      this.objetivos = draft.objetivos.map((o) => ({
+        descripcion: o.descripcion || '',
+        peso: o.peso != null ? Number(o.peso) : null,
+        rango: o.rango != null ? Number(o.rango) : null,
+      }));
+    }
+    if (draft.answers && this.user?.sections) {
+      this.user.sections.forEach((section) => {
+        if (!section?.questions) {
+          return;
+        }
+        section.questions.forEach((question: Question) => {
+          const key = String(question.id);
+          if (draft.answers[key] !== undefined) {
+            question.valueResp = draft.answers[key];
+          }
+        });
+      });
+    }
+    if (draft.sectionActive != null && draft.sectionActive >= 0) {
+      this.sectionActive = draft.sectionActive;
+    }
   }
 
   back(id: any) {
@@ -112,6 +144,7 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
     } else {
       question.valueResp = question.valueResp.filter((item) => item != optionId);
     }
+    this.autoSave();
   }
 
   /**
@@ -129,14 +162,19 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
    * Agregar sección de objetivos al usuario
    */
   addObjetivosSection() {
-    // Crear la sección de objetivos (solo datos principales)
+    if (!this.user?.sections) {
+      return;
+    }
+    const already = this.user.sections.some((s: any) => s.id === 'objetivos-section');
+    if (already) {
+      return;
+    }
     const objetivosSection = {
       id: 'objetivos-section',
       name: 'Evaluación de Objetivos',
       numberSection: this.user.sections.length + 1
     };
     
-    // Agregar la sección al usuario
     (this.user.sections as any).push(objetivosSection);
   }
 
@@ -145,6 +183,7 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
    */
   removeObjetivo(index: number) {
     this.objetivos.splice(index, 1);
+    this.autoSave();
   }
 
   /**
@@ -173,6 +212,7 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
     if(this.validateSection()){
       this.evaluationForm.form.markAsUntouched()
       this.sectionActive++;
+      this.autoSave();
     }else{
       this.evaluationForm.form.markAllAsTouched();
       this.toastrService.error('Debe responder las preguntas que son obligatorias antes de pasar a la siguiente Sección!')
@@ -184,6 +224,7 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
    */
   backSection() {
     this.sectionActive--;
+    this.autoSave();
   }
 
   validateSection():boolean{
@@ -210,8 +251,28 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
   }
 
 
-  autoSave(form: NgForm){
-    this.temporaryStorageService.set(`evaluation${this.evaluation.id}`, form.value);
+  /** Guarda borrador parcial en localStorage (instrumento + usuario evaluado). */
+  autoSave(_form?: NgForm) {
+    if (!this.evaluation?.id || !this.user?.id) {
+      return;
+    }
+    const answers: { [questionId: string]: any } = {};
+    (this.user.sections || []).forEach((section) => {
+      if (!section?.questions) {
+        return;
+      }
+      section.questions.forEach((question: Question) => {
+        if (question.valueResp !== undefined && question.valueResp !== null && question.valueResp !== '') {
+          answers[String(question.id)] = question.valueResp;
+        }
+      });
+    });
+    const draft: Evaluation360Draft = {
+      sectionActive: this.sectionActive,
+      objetivos: this.objetivos,
+      answers,
+    };
+    this.temporaryStorageService.set(this.getDraftKey(), draft);
   }
 
   /**
@@ -219,23 +280,29 @@ export class Evaluation360Component extends BaseComponent implements OnInit {
  * @param form 
  */
   async onSubmit(form: NgForm) {
-    if (form.valid) {
-      this.submitted = true;
-      
-      // Agregar los objetivos al usuario antes de enviar
-      if (this.objetivos && this.objetivos.length > 0) {
-        // Usar una propiedad dinámica para evitar errores de tipos
-        Object.assign(this.user, { objetivos: this.objetivos });
-      }
-      
-      console.log('evaluation de usuarios', Instrument.mapForPostResponseByUser(this.user, +this.evaluation.id))
-      //await this.evaluationInstrumentsService.storeUsersEvaluationResponse(Instrument.mapForPostResponse(this.evaluation));
-      setTimeout(() => {
-        this.temporaryStorageService.remove(`evaluation${this.evaluation.id}`);
-        this.back(this.evaluation.id);
-        this.submitted = false;
-      }, 500);
-    } 
+    if (!form.valid || !this.validateSection()) {
+      form.form.markAllAsTouched();
+      this.toastrService.error('Complete las preguntas obligatorias antes de guardar.');
+      return;
+    }
+
+    this.submitted = true;
+
+    // TODO ODIS: reactivar cuando se implemente el envío de objetivos
+    // if (this.objetivos && this.objetivos.length > 0) {
+    //   Object.assign(this.user, { objetivos: this.objetivos });
+    // }
+
+    const payload = Instrument.mapForPostResponseByUser(this.user, +this.evaluation.id);
+    const ok = await this.evaluationInstrumentsService.storeUsersEvaluationResponse(payload);
+
+    if (ok) {
+      this.temporaryStorageService.remove(this.getDraftKey());
+      // Limpia clave legacy si existía
+      this.temporaryStorageService.remove(`evaluation${this.evaluation.id}`);
+      this.back(this.evaluation.id);
+    }
+    this.submitted = false;
   }
 
 
