@@ -53,6 +53,7 @@ export class User {
     questions: Array<Question>
     password: string;
     sections: Array<Section>;
+    unit: SelectOption;
 
     get fullName() {
         return (this.firstName ? this.firstName : '') + ' ' + (this.lastName ? this.lastName : '');
@@ -100,7 +101,7 @@ export class User {
         newInstace.city = user.city;
         newInstace.socialNetwork = user.socialNetwork;
         newInstace.company = user.company;
-
+        newInstace.unit = user.unit;
         return newInstace
     }
 

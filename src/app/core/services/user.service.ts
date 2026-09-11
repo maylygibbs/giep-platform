@@ -61,6 +61,9 @@ export class UserService extends HttpService {
 
       return itemRol.rol;
     })
+    if(resp[0].unidad){
+      user.unit = new SelectOption(resp[0].unidad.id, resp[0].unidad.Label);
+    }
     this.permissionsService.loadPermissions(user.roles)
     console.log('permission >>>>>>>', this.permissionsService.getPermissions())
     var datauserresorce = '';

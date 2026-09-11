@@ -33,6 +33,14 @@
                         <h6 class="mb-0">{{user.firstName}}</h6>
                         <small class="text-muted">{{user.email}}</small>
                         <br>
+                        <small class="text-muted" *ngIf="user.position?.label">
+                          Cargo: {{user.position.label}}
+                        </small>
+                        <small class="text-muted" *ngIf="user.position?.label && user.unit?.label"> · </small>
+                        <small class="text-muted" *ngIf="user.unit?.label">
+                          Unidad: {{user.unit.label}}
+                        </small>
+                        <br *ngIf="user.position?.label || user.unit?.label">
                         <small class="text-muted">
                           <span *ngFor="let role of user.roles; let last = last">
                             {{role.replace('ROLE_', '')}}<span *ngIf="!last">, </span>

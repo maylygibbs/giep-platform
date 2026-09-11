@@ -279,6 +279,12 @@ export class Evaluation360InstrumentsService extends HttpService{
           user.email = u.email;
           user.answered = u.respondida == 1 ? true : false;
           user.roles = u.roles;
+          if(u.cargoId && u.cargoNombre){
+            user.position = new SelectOption(u.cargoId, u.cargoNombre);
+          }
+          if(u.unidad){
+            user.unit = new SelectOption(u.unidad.id, u.unidad.label);
+          }
           return user;
         });
       }
