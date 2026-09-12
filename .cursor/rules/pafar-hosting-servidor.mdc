@@ -1,0 +1,58 @@
+---
+description: Hosting VPS PAFAR (vps2) — migración cerrada, inventario, pendientes abiertos y fuentes de verdad
+alwaysApply: true
+---
+
+# Hosting PAFAR — contexto permanente
+
+Migración CentOS 7 → AlmaLinux 9 **cerrada el 2026-07-30**. No reabrir esa lista salvo incidente nuevo.
+
+## Servidor en producción
+
+| Campo | Valor |
+|---|---|
+| Hostname | `vps2.pafar.com.ve` |
+| IP | `162.35.181.102` (proveedor InterServer) |
+| SSH | `root` puerto **3928** (pedir pass; no está en git) |
+| WHM | `https://162.35.181.102:2087` / `https://vps2.pafar.com.ve:2087` |
+| cPanel | `https://162.35.181.102:2083` — cuenta `pafarco1`, dominio `pafar.com.ve` |
+| SO | AlmaLinux 9 + cPanel/WHM + EasyApache 4 |
+| Firewall | **Imunify360** (`INPUT_imunify360`, whitelist `TCP_IN_IPv4`). CSF y firewalld inactivos. |
+
+VPS viejo `74.50.65.149` (CentOS 7) ya no es destino operativo.
+
+## Fuentes de verdad (leer antes de improvisar)
+
+- Historial Claude: `/home/mgibbs/claude/projects/pafar/management_server.json`
+- Memoria: `/home/mgibbs/.claude/projects/-home-mgibbs/memory/project_pafar_migration.md`
+- Docs locales: `/home/mgibbs/Documents/PAFAR/` (`estado_migracion_20260721.md`, reportes, evidencias)
+- Skill operativo: `pafar-hosting` (`~/.cursor/skills/pafar-hosting/`)
+
+## Cómo operar
+
+- Explicar **cada** comando SSH/API en lenguaje llano **antes** de ejecutarlo.
+- SSH con `python3` + **paramiko** (no hay `sshpass`).
+- No guardar contraseñas en el repo. Credenciales locales en `Documents/PAFAR/*credenciales*` / `claves_temporales*`.
+- Tras `chown -R` en un docroot cPanel: el top-level debe quedar `pafarco1:nobody` (`chgrp nobody`, no recursivo).
+- Carpetas **bare** (`giepboffice`, `bofficegiepstage`, …) suelen ser la app real; `nombre.pafar.com.ve` a veces es stub.
+- Heurística grep **no** sustituye Imunify360. `/tmp/av_test/webshell_test.php` es auto-test de Imunify, no infección.
+- Apps internas (n8n, Superset, ws, Odoo) escuchan en `127.0.0.1` + proxy Apache. No abrir 3306/5678/8088/8069 a internet.
+
+## Apps clave en este VPS
+
+| URL | Qué es |
+|---|---|
+| `giep-platform.pafar.com.ve` | Frontend Angular GIEP prod |
+| `giepboffice.pafar.com.ve` | API Symfony GIEP (`/public/api`) |
+| `platformstage.pafar.com.ve` ↔ `bofficegiepstage.pafar.com.ve` | Stage GIEP |
+| `wsplatformprod/stage.pafar.com.ve` | NestJS + socket.io (systemd, código en `api-notification`) |
+| `pn8n.pafar.com.ve` / `psuperset.pafar.com.ve` | n8n Docker / Superset gunicorn |
+| `dwh.pafar.com.ve` | Odoo 19 Docker |
+| `website.pafar.com.ve` | Lo maneja Kevin — no tocar salvo pedido explícito |
+
+## Temas abiertos (no son “la migración”)
+
+- `RETOMAR SPAM GIEP ACREDITACIONES` — `mail()` nativo, `postqr()` síncrono, inyección headers
+- `RETOMAR HARDENING ANTIPHISHING PAFAR` — resolver DNSBL Spamhaus; DMARC sigue `p=none`
+- `RETOMAR DESPLIEGUE ODOO DWH` — wizard BD inicial + addon `pafar_crm`
+- `RETOMAR FIREWALL IMUNIFY PAFAR` — no abrir puertos globales; whitelist IP si hace falta
